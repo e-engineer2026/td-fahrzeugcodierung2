@@ -31,7 +31,7 @@ export default function Home(){
         <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, SEAT und Škoda – mit Fahrzeugauswahl, transparenter Kalkulation und direkter Terminbuchung.</p>
 
         <div className="mt-6 max-w-xl rounded-2xl border border-blue-200 bg-blue-50 p-4 sm:mt-7 sm:p-5">
-          <b className="text-blue-900">Staffelrabatt automatisch:</b>
+          <b className="text-blue-900">Staffelrabatt</b>
           <div className="mt-3 grid grid-cols-2 gap-2 text-sm text-blue-800 sm:flex sm:flex-wrap sm:gap-x-4">
             <span>ab 50 €: <b>5 %</b></span><span>ab 100 €: <b>10 %</b></span><span>ab 150 €: <b>15 %</b></span><span>ab 200 €: <b>20 %</b></span>
           </div>
