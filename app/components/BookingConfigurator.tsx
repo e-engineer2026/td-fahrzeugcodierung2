@@ -67,6 +67,7 @@ export default function BookingConfigurator(){
 
   const chosen = selected.map(id=>{const c=codingCatalog.find(c=>c.id===id); return c?displayCodingName(c):null}).filter(Boolean).join(", ");
   const prepay=total*.70, finalpay=total*.30;
+  const paypalUrl=`https://paypal.me/TiDrechsler/${prepay.toFixed(2)}`;
 
   const calBase=mode==="remote"
     ?"https://cal.com/timo-drechsler-lej6jm/remote-codierung"
@@ -219,7 +220,7 @@ export default function BookingConfigurator(){
           <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">5 · Zahlung</div>
           <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50 p-4 sm:mt-5 sm:p-5">
             <b>Remote: PayPal · 70 % vorab / 30 % danach</b>
-            <p className="mt-2 text-sm text-slate-600">PayPal-Adresse: <strong>elektronikermeister@gmail.com</strong></p>
+            <p className="mt-2 text-sm text-slate-600">PayPal.Me: <strong>paypal.me/TiDrechsler</strong></p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div className="rounded-xl bg-white p-4"><span className="text-sm text-slate-500">70 % vorab</span><b className="mt-1 block text-2xl">{prepay.toFixed(2)} €</b></div>
               <div className="rounded-xl bg-white p-4"><span className="text-sm text-slate-500">30 % nach Durchführung</span><b className="mt-1 block text-2xl">{finalpay.toFixed(2)} €</b></div>
@@ -227,11 +228,11 @@ export default function BookingConfigurator(){
             {selected.length===0 ? (
               <div className="mt-4 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-500">PayPal wird nach Auswahl mindestens einer Codierung freigeschaltet.</div>
             ) : (
-              <a href="https://www.paypal.com/" target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full sm:w-auto">PayPal öffnen · {prepay.toFixed(2)} € vorab</a>
+              <a href={paypalUrl} target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full sm:w-auto">Jetzt {prepay.toFixed(2)} € per PayPal zahlen</a>
             )}
           </div>
           <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-slate-700 sm:mt-5 sm:p-5 sm:leading-7">
-            <b>Zahlung vor dem Termin:</b> Nach der Terminbuchung und vor dem vereinbarten Remote-Termin sind 70 % des Gesamtbetrags per PayPal an <strong>elektronikermeister@gmail.com</strong> zu zahlen. Die verbleibenden 30 % werden nach Durchführung der vereinbarten Codierung fällig.
+            <b>Zahlung vor dem Termin:</b> Nach der Terminbuchung und vor dem vereinbarten Remote-Termin sind 70 % des Gesamtbetrags über PayPal.Me zu zahlen. Die verbleibenden 30 % werden nach Durchführung der vereinbarten Codierung fällig.
           </div>
         </section>
       </>
