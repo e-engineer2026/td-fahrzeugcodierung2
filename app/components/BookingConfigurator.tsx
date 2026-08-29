@@ -104,10 +104,10 @@ export default function BookingConfigurator(){
     <section className="card p-4 sm:p-8">
       <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">1 · Terminart</div>
       <div className="mt-4 grid gap-3 sm:mt-5 sm:gap-4 md:grid-cols-2">
-        <button onClick={()=>setMode("onsite")} className={`rounded-2xl border p-4 text-left sm:p-5 ${mode==="onsite"?"border-blue-600 bg-blue-50":"border-slate-200"}`}>
+        <button onClick={()=>setMode("onsite")} className={`min-h-[132px] rounded-2xl border p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:min-h-[148px] sm:p-5 ${mode==="onsite"?"border-blue-600 bg-blue-50":"border-slate-200 bg-white"}`}>
           <MapPin className="h-7 w-7 text-blue-600"/><b className="mt-3 block">Vor Ort in Leipzig-Süd</b><span className="text-sm text-slate-600">Schenkendorfstraße 33, 04275 Leipzig</span>
         </button>
-        <button onClick={()=>{setMode("remote");setPayment("paypal")}} className={`rounded-2xl border p-4 text-left sm:p-5 ${mode==="remote"?"border-blue-600 bg-blue-50":"border-slate-200"}`}>
+        <button onClick={()=>{setMode("remote");setPayment("paypal")}} className={`min-h-[132px] rounded-2xl border p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:min-h-[148px] sm:p-5 ${mode==="remote"?"border-blue-600 bg-blue-50":"border-slate-200 bg-white"}`}>
           <Laptop className="h-7 w-7 text-blue-600"/><b className="mt-3 block">Remote-Codierung</b><span className="text-sm text-slate-600">Termin bequem von zu Hause durchführen.</span>
         </button>
       </div>
@@ -141,7 +141,7 @@ export default function BookingConfigurator(){
         </div>
         <div className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-600 sm:p-4">Plattform: <strong>{vehicle.platform}</strong>. Die Codierliste wird automatisch anhand der Fahrzeugplattform zugeordnet. Die endgültige Machbarkeit wird anhand von Ausstattung, Steuergerät, Softwarestand und Hardware geprüft.{vehicle.sourceUrl&&<> <a href={vehicle.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">VCDS-Wiki Referenz</a></>}</div>
       </div>
-      {!isSfd2&&<div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700 sm:mt-5 sm:p-4">{isSfd1&&<> Bei SFD1-Fahrzeugen werden Assistenzfunktionen mit möglichem SVM-/Datensatz-, Parametrierungs- oder Kalibrierungsbedarf nicht regulär zur Buchung angeboten.</>}</div>}
+      {isSfd1&&<div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700 sm:mt-5 sm:p-4">Bei SFD1-Fahrzeugen werden Assistenzfunktionen mit möglichem SVM-/Datensatz-, Parametrierungs- oder Kalibrierungsbedarf nicht regulär zur Buchung angeboten.</div>}
 
       {isSfd2 ? (
         <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-900 sm:p-4">
@@ -179,10 +179,7 @@ export default function BookingConfigurator(){
               <b className="shrink-0 whitespace-nowrap pt-0.5">{c.price} €</b>
             </label>
             {(c.interfaceInfo||c.hardware||c.requirements)&&<div className="mt-3 space-y-1 border-t border-slate-200 pt-3 text-xs leading-5 text-slate-600">
-              
-                  
-              
-                  {c.hardware&&<div><b>Hardware:</b> {c.hardware}</div>}
+              {c.hardware&&<div><b>Hardware:</b> {c.hardware}</div>}
               {c.requirements&&<div><b>Voraussetzung:</b> {c.requirements}</div>}
               {c.sourceUrl&&<div><a href={c.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">VCDS-Wiki Quelle</a></div>}
             </div>}
@@ -210,6 +207,8 @@ export default function BookingConfigurator(){
           </div>
           {isSfd2 ? (
             <div className="mt-6 rounded-xl bg-slate-100 px-5 py-3 font-semibold text-slate-500">Terminbuchung für Codierungen deaktiviert</div>
+          ) : selected.length===0 ? (
+            <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-semibold text-slate-500">Bitte zuerst mindestens eine Codierung auswählen.</div>
           ) : (
             <a href={calUrl} target="_blank" rel="noreferrer" className="btn-primary mt-5 w-full text-center sm:mt-6 sm:w-auto"><CalendarDays className="mr-2 h-5 w-5"/>Termin mit Daten an Cal.com übergeben</a>
           )}
@@ -225,7 +224,11 @@ export default function BookingConfigurator(){
               <div className="rounded-xl bg-white p-4"><span className="text-sm text-slate-500">70 % vorab</span><b className="mt-1 block text-2xl">{prepay.toFixed(2)} €</b></div>
               <div className="rounded-xl bg-white p-4"><span className="text-sm text-slate-500">30 % nach Durchführung</span><b className="mt-1 block text-2xl">{finalpay.toFixed(2)} €</b></div>
             </div>
-            <a href="https://www.paypal.com/" target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full sm:w-auto">PayPal öffnen · {prepay.toFixed(2)} € vorab</a>
+            {selected.length===0 ? (
+              <div className="mt-4 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-500">PayPal wird nach Auswahl mindestens einer Codierung freigeschaltet.</div>
+            ) : (
+              <a href="https://www.paypal.com/" target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full sm:w-auto">PayPal öffnen · {prepay.toFixed(2)} € vorab</a>
+            )}
           </div>
           <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-slate-700 sm:mt-5 sm:p-5 sm:leading-7">
             <b>Zahlung vor dem Termin:</b> Nach der Terminbuchung und vor dem vereinbarten Remote-Termin sind 70 % des Gesamtbetrags per PayPal an <strong>elektronikermeister@gmail.com</strong> zu zahlen. Die verbleibenden 30 % werden nach Durchführung der vereinbarten Codierung fällig.
@@ -250,6 +253,8 @@ export default function BookingConfigurator(){
           </div>
           {isSfd2 ? (
             <div className="mt-6 rounded-xl bg-slate-100 px-5 py-3 font-semibold text-slate-500">Terminbuchung für Codierungen deaktiviert</div>
+          ) : selected.length===0 ? (
+            <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-semibold text-slate-500">Bitte zuerst mindestens eine Codierung auswählen.</div>
           ) : (
             <a href={calUrl} target="_blank" rel="noreferrer" className="btn-primary mt-5 w-full text-center sm:mt-6 sm:w-auto"><CalendarDays className="mr-2 h-5 w-5"/>Termin mit Daten an Cal.com übergeben</a>
           )}
