@@ -152,7 +152,7 @@ export default function BookingConfigurator(){
 
     {mode==="remote" ? <>
       <section className="card p-4 sm:p-8">
-        <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">4 · Termin</div>
+        <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">4 · Termin und Zahlung</div>
         <div className="mt-4 rounded-2xl border border-blue-100 p-4 text-sm leading-6 sm:mt-5 sm:p-5 sm:leading-7"><b>Remote</b> · {brand} {vehicle.model} · Baujahr {year}<br/>{selected.length} Codierung(en) · {Math.round(rate*100)} % Rabatt · <b>{total.toFixed(2)} €</b><br/>70 % vorab: {prepay.toFixed(2)} € · 30 % danach: {finalpay.toFixed(2)} €</div>
         <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-blue-950"><b>Ablauf:</b> Termin auswählen, anschließend 70 % vorauszahlen. <strong>Der Termin wird nach Eingang der Vorauszahlung verbindlich bestätigt.</strong></div>
         {isSfd2 ? <div className="mt-6 rounded-xl bg-slate-100 px-5 py-3 font-semibold text-slate-500">Terminbuchung für Codierungen deaktiviert</div>
