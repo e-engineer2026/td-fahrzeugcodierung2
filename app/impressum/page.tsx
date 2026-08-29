@@ -20,16 +20,24 @@ export default function Impressum() {
           <section>
             <h2 className="text-xl font-bold">Kontakt</h2>
             <p className="mt-3">
-              Telefon: 01556 3047044<br />
-              E-Mail: elektronikermeister@gmail.com
+              Telefon: <a className="text-blue-700 hover:underline" href="tel:+4915563047044">01556 3047044</a><br />
+              E-Mail: <a className="text-blue-700 hover:underline" href="mailto:elektronikermeister@gmail.com">elektronikermeister@gmail.com</a>
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-bold">Umsatzsteuer</h2>
-            <p className="mt-3">
-              Kleinunternehmer gemäß § 19 UStG. Es wird keine Umsatzsteuer ausgewiesen.
-            </p>
+            <p className="mt-3">Kleinunternehmer gemäß § 19 UStG. Umsatzsteuer wird nicht gesondert ausgewiesen.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold">Verbraucherstreitbeilegung</h2>
+            <p className="mt-3">Wir sind nicht verpflichtet und derzeit nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold">Hinweis zur früheren EU-OS-Plattform</h2>
+            <p className="mt-3">Die europäische Plattform zur Online-Streitbeilegung wurde eingestellt; ein Link auf die frühere OS-Plattform wird daher nicht mehr bereitgestellt.</p>
           </section>
         </div>
       </div>
