@@ -180,7 +180,7 @@ export default function BookingConfigurator(){
             </label>
             {(c.interfaceInfo||c.hardware||c.requirements)&&<div className="mt-3 space-y-1 border-t border-slate-200 pt-3 text-xs leading-5 text-slate-600">
               {c.hardware&&<div><b>Hardware:</b> {c.hardware}</div>}
-              {c.requirements&&<div><b>Voraussetzung:</b> {c.requirements}</div>}
+              {c.requirements&&<div><b>Leistungen:</b> {c.requirements}</div>}
               {c.sourceUrl&&<div><a href={c.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">VCDS-Wiki Quelle</a></div>}
             </div>}
           </div>)}
