@@ -5,7 +5,10 @@ import ContactBox from "./components/ContactBox";
 export default function Home(){
  return <main className="pb-20 md:pb-0">
   <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
-    <div className="container-x flex h-14 items-center justify-end gap-3 sm:h-16">
+    <div className="container-x flex h-14 items-center justify-between gap-3 sm:h-16">
+      <a href="#" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
+        <img src="/td-logo-icon.png" alt="TD Fahrzeugcodierung" className="h-9 w-auto sm:h-11" />
+      </a>
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <a href="#buchen" className="btn-primary px-3 py-2 text-xs sm:px-4 sm:text-sm">Termin buchen</a>
