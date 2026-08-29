@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CalendarDays, Laptop, MapPin } from "lucide-react";
-import { brands, codingCatalog, vehicles, codingsForVehicle } from "../data/catalog";
+import { brands, codingCatalog, codingGroups, vehicles, codingsForVehicle, type CodingGroup } from "../data/catalog";
 
 function discountRate(v:number){ return v>=200?.20:v>=150?.15:v>=100?.10:v>=50?.05:0; }
 function nextTier(v:number){ return v<50?50:v<100?100:v<150?150:v<200?200:null; }
@@ -16,6 +16,7 @@ export default function BookingConfigurator(){
   const [vin,setVin]=useState("");
   const [selected,setSelected]=useState<string[]>([]);
   const [search,setSearch]=useState("");
+  const [activeGroup,setActiveGroup]=useState<"Alle"|CodingGroup>("Alle");
   const [payment,setPayment]=useState<"paypal"|"bar">("paypal");
 
   const models=vehicles.filter(v=>v.brand===brand);
@@ -23,31 +24,21 @@ export default function BookingConfigurator(){
   const years=Array.from({length:vehicle.endYear-vehicle.startYear+1},(_,i)=>vehicle.endYear-i);
 
   const isSfd1 = !!vehicle.sfd1From && year >= vehicle.sfd1From && year < 2024;
-  const isSfd2 = year >= 2024;
+  const isSfd2 = year >= 2024 && !!vehicle.sfd1From;
 
-  const sfd1BlockedAssistantIds = new Set(["lane","park","side","acc","frontkamera","trailer","travel","stau"]);
   const vehicleCodingIds = codingsForVehicle(vehicle);
-  const available=isSfd2 ? [] : codingCatalog.filter(c=>vehicleCodingIds.includes(c.id) && !(isSfd1 && c.category==="Assistenzsysteme" && sfd1BlockedAssistantIds.has(c.id)));
-  const mqbevoAssistantIds = ["muedigkeit","ops","rueckfahrkamera","fernlicht","vze","lane","park","side","acc","frontkamera","emergency","travel"];
-  const brandNameForMqbevo = brand || "";
-  const isMqbevoBooking =
-    vehicle?.platform === "MQBevo" &&
-    ["Volkswagen","VW","SEAT","Seat","Škoda","Skoda","CUPRA","Cupra"].includes(brandNameForMqbevo);
+  const available=isSfd2 ? [] : codingCatalog.filter(c=>{
+    if(!vehicleCodingIds.includes(c.id)) return false;
+    if(!isSfd1 || c.category!=="Assistenzsysteme") return true;
+    return !/(aktivieren|freischalten|codieren|parametrieren)/i.test(c.name);
+  });
 
   const shown=available
-    .filter(c => !(isMqbevoBooking && c.category === "Assistenzsysteme" && !mqbevoAssistantIds.includes(c.id)))
+    .filter(c=>activeGroup==="Alle" || c.uiGroup===activeGroup)
     .filter(c=>c.name.toLowerCase().includes(search.toLowerCase()));
 
   const displayCodingName = (c: any) => {
-    const isSfdVehicle = isSfd1 || isSfd2;
-    const brandName = brand || "";
-    const isMqbevoGroup =
-      vehicle?.platform === "MQBevo" &&
-      ["Volkswagen", "VW", "SEAT", "Seat", "Škoda", "Skoda", "CUPRA", "Cupra"].includes(brandName);
-
-    if (isMqbevoGroup && c.id === "frontkamera") return "Frontkamera parametrieren";
-
-    if (c.category === "Assistenzsysteme" && (isSfdVehicle || isMqbevoGroup)) {
+    if (c.category === "Assistenzsysteme" && isSfd1) {
       const cleaned = c.name
         .replace(/^Anpassung\s+/i, "")
         .replace(/^Freischaltung\s+/i, "")
@@ -95,10 +86,10 @@ export default function BookingConfigurator(){
   };
 
   const changeBrand=(b:string)=>{
-    setBrand(b); const v=vehicles.find(x=>x.brand===b)!; setVehicleModel(v.model); setYear(v.endYear); setSelected([]);
+    setBrand(b); const v=vehicles.find(x=>x.brand===b)!; setVehicleModel(v.model); setYear(v.endYear); setSelected([]); setActiveGroup("Alle"); setSearch("");
   };
   const changeModel=(m:string)=>{
-    const v=vehicles.find(x=>x.brand===brand&&x.model===m)!; setVehicleModel(m); setYear(v.endYear); setSelected([]);
+    const v=vehicles.find(x=>x.brand===brand&&x.model===m)!; setVehicleModel(m); setYear(v.endYear); setSelected([]); setActiveGroup("Alle"); setSearch("");
   };
   const toggle=(id:string)=>setSelected(p=>p.includes(id)?p.filter(x=>x!==id):[...p,id]);
 
@@ -132,20 +123,24 @@ export default function BookingConfigurator(){
           {vin.length>0 && vin.length!==17 && <p className="mt-2 text-xs font-semibold text-amber-600">FIN muss 17 Zeichen enthalten · {vin.length}/17</p>}
           {vin.length===17 && <p className="mt-2 text-xs font-semibold text-emerald-600">FIN vollständig · 17/17</p>}
         </div>
-        <div className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-600 sm:p-4">Plattform: <strong>{vehicle.platform}</strong>. Die Codierliste wird automatisch anhand der Fahrzeugplattform zugeordnet. Die endgültige Machbarkeit wird anhand von Ausstattung, Steuergerät, Softwarestand und Hardware geprüft.{vehicle.sourceUrl&&<> <a href={vehicle.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">VCDS-Wiki Referenz</a></>}</div>
+        <div className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-600 sm:p-4">Plattform: <strong>{vehicle.platform}</strong>. Die angebotenen Funktionen werden modellbezogen zugeordnet. Die endgültige Machbarkeit wird anhand von Ausstattung, Steuergerät, Softwarestand und Hardware geprüft.{vehicle.sourceUrl&&<> <a href={vehicle.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">AS.Coding Referenz</a></>}</div>
       </div>
-      {isSfd1&&<div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700 sm:mt-5 sm:p-4">Bei SFD1-Fahrzeugen werden Assistenzfunktionen mit möglichem SVM-/Datensatz-, Parametrierungs- oder Kalibrierungsbedarf nicht regulär zur Buchung angeboten.</div>}
-      {isSfd2 ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-900 sm:p-4"><b>SFD2 / UNECE:</b> Fahrzeuge ab Modelljahr 2024 werden für Codierungsaufträge ausgeschlossen.</div>
+      {isSfd1&&<div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700 sm:mt-5 sm:p-4">Bei SFD1-Fahrzeugen werden Assistenz-Freischaltungen mit möglichem SVM-/Datensatz-, Parametrierungs- oder Kalibrierungsbedarf nicht regulär angeboten. Reine Anpassungen bleiben nach Vorprüfung auswählbar.</div>}
+      {isSfd2 ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-900 sm:p-4"><b>SFD2 / UNECE:</b> Diese Baureihe wird ab Modelljahr 2024 für Codierungsaufträge ausgeschlossen.</div>
       : isSfd1 ? <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm leading-6 text-blue-900 sm:p-4"><b>SFD1:</b> Für die Freischaltung geschützter Steuergeräte werden einmalig <strong>10,00 €</strong> zum Auftrag addiert.</div>
       : year===2023 ? <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-900 sm:p-4"><b>Hinweis:</b> Einige VAG-Modelle erhielten SFD2 bereits 2023. Vor Durchführung ist daher ein SFD-Check sinnvoll.</div> : null}
     </section>
 
     <section className="card p-4 sm:p-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">3 · Fahrzeugbezogene Codierungen</div><h3 className="mt-2 text-xl font-black leading-tight sm:text-2xl">{brand} {vehicle.model} · {year}</h3></div><input className="md:max-w-xs" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Codierung suchen …"/></div>
+      {!isSfd2&&<div className="mt-5 flex flex-wrap gap-2">
+        {["Alle",...codingGroups].map(group=><button type="button" key={group} onClick={()=>setActiveGroup(group as "Alle"|CodingGroup)} className={`rounded-full border px-3 py-2 text-sm font-semibold transition ${activeGroup===group?"border-blue-600 bg-blue-600 text-white":"border-slate-200 bg-white text-slate-700 hover:border-blue-300"}`}>{group}</button>)}
+      </div>}
       {isSfd2 ? <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-5 text-sm leading-7 text-red-900">Für dieses Baujahr werden keine Codierungsleistungen angeboten.</div>
-      : (["Standard-Codierungen","Assistenzsysteme"] as const).map(cat=>{
-        const list=shown.filter(c=>c.category===cat); if(!list.length) return null;
-        return <div className="mt-6 sm:mt-8" key={cat}><h4 className="font-black text-blue-700">{cat}</h4><div className="mt-3 grid gap-3 lg:grid-cols-2">{list.map(c=><div key={c.id} className={`rounded-xl border p-3 sm:p-4 ${selected.includes(c.id)?"border-blue-500 bg-blue-50":"border-slate-200"}`}><label className="flex cursor-pointer items-start justify-between gap-3"><span className="min-w-0 flex-1 leading-6"><input className="mr-3 h-5 w-5 translate-y-1 shrink-0" type="checkbox" checked={selected.includes(c.id)} onChange={()=>toggle(c.id)}/>{displayCodingName(c)}</span><b className="shrink-0 whitespace-nowrap pt-0.5">{c.price} €</b></label>{(c.interfaceInfo||c.hardware||c.requirements)&&<div className="mt-3 space-y-1 border-t border-slate-200 pt-3 text-xs leading-5 text-slate-600">{c.hardware&&<div><b>Hardware:</b> {c.hardware}</div>}{c.requirements&&<div><b>Leistungen:</b> {c.requirements}</div>}{c.sourceUrl&&<div><a href={c.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">VCDS-Wiki Quelle</a></div>}</div>}</div>)}</div></div>
+      : shown.length===0 ? <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm leading-7 text-slate-600">Für diesen Filter sind aktuell keine dokumentierten Funktionen hinterlegt. Nutze „Alle“ oder die Machbarkeitsanfrage.</div>
+      : codingGroups.map(group=>{
+        const list=shown.filter(c=>c.uiGroup===group); if(!list.length) return null;
+        return <div className="mt-6 sm:mt-8" key={group}><h4 className="font-black text-blue-700">{group}</h4><div className="mt-3 grid gap-3 lg:grid-cols-2">{list.map(c=><div key={c.id} className={`rounded-xl border p-3 sm:p-4 ${selected.includes(c.id)?"border-blue-500 bg-blue-50":"border-slate-200"}`}><label className="flex cursor-pointer items-start justify-between gap-3"><span className="min-w-0 flex-1 leading-6"><input className="mr-3 h-5 w-5 translate-y-1 shrink-0" type="checkbox" checked={selected.includes(c.id)} onChange={()=>toggle(c.id)}/>{displayCodingName(c)}</span><b className="shrink-0 whitespace-nowrap pt-0.5">{c.price} €</b></label>{(c.interfaceInfo||c.hardware||c.requirements)&&<div className="mt-3 space-y-1 border-t border-slate-200 pt-3 text-xs leading-5 text-slate-600">{c.hardware&&<div><b>Hardware:</b> {c.hardware}</div>}{c.requirements&&<div><b>Hinweis:</b> {c.requirements}</div>}</div>}</div>)}</div></div>
       })}
       <div className="mt-6 rounded-2xl bg-slate-50 p-4 sm:mt-8 sm:p-5"><div className="flex justify-between"><span>Zwischensumme</span><b>{subtotal.toFixed(2)} €</b></div><div className="mt-2 flex justify-between text-blue-700"><span>Rabatt ({Math.round(rate*100)} %)</span><b>-{discount.toFixed(2)} €</b></div><div className="mt-4 flex justify-between gap-4 border-t pt-4 text-lg sm:text-xl"><b>Gesamt</b><b>{total.toFixed(2)} €</b></div>{next?<p className="mt-3 text-sm text-slate-600">Noch {(next-subtotal).toFixed(2)} € bis zur nächsten Rabattstufe ({next===50?5:next===100?10:next===150?15:20} %).</p>:<p className="mt-3 text-sm font-semibold text-blue-700">20 % Maximalrabatt erreicht.</p>}{sfdFee>0&&<div className="mt-3 flex justify-between border-t pt-3 text-sm text-blue-700"><span>SFD1-Freischaltung</span><b>+10,00 €</b></div>}</div>
     </section>
