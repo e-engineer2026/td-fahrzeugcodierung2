@@ -157,8 +157,11 @@ export default function BookingConfigurator(){
         <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-blue-950"><b>Ablauf:</b> Termin auswählen, anschließend 70 % vorauszahlen. <strong>Der Termin wird nach Eingang der Vorauszahlung verbindlich bestätigt.</strong></div>
         {isSfd2 ? <div className="mt-6 rounded-xl bg-slate-100 px-5 py-3 font-semibold text-slate-500">Terminbuchung für Codierungen deaktiviert</div>
         : selected.length===0 ? <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-semibold text-slate-500">Bitte zuerst mindestens eine Codierung auswählen.</div>
-        : <a href={calUrl} onClick={savePendingBooking} target="_blank" rel="noreferrer" className="btn-primary mt-5 w-full text-center sm:mt-6 sm:w-auto"><CalendarDays className="mr-2 h-5 w-5"/>Termin auswählen</a>}
-        <p className="mt-3 text-xs leading-5 text-slate-500">Nach erfolgreicher Buchung kann Cal.com automatisch zur Zahlungsseite zurückleiten.</p>
+        : <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2">
+            <a href={calUrl} onClick={savePendingBooking} target="_blank" rel="noreferrer" className="btn-primary w-full text-center"><CalendarDays className="mr-2 h-5 w-5"/>1. Termin auswählen</a>
+            <a href="/zahlung" onClick={savePendingBooking} className="btn-secondary w-full text-center">2. Termin gebucht? Jetzt 70 % vorauszahlen</a>
+          </div>}
+        <p className="mt-3 text-xs leading-5 text-slate-500">Cal.com öffnet sich in einem neuen Tab. Nach erfolgreicher Terminbuchung hier zurückkehren und mit Schritt 2 zur Zahlungsseite gehen.</p>
       </section>
       <section className="card p-4 sm:p-8">
         <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">5 · Zahlung</div>
