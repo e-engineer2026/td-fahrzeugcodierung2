@@ -206,14 +206,17 @@ export default function BookingConfigurator(){
             {selected.length} Codierung(en) · {Math.round(rate*100)} % Rabatt · <b>{total.toFixed(2)} €</b><br/>
             70 % vorab: {prepay.toFixed(2)} € · 30 % danach: {finalpay.toFixed(2)} €
           </div>
+          <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-blue-950">
+            <b>Ablauf:</b> Termin auswählen, anschließend 70 % vorauszahlen. <strong>Der Termin wird nach Eingang der Vorauszahlung verbindlich bestätigt.</strong>
+          </div>
           {isSfd2 ? (
             <div className="mt-6 rounded-xl bg-slate-100 px-5 py-3 font-semibold text-slate-500">Terminbuchung für Codierungen deaktiviert</div>
           ) : selected.length===0 ? (
             <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-5 py-3 text-sm font-semibold text-slate-500">Bitte zuerst mindestens eine Codierung auswählen.</div>
           ) : (
-            <a href={calUrl} target="_blank" rel="noreferrer" className="btn-primary mt-5 w-full text-center sm:mt-6 sm:w-auto"><CalendarDays className="mr-2 h-5 w-5"/>Termin mit Daten an Cal.com übergeben</a>
+            <a href={calUrl} target="_blank" rel="noreferrer" className="btn-primary mt-5 w-full text-center sm:mt-6 sm:w-auto"><CalendarDays className="mr-2 h-5 w-5"/>Termin auswählen</a>
           )}
-          <p className="mt-3 text-xs leading-5 text-slate-500">Name und E-Mail werden direkt von Cal.com bei der Terminbuchung abgefragt.</p>
+          <p className="mt-3 text-xs leading-5 text-slate-500">Name und E-Mail werden direkt von Cal.com bei der Terminbuchung abgefragt. Anschließend bitte die 70-%-Vorauszahlung über PayPal.Me durchführen.</p>
         </section>
 
         <section className="card p-4 sm:p-8">
@@ -228,11 +231,11 @@ export default function BookingConfigurator(){
             {selected.length===0 ? (
               <div className="mt-4 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-500">PayPal wird nach Auswahl mindestens einer Codierung freigeschaltet.</div>
             ) : (
-              <a href={paypalUrl} target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full sm:w-auto">Jetzt {prepay.toFixed(2)} € per PayPal zahlen</a>
+              <a href={paypalUrl} target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full sm:w-auto">Jetzt {prepay.toFixed(2)} € per PayPal vorauszahlen</a>
             )}
           </div>
           <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-slate-700 sm:mt-5 sm:p-5 sm:leading-7">
-            <b>Zahlung vor dem Termin:</b> Nach der Terminbuchung und vor dem vereinbarten Remote-Termin sind 70 % des Gesamtbetrags über PayPal.Me zu zahlen. Die verbleibenden 30 % werden nach Durchführung der vereinbarten Codierung fällig.
+            <b>Verbindliche Terminbestätigung:</b> Nach der Terminbuchung sind 70 % des Gesamtbetrags über PayPal.Me zu zahlen. <strong>Der Remote-Termin gilt nach Eingang dieser Vorauszahlung als verbindlich bestätigt.</strong> Die verbleibenden 30 % werden nach Durchführung der vereinbarten Codierung fällig.
           </div>
         </section>
       </>
