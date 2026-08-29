@@ -1,5 +1,6 @@
 import {
   codingCatalog as baseCodingCatalog,
+  codingGroups,
   vehicles,
   brands,
   codingsForVehicle as baseCodingsForVehicle,
@@ -7,7 +8,7 @@ import {
 import type { Coding, CodingGroup, Platform, Vehicle } from "./catalog3";
 
 export type { Coding, CodingGroup, Platform, Vehicle };
-export { vehicles, brands };
+export { vehicles, brands, codingGroups };
 
 export const VCDS_WIKI_HOME = "https://wiki-online.vcds.de/de/home";
 
