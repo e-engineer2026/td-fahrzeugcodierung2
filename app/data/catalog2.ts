@@ -1,4 +1,5 @@
 import { ascodingCodingNames, ascodingModelCodings } from "./ascoding";
+import { hardwareForName } from "./hardware";
 
 export type Coding = {
   id: string;
@@ -100,6 +101,7 @@ const sourceCodings:Coding[] = ascodingCodingNames.map((name,index)=>(
     price:priceForName(name),
     category:categoryForName(name),
     interfaceInfo:"VCDS; je nach Steuergerät/Softwarestand ggf. VCP oder ODIS nach Vorprüfung",
+    hardware:hardwareForName(name),
     requirements:"Verfügbarkeit abhängig von Ausstattung, Modelljahr, Steuergerät, Softwarestand und vorhandener Hardware."
   }
 ));
