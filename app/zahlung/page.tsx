@@ -53,13 +53,25 @@ export default function ZahlungPage(){
             <div className="rounded-2xl border border-slate-200 bg-white p-4"><span className="text-sm text-slate-500">Danach 30 %</span><b className="mt-1 block text-2xl">{booking.finalpay.toFixed(2)} €</b></div>
           </div>
 
-          <a href={booking.paypalUrl} target="_blank" rel="noreferrer" className="btn-primary mt-6 w-full text-center sm:w-auto">Jetzt {booking.prepay.toFixed(2)} € per PayPal vorauszahlen</a>
+          <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-5">
+            <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-700">1 · Vorauszahlung vor dem Termin</div>
+            <h2 className="mt-2 text-xl font-black">70 % jetzt bezahlen</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Die Vorauszahlung bestätigt deinen Remote-Termin nach Zahlungseingang verbindlich.</p>
+            <a href={booking.paypalUrl} target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full text-center sm:w-auto">Jetzt {booking.prepay.toFixed(2)} € per PayPal vorauszahlen</a>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="text-xs font-bold uppercase tracking-[.16em] text-slate-500">2 · Restbetrag nach Durchführung</div>
+            <h2 className="mt-2 text-xl font-black">30 % nach erfolgreicher Codierung</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Dieser Restbetrag wird erst nach Durchführung der vereinbarten Codierung fällig.</p>
+            <a href={`https://paypal.me/TiDrechsler/${booking.finalpay.toFixed(2)}`} target="_blank" rel="noreferrer" className="btn-secondary mt-4 w-full text-center sm:w-auto">{booking.finalpay.toFixed(2)} € Restbetrag per PayPal zahlen</a>
+          </div>
 
           <div className="mt-5 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-slate-700">
-            <b>Wichtig:</b> Die Terminbuchung allein bestätigt den Remote-Termin noch nicht verbindlich. Die verbindliche Bestätigung erfolgt nach Eingang der oben genannten Vorauszahlung. Die restlichen 30 % werden nach Durchführung fällig.
+            <b>Wichtig:</b> Die Terminbuchung allein bestätigt den Remote-Termin noch nicht verbindlich. Die verbindliche Bestätigung erfolgt nach Eingang der 70-%-Vorauszahlung. Die verbleibenden 30 % werden erst nach Durchführung der vereinbarten Codierung fällig.
           </div>
         </> : <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900">
-          Die Buchungsdaten konnten auf diesem Gerät nicht gefunden werden. Öffne die Zahlungsseite am besten direkt nach der Terminbuchung im selben Browser oder gehe zurück zur Startseite und nutze dort den PayPal-Button mit dem berechneten Vorauszahlungsbetrag.
+          Die Buchungsdaten konnten auf diesem Gerät nicht gefunden werden. Öffne die Zahlungsseite am besten direkt nach der Terminbuchung im selben Browser oder gehe zurück zur Startseite und starte den Buchungsablauf erneut.
         </div>}
       </section>
     </div>
