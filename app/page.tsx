@@ -6,8 +6,9 @@ export default function Home(){
  return <main className="pb-20 md:pb-0">
   <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
     <div className="container-x flex h-14 items-center justify-between gap-3 sm:h-16">
-      <a href="#" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-        <img src="/td-logo-icon.png" alt="TD Fahrzeugcodierung" className="h-9 w-auto sm:h-11" />
+      <a href="#" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="TD Fahrzeugcodierung – Startseite">
+        <img src="/td-logo-icon.png" alt="" className="h-9 w-auto sm:h-11" />
+        <span className="truncate text-sm font-black tracking-tight text-slate-950 sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
       </a>
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
