@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import ConversionTracking from "./components/ConversionTracking";
 import "./globals.css";
 
 const siteUrl = "https://td-fahrzeugcodierung.vercel.app";
@@ -48,7 +47,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="de">
       <body>
         {children}
-        <ConversionTracking />
         <Analytics />
       </body>
     </html>
