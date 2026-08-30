@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import GoogleAnalytics from "./components/GoogleAnalytics";
 import "./globals.css";
 
 const siteUrl = "https://td-fahrzeugcodierung.vercel.app";
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="de">
       <body>
         {children}
+        <GoogleAnalytics />
         <Analytics />
       </body>
     </html>
