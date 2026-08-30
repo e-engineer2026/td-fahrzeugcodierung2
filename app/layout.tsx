@@ -7,6 +7,62 @@ import "./globals.css";
 const siteUrl = "https://td-fahrzeugcodierung.vercel.app";
 const gaId = "G-T8R5MJJW2P";
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": `${siteUrl}/#business`,
+      name: "TD Fahrzeugcodierung",
+      url: siteUrl,
+      logo: `${siteUrl}/td-logo-icon.png`,
+      description:
+        "VAG Fahrzeugcodierung und Fahrzeugdiagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – persönlich in Leipzig-Süd oder per Remote.",
+      telephone: "+4915563047044",
+      email: "elektronikermeister@gmail.com",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Schenkendorfstraße 33",
+        postalCode: "04275",
+        addressLocality: "Leipzig",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Leipzig" },
+        { "@type": "Country", name: "Deutschland" },
+      ],
+      knowsAbout: [
+        "VAG Fahrzeugcodierung",
+        "Fahrzeugdiagnose",
+        "VCDS",
+        "VCP",
+        "Remote-Codierung",
+        "Volkswagen",
+        "Audi",
+        "SEAT",
+        "CUPRA",
+        "Škoda",
+      ],
+    },
+    {
+      "@type": "Service",
+      "@id": `${siteUrl}/#vehicle-coding-service`,
+      name: "VAG Fahrzeugcodierung und Diagnose",
+      serviceType: [
+        "Fahrzeugcodierung",
+        "Fahrzeugdiagnose",
+        "Remote-Codierung",
+      ],
+      provider: { "@id": `${siteUrl}/#business` },
+      url: siteUrl,
+      areaServed: [
+        { "@type": "City", name: "Leipzig" },
+        { "@type": "Country", name: "Deutschland" },
+      ],
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -49,6 +105,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="de">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         <Script id="google-consent-default" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
