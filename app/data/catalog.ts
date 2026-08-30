@@ -1,1 +1,1 @@
-export * from "./catalog6";
+export * from "./catalog7";
