@@ -1,10 +1,8 @@
 "use client";
 
-import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const GA_ID = "G-T8R5MJJW2P";
 const CONSENT_KEY = "td_ga_consent";
 
 type GtagWindow = Window & {
@@ -12,9 +10,26 @@ type GtagWindow = Window & {
   gtag?: (...args: unknown[]) => void;
 };
 
-function gtagEvent(name: string, params?: Record<string, string | number | boolean>) {
+function getGtag() {
   const w = window as GtagWindow;
-  if (typeof w.gtag === "function") w.gtag("event", name, params || {});
+  w.dataLayer = w.dataLayer || [];
+  w.gtag = w.gtag || function (...args: unknown[]) {
+    w.dataLayer?.push(args);
+  };
+  return w.gtag;
+}
+
+function gtagEvent(name: string, params?: Record<string, string | number | boolean>) {
+  getGtag()("event", name, params || {});
+}
+
+function updateConsent(value: "granted" | "denied") {
+  getGtag()("consent", "update", {
+    analytics_storage: value,
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
 }
 
 export default function GoogleAnalytics() {
@@ -26,23 +41,12 @@ export default function GoogleAnalytics() {
     const stored = window.localStorage.getItem(CONSENT_KEY);
     if (stored === "granted" || stored === "denied") {
       setChoice(stored);
+      updateConsent(stored);
       setShowBanner(false);
     } else {
       setShowBanner(true);
     }
   }, []);
-
-  useEffect(() => {
-    if (choice !== "granted") return;
-
-    const w = window as GtagWindow;
-    w.dataLayer = w.dataLayer || [];
-    w.gtag = w.gtag || function (...args: unknown[]) {
-      w.dataLayer?.push(args);
-    };
-    w.gtag("js", new Date());
-    w.gtag("config", GA_ID, { send_page_view: false });
-  }, [choice]);
 
   useEffect(() => {
     if (choice !== "granted" || !pathname) return;
@@ -133,24 +137,18 @@ export default function GoogleAnalytics() {
 
   const saveChoice = (value: "granted" | "denied") => {
     window.localStorage.setItem(CONSENT_KEY, value);
+    updateConsent(value);
     setChoice(value);
     setShowBanner(false);
   };
 
   return (
     <>
-      {choice === "granted" && (
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-          strategy="afterInteractive"
-        />
-      )}
-
       {showBanner && (
         <div className="fixed inset-x-3 bottom-20 z-[100] mx-auto max-w-xl rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl md:bottom-4 sm:p-5">
           <div className="text-base font-black text-slate-900">Analyse-Einstellungen</div>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Mit deiner Zustimmung verwenden wir Google Analytics, um Seitenaufrufe und wichtige Aktionen wie Termin-, WhatsApp- und Kontaktklicks auszuwerten. Ohne Zustimmung wird Google Analytics nicht geladen.
+            Google Consent Mode startet mit verweigerter Analyse- und Werbespeicherung. Mit deiner Zustimmung erlaubst du Google Analytics, Seitenaufrufe und wichtige Aktionen wie Termin-, WhatsApp- und Kontaktklicks auszuwerten.
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row">
             <button type="button" onClick={() => saveChoice("granted")} className="btn-primary w-full sm:w-auto">
