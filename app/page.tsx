@@ -10,7 +10,7 @@ export default function Home(){
         <img src="/td-logo-icon.png" alt="" className="h-9 w-auto sm:h-11" />
         <span className="ml-2 hidden whitespace-nowrap text-sm font-black text-slate-950 sm:inline sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
       </a>
-      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><a href="#faq">FAQ</a></nav>
+      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><a href="/fahrzeuge">Fahrzeuge</a><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <a href="#buchen" className="btn-primary px-3 py-2 text-xs sm:px-4 sm:text-sm">Termin buchen</a>
         <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 sm:inline-flex">
@@ -67,7 +67,7 @@ export default function Home(){
    <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Wie bezahle ich?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Vor Ort bar oder per PayPal. Remote per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Codierung.</p></details>
   </div></div></section>
 
-  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:py-10"><div className="flex items-center gap-3"><img src="/td-logo-icon.png" alt="" className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/widerruf">Widerruf</a><a href="/agb">AGB</a></div></div></footer>
+  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:py-10"><div className="flex items-center gap-3"><img src="/td-logo-icon.png" alt="" className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><a href="/fahrzeuge">Fahrzeuge</a><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/widerruf">Widerruf</a><a href="/agb">AGB</a></div></div></footer>
 
   <div className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-100 bg-white/95 p-3 shadow-[0_-8px_30px_rgba(15,23,42,.08)] backdrop-blur md:hidden">
     <div className="mx-auto flex max-w-md gap-2">
