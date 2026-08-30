@@ -27,7 +27,8 @@ export function generateMetadata({ params }: { params: PageParams }): Metadata {
 
   const name = `${shortBrand(vehicle.brand)} ${vehicle.model}`;
   const url = `${BASE}/fahrzeuge/${params.brand}/${params.model}`;
-  const title = `${name} Codierung Leipzig | TD Fahrzeugcodierung`;
+  const title = `${name} Codierung Leipzig`;
+  const fullTitle = `${title} | TD Fahrzeugcodierung`;
   const description = `Codierungen und Diagnose für ${name} in Leipzig-Süd oder per Remote. Fahrzeugbezogene Funktionen und Preise ansehen und Termin online konfigurieren.`;
 
   return {
@@ -36,7 +37,7 @@ export function generateMetadata({ params }: { params: PageParams }): Metadata {
     alternates: { canonical: url },
     robots: { index: true, follow: true },
     openGraph: {
-      title,
+      title: fullTitle,
       description,
       url,
       siteName: "TD Fahrzeugcodierung",
