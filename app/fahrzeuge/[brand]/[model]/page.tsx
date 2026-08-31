@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { codingCatalog, codingGroups, codingsForVehicle } from "../../../data/catalog";
@@ -21,7 +22,8 @@ export function generateStaticParams(): PageParams[] {
   }));
 }
 
-export function generateMetadata({ params }: { params: PageParams }): Metadata {
+export async function generateMetadata(props: { params: Promise<PageParams> }): Promise<Metadata> {
+  const params = await props.params;
   const vehicle = findVehicleBySlugs(params.brand, params.model);
   if (!vehicle) return {};
 
@@ -47,7 +49,8 @@ export function generateMetadata({ params }: { params: PageParams }): Metadata {
   };
 }
 
-export default function VehicleSeoPage({ params }: { params: PageParams }) {
+export default async function VehicleSeoPage(props: { params: Promise<PageParams> }) {
+  const params = await props.params;
   const vehicle = findVehicleBySlugs(params.brand, params.model);
   if (!vehicle) notFound();
 
@@ -62,12 +65,11 @@ export default function VehicleSeoPage({ params }: { params: PageParams }) {
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-            <img src="/td-logo-icon.png" alt="" className="h-10 w-auto" />
-            <span className="ml-2 hidden text-sm font-black sm:inline">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
+            <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-10 w-auto" priority />
+            <span className="ml-2 whitespace-nowrap text-xs font-black sm:text-sm">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
             <Link href="/fahrzeuge" className="font-semibold text-slate-600 hover:text-blue-700">Alle Fahrzeuge</Link>
-            <Link href="/#buchen" className="btn-primary px-4 py-2 text-sm">Termin buchen</Link>
           </div>
         </div>
       </header>

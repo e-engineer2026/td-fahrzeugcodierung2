@@ -5,9 +5,13 @@ import { Mail, MessageCircle, Phone } from "lucide-react";
 
 export default function ContactBox() {
   const [name, setName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
   const [vehicle, setVehicle] = useState("");
   const [year, setYear] = useState("");
   const [coding, setCoding] = useState("");
+  const [website, setWebsite] = useState("");
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const whatsappNumber = "4915563047044";
   const phoneDisplay = "01556 3047044";
@@ -17,14 +21,47 @@ export default function ContactBox() {
     `Hallo, ich möchte eine Codierung vorprüfen lassen.\n\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
   );
 
-  const mailSubject = encodeURIComponent("Anfrage zur Fahrzeugcodierung");
-  const mailBody = encodeURIComponent(
-    `Name: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
-  );
-
-  function submit(e: FormEvent<HTMLFormElement>) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    window.location.href = `mailto:${email}?subject=${mailSubject}&body=${mailBody}`;
+    if (website) return;
+
+    setStatus("sending");
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${email}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          _subject: `Neue Codierungsanfrage: ${vehicle}`,
+          _template: "table",
+          _captcha: "false",
+          _honey: website,
+          _replyto: customerEmail,
+          _url: "https://td-fahrzeugcodierung.vercel.app/#kontakt",
+          Name: name,
+          "E-Mail": customerEmail,
+          Fahrzeug: vehicle,
+          Baujahr: year,
+          Codierung: coding,
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok || result.success === false) throw new Error("Formularversand fehlgeschlagen");
+
+      setName("");
+      setCustomerEmail("");
+      setVehicle("");
+      setYear("");
+      setCoding("");
+      setPrivacyAccepted(false);
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -71,7 +108,7 @@ export default function ContactBox() {
       <form onSubmit={submit} className="card p-4 sm:p-8">
         <h3 className="text-xl font-black sm:text-2xl">Codierung vorprüfen lassen</h3>
         <p className="mt-3 text-sm leading-6 text-slate-600">
-          Formular ausfüllen und Anfrage per E-Mail senden.
+          Formular ausfüllen und direkt absenden. Wir melden uns per E-Mail zurück.
         </p>
 
         <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2 sm:gap-4">
@@ -79,6 +116,16 @@ export default function ContactBox() {
             value={name}
             onChange={e => setName(e.target.value)}
             placeholder="Name"
+            autoComplete="name"
+            required
+          />
+          <input
+            type="email"
+            value={customerEmail}
+            onChange={e => setCustomerEmail(e.target.value)}
+            placeholder="E-Mail für Rückmeldung"
+            autoComplete="email"
+            required
           />
           <input
             value={vehicle}
@@ -90,6 +137,8 @@ export default function ContactBox() {
             value={year}
             onChange={e => setYear(e.target.value)}
             placeholder="Baujahr"
+            inputMode="numeric"
+            pattern="[0-9]{4}"
             required
           />
           <input
@@ -100,10 +149,48 @@ export default function ContactBox() {
           />
         </div>
 
+        <div className="absolute -left-[9999px]" aria-hidden="true">
+          <label>
+            Website
+            <input
+              value={website}
+              onChange={e => setWebsite(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </label>
+        </div>
+
+        <label className="mt-4 flex items-start gap-3 text-sm leading-6 text-slate-600">
+          <input
+            type="checkbox"
+            checked={privacyAccepted}
+            onChange={e => setPrivacyAccepted(e.target.checked)}
+            className="mt-1 h-4 w-4 shrink-0"
+            required
+          />
+          <span>
+            Ich habe die <a href="/datenschutz" className="font-semibold text-blue-700 hover:underline">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Angaben zur Bearbeitung der Anfrage zu.
+          </span>
+        </label>
+
+        <div className="mt-4" aria-live="polite">
+          {status === "success" && (
+            <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-semibold text-emerald-800">
+              Anfrage erfolgreich gesendet. Wir melden uns schnellstmöglich per E-Mail.
+            </p>
+          )}
+          {status === "error" && (
+            <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              Die Anfrage konnte nicht gesendet werden. Bitte nutze WhatsApp oder schreibe direkt an <a href={`mailto:${email}`} className="font-semibold underline">{email}</a>.
+            </p>
+          )}
+        </div>
+
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-          <button type="submit" className="btn-primary w-full sm:w-auto">
+          <button type="submit" disabled={status === "sending"} className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto">
             <Mail className="mr-2 h-4 w-4" />
-            Anfrage per E-Mail
+            {status === "sending" ? "Wird gesendet …" : "Anfrage direkt senden"}
           </button>
 
           <a

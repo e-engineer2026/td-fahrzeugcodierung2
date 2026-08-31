@@ -36,7 +36,24 @@ const caddyCodings: Coding[] = [
   { id:"caddysb-chlh", name:"Coming Home / Leaving Home anpassen", price:29, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"OBD11 oder VCDS nach SFD1-Freischaltung", requirements:"SFD1-Freischaltung; Funktionsumfang abhängig von Licht-/Sensor-Ausstattung." },
 ];
 
-export const codingCatalog: Coding[] = [...baseCodingCatalog, ...caddyCodings];
+const reducedPriceByOriginal = new Map<number, number>([
+  [15, 15],
+  [19, 15],
+  [25, 20],
+  [29, 25],
+  [35, 30],
+  [39, 35],
+  [49, 45],
+  [59, 55],
+  [69, 65],
+  [79, 75],
+  [89, 85],
+]);
+
+export const codingCatalog: Coding[] = [...baseCodingCatalog, ...caddyCodings].map((coding) => ({
+  ...coding,
+  price: reducedPriceByOriginal.get(coding.price) ?? coding.price,
+}));
 
 const caddy2kIds = caddyCodings.filter(c=>c.id.startsWith("caddy-")).map(c=>c.id);
 const caddySbIds = caddyCodings.filter(c=>c.id.startsWith("caddysb-")).map(c=>c.id);

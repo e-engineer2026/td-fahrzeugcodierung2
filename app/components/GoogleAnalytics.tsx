@@ -37,6 +37,7 @@ export default function GoogleAnalytics() {
   const [choice, setChoice] = useState<"granted" | "denied" | null>(null);
   const [showBanner, setShowBanner] = useState(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- The consent preference is hydrated once from browser-only storage. */
   useEffect(() => {
     const stored = window.localStorage.getItem(CONSENT_KEY);
     if (stored === "granted" || stored === "denied") {
@@ -47,6 +48,7 @@ export default function GoogleAnalytics() {
       setShowBanner(true);
     }
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     if (choice !== "granted" || !pathname) return;

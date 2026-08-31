@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { seoVehicles, vehiclePath } from "../lib/vehicleSeo";
 
@@ -25,10 +26,9 @@ export default function FahrzeugePage() {
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-            <img src="/td-logo-icon.png" alt="" className="h-10 w-auto" />
-            <span className="ml-2 hidden text-sm font-black sm:inline">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
+            <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-10 w-auto" priority />
+            <span className="ml-2 whitespace-nowrap text-xs font-black sm:text-sm">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
           </Link>
-          <Link href="/#buchen" className="btn-primary px-4 py-2 text-sm">Termin buchen</Link>
         </div>
       </header>
 

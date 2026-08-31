@@ -336,3 +336,64 @@ Trailer Assist und Stauassistent werden bei MQBevo nicht mehr in der direkten As
 ## v8.40
 - Im Bereich „Codierung vorprüfen lassen“ ein Feld „Codierung“ ergänzt.
 - Codierung wird in E-Mail- und WhatsApp-Anfrage übernommen.
+
+
+## v8.43
+- Remote-Hinweise auf eine vor dem Termin vereinbarte Remote-Software vereinheitlicht.
+- Terminbuchung bleibt ohne ausgewählte Codierung gesperrt.
+- Sofortüberweisung beim Vor-Ort-Termin als dritte Zahlungsart ergänzt und an Cal.com übergeben.
+- Kontaktformular sendet Anfragen direkt mit Statusanzeige und Rückfallkontakt.
+- E-Mail-Feld, Datenschutz-Zustimmung und Spam-Schutz im Kontaktformular ergänzt.
+- Datenschutzerklärung um den Formularversand über FormSubmit erweitert.
+
+
+## v8.44
+- Den oberen Button „Termin buchen“ neben dem Logo auf der Startseite und den Fahrzeugseiten entfernt.
+- Die Buchungsmöglichkeiten im Seiteninhalt und in der mobilen Leiste bleiben erhalten.
+
+
+## v8.45
+- Die Beschriftung „TD Fahrzeugcodierung“ in allen Kopfzeilen direkt neben dem Logo sichtbar gemacht.
+- Die Beschriftung bleibt jetzt auch auf kleinen Bildschirmen eingeblendet.
+
+
+## v8.46
+- Im Vor-Ort-Zahlungsbereich den Hinweis „Die Zahlung erfolgt beim Termin.“ nur einmal ausgegeben.
+- Die Zahlungsarten auf „Bar“, „PayPal“ und „Sofortüberweisung“ gekürzt.
+
+
+## v8.47
+- Alle Codierpreise oberhalb von 15 € reduziert.
+- Bereits bestehende Preise von 15 € unverändert gelassen.
+- Neue Preisstaffel: 19→15 €, 25→20 €, 29→25 €, 35→30 €, 39→35 €, 49→45 €, 59→55 €, 69→65 €, 79→75 € und 89→85 €.
+
+
+## v8.48
+- Zahlungsmöglichkeiten beim Vor-Ort-Termin werden nur noch angezeigt und nicht mehr ausgewählt.
+- Cal.com-Button für Vor-Ort- und Remote-Termine einheitlich benannt.
+- Cal.com-Button zeigt die aktuelle Gesamtsumme und bleibt bis zur Auswahl einer Codierung ausgegraut.
+
+
+## v8.49
+- Überschrift des Vor-Ort-Zahlungsbereichs in „Zahlungsmöglichkeiten“ geändert.
+- Gesamtsumme im Cal.com-Button als eigener, deutlich sichtbarer Hinweis gestaltet.
+- Den deaktivierten Cal.com-Button mit grauem Hintergrund, Rahmen und Preisanzeige klarer hervorgehoben.
+
+
+## v8.50
+- Den unteren linken Terminbutton der mobilen Leiste direkt mit dem Buchungskonfigurator verbunden.
+- Der mobile Terminbutton bleibt ohne ausgewählte Codierung grau und deaktiviert.
+- Nach der Auswahl zeigt der mobile Terminbutton die Gesamtsumme und übergibt die Buchungsdaten direkt an Cal.com.
+
+## v8.51
+- Den rechten unteren Mobilbutton von „Anfragen“ in „Direktkontakt“ umbenannt.
+- Das Sprungziel zum Kontaktbereich bleibt unverändert.
+
+## v8.52
+- Bei Remote-Terminen die Gesamtsumme aus dem großen und dem mobilen Cal.com-Button entfernt.
+- PayPal als Zahlungsmöglichkeit im Remote-Bereich ergänzt.
+- Im Button zur Vorauszahlung den konkreten 70-%-Betrag ergänzt.
+
+## v8.53
+- Einen IndexNow-Verifizierungsschlüssel für Bing und weitere unterstützte Suchmaschinen veröffentlicht.
+- Die vorhandenen Sitemap-URLs für die erstmalige IndexNow-Übermittlung vorbereitet.

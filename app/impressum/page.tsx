@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 export default function Impressum() {
   return (
     <main className="min-h-screen bg-[#f7fbff] text-slate-900">
       <div className="mx-auto max-w-4xl px-6 py-16">
-        <a href="/" className="font-semibold text-blue-700 hover:underline">← Zur Startseite</a>
+        <Link href="/" className="font-semibold text-blue-700 hover:underline">← Zur Startseite</Link>
         <h1 className="mt-8 text-4xl font-black">Impressum</h1>
 
         <div className="mt-8 space-y-8 leading-7">

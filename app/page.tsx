@@ -1,18 +1,19 @@
 import { Laptop, MapPin, MessageCircle } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
 
 export default function Home(){
- return <main className="pb-20 md:pb-0">
+ return <main className="pb-24 md:pb-0">
   <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
     <div className="container-x flex h-14 items-center justify-between gap-3 sm:h-16">
       <a href="#" className="flex min-w-0 items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-        <img src="/td-logo-icon.png" alt="" className="h-9 w-auto sm:h-11" />
-        <span className="ml-2 hidden whitespace-nowrap text-sm font-black text-slate-950 sm:inline sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
+        <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-9 w-auto sm:h-11" priority />
+        <span className="ml-2 whitespace-nowrap text-xs font-black text-slate-950 sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
       </a>
-      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><a href="/fahrzeuge">Fahrzeuge</a><a href="#faq">FAQ</a></nav>
+      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge</Link><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <a href="#buchen" className="btn-primary px-3 py-2 text-xs sm:px-4 sm:text-sm">Termin buchen</a>
         <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 sm:inline-flex">
           Direkt anfragen
         </a>
@@ -40,7 +41,7 @@ export default function Home(){
         <h2 className="text-2xl font-black sm:text-3xl">Persönlich oder per Remote</h2>
         <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2 lg:grid-cols-1 lg:gap-4">
           <div className="min-h-[148px] rounded-2xl border border-blue-300 bg-blue-50 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:min-h-[164px] sm:p-5"><MapPin className="h-6 w-6 text-blue-600"/><b className="mt-3 block">Leipzig-Süd</b><span className="mt-1 block text-sm leading-6 text-slate-600">Schenkendorfstraße 33, 04275 Leipzig</span></div>
-          <div className="min-h-[148px] rounded-2xl border border-blue-300 bg-blue-50 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:min-h-[164px] sm:p-5"><Laptop className="h-6 w-6 text-blue-600"/><b className="mt-3 block">Remote</b><span className="mt-1 block text-sm leading-6 text-slate-600">Mit eigenem Diagnoseinterface, PC/Laptop, stabiler Internetverbindung und AnyDesk.</span></div>
+          <div className="min-h-[148px] rounded-2xl border border-blue-300 bg-blue-50 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:min-h-[164px] sm:p-5"><Laptop className="h-6 w-6 text-blue-600"/><b className="mt-3 block">Remote</b><span className="mt-1 block text-sm leading-6 text-slate-600">Mit eigenem Diagnoseinterface, PC/Laptop, stabiler Internetverbindung und vereinbarter Remote-Software.</span></div>
         </div>
       </div>
     </div>
@@ -62,18 +63,12 @@ export default function Home(){
   </section>
 
   <section id="faq" className="scroll-mt-20 border-t border-blue-100 bg-white"><div className="container-x py-14 sm:py-20 lg:py-24"><h2 className="text-3xl font-black sm:text-4xl">FAQ</h2><div className="mt-6 space-y-3 sm:mt-8">
-   <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Was brauche ich für Remote?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Ein eigenes kompatibles Diagnoseinterface (z. B. VCDS, VCP oder OBD11), Windows-PC/Laptop, stabile Internetverbindung und AnyDesk.</p></details>
+   <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Was brauche ich für Remote?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Ein eigenes kompatibles Diagnoseinterface (z. B. VCDS, VCP oder OBD11), Windows-PC/Laptop, stabile Internetverbindung und eine vor dem Termin vereinbarte Remote-Software.</p></details>
    <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Sind alle Funktionen garantiert möglich?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Nein. Die Machbarkeit hängt von Hardware, Steuergeräten, Softwarestand und Fahrzeugkonfiguration ab und wird vor Durchführung geprüft.</p></details>
-   <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Wie bezahle ich?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Vor Ort bar oder per PayPal. Remote per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Codierung.</p></details>
+   <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Wie bezahle ich?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Vor Ort bar, per PayPal oder per Sofortüberweisung beim Termin. Remote per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Codierung.</p></details>
   </div></div></section>
 
-  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:py-10"><div className="flex items-center gap-3"><img src="/td-logo-icon.png" alt="" className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><a href="/fahrzeuge">Fahrzeuge</a><a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><a href="/widerruf">Widerruf</a><a href="/agb">AGB</a></div></div></footer>
+  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:py-10"><div className="flex items-center gap-3"><Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/fahrzeuge">Fahrzeuge</Link><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></div></div></footer>
 
-  <div className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-100 bg-white/95 p-3 shadow-[0_-8px_30px_rgba(15,23,42,.08)] backdrop-blur md:hidden">
-    <div className="mx-auto flex max-w-md gap-2">
-      <a href="#buchen" className="btn-primary flex-1 px-3 py-3 text-sm">Termin buchen</a>
-      <a href="#kontakt" className="btn-secondary flex-1 px-3 py-3 text-sm">Anfragen</a>
-    </div>
-  </div>
  </main>
 }

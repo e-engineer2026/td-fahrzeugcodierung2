@@ -19,6 +19,7 @@ export default function ZahlungPage(){
   const [booking,setBooking]=useState<PendingBooking|null>(null);
   const [loaded,setLoaded]=useState(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- Booking data only exists in browser localStorage after hydration. */
   useEffect(()=>{
     try{
       const raw=window.localStorage.getItem("td_pending_booking");
@@ -26,6 +27,7 @@ export default function ZahlungPage(){
     }catch{}
     setLoaded(true);
   },[]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return <main className="min-h-screen bg-slate-50 py-10 sm:py-16">
     <div className="container-x max-w-3xl">

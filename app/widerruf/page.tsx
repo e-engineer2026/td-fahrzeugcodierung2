@@ -1,7 +1,9 @@
+import Link from "next/link";
+
 export default function Page() {
   return (
     <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
-      <a href="/" className="text-sm font-semibold text-blue-600 hover:underline">← Zurück zur Startseite</a>
+      <Link href="/" className="text-sm font-semibold text-blue-600 hover:underline">← Zurück zur Startseite</Link>
       <div className="card mt-6 p-6 sm:p-10">
         <h1 className="text-3xl font-black tracking-tight text-slate-900">Widerrufsbelehrung</h1>
         <div className="mt-8 space-y-7 text-sm leading-7 text-slate-700">
