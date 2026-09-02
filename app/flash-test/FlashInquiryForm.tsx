@@ -150,7 +150,7 @@ export default function FlashInquiryForm() {
       <fieldset className="mt-4">
         <legend className="text-sm font-bold text-blue-100">Durchführung</legend>
         <div className="mt-1.5 grid gap-2 sm:grid-cols-2">
-          {["Vor Ort in Leipzig", "Remote nach Vorprüfung"].map(item => (
+          {["Vor Ort in Leipzig", "Remote"].map(item => (
             <label key={item} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-sm font-semibold transition ${serviceMode === item ? "border-blue-300 bg-blue-500/20" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>
               <input type="radio" name="Durchführung" value={item} checked={serviceMode === item} onChange={() => setServiceMode(item)} className="h-4 w-4" />
               {item}
