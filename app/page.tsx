@@ -31,8 +31,9 @@ export default function Home(){
         </div>
         <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, SEAT und Škoda – mit Fahrzeugauswahl, transparenter Kalkulation und direkter Terminbuchung.</p>
 
-        <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row">
+        <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
           <a href="#buchen" className="btn-primary w-full sm:w-auto">Codierungen auswählen</a>
+          <Link href="/flash-test" className="btn-primary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
           <a href="#kontakt" className="btn-secondary w-full sm:w-auto"><MessageCircle className="mr-2 h-4 w-4"/>Machbarkeit anfragen</a>
         </div>
       </div>
