@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import { ArrowRight, CheckCircle2, MessageCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { vehicles } from "../data/catalog";
 
 const brands = ["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"];
 const requestTypes = [
@@ -24,6 +25,18 @@ export default function FlashInquiryForm() {
   const [description, setDescription] = useState("");
   const [serviceMode, setServiceMode] = useState("Vor Ort in Leipzig");
 
+  const models = useMemo(() => {
+    if (!brand) return [];
+
+    return vehicles
+      .filter(vehicle => {
+        if (brand === "SEAT") return vehicle.brand === "SEAT / CUPRA" && vehicle.model.startsWith("SEAT ");
+        if (brand === "CUPRA") return vehicle.brand === "SEAT / CUPRA" && vehicle.model.startsWith("CUPRA ");
+        return vehicle.brand === brand;
+      })
+      .map(vehicle => vehicle.model.replace(/^(SEAT|CUPRA)\s/, ""));
+  }, [brand]);
+
   const whatsappHref = useMemo(() => {
     const message = [
       "Hallo, ich möchte die Flashbarkeit eines Steuergeräts prüfen lassen.",
@@ -36,7 +49,7 @@ export default function FlashInquiryForm() {
       `Softwarestand: ${softwareVersion || "nicht angegeben"}`,
       `Anliegen: ${requestType || "-"}`,
       `Durchführung: ${serviceMode}`,
-      `Beschreibung: ${description || "-"}`,
+      ...(requestType === "Sonstiges" ? [`Beschreibung: ${description}`] : []),
     ].join("\n");
 
     return `https://wa.me/4915563047044?text=${encodeURIComponent(message)}`;
@@ -52,8 +65,7 @@ export default function FlashInquiryForm() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-bold uppercase tracking-[.14em] text-blue-200">Technische Vorprüfung</p>
-          <h2 className="mt-2 text-2xl font-black sm:text-3xl">Flashbarkeit anfragen</h2>
-          <p className="mt-2 text-sm leading-6 text-blue-100">Noch keine verbindliche Buchung oder Zahlung.</p>
+          <h2 className="mt-2 text-2xl font-black sm:text-3xl">Anfrage Stg. Flashen</h2>
         </div>
         <div className="hidden rounded-2xl bg-white/10 p-3 sm:block"><CheckCircle2 className="h-6 w-6 text-blue-200" /></div>
       </div>
@@ -61,7 +73,15 @@ export default function FlashInquiryForm() {
       <div className="mt-7 grid gap-4 sm:grid-cols-2">
         <label className="text-sm font-bold text-blue-100">
           Marke <span aria-hidden="true">*</span>
-          <select value={brand} onChange={event => setBrand(event.target.value)} required className="mt-2 text-slate-900">
+          <select
+            value={brand}
+            onChange={event => {
+              setBrand(event.target.value);
+              setModel("");
+            }}
+            required
+            className="mt-2 text-slate-900"
+          >
             <option value="">Bitte auswählen</option>
             {brands.map(item => <option key={item}>{item}</option>)}
           </select>
@@ -69,7 +89,10 @@ export default function FlashInquiryForm() {
 
         <label className="text-sm font-bold text-blue-100">
           Modell <span aria-hidden="true">*</span>
-          <input value={model} onChange={event => setModel(event.target.value)} required placeholder="z. B. Golf 7" className="mt-2" />
+          <select value={model} onChange={event => setModel(event.target.value)} required disabled={!brand} className="mt-2 text-slate-900 disabled:cursor-not-allowed disabled:bg-slate-200">
+            <option value="">{brand ? "Bitte auswählen" : "Zuerst Marke auswählen"}</option>
+            {models.map(item => <option key={item}>{item}</option>)}
+          </select>
         </label>
 
         <label className="text-sm font-bold text-blue-100">
@@ -88,8 +111,8 @@ export default function FlashInquiryForm() {
         </label>
 
         <label className="text-sm font-bold text-blue-100">
-          Teilenummer (optional)
-          <input value={partNumber} onChange={event => setPartNumber(event.target.value.toUpperCase())} placeholder="z. B. 3Q0 035 819 B" className="mt-2 uppercase" />
+          Teilenummer <span aria-hidden="true">*</span>
+          <input value={partNumber} onChange={event => setPartNumber(event.target.value.toUpperCase())} required placeholder="z. B. 3Q0 035 819 B" className="mt-2 uppercase" />
         </label>
 
         <label className="text-sm font-bold text-blue-100">
@@ -118,17 +141,17 @@ export default function FlashInquiryForm() {
         </div>
       </fieldset>
 
-      <label className="mt-5 block text-sm font-bold text-blue-100">
-        Fehler oder gewünschtes Ergebnis <span aria-hidden="true">*</span>
-        <textarea value={description} onChange={event => setDescription(event.target.value)} required rows={4} placeholder="Bitte kurz beschreiben, was geändert oder geprüft werden soll …" className="mt-2 resize-y text-slate-900" />
-      </label>
+      {requestType === "Sonstiges" && (
+        <label className="mt-5 block text-sm font-bold text-blue-100">
+          Beschreibung <span aria-hidden="true">*</span>
+          <textarea value={description} onChange={event => setDescription(event.target.value)} required rows={4} placeholder="Bitte kurz beschreiben, was geändert oder geprüft werden soll …" className="mt-2 resize-y text-slate-900" />
+        </label>
+      )}
 
       <button type="submit" className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-5 py-3.5 font-bold text-white transition hover:brightness-95">
-        <MessageCircle className="mr-2 h-5 w-5" />
-        Anfrage per WhatsApp vorbereiten
+        Formular senden
         <ArrowRight className="ml-2 h-4 w-4" />
       </button>
-      <p className="mt-3 text-center text-xs leading-5 text-blue-200">Die Angaben werden erst beim Öffnen von WhatsApp übergeben.</p>
     </form>
   );
 }
