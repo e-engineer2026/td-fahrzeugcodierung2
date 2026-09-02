@@ -14,8 +14,9 @@ export default function Home(){
       </a>
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge</Link><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 sm:inline-flex">
-          Direkt anfragen
+        <a href="https://wa.me/4915563047044" target="_blank" rel="noreferrer" className="hidden items-center justify-center rounded-xl bg-[#25D366] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:brightness-95 sm:inline-flex">
+          <MessageCircle className="mr-2 h-4 w-4" />
+          WhatsApp
         </a>
       </div>
     </div>

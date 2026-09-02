@@ -23,7 +23,7 @@ export default function Impressum() {
             <h2 className="text-xl font-bold">Kontakt</h2>
             <p className="mt-3">
               Telefon: <a className="text-blue-700 hover:underline" href="tel:+4915563047044">01556 3047044</a><br />
-              E-Mail: <a className="text-blue-700 hover:underline" href="mailto:elektronikermeister@gmail.com">elektronikermeister@gmail.com</a>
+              E-Mail: <a className="text-blue-700 hover:underline" href="mailto:td.fahrzeugcodierung@gmail.com">td.fahrzeugcodierung@gmail.com</a>
             </p>
           </section>
 
