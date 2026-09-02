@@ -47,22 +47,6 @@ export default function FlashTestPage() {
             </p>
           </div>
 
-          <div className="card mt-7 p-4 sm:p-6">
-            <div className="flex items-center gap-3"><FileSearch className="h-5 w-5 text-blue-600" /><h2 className="text-xl font-black">So läuft die Vorprüfung ab</h2></div>
-            <ol className="mt-4 grid gap-3 sm:grid-cols-3">
-              {[
-                ["1", "Daten senden", "Fahrzeug, Steuergerät und Softwarestand übermitteln."],
-                ["2", "Machbarkeit prüfen", "Passenden Datenstand und benötigtes Verfahren bestimmen."],
-                ["3", "Angebot erhalten", "Einschätzung, Terminoption und Preis abstimmen."],
-              ].map(([number, title, text]) => (
-                <li key={number} className="flex gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-3">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-blue-600 font-black text-white">{number}</span>
-                  <div><b className="block">{title}</b><p className="mt-1 text-sm leading-5 text-slate-600">{text}</p></div>
-                </li>
-              ))}
-            </ol>
-          </div>
-
           <div className="mt-7 grid items-start gap-6 lg:grid-cols-[.82fr_1.18fr] lg:gap-8">
             <div>
               <div className="rounded-3xl border border-blue-100 bg-[#f8fbff] p-4 sm:p-5">
@@ -81,13 +65,29 @@ export default function FlashTestPage() {
                 <div className="rounded-2xl border border-blue-100 bg-white p-3.5">
                   <MapPin className="h-5 w-5 text-blue-600" />
                   <b className="mt-2 block">Vor Ort in Leipzig</b>
-                  <span className="mt-1 block text-sm leading-5 text-slate-600">Mit geeigneter Stromversorgung und Diagnosehardware.</span>
+                  <span className="mt-1 block text-sm leading-5 text-slate-600">Mit Diagnoseinterface.</span>
                 </div>
                 <div className="rounded-2xl border border-blue-100 bg-white p-3.5">
                   <Laptop className="h-5 w-5 text-blue-600" />
                   <b className="mt-2 block">Remote nach Prüfung</b>
                   <span className="mt-1 block text-sm leading-5 text-slate-600">Nur wenn Fahrzeug, Hardware und Verbindung geeignet sind.</span>
                 </div>
+              </div>
+
+              <div className="card mt-4 p-4">
+                <div className="flex items-center gap-3"><FileSearch className="h-5 w-5 text-blue-600" /><h2 className="text-xl font-black">So läuft die Vorprüfung ab</h2></div>
+                <ol className="mt-4 grid gap-3">
+                  {[
+                    ["1", "Daten senden", "Fahrzeug, Steuergerät und Softwarestand übermitteln."],
+                    ["2", "Machbarkeit prüfen", "Passenden Datenstand und benötigtes Verfahren bestimmen."],
+                    ["3", "Angebot erhalten", "Einschätzung, Terminoption und Preis abstimmen."],
+                  ].map(([number, title, text]) => (
+                    <li key={number} className="flex gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-3">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-blue-600 font-black text-white">{number}</span>
+                      <div><b className="block">{title}</b><p className="mt-1 text-sm leading-5 text-slate-600">{text}</p></div>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </div>
 
