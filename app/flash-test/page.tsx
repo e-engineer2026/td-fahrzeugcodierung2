@@ -5,9 +5,8 @@ import { ArrowLeft, Check, CircleAlert, Cpu, FileSearch, Laptop, MapPin, Wrench 
 import FlashInquiryForm from "./FlashInquiryForm";
 
 export const metadata: Metadata = {
-  title: "Testseite Steuergeräte-Flash",
-  description: "Testseite zur Vorprüfung von Steuergeräte-Flash und Softwareupdates.",
-  robots: { index: false, follow: false },
+  title: "Steuergeräte-Flash & Softwareupdates",
+  description: "Vorprüfung für Steuergeräte-Flash und Softwareupdates bei Volkswagen, Audi, Škoda, SEAT und CUPRA.",
 };
 
 const services = [
@@ -26,7 +25,6 @@ export default function FlashTestPage() {
             <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-10 w-auto" priority />
             <span className="ml-2 whitespace-nowrap text-sm font-black text-slate-950 sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
           </Link>
-          <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-amber-800">Testseite</span>
         </div>
       </header>
 
