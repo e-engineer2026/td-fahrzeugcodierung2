@@ -65,12 +65,10 @@ export default function FlashTestPage() {
                 <div className="rounded-2xl border border-blue-100 bg-white p-3.5">
                   <MapPin className="h-5 w-5 text-blue-600" />
                   <b className="mt-2 block">Vor Ort in Leipzig</b>
-                  <span className="mt-1 block text-sm leading-5 text-slate-600">Mit Diagnoseinterface.</span>
                 </div>
                 <div className="rounded-2xl border border-blue-100 bg-white p-3.5">
                   <Laptop className="h-5 w-5 text-blue-600" />
                   <b className="mt-2 block">Remote nach Prüfung</b>
-                  <span className="mt-1 block text-sm leading-5 text-slate-600">Nur wenn Fahrzeug, Hardware und Verbindung geeignet sind.</span>
                 </div>
               </div>
 
