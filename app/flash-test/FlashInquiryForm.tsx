@@ -75,6 +75,7 @@ export default function FlashInquiryForm() {
     <form action="https://formsubmit.co/td.fahrzeugcodierung@gmail.com" method="POST" encType="multipart/form-data" aria-label="Technische Vorprüfung Steuergeräte-Flash" className="rounded-3xl bg-[#0c2f68] p-4 text-white shadow-xl shadow-blue-950/10 sm:p-6">
       <input type="hidden" name="_subject" value="Neue Anfrage: Steuergeräte-Flash" />
       <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_next" value="https://td-fahrzeugcodierung.vercel.app/flash-anfrage-gesendet" />
       <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="hidden" />
       <div className="flex items-start justify-between gap-4">
         <p className="text-sm font-bold uppercase tracking-[.14em] text-blue-200">Technische Vorprüfung</p>
