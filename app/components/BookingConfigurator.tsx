@@ -220,7 +220,7 @@ export default function BookingConfigurator(){
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-100 bg-white/95 p-3 shadow-[0_-8px_30px_rgba(15,23,42,.08)] backdrop-blur md:hidden">
       <div className="mx-auto grid max-w-md grid-cols-[2fr_1fr] gap-2">
         {mobileCalButton}
-        <a href="https://wa.me/4915563047044" target="_blank" rel="noreferrer" className="inline-flex min-h-16 items-center justify-center rounded-xl bg-[#25D366] px-3 py-2 text-center text-sm font-bold text-white transition hover:brightness-95">WhatsApp</a>
+        <a href="#kontakt" className="inline-flex min-h-16 items-center justify-center rounded-xl border border-blue-200 bg-white px-3 py-2 text-center text-sm font-bold text-blue-700">Direktkontakt</a>
       </div>
     </div>
   </div>
