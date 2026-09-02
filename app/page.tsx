@@ -35,6 +35,7 @@ export default function Home(){
           <a href="#buchen" className="btn-primary w-full sm:w-auto">Codierungen auswählen</a>
           <a href="#kontakt" className="btn-secondary w-full sm:w-auto"><MessageCircle className="mr-2 h-4 w-4"/>Machbarkeit anfragen</a>
         </div>
+        <Link href="/flash-test" className="mt-4 inline-flex text-sm font-bold text-blue-700 underline-offset-4 hover:underline">Neu: Steuergeräte-Flash &amp; Softwareupdates</Link>
       </div>
 
       <div className="card p-5 sm:p-8">
