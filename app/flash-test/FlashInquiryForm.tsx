@@ -1,7 +1,7 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ChangeEvent, FormEvent, useMemo, useRef, useState } from "react";
+import { ArrowRight, CheckCircle2, FileUp, X } from "lucide-react";
 import { vehicles } from "../data/catalog";
 
 const brands = ["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"];
@@ -24,6 +24,9 @@ export default function FlashInquiryForm() {
   const [requestType, setRequestType] = useState("");
   const [description, setDescription] = useState("");
   const [serviceMode, setServiceMode] = useState("Vor Ort in Leipzig");
+  const [attachment, setAttachment] = useState<File | null>(null);
+  const [attachmentError, setAttachmentError] = useState("");
+  const attachmentInput = useRef<HTMLInputElement>(null);
 
   const models = useMemo(() => {
     if (!brand) return [];
@@ -37,8 +40,8 @@ export default function FlashInquiryForm() {
       .map(vehicle => vehicle.model.replace(/^(SEAT|CUPRA)\s/, ""));
   }, [brand]);
 
-  const whatsappHref = useMemo(() => {
-    const message = [
+  const message = useMemo(() => {
+    return [
       "Hallo, ich möchte die Flashbarkeit eines Steuergeräts prüfen lassen.",
       "",
       `Fahrzeug: ${brand || "-"} ${model || "-"}`,
@@ -50,27 +53,61 @@ export default function FlashInquiryForm() {
       `Anliegen: ${requestType || "-"}`,
       `Durchführung: ${serviceMode}`,
       ...(requestType === "Sonstiges" ? [`Beschreibung: ${description}`] : []),
+      ...(attachment ? [`Datei: ${attachment.name}`] : []),
     ].join("\n");
+  }, [brand, model, year, vin, controlUnit, partNumber, softwareVersion, requestType, serviceMode, description, attachment]);
 
-    return `https://wa.me/4915563047044?text=${encodeURIComponent(message)}`;
-  }, [brand, model, year, vin, controlUnit, partNumber, softwareVersion, requestType, serviceMode, description]);
+  const whatsappHref = useMemo(
+    () => `https://wa.me/4915563047044?text=${encodeURIComponent(message)}`,
+    [message],
+  );
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  function chooseAttachment(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    if (file && file.size > 10 * 1024 * 1024) {
+      setAttachment(null);
+      setAttachmentError("Die Datei darf höchstens 10 MB groß sein.");
+      event.target.value = "";
+      return;
+    }
+
+    setAttachment(file);
+    setAttachmentError("");
+  }
+
+  function removeAttachment() {
+    setAttachment(null);
+    setAttachmentError("");
+    if (attachmentInput.current) attachmentInput.current.value = "";
+  }
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (attachment && navigator.canShare?.({ files: [attachment] })) {
+      try {
+        await navigator.share({
+          title: "Anfrage Steuergerät flashen",
+          text: message,
+          files: [attachment],
+        });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+
     window.open(whatsappHref, "_blank", "noopener,noreferrer");
   }
 
   return (
-    <form onSubmit={submit} className="rounded-3xl bg-[#0c2f68] p-5 text-white shadow-xl shadow-blue-950/10 sm:p-8">
+    <form onSubmit={submit} aria-label="Technische Vorprüfung Steuergeräte-Flash" className="rounded-3xl bg-[#0c2f68] p-4 text-white shadow-xl shadow-blue-950/10 sm:p-6">
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-bold uppercase tracking-[.14em] text-blue-200">Technische Vorprüfung</p>
-          <h2 className="mt-2 text-2xl font-black sm:text-3xl">Anfrage Stg. Flashen</h2>
-        </div>
-        <div className="hidden rounded-2xl bg-white/10 p-3 sm:block"><CheckCircle2 className="h-6 w-6 text-blue-200" /></div>
+        <p className="text-sm font-bold uppercase tracking-[.14em] text-blue-200">Technische Vorprüfung</p>
+        <div className="hidden rounded-xl bg-white/10 p-2.5 sm:block"><CheckCircle2 className="h-5 w-5 text-blue-200" /></div>
       </div>
 
-      <div className="mt-7 grid gap-4 sm:grid-cols-2">
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <label className="text-sm font-bold text-blue-100">
           Marke <span aria-hidden="true">*</span>
           <select
@@ -80,7 +117,7 @@ export default function FlashInquiryForm() {
               setModel("");
             }}
             required
-            className="mt-2 text-slate-900"
+            className="mt-1.5 px-3 py-2.5 text-slate-900"
           >
             <option value="">Bitte auswählen</option>
             {brands.map(item => <option key={item}>{item}</option>)}
@@ -89,7 +126,7 @@ export default function FlashInquiryForm() {
 
         <label className="text-sm font-bold text-blue-100">
           Modell <span aria-hidden="true">*</span>
-          <select value={model} onChange={event => setModel(event.target.value)} required disabled={!brand} className="mt-2 text-slate-900 disabled:cursor-not-allowed disabled:bg-slate-200">
+          <select value={model} onChange={event => setModel(event.target.value)} required disabled={!brand} className="mt-1.5 px-3 py-2.5 text-slate-900 disabled:cursor-not-allowed disabled:bg-slate-200">
             <option value="">{brand ? "Bitte auswählen" : "Zuerst Marke auswählen"}</option>
             {models.map(item => <option key={item}>{item}</option>)}
           </select>
@@ -97,43 +134,43 @@ export default function FlashInquiryForm() {
 
         <label className="text-sm font-bold text-blue-100">
           Baujahr <span aria-hidden="true">*</span>
-          <input value={year} onChange={event => setYear(event.target.value)} required inputMode="numeric" pattern="[0-9]{4}" placeholder="z. B. 2019" className="mt-2" />
+          <input value={year} onChange={event => setYear(event.target.value)} required inputMode="numeric" pattern="[0-9]{4}" placeholder="z. B. 2019" className="mt-1.5 px-3 py-2.5" />
         </label>
 
         <label className="text-sm font-bold text-blue-100">
           FIN (optional)
-          <input value={vin} onChange={event => setVin(event.target.value.toUpperCase())} maxLength={17} placeholder="17-stellige FIN" className="mt-2 uppercase" />
+          <input value={vin} onChange={event => setVin(event.target.value.toUpperCase())} maxLength={17} placeholder="17-stellige FIN" className="mt-1.5 px-3 py-2.5 uppercase" />
         </label>
 
         <label className="text-sm font-bold text-blue-100">
           Steuergerät <span aria-hidden="true">*</span>
-          <input value={controlUnit} onChange={event => setControlUnit(event.target.value)} required placeholder="z. B. 5F Informationselektronik" className="mt-2" />
+          <input value={controlUnit} onChange={event => setControlUnit(event.target.value)} required placeholder="z. B. 5F Informationselektronik" className="mt-1.5 px-3 py-2.5" />
         </label>
 
         <label className="text-sm font-bold text-blue-100">
           Teilenummer <span aria-hidden="true">*</span>
-          <input value={partNumber} onChange={event => setPartNumber(event.target.value.toUpperCase())} required placeholder="z. B. 3Q0 035 819 B" className="mt-2 uppercase" />
+          <input value={partNumber} onChange={event => setPartNumber(event.target.value.toUpperCase())} required placeholder="z. B. 3Q0 035 819 B" className="mt-1.5 px-3 py-2.5 uppercase" />
         </label>
 
         <label className="text-sm font-bold text-blue-100">
           Softwarestand (optional)
-          <input value={softwareVersion} onChange={event => setSoftwareVersion(event.target.value)} placeholder="Aktuell angezeigte Version" className="mt-2" />
+          <input value={softwareVersion} onChange={event => setSoftwareVersion(event.target.value)} placeholder="Aktuell angezeigte Version" className="mt-1.5 px-3 py-2.5" />
         </label>
 
         <label className="text-sm font-bold text-blue-100">
           Gewünschte Leistung <span aria-hidden="true">*</span>
-          <select value={requestType} onChange={event => setRequestType(event.target.value)} required className="mt-2 text-slate-900">
+          <select value={requestType} onChange={event => setRequestType(event.target.value)} required className="mt-1.5 px-3 py-2.5 text-slate-900">
             <option value="">Bitte auswählen</option>
             {requestTypes.map(item => <option key={item}>{item}</option>)}
           </select>
         </label>
       </div>
 
-      <fieldset className="mt-5">
+      <fieldset className="mt-4">
         <legend className="text-sm font-bold text-blue-100">Durchführung</legend>
-        <div className="mt-2 grid gap-3 sm:grid-cols-2">
+        <div className="mt-1.5 grid gap-2 sm:grid-cols-2">
           {["Vor Ort in Leipzig", "Remote nach Vorprüfung"].map(item => (
-            <label key={item} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 text-sm font-semibold transition ${serviceMode === item ? "border-blue-300 bg-blue-500/20" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>
+            <label key={item} className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 text-sm font-semibold transition ${serviceMode === item ? "border-blue-300 bg-blue-500/20" : "border-white/15 bg-white/5 hover:bg-white/10"}`}>
               <input type="radio" name="serviceMode" value={item} checked={serviceMode === item} onChange={() => setServiceMode(item)} className="h-4 w-4" />
               {item}
             </label>
@@ -141,14 +178,30 @@ export default function FlashInquiryForm() {
         </div>
       </fieldset>
 
+      <div className="mt-4">
+        <label htmlFor="flash-attachment" className="block text-sm font-bold text-blue-100">VCDS-Scan oder Diagnosedatei (optional)</label>
+        <label htmlFor="flash-attachment" className="mt-1.5 flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-blue-300/70 bg-white/5 px-4 py-3 text-sm font-semibold text-blue-100 transition hover:bg-white/10">
+          <FileUp className="h-4 w-4" /> Datei auswählen
+        </label>
+        <input ref={attachmentInput} id="flash-attachment" type="file" accept=".txt,.log,.csv,.xml,.pdf,.zip" onChange={chooseAttachment} className="sr-only" />
+        {attachment && (
+          <div className="mt-2 flex items-center justify-between gap-3 rounded-lg bg-white/10 px-3 py-2 text-sm">
+            <span className="min-w-0 truncate">{attachment.name}</span>
+            <button type="button" onClick={removeAttachment} aria-label="Datei entfernen" className="shrink-0 rounded-md p-1 text-blue-100 hover:bg-white/10"><X className="h-4 w-4" /></button>
+          </div>
+        )}
+        {attachmentError && <p role="alert" className="mt-2 text-sm text-red-200">{attachmentError}</p>}
+        <p className="mt-1.5 text-xs leading-5 text-blue-200">TXT, LOG, CSV, XML, PDF oder ZIP · maximal 10 MB</p>
+      </div>
+
       {requestType === "Sonstiges" && (
-        <label className="mt-5 block text-sm font-bold text-blue-100">
+        <label className="mt-4 block text-sm font-bold text-blue-100">
           Beschreibung <span aria-hidden="true">*</span>
-          <textarea value={description} onChange={event => setDescription(event.target.value)} required rows={4} placeholder="Bitte kurz beschreiben, was geändert oder geprüft werden soll …" className="mt-2 resize-y text-slate-900" />
+          <textarea value={description} onChange={event => setDescription(event.target.value)} required rows={3} placeholder="Bitte kurz beschreiben, was geändert oder geprüft werden soll …" className="mt-1.5 resize-y px-3 py-2.5 text-slate-900" />
         </label>
       )}
 
-      <button type="submit" className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-5 py-3.5 font-bold text-white transition hover:brightness-95">
+      <button type="submit" className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-5 py-3 font-bold text-white transition hover:brightness-95">
         Formular senden
         <ArrowRight className="ml-2 h-4 w-4" />
       </button>
