@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Check, CircleAlert, Cpu, FileSearch, Laptop, MapPin, ShieldCheck, Wrench } from "lucide-react";
+import { ArrowLeft, Check, CircleAlert, Cpu, FileSearch, Laptop, MapPin, Wrench } from "lucide-react";
 import FlashInquiryForm from "./FlashInquiryForm";
 
 export const metadata: Metadata = {
@@ -48,7 +48,7 @@ export default function FlashTestPage() {
               </p>
 
               <div className="mt-7 rounded-3xl border border-blue-100 bg-[#f8fbff] p-5 sm:p-6">
-                <h2 className="text-xl font-black text-slate-950">Mögliche Leistungen</h2>
+                <h2 className="text-xl font-black text-slate-950">Leistungen</h2>
                 <ul className="mt-4 space-y-3">
                   {services.map(service => (
                     <li key={service} className="flex gap-3 text-sm leading-6 text-slate-700 sm:text-base">
@@ -100,10 +100,6 @@ export default function FlashTestPage() {
           <aside className="rounded-3xl border border-amber-200 bg-amber-50 p-5 sm:p-8">
             <div className="flex items-center gap-3 text-amber-900"><CircleAlert className="h-6 w-6" /><h2 className="text-2xl font-black">Wichtiger Hinweis</h2></div>
             <p className="mt-4 leading-7 text-amber-950/80">Der Preis wird erst nach technischer Prüfung festgelegt. Entscheidend sind Steuergerät, vorhandener Softwarestand, Datenverfügbarkeit und Arbeitsaufwand.</p>
-            <div className="mt-5 flex items-start gap-3 rounded-2xl bg-white/70 p-4 text-sm leading-6 text-amber-950/80">
-              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" />
-              Kein Chiptuning, keine Manipulation von Kilometerstand oder Abgassystemen und keine Umgehung von SFD2.
-            </div>
           </aside>
         </div>
       </section>
