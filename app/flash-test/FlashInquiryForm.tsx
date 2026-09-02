@@ -20,7 +20,6 @@ export default function FlashInquiryForm() {
   const [vin, setVin] = useState("");
   const [controlUnit, setControlUnit] = useState("");
   const [partNumber, setPartNumber] = useState("");
-  const [softwareVersion, setSoftwareVersion] = useState("");
   const [requestType, setRequestType] = useState("");
   const [description, setDescription] = useState("");
   const [serviceMode, setServiceMode] = useState("Vor Ort in Leipzig");
@@ -40,6 +39,20 @@ export default function FlashInquiryForm() {
       .map(vehicle => vehicle.model.replace(/^(SEAT|CUPRA)\s/, ""));
   }, [brand]);
 
+  const years = useMemo(() => {
+    const selectedVehicle = vehicles.find(vehicle => {
+      if (brand === "SEAT") return vehicle.brand === "SEAT / CUPRA" && vehicle.model === `SEAT ${model}`;
+      if (brand === "CUPRA") return vehicle.brand === "SEAT / CUPRA" && vehicle.model === `CUPRA ${model}`;
+      return vehicle.brand === brand && vehicle.model === model;
+    });
+
+    if (!selectedVehicle) return [];
+    return Array.from(
+      { length: selectedVehicle.endYear - selectedVehicle.startYear + 1 },
+      (_, index) => String(selectedVehicle.endYear - index),
+    );
+  }, [brand, model]);
+
   const message = useMemo(() => {
     return [
       "Hallo, ich möchte die Flashbarkeit eines Steuergeräts prüfen lassen.",
@@ -49,13 +62,12 @@ export default function FlashInquiryForm() {
       `FIN: ${vin || "nicht angegeben"}`,
       `Steuergerät: ${controlUnit || "-"}`,
       `Teilenummer: ${partNumber || "nicht angegeben"}`,
-      `Softwarestand: ${softwareVersion || "nicht angegeben"}`,
       `Anliegen: ${requestType || "-"}`,
       `Durchführung: ${serviceMode}`,
       ...(requestType === "Sonstiges" ? [`Beschreibung: ${description}`] : []),
       ...(attachment ? [`Datei: ${attachment.name}`] : []),
     ].join("\n");
-  }, [brand, model, year, vin, controlUnit, partNumber, softwareVersion, requestType, serviceMode, description, attachment]);
+  }, [brand, model, year, vin, controlUnit, partNumber, requestType, serviceMode, description, attachment]);
 
   const whatsappHref = useMemo(
     () => `https://wa.me/4915563047044?text=${encodeURIComponent(message)}`,
@@ -115,6 +127,7 @@ export default function FlashInquiryForm() {
             onChange={event => {
               setBrand(event.target.value);
               setModel("");
+              setYear("");
             }}
             required
             className="mt-1.5 px-3 py-2.5 text-slate-900"
@@ -126,7 +139,7 @@ export default function FlashInquiryForm() {
 
         <label className="text-sm font-bold text-blue-100">
           Modell <span aria-hidden="true">*</span>
-          <select value={model} onChange={event => setModel(event.target.value)} required disabled={!brand} className="mt-1.5 px-3 py-2.5 text-slate-900 disabled:cursor-not-allowed disabled:bg-slate-200">
+          <select value={model} onChange={event => { setModel(event.target.value); setYear(""); }} required disabled={!brand} className="mt-1.5 px-3 py-2.5 text-slate-900 disabled:cursor-not-allowed disabled:bg-slate-200">
             <option value="">{brand ? "Bitte auswählen" : "Zuerst Marke auswählen"}</option>
             {models.map(item => <option key={item}>{item}</option>)}
           </select>
@@ -134,7 +147,10 @@ export default function FlashInquiryForm() {
 
         <label className="text-sm font-bold text-blue-100">
           Baujahr <span aria-hidden="true">*</span>
-          <input value={year} onChange={event => setYear(event.target.value)} required inputMode="numeric" pattern="[0-9]{4}" placeholder="z. B. 2019" className="mt-1.5 px-3 py-2.5" />
+          <select value={year} onChange={event => setYear(event.target.value)} required disabled={!model} className="mt-1.5 px-3 py-2.5 text-slate-900 disabled:cursor-not-allowed disabled:bg-slate-200">
+            <option value="">{model ? "Bitte auswählen" : "Zuerst Modell auswählen"}</option>
+            {years.map(item => <option key={item}>{item}</option>)}
+          </select>
         </label>
 
         <label className="text-sm font-bold text-blue-100">
@@ -150,11 +166,6 @@ export default function FlashInquiryForm() {
         <label className="text-sm font-bold text-blue-100">
           Teilenummer <span aria-hidden="true">*</span>
           <input value={partNumber} onChange={event => setPartNumber(event.target.value.toUpperCase())} required placeholder="z. B. 3Q0 035 819 B" className="mt-1.5 px-3 py-2.5 uppercase" />
-        </label>
-
-        <label className="text-sm font-bold text-blue-100">
-          Softwarestand (optional)
-          <input value={softwareVersion} onChange={event => setSoftwareVersion(event.target.value)} placeholder="Aktuell angezeigte Version" className="mt-1.5 px-3 py-2.5" />
         </label>
 
         <label className="text-sm font-bold text-blue-100">
