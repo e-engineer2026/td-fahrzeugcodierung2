@@ -98,6 +98,9 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+  verification: {
+    google: "Yyo67kPT25Fo9pWeygSkAxL1zq8fvSqUeKTNYoRRlI0",
+  },
   icons: { icon: "/td-logo-icon.png" },
 };
 
