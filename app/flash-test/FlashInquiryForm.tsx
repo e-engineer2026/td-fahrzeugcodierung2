@@ -17,9 +17,7 @@ export default function FlashInquiryForm() {
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
-  const [vin, setVin] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
-  const [controlUnit, setControlUnit] = useState("");
   const [partNumber, setPartNumber] = useState("");
   const [requestType, setRequestType] = useState("");
   const [description, setDescription] = useState("");
@@ -119,18 +117,8 @@ export default function FlashInquiryForm() {
         </label>
 
         <label className="text-sm font-bold text-blue-100">
-          FIN (optional)
-          <input name="FIN" value={vin} onChange={event => setVin(event.target.value.toUpperCase())} maxLength={17} placeholder="17-stellige FIN" className="mt-1.5 px-3 py-2.5 uppercase" />
-        </label>
-
-        <label className="text-sm font-bold text-blue-100">
           E-Mail für Rückfragen <span aria-hidden="true">*</span>
           <input type="email" name="email" value={customerEmail} onChange={event => setCustomerEmail(event.target.value)} required placeholder="name@beispiel.de" className="mt-1.5 px-3 py-2.5" />
-        </label>
-
-        <label className="text-sm font-bold text-blue-100">
-          Steuergerät <span aria-hidden="true">*</span>
-          <input name="Steuergerät" value={controlUnit} onChange={event => setControlUnit(event.target.value)} required placeholder="z. B. 5F Informationselektronik" className="mt-1.5 px-3 py-2.5" />
         </label>
 
         <label className="text-sm font-bold text-blue-100">
