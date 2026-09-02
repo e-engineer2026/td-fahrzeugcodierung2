@@ -105,7 +105,7 @@ export default function FlashTestPage() {
 
       <footer className="border-t border-blue-100 bg-white">
         <div className="container-x flex flex-col gap-4 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2"><Wrench className="h-4 w-4 text-blue-600" /> VCP · ODIS · technische Vorprüfung</div>
+          <div className="flex items-center gap-2"><Wrench className="h-4 w-4 text-blue-600" /> Technische Vorprüfung</div>
           <div className="flex gap-5"><Link href="/datenschutz">Datenschutz</Link><Link href="/impressum">Impressum</Link></div>
         </div>
       </footer>
