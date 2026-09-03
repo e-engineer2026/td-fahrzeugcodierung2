@@ -15,7 +15,7 @@ export default function ContactBox() {
 
   const whatsappNumber = "4915563047044";
   const phoneDisplay = "01556 3047044";
-  const email = "td.fahrzeugcodierung@gmail.com";
+  const email = "td.codierung@gmail.com";
 
   const whatsappText = encodeURIComponent(
     `Hallo, ich möchte eine Codierung vorprüfen lassen.\n\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
@@ -111,7 +111,7 @@ export default function ContactBox() {
           Formular ausfüllen und direkt absenden. Wir melden uns per E-Mail zurück.
         </p>
 
-        <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2 sm:gap-4">
+        <div className="mt-5 grid gap-3 sm:mt-6 sm:gap-4">
           <input
             value={name}
             onChange={e => setName(e.target.value)}
