@@ -9,7 +9,7 @@ export default function Page() {
         <div className="mt-8 space-y-7 text-sm leading-7 text-slate-700">
 
           <section><h2 className="text-xl font-bold text-slate-900">1. Verantwortlicher</h2>
-          <p className="mt-2">Timo Drechsler · TD Fahrzeugcodierung<br/>Schenkendorfstraße 33, 04275 Leipzig, Deutschland<br/>E-Mail: td.fahrzeugcodierung@gmail.com<br/>Telefon: 01556 3047044</p></section>
+          <p className="mt-2">Timo Drechsler · TD Fahrzeugcodierung<br/>Schenkendorfstraße 33, 04275 Leipzig, Deutschland<br/>E-Mail: td.codierung@gmail.com<br/>Telefon: 01556 3047044</p></section>
 
           <section><h2 className="text-xl font-bold text-slate-900">2. Allgemeine Hinweise und Rechtsgrundlagen</h2>
           <p className="mt-2">Personenbezogene Daten werden nur verarbeitet, soweit dies zur Bereitstellung der Website, zur Bearbeitung von Anfragen, zur Terminvereinbarung, Zahlungsabwicklung sowie zur Anbahnung und Durchführung unserer Dienstleistungen erforderlich ist. Rechtsgrundlagen sind insbesondere Art. 6 Abs. 1 lit. b, c und f DSGVO. Einwilligungsabhängige Analysefunktionen werden nur nach einer entsprechenden Auswahl freigeschaltet.</p></section>
