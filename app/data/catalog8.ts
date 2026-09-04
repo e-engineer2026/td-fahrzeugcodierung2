@@ -14,7 +14,7 @@ const caddyCodings: Coding[] = [
   // Caddy III / IV (2K / SA)
   { id:"caddy-autolock", name:"Auto-Lock / Auto-Unlock anpassen", price:15, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", requirements:"Abhängig vom verbauten Komfort-/Bordnetzsteuergerät." },
   { id:"caddy-gurt", name:"Gurtwarner anpassen", price:15, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11" },
-  { id:"caddy-zeigertest", name:"Zeigertest / Needle Sweep aktivieren", price:15, category:"Standard-Codierungen", uiGroup:"Infotainment", interfaceInfo:"VCDS / OBD11", requirements:"Nur bei unterstütztem Kombiinstrument." },
+  { id:"caddy-zeigertest", name:"Zeigertest", price:15, category:"Standard-Codierungen", uiGroup:"Infotainment", interfaceInfo:"VCDS / OBD11", requirements:"Nur bei unterstütztem Kombiinstrument." },
   { id:"caddy-chlh", name:"Coming Home / Leaving Home anpassen", price:19, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"VCDS / OBD11", hardware:"Je nach Ausführung Regen-/Lichtsensor erforderlich." },
   { id:"caddy-komfortblinken", name:"Komfortblinken anpassen", price:15, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11" },
   { id:"caddy-abbiegelicht", name:"Abbiegelicht über Nebelscheinwerfer aktivieren", price:25, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"VCDS / OBD11", hardware:"Nebelscheinwerfer erforderlich." },
@@ -78,8 +78,17 @@ function adjustedPrice(coding: Coding): number {
   return lowerEffort25Terms.some((term) => name.includes(term)) ? 20 : 25;
 }
 
+function compactCodingName(name: string): string {
+  const normalized = name.toLocaleLowerCase("de");
+  if (normalized.includes("zeigertest") || normalized.includes("needle sweep") || normalized.includes("staging")) {
+    return "Zeigertest";
+  }
+  return name;
+}
+
 export const codingCatalog: Coding[] = [...baseCodingCatalog, ...caddyCodings].map((coding) => ({
   ...coding,
+  name: compactCodingName(coding.name),
   price: adjustedPrice(coding),
 }));
 

@@ -201,7 +201,8 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   min-height: 3rem;
   padding: .625rem .75rem;
   color: rgb(29 78 216);
-  font-size: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
   font-weight: 900;
 }
 
@@ -291,5 +292,46 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 
   #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > button {
     display: none;
+  }
+}
+
+/* Vor Ort: Bar · PayPal · Sofortüberweisung als ein gemeinsames Feld in einer Zeile. */
+#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: .75rem 1rem;
+  border: 1px solid rgb(226 232 240);
+  border-radius: .75rem;
+  background: rgb(248 250 252);
+  white-space: nowrap;
+}
+
+#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
+  min-width: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent !important;
+  overflow: visible;
+  white-space: nowrap;
+  font-size: .8125rem !important;
+}
+
+#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div + div::before {
+  content: " · ";
+  margin: 0 .35rem;
+  color: rgb(100 116 139);
+  font-weight: 700;
+}
+
+@media (min-width: 640px) {
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
+    padding: .9rem 1rem;
+  }
+
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
+    font-size: 1rem !important;
   }
 }
