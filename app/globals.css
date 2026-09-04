@@ -54,6 +54,20 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   line-height: 1.5rem;
 }
 
+/* Vor Ort: die drei Zahlungsarten auch mobil in einer Reihe anzeigen. */
+#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .5rem;
+}
+
+#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
+  min-width: 0;
+  padding: .75rem .5rem;
+  text-align: center;
+  font-size: .75rem;
+  overflow-wrap: anywhere;
+}
+
 @media (min-width: 640px) {
   header a[aria-label^="TD Fahrzeugcodierung"] > span {
     font-size: 1.125rem;
@@ -65,6 +79,15 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   #kontakt .container-x > div:first-child > .text-xs.font-bold.uppercase {
     font-size: 1.125rem;
     line-height: 1.75rem;
+  }
+
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
+    gap: .75rem;
+  }
+
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
+    padding: 1rem;
+    font-size: 1rem;
   }
 }
 
@@ -189,8 +212,8 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   }
 
   #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child > b {
-    font-size: .625rem;
-    line-height: .875rem;
+    font-size: .75rem;
+    line-height: 1rem;
     font-weight: 700;
     color: white;
   }
