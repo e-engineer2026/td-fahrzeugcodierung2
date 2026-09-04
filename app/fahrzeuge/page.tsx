@@ -31,7 +31,7 @@ export default function FahrzeugePage() {
           </Link>
           <nav className="hidden gap-6 text-sm text-slate-600 md:flex">
             <Link href="/fahrzeuge" className="font-bold text-blue-700">Fahrzeuge</Link>
-            <Link href="/codierlisten">Codierlisten</Link>
+            <Link href="/#buchen">Codierungen</Link>
             <Link href="/#kontakt">Kontakt</Link>
           </nav>
         </div>
@@ -41,8 +41,8 @@ export default function FahrzeugePage() {
         <div className="container-x py-12 sm:py-16">
           <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600">Fahrzeugübersicht</div>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight tracking-tight sm:text-5xl">Codierungen nach Fahrzeugmodell</h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">Wähle deine Baureihe und sieh dir die aktuell hinterlegten Codierungen, Preise und technischen Hinweise an. Die eigentliche Termin- und Preisberechnung erfolgt anschließend über die Fahrzeugauswahl.</p>
-          <Link href="/codierlisten" className="mt-6 inline-flex text-sm font-bold text-blue-700 hover:text-blue-800">Zusätzliche Codierlisten nach Plattform ansehen →</Link>
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">Wähle deine Baureihe und sieh dir die aktuell hinterlegten Codierungen, Preise und technischen Hinweise an. Die eigentliche Termin- und Preisberechnung erfolgt anschließend über die Fahrzeugauswahl auf der Hauptseite.</p>
+          <Link href="/#buchen" className="mt-6 inline-flex text-sm font-bold text-blue-700 hover:text-blue-800">Zur Codierauswahl auf der Hauptseite →</Link>
         </div>
       </section>
 
@@ -72,7 +72,7 @@ export default function FahrzeugePage() {
       <footer className="border-t border-blue-100 bg-white">
         <div className="container-x flex flex-col gap-4 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 TD Fahrzeugcodierung</span>
-          <div className="flex flex-wrap gap-5"><Link href="/">Startseite</Link><Link href="/codierlisten">Codierlisten</Link><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link></div>
+          <div className="flex flex-wrap gap-5"><Link href="/">Startseite</Link><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link></div>
         </div>
       </footer>
     </main>

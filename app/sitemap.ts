@@ -16,7 +16,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: base, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${base}/steuergeraete-flash`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/fahrzeuge`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${base}/codierlisten`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     ...vehiclePages,
     { url: `${base}/impressum`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
     { url: `${base}/datenschutz`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
