@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { platformCodingSources } from "../data/platformCodingLists";
+import type { PlatformCodingSource } from "../data/platformCodingLists";
 import { mqbCodingEntries } from "../data/mqbCodingList";
 
 type VehicleSummary = {
@@ -24,7 +25,7 @@ const platformLabels: Record<string, string> = {
 
 const platformOrder = ["Alle", "MQB", "MQBevo", "MLBevo"] as const;
 
-const codingSources = platformCodingSources.map((source) =>
+const codingSources: PlatformCodingSource[] = platformCodingSources.map((source) =>
   source.id === "mqb"
     ? { ...source, entries: mqbCodingEntries.map((name) => ({ name })) }
     : source
