@@ -14,10 +14,6 @@ export default function Home(){
       </a>
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge</Link><a href="#buchen">Codierungen</a><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <div className="inline-flex max-w-[112px] items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-2 py-1.5 text-center text-[8px] font-bold uppercase leading-[1rem] tracking-[.07em] text-blue-700 sm:max-w-none sm:rounded-full sm:px-3 sm:py-2 sm:text-[10px] sm:leading-none sm:tracking-[.12em]">
-          <span className="sm:hidden">VAG Codierung<br />&amp; Diagnose</span>
-          <span className="hidden sm:inline">VAG Codierung &amp; Diagnose</span>
-        </div>
         <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 lg:inline-flex">
           Direkt anfragen
         </a>
