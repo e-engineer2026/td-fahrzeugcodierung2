@@ -130,7 +130,7 @@ export default function BookingConfigurator(){
           <MapPin className="h-7 w-7 text-blue-600"/><b className="mt-3 block">Vor Ort in Leipzig-Süd</b><span className="text-sm text-slate-600">Schenkendorfstraße 33, 04275 Leipzig</span>
         </button>
         <button onClick={()=>setMode("remote")} className={`min-h-[132px] rounded-2xl border p-4 text-left transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:min-h-[148px] sm:p-5 ${mode==="remote"?"border-blue-600 bg-blue-50":"border-slate-200 bg-white"}`}>
-          <Laptop className="h-7 w-7 text-blue-600"/><b className="mt-3 block">Remote-Codierung</b><span className="text-sm text-slate-600">Termin bequem von zu Hause durchführen.</span>
+          <Laptop className="h-7 w-7 text-blue-600"/><b className="mt-3 block">Remote-Codierung</b><span className="mt-1 block text-sm leading-6 text-slate-600">Mit eigenem Diagnoseinterface, PC/Laptop, stabiler Internetverbindung und vereinbarter Remote-Software.</span>
         </button>
       </div>
       {mode==="remote"&&<div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm leading-6 text-slate-700 sm:mt-5 sm:p-5 sm:leading-7">

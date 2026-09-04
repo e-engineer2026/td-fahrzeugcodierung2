@@ -28,8 +28,9 @@ export default function Page() {
           <section><h2 className="text-xl font-bold text-slate-900">6. Kontaktaufnahme</h2>
           <p className="mt-2">Bei Kontakt per E-Mail, Telefon, WhatsApp oder Kontaktformular verarbeiten wir die von Ihnen übermittelten Angaben zur Bearbeitung Ihrer Anfrage. Dazu können Name, Kontaktdaten, Fahrzeugdaten, FIN und Angaben zur gewünschten Codierung gehören. Die Daten werden gelöscht, wenn sie für den jeweiligen Zweck nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">7. Kontaktformular über FormSubmit</h2>
-          <p className="mt-2">Für den direkten Versand des Kontaktformulars verwenden wir FormSubmit. Beim Absenden werden die eingegebenen Angaben, insbesondere Name, E-Mail-Adresse, Fahrzeug, Baujahr und gewünschte Codierung, an FormSubmit übermittelt und per E-Mail an uns weitergeleitet. Die Verarbeitung erfolgt zur Bearbeitung Ihrer Anfrage. Weitere Informationen finden Sie in den Datenschutzbestimmungen von <a href="https://formsubmit.co/privacy.pdf" target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">FormSubmit</a>.</p></section>
+          <section><h2 className="text-xl font-bold text-slate-900">7. Kontakt- und Flash-Anfrageformular über FormSubmit</h2>
+          <p className="mt-2">Für den direkten Versand des Kontaktformulars und des Flash-Anfrageformulars verwenden wir FormSubmit. Beim Absenden werden die eingegebenen Angaben an FormSubmit übermittelt und per E-Mail an uns weitergeleitet. Je nach Formular können dazu insbesondere Name, E-Mail-Adresse, Fahrzeugmarke, Modell, Baujahr, FIN, Teilenummer, gewünschte Codierung oder Flash-Leistung, Art der Durchführung und eine Beschreibung der Anfrage gehören.</p>
+          <p className="mt-2">Im Flash-Anfrageformular können Sie freiwillig einen VCDS-Scan oder eine Diagnosedatei hochladen. Dabei werden auch der Dateiname und der Inhalt der ausgewählten Datei über FormSubmit an uns übermittelt. Bitte laden Sie nur für die technische Prüfung erforderliche Dateien hoch und entfernen Sie nicht benötigte personenbezogene Angaben. Die Verarbeitung erfolgt zur Bearbeitung und technischen Vorprüfung Ihrer Anfrage. Weitere Informationen finden Sie in den Datenschutzbestimmungen von <a href="https://formsubmit.co/privacy.pdf" target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">FormSubmit</a>.</p></section>
 
           <section><h2 className="text-xl font-bold text-slate-900">8. WhatsApp</h2>
           <p className="mt-2">Wenn Sie den angebotenen WhatsApp-Link verwenden, verlassen Sie unsere Website und kommunizieren über WhatsApp. Dabei verarbeitet der Anbieter des Dienstes die für die Kommunikation erforderlichen Daten. Die Nutzung von WhatsApp ist freiwillig; alternativ können Sie uns per E-Mail oder Telefon kontaktieren.</p></section>
@@ -52,7 +53,7 @@ export default function Page() {
           <section><h2 className="text-xl font-bold text-slate-900">14. Ihre Rechte</h2>
           <p className="mt-2">Sie haben nach Maßgabe der DSGVO insbesondere Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Zudem besteht ein Beschwerderecht bei einer zuständigen Datenschutzaufsichtsbehörde.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">15. Stand</h2><p className="mt-2">Stand: August 2026.</p></section>
+          <section><h2 className="text-xl font-bold text-slate-900">15. Stand</h2><p className="mt-2">Stand: September 2026.</p></section>
 
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { Laptop, MapPin, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import BookingConfigurator from "./components/BookingConfigurator";
@@ -22,29 +22,23 @@ export default function Home(){
   </header>
 
   <section className="hero-grid border-b border-blue-100 bg-white">
-    <div className="container-x grid items-center gap-8 py-12 sm:gap-10 sm:py-16 lg:min-h-[650px] lg:grid-cols-[1.15fr_.85fr] lg:gap-12 lg:py-20">
-      <div>
+    <div className="container-x py-12 sm:py-16 lg:py-20">
+      <div className="max-w-4xl">
         <div className="inline-flex rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-[11px] font-bold uppercase tracking-[.12em] text-blue-700 sm:px-4 sm:text-xs sm:tracking-[.15em]">VAG Codierung & Diagnose</div>
         <h1 className="sr-only">TD Fahrzeugcodierung</h1>
         <div className="mt-5 max-w-[620px] sm:mt-6">
           <div className="min-w-0"><div className="text-4xl font-black leading-none tracking-tight sm:text-6xl"><span className="text-slate-950">TD</span> <span className="text-blue-600">Fahrzeugcodierung</span></div><div className="mt-3 h-1 w-full rounded-full bg-blue-600" /></div>
         </div>
+        <p className="mt-4 text-xl font-bold text-slate-900 sm:text-2xl">Persönlich oder per Remote</p>
         <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, SEAT und Škoda – mit Fahrzeugauswahl, transparenter Kalkulation und direkter Terminbuchung.</p>
 
         <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
           <a href="#buchen" className="btn-primary w-full sm:w-auto">Codierungen auswählen</a>
-          <Link href="/flash-test" className="btn-primary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
+          <Link href="/steuergeraete-flash" className="btn-primary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
           <a href="#kontakt" className="btn-secondary w-full sm:w-auto"><MessageCircle className="mr-2 h-4 w-4"/>Machbarkeit anfragen</a>
         </div>
       </div>
 
-      <div className="card p-5 sm:p-8">
-        <h2 className="text-2xl font-black sm:text-3xl">Persönlich oder per Remote</h2>
-        <div className="mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2 lg:grid-cols-1 lg:gap-4">
-          <div className="min-h-[148px] rounded-2xl border border-blue-300 bg-blue-50 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:min-h-[164px] sm:p-5"><MapPin className="h-6 w-6 text-blue-600"/><b className="mt-3 block">Leipzig-Süd</b><span className="mt-1 block text-sm leading-6 text-slate-600">Schenkendorfstraße 33, 04275 Leipzig</span></div>
-          <div className="min-h-[148px] rounded-2xl border border-blue-300 bg-blue-50 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:min-h-[164px] sm:p-5"><Laptop className="h-6 w-6 text-blue-600"/><b className="mt-3 block">Remote</b><span className="mt-1 block text-sm leading-6 text-slate-600">Mit eigenem Diagnoseinterface, PC/Laptop, stabiler Internetverbindung und vereinbarter Remote-Software.</span></div>
-        </div>
-      </div>
     </div>
   </section>
 
