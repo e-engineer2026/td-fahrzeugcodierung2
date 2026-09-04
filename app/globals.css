@@ -42,13 +42,17 @@ input:focus, select:focus, textarea:focus {
   background-size: 38px 38px;
 }
 
-#buchen .space-y-5 > section:nth-of-type(-n+4) .text-xs.font-bold.uppercase {
+#buchen .space-y-5 > section:nth-of-type(-n+5) .text-xs.font-bold.uppercase,
+#buchen > div:first-child > .text-xs.font-bold.uppercase,
+#kontakt .container-x > div:first-child > .text-xs.font-bold.uppercase {
   font-size: 1rem;
   line-height: 1.5rem;
 }
 
 @media (min-width: 640px) {
-  #buchen .space-y-5 > section:nth-of-type(-n+4) .text-xs.font-bold.uppercase {
+  #buchen .space-y-5 > section:nth-of-type(-n+5) .text-xs.font-bold.uppercase,
+  #buchen > div:first-child > .text-xs.font-bold.uppercase,
+  #kontakt .container-x > div:first-child > .text-xs.font-bold.uppercase {
     font-size: 1.125rem;
     line-height: 1.75rem;
   }
