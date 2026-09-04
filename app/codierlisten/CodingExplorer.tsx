@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { platformCodingSources } from "../data/platformCodingLists";
+import { mqbCodingEntries } from "../data/mqbCodingList";
 
 type VehicleSummary = {
   key: string;
@@ -23,6 +24,12 @@ const platformLabels: Record<string, string> = {
 
 const platformOrder = ["Alle", "MQB", "MQBevo", "MLBevo"] as const;
 
+const codingSources = platformCodingSources.map((source) =>
+  source.id === "mqb"
+    ? { ...source, entries: mqbCodingEntries.map((name) => ({ name })) }
+    : source
+);
+
 function SfdBadge({ value }: { value?: "Ja" | "Nein" | "Unklar" }) {
   if (!value) return null;
   if (value === "Ja") {
@@ -40,7 +47,7 @@ export default function CodingExplorer({ platformVehicles }: Props) {
   const normalizedQuery = query.trim().toLocaleLowerCase("de");
 
   const displayedSources = useMemo(() => {
-    return platformCodingSources
+    return codingSources
       .filter((source) => platform === "Alle" || source.platform === platform)
       .map((source) => ({
         ...source,
