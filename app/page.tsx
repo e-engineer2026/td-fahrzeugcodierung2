@@ -7,14 +7,18 @@ import ContactBox from "./components/ContactBox";
 export default function Home(){
  return <main className="pb-24 md:pb-0">
   <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
-    <div className="container-x flex h-14 items-center justify-between gap-3 sm:h-16">
+    <div className="container-x flex h-14 items-center justify-between gap-2 sm:h-16 sm:gap-3">
       <a href="#" className="flex min-w-0 items-center" aria-label="TD Fahrzeugcodierung – Startseite">
         <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-9 w-auto sm:h-11" priority />
         <span className="ml-2 whitespace-nowrap text-xs font-black text-slate-950 sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
       </a>
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge</Link><a href="#buchen">Codierungen</a><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 sm:inline-flex">
+        <div className="inline-flex max-w-[112px] items-center justify-center rounded-xl border border-blue-200 bg-blue-50 px-2 py-1.5 text-center text-[8px] font-bold uppercase leading-[1rem] tracking-[.07em] text-blue-700 sm:max-w-none sm:rounded-full sm:px-3 sm:py-2 sm:text-[10px] sm:leading-none sm:tracking-[.12em]">
+          <span className="sm:hidden">VAG Codierung<br />&amp; Diagnose</span>
+          <span className="hidden sm:inline">VAG Codierung &amp; Diagnose</span>
+        </div>
+        <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 lg:inline-flex">
           Direkt anfragen
         </a>
       </div>
@@ -24,9 +28,8 @@ export default function Home(){
   <section className="hero-grid border-b border-blue-100 bg-white">
     <div className="container-x py-12 sm:py-16 lg:py-20">
       <div className="max-w-4xl">
-        <div className="inline-flex rounded-full border border-blue-200 bg-blue-50 px-3 py-2 text-[11px] font-bold uppercase tracking-[.12em] text-blue-700 sm:px-4 sm:text-xs sm:tracking-[.15em]">VAG Codierung &amp; Diagnose</div>
         <h1 className="sr-only">TD Fahrzeugcodierung</h1>
-        <div className="mt-5 max-w-[620px] sm:mt-6">
+        <div className="max-w-[620px]">
           <div className="min-w-0"><div className="text-4xl font-black leading-none tracking-tight sm:text-6xl"><span className="text-slate-950">TD</span> <span className="text-blue-600">Fahrzeugcodierung</span></div><div className="mt-3 h-1 w-full rounded-full bg-blue-600" /></div>
         </div>
         <p className="mt-4 text-xl font-bold text-slate-900 sm:text-2xl">Persönlich oder per Remote</p>
