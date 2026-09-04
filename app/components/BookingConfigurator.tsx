@@ -92,10 +92,9 @@ const capabilityTerms: Array<[string, string[]]> = [
 ];
 
 const popularTerms = [
-  "auto-lock",
-  "gurtwarner",
   "zeigertest",
   "komfortblinken",
+  "auto-lock",
   "coming home",
   "spiegel",
   "tagfahrlicht",
@@ -324,7 +323,7 @@ export default function BookingConfigurator() {
         (entry) => entry.name.toLocaleLowerCase("de").includes(term) && !result.some((item) => item.id === entry.id)
       );
       if (hit) result.push(hit);
-      if (result.length >= 8) break;
+      if (result.length >= 4) break;
     }
     return result;
   }, [available]);
