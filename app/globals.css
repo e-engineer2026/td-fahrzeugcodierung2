@@ -119,6 +119,15 @@ input:focus, select:focus, textarea:focus {
   text-align: center;
 }
 
+#buchen [class*="md:grid-cols-[1fr_2fr]"] {
+  max-width: 28rem;
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+#buchen [class*="md:grid-cols-[1fr_2fr]"] > :nth-child(2) {
+  display: none;
+}
+
 @media (max-width: 767px) {
   html { scroll-padding-top: 5rem; }
   body { overflow-x: hidden; }
