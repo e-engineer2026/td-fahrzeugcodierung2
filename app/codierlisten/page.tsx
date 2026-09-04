@@ -2,18 +2,17 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import CodingExplorer from "./CodingExplorer";
-import { vehicles } from "../data/catalog";
 
 export const metadata: Metadata = {
-  title: "Codierlisten nach Plattform | MQB, MQB evo, MLB evo",
+  title: "Codierliste nach Fahrzeug | VW, Audi, Škoda, SEAT, CUPRA",
   description:
-    "Zusammengefasste Codiermöglichkeiten für MQB, MQB evo und MLB evo – den Fahrzeugen der jeweiligen Plattform zugeordnet.",
+    "Fahrzeug auswählen und passende Codiermöglichkeiten mit Preisen anzeigen – marken- und plattformübergreifend für VAG-Fahrzeuge.",
   alternates: { canonical: "https://td-fahrzeugcodierung.vercel.app/codierlisten" },
   robots: { index: true, follow: true },
   openGraph: {
-    title: "Codierlisten nach Plattform | TD Fahrzeugcodierung",
+    title: "Codierliste nach Fahrzeug | TD Fahrzeugcodierung",
     description:
-      "MQB, MQB evo und MLB evo: Codierfunktionen nach Plattform und Fahrzeug zusammengefasst.",
+      "Marke, Modell und Baujahr auswählen und passende Codiermöglichkeiten mit Preisen anzeigen.",
     url: "https://td-fahrzeugcodierung.vercel.app/codierlisten",
     siteName: "TD Fahrzeugcodierung",
     locale: "de_DE",
@@ -21,23 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-const supportedPlatforms = ["MQB", "MQBevo", "MLBevo"] as const;
-
 export default function CodierlistenPage() {
-  const platformVehicles = Object.fromEntries(
-    supportedPlatforms.map((platform) => [
-      platform,
-      vehicles
-        .filter((vehicle) => vehicle.platform === platform)
-        .map((vehicle) => ({
-          key: `${vehicle.brand}|${vehicle.model}`,
-          brand: vehicle.brand,
-          model: vehicle.model,
-          years: `${vehicle.startYear}–${vehicle.endYear >= 2026 ? "heute" : vehicle.endYear}`,
-        })),
-    ])
-  );
-
   return (
     <main className="min-h-screen bg-white text-slate-950">
       <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
@@ -60,22 +43,19 @@ export default function CodierlistenPage() {
         <div className="container-x py-12 sm:py-16">
           <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600">Codierübersicht</div>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight tracking-tight sm:text-5xl">
-            Codierlisten nach Fahrzeugplattform
+            Codierungen nach Fahrzeug auswählen
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            MQB, MQB evo und MLB evo kompakt zusammengefasst.
+            Marke, Modell und Baujahr auswählen. Die passende Codierliste wird automatisch im Hintergrund zugeordnet.
           </p>
           <div className="mt-6 max-w-3xl rounded-2xl border border-blue-200 bg-white p-5 text-sm leading-6 text-slate-600 shadow-sm">
-            <strong className="text-slate-900">Wichtig:</strong> Die Plattformzuordnung ist eine
-            technische Vorauswahl. Ob eine Funktion am konkreten Fahrzeug möglich ist, hängt unter
-            anderem von Modelljahr, Ausstattung, Steuergerät, Softwarestand und SFD-Schutz ab und
-            wird vor der Durchführung geprüft.
+            <strong className="text-slate-900">Wichtig:</strong> Die Auswahl ist eine technische Vorauswahl. Ob eine Funktion am konkreten Fahrzeug möglich ist, hängt unter anderem von Ausstattung, Steuergerät, Softwarestand, vorhandener Hardware und SFD-Schutz ab und wird vor der Durchführung geprüft.
           </div>
         </div>
       </section>
 
       <section className="container-x py-12 sm:py-16 lg:py-20">
-        <CodingExplorer platformVehicles={platformVehicles} />
+        <CodingExplorer />
       </section>
 
       <section className="border-t border-blue-100 bg-blue-50/50">
