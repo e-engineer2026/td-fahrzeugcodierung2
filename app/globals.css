@@ -170,22 +170,89 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   display: none;
 }
 
+/* „Häufig gewählt“ als ersten Punkt der Codier-Tabelle darstellen. */
+#buchen .space-y-5 > section:nth-of-type(3) {
+  display: flex;
+  flex-direction: column;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .flex.flex-col.gap-4 {
+  order: 0;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
+  order: 1;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .-mx-1.mt-4.flex {
+  order: 2;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) {
+  order: 3;
+  margin-top: 1.25rem;
+  overflow: hidden;
+  padding: 0;
+  border-color: rgb(226 232 240);
+  background: white;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) > div:first-child {
+  min-height: 3rem;
+  padding: .625rem .75rem;
+  color: rgb(29 78 216);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) .lucide-sparkles {
+  display: none;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) > .mt-3 {
+  margin-top: 0;
+  padding: .5rem;
+  border-top: 1px solid rgb(226 232 240);
+  background: rgb(248 250 252 / .6);
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .mt-5.space-y-2,
+#buchen .space-y-5 > section:nth-of-type(3) > .mt-6 {
+  order: 4;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .mt-5.space-y-2 {
+  margin-top: .5rem;
+}
+
+#buchen .space-y-5 > section:nth-of-type(3) > .mt-5.rounded-xl.bg-slate-50.p-4 {
+  order: 5;
+}
+
 @media (max-width: 767px) {
   html { scroll-padding-top: 5rem; }
   body { overflow-x: hidden; }
   input, select, textarea { font-size: 16px; }
 
+  /* Untere Aktionsbuttons flacher halten, Schriftgrößen bleiben unverändert. */
+  #buchen .fixed > div > * {
+    height: 3.75rem;
+    min-height: 3.75rem !important;
+  }
+
   /* Nur bei „Vor Ort in Leipzig-Süd“: Auswahl und Gesamtpreis in den linken mobilen Terminbutton integrieren. */
   #buchen .space-y-5:has(> section:nth-of-type(5)):has(> section:nth-of-type(3) > .border-blue-200.bg-blue-50) > .fixed > div > :first-child {
-    min-height: 5.25rem;
-    padding-bottom: 1.65rem;
+    height: 3.75rem;
+    min-height: 3.75rem !important;
+    padding-top: .35rem;
+    padding-bottom: 1.05rem;
   }
 
   #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
     position: fixed;
     z-index: 60;
     left: max(.75rem, calc(50vw - 14rem));
-    bottom: 1rem;
+    bottom: .8rem;
     display: flex;
     width: min(calc(66.666vw - 1.333rem), 18.333rem);
     align-items: center;
