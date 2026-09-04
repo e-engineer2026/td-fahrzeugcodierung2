@@ -3,6 +3,12 @@
 import { FormEvent, useState } from "react";
 import { Mail, MessageCircle, Phone } from "lucide-react";
 
+function track(event: string, params: Record<string, string | number | boolean> = {}) {
+  if (typeof window === "undefined") return;
+  const gtag = (window as typeof window & { gtag?: (...args: unknown[]) => void }).gtag;
+  gtag?.("event", event, params);
+}
+
 export default function ContactBox() {
   const [name, setName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -52,6 +58,7 @@ export default function ContactBox() {
       const result = await response.json();
       if (!response.ok || result.success === false) throw new Error("Formularversand fehlgeschlagen");
 
+      track("inquiry_sent", { channel: "form", vehicle, year, coding });
       setName("");
       setCustomerEmail("");
       setVehicle("");
@@ -60,6 +67,7 @@ export default function ContactBox() {
       setPrivacyAccepted(false);
       setStatus("success");
     } catch {
+      track("inquiry_error", { channel: "form" });
       setStatus("error");
     }
   }
@@ -79,6 +87,7 @@ export default function ContactBox() {
         <div className="mt-5 space-y-3 sm:mt-6">
           <a
             href={`https://wa.me/${whatsappNumber}?text=${whatsappText}`}
+            onClick={() => track("contact_clicked", { channel: "whatsapp" })}
             target="_blank"
             rel="noreferrer"
             className="flex min-w-0 items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100 sm:text-base"
@@ -89,6 +98,7 @@ export default function ContactBox() {
 
           <a
             href={`tel:+${whatsappNumber}`}
+            onClick={() => track("contact_clicked", { channel: "phone" })}
             className="flex min-w-0 items-center gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm font-semibold text-blue-800 transition hover:bg-blue-100 sm:text-base"
           >
             <Phone className="h-5 w-5" />
@@ -97,6 +107,7 @@ export default function ContactBox() {
 
           <a
             href={`mailto:${email}`}
+            onClick={() => track("contact_clicked", { channel: "email" })}
             className="flex min-w-0 items-center gap-3 break-all rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:text-base"
           >
             <Mail className="h-5 w-5" />
@@ -112,79 +123,25 @@ export default function ContactBox() {
         </p>
 
         <div className="mt-5 grid gap-3 sm:mt-6 sm:gap-4">
-          <input
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder="Name"
-            autoComplete="name"
-            required
-          />
-          <input
-            type="email"
-            value={customerEmail}
-            onChange={e => setCustomerEmail(e.target.value)}
-            placeholder="E-Mail für Rückmeldung"
-            autoComplete="email"
-            required
-          />
-          <input
-            value={vehicle}
-            onChange={e => setVehicle(e.target.value)}
-            placeholder="Fahrzeug, z. B. Audi A4 B9"
-            required
-          />
-          <input
-            value={year}
-            onChange={e => setYear(e.target.value)}
-            placeholder="Baujahr"
-            inputMode="numeric"
-            pattern="[0-9]{4}"
-            required
-          />
-          <input
-            value={coding}
-            onChange={e => setCoding(e.target.value)}
-            placeholder="Codierung"
-            required
-          />
+          <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" autoComplete="name" required />
+          <input type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} placeholder="E-Mail für Rückmeldung" autoComplete="email" required />
+          <input value={vehicle} onChange={e => setVehicle(e.target.value)} placeholder="Fahrzeug, z. B. Audi A4 B9" required />
+          <input value={year} onChange={e => setYear(e.target.value)} placeholder="Baujahr" inputMode="numeric" pattern="[0-9]{4}" required />
+          <input value={coding} onChange={e => setCoding(e.target.value)} placeholder="Codierung" required />
         </div>
 
         <div className="absolute -left-[9999px]" aria-hidden="true">
-          <label>
-            Website
-            <input
-              value={website}
-              onChange={e => setWebsite(e.target.value)}
-              tabIndex={-1}
-              autoComplete="off"
-            />
-          </label>
+          <label>Website<input value={website} onChange={e => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" /></label>
         </div>
 
         <label className="mt-4 flex items-start gap-3 text-sm leading-6 text-slate-600">
-          <input
-            type="checkbox"
-            checked={privacyAccepted}
-            onChange={e => setPrivacyAccepted(e.target.checked)}
-            className="mt-1 h-4 w-4 shrink-0"
-            required
-          />
-          <span>
-            Ich habe die <a href="/datenschutz" className="font-semibold text-blue-700 hover:underline">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Angaben zur Bearbeitung der Anfrage zu.
-          </span>
+          <input type="checkbox" checked={privacyAccepted} onChange={e => setPrivacyAccepted(e.target.checked)} className="mt-1 h-4 w-4 shrink-0" required />
+          <span>Ich habe die <a href="/datenschutz" className="font-semibold text-blue-700 hover:underline">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Angaben zur Bearbeitung der Anfrage zu.</span>
         </label>
 
         <div className="mt-4" aria-live="polite">
-          {status === "success" && (
-            <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-semibold text-emerald-800">
-              Anfrage erfolgreich gesendet. Wir melden uns schnellstmöglich per E-Mail.
-            </p>
-          )}
-          {status === "error" && (
-            <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-              Die Anfrage konnte nicht gesendet werden. Bitte nutze WhatsApp oder schreibe direkt an <a href={`mailto:${email}`} className="font-semibold underline">{email}</a>.
-            </p>
-          )}
+          {status === "success" && <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-semibold text-emerald-800">Anfrage erfolgreich gesendet. Wir melden uns schnellstmöglich per E-Mail.</p>}
+          {status === "error" && <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">Die Anfrage konnte nicht gesendet werden. Bitte nutze WhatsApp oder schreibe direkt an <a href={`mailto:${email}`} className="font-semibold underline">{email}</a>.</p>}
         </div>
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -195,6 +152,7 @@ export default function ContactBox() {
 
           <a
             href={`https://wa.me/${whatsappNumber}?text=${whatsappText}`}
+            onClick={() => track("contact_clicked", { channel: "whatsapp_form" })}
             target="_blank"
             rel="noreferrer"
             className="inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-5 py-3 font-semibold text-white transition hover:brightness-95 sm:w-auto"
