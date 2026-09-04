@@ -182,11 +182,54 @@ export function priceForPlatformCoding(name: string): number {
   // Mittlerer Aufwand / mehrere Anpassungen oder spezielle Funktionsfreischaltung.
   if (includesAny(n, ["drive select", "fahrprofilauswahl", "effizienzassistent", "optische anzeige der einparkhilfe"])) return 35;
   if (includesAny(n, ["elektrische heckklappe", "heckklappe per", "ambientebeleuchtung plus"])) return 30;
-  if (includesAny(n, ["start-stopp", "start/stop", "regenschließen", "regenschliessen", "sitzheizung", "reifendruckkontrolle", "soundaktor", "xds", "esc sport", "lenkungskennlinie", "berganfahrassistent", "bremsscheibentrocknung", "spiegelanklappen", "spiegel anklappen", "bordsteinautomatik", "spiegelabsenkung", "scheinwerferreinigungsanlage"])) return 25;
-  if (includesAny(n, ["hidden menu", "green menu", "developer mode", "fußraumbeleuchtung", "fussraumbeleuchtung", "einparkhilfe"])) return 25;
+
+  // Mittlerer Standardaufwand bleibt bei 25 €.
+  if (includesAny(n, [
+    "start-stopp",
+    "start/stop",
+    "regenschließen",
+    "regenschliessen",
+    "berganfahrassistent",
+    "spiegelanklappen",
+    "spiegel anklappen",
+    "bordsteinautomatik",
+    "spiegelabsenkung",
+  ])) return 25;
+
+  // Weniger aufwendige Einzelanpassungen: bisher 25 €, jetzt 20 €.
+  if (includesAny(n, [
+    "sitzheizung",
+    "reifendruckkontrolle",
+    "soundaktor",
+    "xds",
+    "esc sport",
+    "lenkungskennlinie",
+    "bremsscheibentrocknung",
+    "scheinwerferreinigungsanlage",
+    "hidden menu",
+    "green menu",
+    "developer mode",
+    "fußraumbeleuchtung",
+    "fussraumbeleuchtung",
+    "einparkhilfe",
+  ])) return 20;
 
   // Schnelle Standardanpassungen wie auf der Hauptseite.
   if (includesAny(n, ["zeigertest", "needle sweep", "staging", "gurtwarner", "nachtankmenge", "auto-lock", "auto-unlock", "komfortblinken", "tränenwischen", "traenenwischen", "heckwischer", "ganganzeige", "öltemperatur", "oeltemperatur", "laptimer", "rundenzähler", "rundenzaehler", "coming home", "leaving home", "tagfahrlicht", "tfl", "heckleuchten", "rückleuchten", "komfortöffnung", "komfortoeffnung", "komfortschließ", "komfortschliess", "fenster per", "akustische quittierung", "hornquittierung", "startlogo", "tacho-darstellung", "verbrauchsanzeige"])) return 15;
+
+  // Weitere einfache Anpassungen liegen zwischen Standard- und mittlerem Aufwand.
+  if (includesAny(n, [
+    "deaktivieren",
+    "deaktivierung",
+    "anpassen",
+    "einstellen",
+    "helligkeit",
+    "empfindlichkeit",
+    "geschwindigkeitsschwelle",
+    "tonhöhe",
+    "lautstärke",
+    "zustand speichern",
+  ])) return 20;
 
   // Solide Standard-Codierung als neutraler Ausgangswert.
   return 25;
