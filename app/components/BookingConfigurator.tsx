@@ -93,7 +93,7 @@ const capabilityTerms: Array<[string, string[]]> = [
 
 const popularTerms = [
   "zeigertest",
-  "komfortblinken",
+  "rückleuchten zusätzlich aktiv",
   "auto-lock",
   "coming home",
   "spiegel",
@@ -114,6 +114,12 @@ function normalize(value: string) {
 function capabilityForName(name: string): string | undefined {
   const n = name.toLocaleLowerCase("de");
   return capabilityTerms.find(([, terms]) => terms.some((term) => n.includes(term)))?.[0];
+}
+
+function popularLabel(name: string) {
+  if (/tagfahrlicht.*rückleuchten zusätzlich aktiv/i.test(name)) return "TFL mit Heckleuchten";
+  if (/zeigertest|needle sweep|staging/i.test(name)) return "Zeigertest";
+  return name;
 }
 
 function meaningfulTokens(name: string): string[] {
@@ -305,7 +311,8 @@ export default function BookingConfigurator() {
 
   const selectedEntries = available.filter((entry) => selected.includes(entry.id));
   const subtotal = selectedEntries.reduce((sum, entry) => sum + entry.price, 0);
-  const sfdFee = isSfd1 && selected.length > 0 ? 10 : 0;
+  const sfdRequired = isSfd1 && selectedEntries.some((entry) => entry.sfd === "Ja");
+  const sfdFee = sfdRequired ? 10 : 0;
   const rate = discountRate(subtotal);
   const discount = subtotal * rate;
   const total = subtotal - discount + sfdFee;
@@ -469,7 +476,7 @@ export default function BookingConfigurator() {
         </div>
         {selectedVehicle ? <div className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-600">Erkannt: <strong>{platformLabels[selectedVehicle.platform] ?? selectedVehicle.platform}</strong>. Modell- und baujahrbezogene Vorauswahl aktiv; die technische Machbarkeit wird vor Durchführung geprüft.</div> : <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-500">Bitte zuerst Marke und Modell auswählen.</div>}
       </div>
-      {isSfd1 && <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"><b>SFD1:</b> Für die Freischaltung geschützter Steuergeräte werden bei einer Auswahl einmalig <strong>10,00 €</strong> ergänzt.</div>}
+      {isSfd1 && <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"><b>SFD1:</b> Die einmalige Freischaltung von <strong>10,00 €</strong> wird nur berechnet, wenn mindestens eine ausgewählte Codierung SFD benötigt.</div>}
       {isSfd2 && <div className="mt-4 rounded-xl border border-slate-200 bg-slate-100 p-3 text-sm leading-6 text-slate-700"><b>SFD2 / UNECE:</b> Für dieses Baujahr werden aktuell keine regulären Codierungsaufträge angeboten.</div>}
     </section>
 
@@ -488,7 +495,7 @@ export default function BookingConfigurator() {
         <div className="flex items-center gap-2 text-sm font-black text-slate-800"><Sparkles className="h-4 w-4 text-blue-600" /> Häufig gewählt</div>
         <div className="mt-3 flex flex-wrap gap-2">{popular.map((entry) => {
           const checked = selected.includes(entry.id);
-          return <button key={entry.id} type="button" onClick={() => toggle(entry.id)} className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${checked ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-blue-300"}`}>{entry.name} · {entry.price} €</button>;
+          return <button key={entry.id} type="button" onClick={() => toggle(entry.id)} className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${checked ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-blue-300"}`}>{popularLabel(entry.name)} · {entry.price} €</button>;
         })}</div>
       </div>}
 
