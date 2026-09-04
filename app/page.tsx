@@ -34,7 +34,7 @@ export default function Home(){
 
         <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
           <a href="#buchen" className="btn-primary w-full sm:w-auto">Codierungen auswählen</a>
-          <Link href="/codierlisten" className="btn-secondary w-full sm:w-auto">Codierlisten nach Plattform</Link>
+          <Link href="/codierlisten" className="btn-secondary w-full sm:w-auto">Codierliste nach Fahrzeug</Link>
           <Link href="/steuergeraete-flash" className="btn-primary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
           <a href="#kontakt" className="btn-secondary w-full sm:w-auto"><MessageCircle className="mr-2 h-4 w-4"/>Machbarkeit anfragen</a>
         </div>
@@ -45,7 +45,7 @@ export default function Home(){
 
   <section className="border-y border-blue-100 bg-blue-600 text-white"><div className="container-x py-10 text-center sm:py-14"><h2 className="text-2xl font-black sm:text-3xl">Mehr auswählen. Mehr sparen.</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-blue-100 sm:text-base">5 % ab 50 €, 10 % ab 100 €, 15 % ab 150 € und 20 % ab 200 € Auftragswert.</p></div></section>
 
-  <section id="buchen" className="container-x scroll-mt-20 py-14 sm:py-20 lg:py-24"><div className="max-w-3xl"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">Buchung</div><h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen & Termin konfigurieren.</h2><p className="mt-4 leading-7 text-slate-600">Die Auswahl wird vor Durchführung auf technische Machbarkeit geprüft.</p></div><div className="mt-8 sm:mt-10"><BookingConfigurator/></div></section>
+  <section id="buchen" className="container-x scroll-mt-20 py-14 sm:py-20 lg:py-24"><div className="max-w-3xl"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">Buchung</div><h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen & Termin konfigurieren.</h2><p className="mt-4 leading-7 text-slate-600">Die Hauptseite verwendet jetzt dieselben Fahrzeug- und Codierdaten wie die Codierübersicht. Die Auswahl wird vor Durchführung auf technische Machbarkeit geprüft.</p></div><div className="mt-8 sm:mt-10"><BookingConfigurator/></div></section>
 
   <section id="kontakt" className="scroll-mt-20 border-y border-blue-100 bg-white">
     <div className="container-x py-14 sm:py-20">
