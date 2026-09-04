@@ -321,11 +321,14 @@ export function hardwareForPlatformCoding(name: string): string | undefined {
 }
 
 export function pricePlatformSource(source: PlatformCodingSource): PricedPlatformCodingEntry[] {
-  return source.entries.map((entry, index) => ({
-    ...entry,
-    id: `${source.id}-${index}`,
-    price: priceForPlatformCoding(entry.name),
-    uiGroup: groupForPlatformCoding(entry.name),
-    hardware: hardwareForPlatformCoding(entry.name),
-  }));
+  return source.entries
+    .filter((entry) => entry.status !== "Ungetestet")
+    .map((entry, index) => ({
+      ...entry,
+      status: undefined,
+      id: `${source.id}-${index}`,
+      price: priceForPlatformCoding(entry.name),
+      uiGroup: groupForPlatformCoding(entry.name),
+      hardware: hardwareForPlatformCoding(entry.name),
+    }));
 }
