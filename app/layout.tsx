@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 import "./globals.css";
+import "./booking-overrides.css";
 
 const siteUrl = "https://td-fahrzeugcodierung.vercel.app";
 const gaId = "G-T8R5MJJW2P";
