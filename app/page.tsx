@@ -41,15 +41,6 @@ export default function Home(){
     </div>
   </section>
 
-  <section className="border-b border-blue-100 bg-slate-50">
-    <div className="container-x grid gap-3 py-5 sm:grid-cols-2 lg:grid-cols-4">
-      <div className="rounded-xl border border-slate-200 bg-white px-4 py-3"><b className="block text-sm text-slate-900">Vor Ort in Leipzig-Süd</b><span className="text-xs text-slate-500">Persönliche Codierung &amp; Diagnose</span></div>
-      <div className="rounded-xl border border-slate-200 bg-white px-4 py-3"><b className="block text-sm text-slate-900">Remote deutschlandweit</b><span className="text-xs text-slate-500">Bei geeigneter Fahrzeug- und PC-Ausstattung</span></div>
-      <div className="rounded-xl border border-slate-200 bg-white px-4 py-3"><b className="block text-sm text-slate-900">VAG spezialisiert</b><span className="text-xs text-slate-500">VW · Audi · SEAT · CUPRA · Škoda</span></div>
-      <div className="rounded-xl border border-slate-200 bg-white px-4 py-3"><b className="block text-sm text-slate-900">Technische Vorprüfung</b><span className="text-xs text-slate-500">Hardware, Steuergeräte &amp; Softwarestand werden berücksichtigt</span></div>
-    </div>
-  </section>
-
   <section className="border-y border-blue-100 bg-blue-600 text-white"><div className="container-x py-10 text-center sm:py-14"><h2 className="text-2xl font-black sm:text-3xl">Mehr auswählen. Mehr sparen.</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-blue-100 sm:text-base">5 % ab 50 €, 10 % ab 100 €, 15 % ab 150 € und 20 % ab 200 € Auftragswert.</p></div></section>
 
   <section id="buchen" className="container-x scroll-mt-20 py-14 sm:py-20 lg:py-24"><div className="max-w-3xl"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">Buchung</div><h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen &amp; Termin konfigurieren.</h2><p className="mt-4 leading-7 text-slate-600">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren. Die Auswahl wird vor Durchführung auf technische Machbarkeit geprüft.</p></div><div className="mt-8 sm:mt-10"><BookingConfigurator/></div></section>
