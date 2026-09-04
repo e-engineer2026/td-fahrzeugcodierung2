@@ -42,6 +42,11 @@ input:focus, select:focus, textarea:focus {
   background-size: 38px 38px;
 }
 
+header a[aria-label^="TD Fahrzeugcodierung"] > span {
+  font-size: .875rem;
+  line-height: 1.25rem;
+}
+
 #buchen .space-y-5 > section:nth-of-type(-n+5) .text-xs.font-bold.uppercase,
 #buchen > div:first-child > .text-xs.font-bold.uppercase,
 #kontakt .container-x > div:first-child > .text-xs.font-bold.uppercase {
@@ -50,6 +55,11 @@ input:focus, select:focus, textarea:focus {
 }
 
 @media (min-width: 640px) {
+  header a[aria-label^="TD Fahrzeugcodierung"] > span {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
   #buchen .space-y-5 > section:nth-of-type(-n+5) .text-xs.font-bold.uppercase,
   #buchen > div:first-child > .text-xs.font-bold.uppercase,
   #kontakt .container-x > div:first-child > .text-xs.font-bold.uppercase {
@@ -71,6 +81,15 @@ input:focus, select:focus, textarea:focus {
   flex: 0 0 auto;
   width: fit-content;
   max-width: 100%;
+}
+
+#buchen .rounded-xl:has(.lucide-sparkles) > .mt-3 > button:nth-child(n+5) {
+  display: none;
+}
+
+/* Die separate Auswahl-Zusammenfassung oberhalb von „Häufig gewählt“ ausblenden. */
+#buchen .space-y-5 > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
+  display: none;
 }
 
 #buchen :is(button, a):has(.lucide-calendar-days) > span:first-of-type {
@@ -132,4 +151,55 @@ input:focus, select:focus, textarea:focus {
   html { scroll-padding-top: 5rem; }
   body { overflow-x: hidden; }
   input, select, textarea { font-size: 16px; }
+
+  /* Nur bei „Vor Ort in Leipzig-Süd“: Auswahl und Gesamtpreis in den linken mobilen Terminbutton integrieren. */
+  #buchen .space-y-5:has(> section:nth-of-type(5)):has(> section:nth-of-type(3) > .border-blue-200.bg-blue-50) > .fixed > div > :first-child {
+    min-height: 5.25rem;
+    padding-bottom: 1.65rem;
+  }
+
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
+    position: fixed;
+    z-index: 60;
+    left: max(.75rem, calc(50vw - 14rem));
+    bottom: 1rem;
+    display: flex;
+    width: min(calc(66.666vw - 1.333rem), 18.333rem);
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0;
+    line-height: 0;
+    color: white;
+  }
+
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child > b {
+    font-size: .625rem;
+    line-height: .875rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child > b:first-child::after {
+    content: " · ";
+  }
+
+  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > button {
+    display: none;
+  }
 }
