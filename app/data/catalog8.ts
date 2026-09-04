@@ -23,11 +23,11 @@ const caddyCodings: Coding[] = [
   { id:"caddy-regenschliessen", name:"Regenschließen aktivieren", price:29, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", hardware:"Regen-/Lichtsensor und kompatibles Komfortsteuergerät erforderlich." },
   { id:"caddy-rueckfahrwischen", name:"Rückfahrwischen anpassen / deaktivieren", price:15, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", hardware:"Heckwischer erforderlich." },
   { id:"caddy-traenenwischen", name:"Tränenwischen Front / Heck anpassen", price:15, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11" },
-  { id:"caddy-fussraum", name:"Fußraumbeleuchtung aktivieren / Dimmwert anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"VCDS / OBD11", hardware:"Vorhandene Fußraumbeleuchtung bzw. passende Verkabelung erforderlich." },
-  { id:"caddy-sra", name:"Scheinwerferreinigungsanlage Intervall / Zeit anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", hardware:"Scheinwerferreinigungsanlage erforderlich." },
+  { id:"caddy-fussraum", name:"Fußraumbeleuchtung aktivieren / Dimmwert anpassen", price:20, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"VCDS / OBD11", hardware:"Vorhandene Fußraumbeleuchtung bzw. passende Verkabelung erforderlich." },
+  { id:"caddy-sra", name:"Scheinwerferreinigungsanlage Intervall / Zeit anpassen", price:20, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", hardware:"Scheinwerferreinigungsanlage erforderlich." },
   { id:"caddy-akustik", name:"Akustische Quittierung beim Ver-/Entriegeln anpassen", price:19, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", hardware:"Abhängig von DWA/Hupe und Komfortsteuergerät." },
-  { id:"caddy-xds", name:"XDS / elektronische Differenzialsperre anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Fahrdynamik", interfaceInfo:"VCDS / OBD11", requirements:"Nur bei unterstütztem ABS/ESC-Steuergerät." },
-  { id:"caddy-sitzheizung", name:"Sitzheizung Verhalten / Speicherfunktion anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", hardware:"Werkseitige Sitzheizung erforderlich." },
+  { id:"caddy-xds", name:"XDS / elektronische Differenzialsperre anpassen", price:20, category:"Standard-Codierungen", uiGroup:"Fahrdynamik", interfaceInfo:"VCDS / OBD11", requirements:"Nur bei unterstütztem ABS/ESC-Steuergerät." },
+  { id:"caddy-sitzheizung", name:"Sitzheizung Verhalten / Speicherfunktion anpassen", price:20, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", hardware:"Werkseitige Sitzheizung erforderlich." },
 
   // Caddy V (SB) / MQB-evo / SFD1
   { id:"caddysb-autolock", name:"Auto-Lock / Auto-Unlock anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"OBD11 oder VCDS nach SFD1-Freischaltung", requirements:"SFD1-Freischaltung und unterstützte Anpassungskanäle erforderlich." },
@@ -50,9 +50,37 @@ const reducedPriceByOriginal = new Map<number, number>([
   [89, 85],
 ]);
 
+const lowerEffort25Terms = [
+  "hidden menu",
+  "green menu",
+  "developer mode",
+  "fußraumbeleuchtung",
+  "fussraumbeleuchtung",
+  "sitzheizung",
+  "reifendruckkontrolle",
+  "soundaktor",
+  "xds",
+  "esc sport",
+  "lenkungskennlinie",
+  "bremsscheibentrocknung",
+  "scheinwerferreinigungsanlage",
+  "ambientebeleuchtung",
+  "easy entry",
+  "offroad-anzeige",
+  "fahrschulmodus",
+  "einparkhilfe",
+];
+
+function adjustedPrice(coding: Coding): number {
+  const reduced = reducedPriceByOriginal.get(coding.price) ?? coding.price;
+  if (reduced !== 25) return reduced;
+  const name = coding.name.toLocaleLowerCase("de");
+  return lowerEffort25Terms.some((term) => name.includes(term)) ? 20 : 25;
+}
+
 export const codingCatalog: Coding[] = [...baseCodingCatalog, ...caddyCodings].map((coding) => ({
   ...coding,
-  price: reducedPriceByOriginal.get(coding.price) ?? coding.price,
+  price: adjustedPrice(coding),
 }));
 
 const caddy2kIds = caddyCodings.filter(c=>c.id.startsWith("caddy-")).map(c=>c.id);
