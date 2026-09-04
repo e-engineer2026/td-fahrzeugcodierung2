@@ -201,7 +201,8 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   min-height: 3rem;
   padding: .625rem .75rem;
   color: rgb(29 78 216);
-  font-size: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
   font-weight: 900;
 }
 
