@@ -104,6 +104,8 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   flex: 0 0 auto;
   width: fit-content;
   max-width: 100%;
+  font-size: .875rem;
+  line-height: 1.25rem;
 }
 
 #buchen .rounded-xl:has(.lucide-sparkles) > .mt-3 > button:nth-child(n+5) {
