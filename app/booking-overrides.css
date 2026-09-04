@@ -1,0 +1,4 @@
+/* Buchung: Bereich „Häufig gewählt“ vollständig ausblenden. */
+#buchen .rounded-xl:has(.lucide-sparkles) {
+  display: none !important;
+}
