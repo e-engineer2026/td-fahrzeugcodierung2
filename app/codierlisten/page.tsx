@@ -7,7 +7,7 @@ import { vehicles } from "../data/catalog";
 export const metadata: Metadata = {
   title: "Codierlisten nach Plattform | MQB, MQB evo, MLB evo",
   description:
-    "Zusammengefasste Codiermöglichkeiten für MQB, MQB evo und MLB evo – den Fahrzeugen der jeweiligen Plattform zugeordnet und ohne Byte-/Bit-Anleitungen.",
+    "Zusammengefasste Codiermöglichkeiten für MQB, MQB evo und MLB evo – den Fahrzeugen der jeweiligen Plattform zugeordnet.",
   alternates: { canonical: "https://td-fahrzeugcodierung.vercel.app/codierlisten" },
   robots: { index: true, follow: true },
   openGraph: {
@@ -63,9 +63,7 @@ export default function CodierlistenPage() {
             Codierlisten nach Fahrzeugplattform
           </h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
-            MQB, MQB evo und MLB evo kompakt zusammengefasst. Angezeigt werden nur die
-            Funktionsbezeichnungen – keine Byte-/Bit-Werte, Anpassungskanäle, Login-Codes oder
-            Schritt-für-Schritt-Anleitungen.
+            MQB, MQB evo und MLB evo kompakt zusammengefasst.
           </p>
           <div className="mt-6 max-w-3xl rounded-2xl border border-blue-200 bg-white p-5 text-sm leading-6 text-slate-600 shadow-sm">
             <strong className="text-slate-900">Wichtig:</strong> Die Plattformzuordnung ist eine
