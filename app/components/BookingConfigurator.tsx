@@ -22,6 +22,7 @@ type UnifiedCodingEntry = {
   name: string;
   price: number;
   uiGroup: PlatformCodingGroup;
+  hardware?: string;
   sfd?: "Ja" | "Nein" | "Unklar";
   status?: "Getestet" | "Ungetestet";
 };
@@ -97,6 +98,7 @@ function codingsFromCodierlisten(
       name: entry.name,
       price: entry.price,
       uiGroup: entry.uiGroup,
+      hardware: entry.hardware,
       sfd: entry.sfd,
       status: entry.status,
     }));
@@ -114,6 +116,7 @@ function codingsFromCodierlisten(
       name: coding.name,
       price: coding.price,
       uiGroup: coding.uiGroup as PlatformCodingGroup,
+      hardware: coding.hardware ?? coding.requirements,
     }));
 }
 
@@ -147,7 +150,10 @@ export default function BookingConfigurator() {
 
   const available = useMemo<UnifiedCodingEntry[]>(() => {
     if (!selectedVehicle || !year) return [];
-    return codingsFromCodierlisten(selectedVehicle, isSfd1, isSfd2);
+    const entries = codingsFromCodierlisten(selectedVehicle, isSfd1, isSfd2);
+    return year > 2014
+      ? entries.filter((entry) => !/(video in motion|\bvim\b)/i.test(entry.name))
+      : entries;
   }, [isSfd1, isSfd2, selectedVehicle, year]);
 
   const normalizedSearch = search.trim().toLocaleLowerCase("de");
@@ -305,7 +311,7 @@ export default function BookingConfigurator() {
             <button type="button" onClick={() => toggleGroup(group)} className="flex min-h-12 w-full items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-slate-50"><span className="font-black text-blue-700">{group} <span className="font-semibold text-slate-400">({list.length})</span></span><span className="flex items-center gap-2">{selectedInGroup > 0 && <span className="rounded-full bg-blue-100 px-2 py-1 text-[11px] font-bold text-blue-700">{selectedInGroup} gewählt</span>}<ChevronDown className={`h-4 w-4 text-slate-500 ${isExpanded ? "rotate-180" : ""}`} /></span></button>
             {isExpanded && <div className="border-t border-slate-200 bg-slate-50/60 p-2 sm:p-3"><div className="grid gap-2 lg:grid-cols-2">{list.map((entry) => {
               const checked = selected.includes(entry.id);
-              return <div key={entry.id} className={`rounded-lg border px-3 py-2.5 ${checked ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white"}`}><label className="flex cursor-pointer items-start justify-between gap-2.5"><span className="flex min-w-0 flex-1 items-start text-sm leading-5"><input className="mr-2.5 mt-0.5 h-4 w-4" type="checkbox" checked={checked} onChange={() => toggle(entry.id)} /><span>{entry.name}</span></span><b className="shrink-0 text-sm">{entry.price} €</b></label>{entry.sfd || entry.status ? <div className="mt-2 flex flex-wrap gap-1.5 border-t border-slate-100 pt-2"><SfdBadge value={entry.sfd} />{entry.status === "Ungetestet" ? <span className="rounded-full bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-700">ungetestet</span> : entry.status === "Getestet" ? <span className="rounded-full bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-700">getestet</span> : null}</div> : null}</div>;
+              return <div key={entry.id} className={`rounded-lg border px-3 py-2.5 ${checked ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white"}`}><label className="flex cursor-pointer items-start justify-between gap-2.5"><span className="flex min-w-0 flex-1 items-start text-sm leading-5"><input className="mr-2.5 mt-0.5 h-4 w-4" type="checkbox" checked={checked} onChange={() => toggle(entry.id)} /><span>{entry.name}</span></span><b className="shrink-0 text-sm">{entry.price} €</b></label>{entry.hardware && <div className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-600"><b className="text-slate-700">Hardware:</b> {entry.hardware}</div>}{entry.sfd || entry.status ? <div className="mt-2 flex flex-wrap gap-1.5 border-t border-slate-100 pt-2"><SfdBadge value={entry.sfd} />{entry.status === "Ungetestet" ? <span className="rounded-full bg-amber-50 px-2 py-1 text-[11px] font-bold text-amber-700">ungetestet</span> : entry.status === "Getestet" ? <span className="rounded-full bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-700">getestet</span> : null}</div> : null}</div>;
             })}</div></div>}
           </div>;
         })}</div>}

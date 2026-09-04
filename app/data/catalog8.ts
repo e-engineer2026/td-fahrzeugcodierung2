@@ -39,7 +39,7 @@ const caddyCodings: Coding[] = [
 const reducedPriceByOriginal = new Map<number, number>([
   [15, 15],
   [19, 15],
-  [25, 20],
+  [25, 25],
   [29, 25],
   [35, 30],
   [39, 35],
