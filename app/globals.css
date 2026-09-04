@@ -58,6 +58,10 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
+#buchen .rounded-xl:has(.lucide-sparkles) > .mt-3 > button:nth-child(n+5) {
+  display: none;
+}
+
 #buchen :is(button, a):has(.lucide-calendar-days) > span:first-of-type {
   font-size: 0;
   line-height: 0;
