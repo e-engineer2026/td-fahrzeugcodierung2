@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { platformCodingSources } from "../data/platformCodingLists";
-import type { PlatformCodingSource } from "../data/platformCodingLists";
+import type { PlatformCodingEntry, PlatformCodingSource } from "../data/platformCodingLists";
 import { mqbCodingEntries } from "../data/mqbCodingList";
 
 type VehicleSummary = {
@@ -25,11 +25,39 @@ const platformLabels: Record<string, string> = {
 
 const platformOrder = ["Alle", "MQB", "MQBevo", "MLBevo"] as const;
 
-const codingSources: PlatformCodingSource[] = platformCodingSources.map((source) =>
-  source.id === "mqb"
-    ? { ...source, entries: mqbCodingEntries.map((name) => ({ name })) }
-    : source
+const exactMqbSource = platformCodingSources.find((source) => source.id === "mqb");
+const mlbEvoSource = platformCodingSources.find((source) => source.platform === "MLBevo");
+const mqbEvoSources = platformCodingSources.filter((source) => source.platform === "MQBevo");
+
+const mergedMqbEvoEntries = Array.from(
+  new Map<string, PlatformCodingEntry>(
+    mqbEvoSources.flatMap((source) => source.entries).map((entry) => [entry.name, entry])
+  ).values()
 );
+
+const codingSources: PlatformCodingSource[] = [
+  ...(exactMqbSource
+    ? [
+        {
+          ...exactMqbSource,
+          entries: mqbCodingEntries.map((name) => ({ name })),
+        },
+      ]
+    : []),
+  ...(mqbEvoSources.length
+    ? [
+        {
+          id: "mqbevo",
+          platform: "MQBevo" as const,
+          title: "MQB evo Codierungen",
+          scope: "Plattformweite Referenzliste",
+          description: "Zusammengefasste Codiermöglichkeiten für Fahrzeuge auf MQB evo.",
+          entries: mergedMqbEvoEntries,
+        },
+      ]
+    : []),
+  ...(mlbEvoSource ? [mlbEvoSource] : []),
+];
 
 function SfdBadge({ value }: { value?: "Ja" | "Nein" | "Unklar" }) {
   if (!value) return null;
@@ -101,9 +129,6 @@ export default function CodingExplorer({ platformVehicles }: Props) {
       <div className="mt-8 space-y-8">
         {displayedSources.map((source) => {
           const allVehicles = platformVehicles[source.platform] ?? [];
-          const exactReferenceVehicles = source.referenceModels?.length
-            ? allVehicles.filter((vehicle) => source.referenceModels?.includes(vehicle.key))
-            : allVehicles;
 
           return (
             <article key={source.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
@@ -119,20 +144,15 @@ export default function CodingExplorer({ platformVehicles }: Props) {
 
                 <div className="mt-5">
                   <div className="text-xs font-black uppercase tracking-[.12em] text-slate-500">
-                    {source.referenceModels?.length ? "Direktes Referenzfahrzeug" : "Zugeordnete Fahrzeuge auf dieser Plattform"}
+                    Zugeordnete Fahrzeuge auf dieser Plattform
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {exactReferenceVehicles.map((vehicle) => (
+                    {allVehicles.map((vehicle) => (
                       <span key={vehicle.key} className="rounded-lg border border-blue-100 bg-blue-50/60 px-2.5 py-1.5 text-xs font-semibold text-slate-700">
                         {vehicle.brand} · {vehicle.model} · {vehicle.years}
                       </span>
                     ))}
                   </div>
-                  {source.referenceModels?.length ? (
-                    <p className="mt-3 text-xs leading-5 text-slate-500">
-                      Weitere {platformLabels[source.platform]}-Fahrzeuge können technisch ähnliche Funktionen besitzen. Die Referenzliste wird deshalb nicht ungeprüft auf jede Baureihe übertragen.
-                    </p>
-                  ) : null}
                 </div>
               </div>
 
