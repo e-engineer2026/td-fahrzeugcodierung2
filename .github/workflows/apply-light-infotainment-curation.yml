@@ -1,0 +1,151 @@
+name: Apply curated light and infotainment lists
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-light-infotainment-curation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Curate light and infotainment functions
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('app/components/BookingConfigurator.tsx')
+          text = path.read_text(encoding='utf-8')
+
+          block = r'''
+type CuratedDisplayRule = {
+  name: string;
+  price: number;
+  match: RegExp;
+};
+
+const curatedLightRules: CuratedDisplayRule[] = [
+  { name: "Coming Home / Leaving Home aktivieren", price: 15, match: /(?=.*(coming home|leaving home))(?=.*(aktivier|freischalt))/i },
+  { name: "Coming Home / Leaving Home Einstellungen anpassen", price: 15, match: /(?=.*(coming home|leaving home))(?!.*(aktivier|freischalt))/i },
+  { name: "Tagfahrlicht mit Heckleuchten aktivieren", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?=.*(heckleucht|rückleucht|rueckleucht))/i },
+  { name: "Tagfahrlicht Einstellungen anpassen", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?!.*(heckleucht|rückleucht|rueckleucht|us[- ]))/i },
+  { name: "US-Standlicht / US-Tagfahrlicht aktivieren", price: 20, match: /(us[- ]?standlicht|us[- ]?tagfahrlicht)/i },
+  { name: "Abbiegelicht über Nebelscheinwerfer aktivieren", price: 20, match: /abbiegelicht/i },
+  { name: "Nebelscheinwerfer Funktionen / LED anpassen", price: 20, match: /(?=.*nebelscheinwerfer)(?!.*abbiegelicht)/i },
+  { name: "Standlicht / Parklicht anpassen", price: 15, match: /(?=.*(standlicht|parklicht))(?!.*us[- ])/i },
+  { name: "Kennzeichenbeleuchtung auf LED anpassen", price: 15, match: /kennzeichenbeleuchtung/i },
+  { name: "Ambientebeleuchtung freischalten", price: 35, match: /(?=.*ambient)(?=.*(aktivier|freischalt|nachrüstung|nachruestung))/i },
+  { name: "Ambientebeleuchtung Farben / Verhalten anpassen", price: 20, match: /(?=.*ambient)(?!.*(aktivier|freischalt|nachrüstung|nachruestung))/i },
+  { name: "Fußraumbeleuchtung freischalten / anpassen", price: 20, match: /(fußraumbeleuchtung|fussraumbeleuchtung)/i },
+  { name: "Umfeldbeleuchtung freischalten / anpassen", price: 25, match: /umfeldbeleuchtung/i },
+  { name: "Innenbeleuchtung Einstellungen anpassen", price: 15, match: /(innenlicht|innenraum[- ]?licht|innenbeleuchtung)/i },
+  { name: "Rücklicht-Inszenierung aktivieren", price: 20, match: /(rücklicht|ruecklicht).*inszenierung/i },
+  { name: "Rückleuchten / Heckleuchten Funktionen anpassen", price: 20, match: /(?=.*(rückleucht|rueckleucht|heckleucht))(?!.*(tagfahrlicht|\btfl\b|inszenierung))/i },
+  { name: "Licht-/Regensensor Empfindlichkeit anpassen", price: 20, match: /(licht.*regensensor|regensensor.*licht|lichtsensorempfindlichkeit|lichtsensor.*empfindlichkeit)/i },
+  { name: "Scheinwerfer Einstellungen / Reisemodus anpassen", price: 20, match: /scheinwerfer.*(reisemodus|einstellung|dauerfahrlicht|lichtschalter|blackout)/i },
+  { name: "Scheinwerferreinigungsanlage / SWRA anpassen", price: 20, match: /(scheinwerferreinigungsanlage|\bswra\b)/i },
+  { name: "Lichthupe Einstellungen anpassen", price: 15, match: /lichthupe/i },
+];
+
+const curatedInfotainmentRules: CuratedDisplayRule[] = [
+  { name: "Apple Wireless CarPlay aktivieren", price: 45, match: /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt)/i },
+  { name: "Android Auto / Smartphone-Integration anpassen", price: 45, match: /(android auto|mirrorlink|smartphone.*integration)/i },
+  { name: "Bluetooth / Zweites Telefon anpassen", price: 15, match: /(zweites telefon|bluetooth.*telefon|telefon.*bluetooth)/i },
+  { name: "Green / Hidden / Developer Menu freischalten", price: 20, match: /(green menu|hidden menu|developer mode|entwicklermenü|entwicklermenu)/i },
+  { name: "Sprachbedienung aktivieren", price: 25, match: /sprachbedienung/i },
+  { name: "WLAN / Media-Streaming aktivieren", price: 25, match: /(wlan.*stream|media.*stream|streaming)/i },
+  { name: "Infotainment Startlogo / Bootanimation anpassen", price: 20, match: /(bootanimation|startlogo|startbildschirm)/i },
+  { name: "Infotainment Skin / Darstellung anpassen", price: 20, match: /(infotainment.*skin|discover pro.*skin|darstellung.*infotainment|skin ändern|skin aendern)/i },
+  { name: "Begrüßungssound aktivieren", price: 15, match: /(begrüßungssound|begruessungssound|welcome sound)/i },
+  { name: "Radiofunktionen anpassen", price: 15, match: /(radio.*am deaktiv|radio-modulation am|hybridradio)/i },
+  { name: "Offroad- / Zusatzanzeigen aktivieren", price: 20, match: /(offroadanzeige|offroad-anzeige|g-meter|beschleunigungsanzeige|beschleunigungsmessung)/i },
+  { name: "Kombiinstrument Staging aktivieren", price: 15, match: /(zeigertest|needle sweep|staging)/i },
+  { name: "Kombiinstrument Zusatzanzeigen aktivieren", price: 15, match: /(öltemperatur|oeltemperatur|laptimer|rundenzähler|rundenzaehler|nachtank|nachzutank|act \/ cod|zylinderabschaltung)/i },
+  { name: "Virtual Cockpit / Tacho Darstellung anpassen", price: 20, match: /(virtual cockpit|\bvc\b|\baid\b|\bfpk\b|tachomaximum|skalendarstellung|skaleneinteilung|tacho.*darstellung|kombiinstrument.*skin)/i },
+  { name: "Ganganzeige / Fahrdatenanzeige anpassen", price: 15, match: /(ganganzeige|fahrdaten|schaltempfehlung)/i },
+  { name: "Navigations- / Kartendarstellung anpassen", price: 20, match: /(kartendarstellung|navigation.*anzeige|karte.*kombiinstrument|kompass)/i },
+  { name: "Telefon / Freisprecheinrichtung anpassen", price: 15, match: /(mikrofonempfindlichkeit|freisprecheinrichtung|telefonieren über|telefonieren ueber)/i },
+];
+
+function curateDisplayGroup(
+  entries: UnifiedCodingEntry[],
+  group: "Licht" | "Infotainment",
+  rules: CuratedDisplayRule[],
+  idPrefix: string
+): UnifiedCodingEntry[] {
+  const candidates = entries.filter((entry) => entry.uiGroup === group);
+  const otherEntries = entries.filter((entry) => entry.uiGroup !== group);
+
+  const curated = rules.flatMap((rule, index) => {
+    const matches = candidates.filter((entry) => rule.match.test(entry.name));
+    if (!matches.length) return [];
+
+    const source = matches[0];
+    const sfd = matches.some((entry) => entry.sfd === "Ja")
+      ? "Ja" as const
+      : matches.some((entry) => entry.sfd === "Unklar")
+        ? "Unklar" as const
+        : matches.some((entry) => entry.sfd === "Nein")
+          ? "Nein" as const
+          : undefined;
+
+    return [{
+      ...source,
+      id: `${idPrefix}-curated-${index}`,
+      name: rule.name,
+      price: rule.price,
+      uiGroup: group,
+      sfd,
+    }];
+  });
+
+  return [...otherEntries, ...curated];
+}
+
+function curateLightAndInfotainmentEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  const light = curateDisplayGroup(entries, "Licht", curatedLightRules, "light");
+  return curateDisplayGroup(light, "Infotainment", curatedInfotainmentRules, "infotainment");
+}
+'''
+
+          if 'const curatedLightRules: CuratedDisplayRule[]' not in text:
+              anchor = 'function normalize(value: string) {'
+              if anchor not in text:
+                  raise SystemExit('normalize anchor not found')
+              text = text.replace(anchor, block + '\n' + anchor, 1)
+
+          old_no_source = 'if (!source) return curateComfortEntries(curateAssistEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year))));'
+          new_no_source = 'if (!source) return curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year)))));'
+          if old_no_source in text:
+              text = text.replace(old_no_source, new_no_source, 1)
+          elif new_no_source not in text:
+              raise SystemExit('no-source return anchor not found')
+
+          old_final = 'return curateComfortEntries(curateAssistEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year))));'
+          new_final = 'return curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year)))));'
+          if old_final in text:
+              text = text.replace(old_final, new_final, 1)
+          elif new_final not in text:
+              raise SystemExit('final return anchor not found')
+
+          path.write_text(text, encoding='utf-8')
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Build website
+        run: npm run build
+      - name: Commit curated light and infotainment lists
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/components/BookingConfigurator.tsx
+          if git diff --cached --quiet; then
+            echo "No changes required"
+            exit 0
+          fi
+          git commit -m "Curate light and infotainment functions and prices"
+          git push
