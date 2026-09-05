@@ -251,6 +251,95 @@ function curateComfortEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry
   return [...otherEntries, ...curated];
 }
 
+type CuratedDisplayRule = {
+  name: string;
+  price: number;
+  match: RegExp;
+};
+
+const curatedLightRules: CuratedDisplayRule[] = [
+  { name: "Coming Home / Leaving Home aktivieren", price: 15, match: /(?=.*(coming home|leaving home))(?=.*(aktivier|freischalt))/i },
+  { name: "Coming Home / Leaving Home Einstellungen anpassen", price: 15, match: /(?=.*(coming home|leaving home))(?!.*(aktivier|freischalt))/i },
+  { name: "Tagfahrlicht mit Heckleuchten aktivieren", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?=.*(heckleucht|r\u00fcckleucht|rueckleucht))/i },
+  { name: "Tagfahrlicht Einstelungen anpassen", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?!.*(heckleucht|r\u00fcckleucht|rueckleucht|us[- ]))/i },
+  { name: "US-Standlicht / US-Tagfahrlicht aktivieren", price: 20, match: /(us[- ]?standlicht|us[- ]?tagfahrlicht)/i },
+  { name: "Abbiegelicht \u00fcber Nebelscheinwerfer aktivieren", price: 20, match: /abbiegelicht/i },
+  { name: "Nebelscheinwerfer Funktionen / LED anpassen", price: 20, match: /(?=.*nebelscheinwerfer)(?!.*abbiegelicht)/i },
+  { name: "Standlicht / Parklicht anpassen", price: 15, match: /(?=.*(standlicht|parklicht))(?!.*us[- ])/i },
+  { name: "Kennzeichenbeleuchtung auf LED anpassen", price: 15, match: /kennzeichenbeleuchtung/i },
+  { name: "Ambientebeleuchtung freischalten", price: 35, match: /(?=.*ambiient)(?=.*(aktivier|freischalt|nachr\u00fcstung|nachruestung))/i },
+  { name: "Ambientebeleuchtung Farben / Verhalten anpassen", price: 20, match: /(?=.*ambient)(?!.*(aktivier|freischalt|nachr\u00fcstung|nachruestung))/i },
+  { name: "Fu\u00dfraumbeleuchtung freischalten / anpassen", price: 20, match: /(fu\u00dfraumbeleuchtung|fussraumbeleuchtung)/i },
+  { name: "Umfeldbeleuchtung freischalten / anpassen", price: 25, match: /umfeldbeleuchtung/i },
+  { name: "Innenbeleuchtung Einstellungen anpassen", price: 15, match: /(innenlicht|innenraum[- ]?licht|innenbeleuchtung)/i },
+  { name: "R\u00fccklicht-Inszenierung aktivieren", price: 20, match: /(r\u00fccklicht|ruecklicht).*inszenierung/i },
+  { name: "R\u00fcckleuchten / Heckleuchten Funktionen anpassen", price: 20, match: /(?=.*(r\u00fcckleucht|rueckleucht|heckleucht))(?!.*(tagfahrlicht|\btfl\b|inszenierung))/i },
+  { name: "Licht-/Regensensor Empfindlichkeit anpassen", price: 20, match: /(licht.*regensensor|regensensor.*licht|lichtsensorempfindlichkeit|lichtsensor.*empfindlichkeit)/i },
+  { name: "Scheinwerfer Einstellungen / Reisemodus anpassen", price: 20, match: /scheinwerfer.*(reisemodus|einstellung|dauerfahrlicht|lichtschalter|blackout)/i },
+  { name: "Scheinwerferreinigungsanlage / SWRA anpassen", price: 20, match: /(scheinwerferreinigungsanlage|\bswra\b)/i },
+  { name: "Lichthupe Einstellungen anpassen", price: 15, match: /lichthupe/i },
+];
+
+const curatedInfotainmentRules: CuratedDisplayRule[] = [
+  { name: "Apple Wireless CarPlay aktivieren", price: 45, match: /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt)/i },
+  { name: "Android Auto / Smartphone-Integration anpassen", price: 45, match: /(android auto|mirrorlink|smartphone.*integration)/i },
+  { name: "Bluetooth / Zweites Telefon anpassen", price: 15, match: /(zweites telefon|bluetooth.*telefon|telefon.*bluetooth)/i },
+  { name: "Green / Hidden / Developer Menu freischalten", price: 20, match: /(green menu|hidden menu|developer mode|entwicklermen\u00fc|entwicklermenu)/i },
+  { name: "Sprachbedienung aktivieren", price: 25, match: /sprachbedienung/i },
+  { name: "WLAN / Media-Streaming aktivieren", price: 25, match: /(wlan.*stream|media.*stream|streaming)/i },
+  { name: "Infotainment Startlogo / Bootanimation anpassen", price: 20, match: /(bootanimation|startlogo|startbildschirm)/i },
+  { name: "Infotainment Skin / Darstellung anpassen", price: 20, match: /(infotainment.*skin|discover pro.*skin|darstellung.*infotainment|skin \u00e4ndern|skin aendern)/i },
+  { name: "Begr\u00fc\u00dfungssound aktivieren", price: 15, match: /(begr\u00fc\u00dfungssound|begruessungssound|welcome sound)/i },
+  { name: "Radiofunktionen anpassen", price: 15, match: /(radio.*am deaktiv|radio-modulation am|hybridradio)/i },
+  { name: "Offroad- / Zusatzanzeigen aktivieren", price: 20, match: /(offroadanzeige|offroad-anzeige|g-meter|beschleunigungsanzeige|beschleunigungsmessung)/i },
+  { name: "Kombiinstrument Staging aktivieren", price: 15, match: /(zeigertest|needle sweep|staging)/i },
+  { name: "Kombiinstrument Zusatzanzeigen aktivieren", price: 15, match: /(\u00f6ltemperatur|oeltemperatur|laptimer|rundenz\u00e4hler|rundenzaehler|nachtank|nachzutank|act \/ cod|zylinderabschaltung)/i },
+  { name: "Virtual Cockpit / Tacho Darstellung anpassen", price: 20, match: /(virtual cockpit|\bvc\b|\baid\b|\bfpk\b|tachomaximum|skalendarstellung|skaleneinteilung|tacho.*darstellung|kombiinstrument.*skin)/i },
+  { name: "Ganganzeige / Fahrdatenanzeige anpassen", price: 15, match: /(ganganzeige|fahrdaten|schaltempfehlung)/i },
+  { name: "Navigations- / Kartendarstellung anpassen", price: 20, match: /(kartendarstellung|navigation.*anzeige|karte.*kombiinstrument|kompass)/i },
+  { name: "Telefon / Freisprecheinrichtung anpassen", price: 15, match: /(mikrofonempfindlichkeit|freisprecheinrichtung|telefonieren \u00fcber|telefonieren ueber)/i },
+];
+
+function curateDisplayGroup(
+  entries: UnifiedCodingEntry[],
+  group: "Licht" | "Infotainment",
+  rules: CuratedDisplayRule[],
+  idPrefix: string
+): UnifiedCodingEntry[] {
+  const candidates = entries.filter((entry) => entry.uiGroup === group);
+  const otherEntries = entries.filter((entry) => entry.uiGroup !== group);
+
+  const curated = rules.flatMap((rule, index) => {
+    const matches = candidates.filter((entry) => rule.match.test(entry.name));
+    if (!matches.length) return [];
+
+    const source = matches[0];
+    const sfd = matches.some((entry) => entry.sfd === "Ja")
+      ? "Ja" as const
+      : matches.some((entry) => entry.sfd === "Unklar")
+        ? "Unklar" as const
+        : matches.some((entry) => entry.sfd === "Nein")
+          ? "Nein" as const
+          : undefined;
+
+    return [{
+      ...source,
+      id: `${idPrefix}-curated-${index}`,
+      name: rule.name,
+      price: rule.price,
+      uiGroup: group,
+      sfd,
+    }];
+  });
+
+  return [...otherEntries, ...curated];
+}
+
+function curateLightAndInfotainmentEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  const light = curateDisplayGroup(entries, "Licht", curatedLightRules, "light");
+  return curateDisplayGroup(light, "Infotainment", curatedInfotainmentRules, "infotainment");
+}
+
 function normalize(value: string) {
   return value
     .toLocaleLowerCase("de")
@@ -388,7 +477,7 @@ function vehicleSpecificCodings(
   }));
 
   const source = codingSources.find((item) => item.platform === vehicle.platform);
-  if (!source) return curateComfortEntries(curateAssistEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year))));
+  if (!source) return curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year)))));
 
   const allowedCapabilities = new Set(
     vehicleCatalog.map((coding) => capabilityForName(coding.name)).filter((value): value is string => Boolean(value))
@@ -423,7 +512,7 @@ function vehicleSpecificCodings(
     const key = normalize(entry.name);
     if (!byName.has(key) || entry.source === "vehicle") byName.set(key, entry);
   }
-  return curateComfortEntries(curateAssistEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year))));
+  return curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year)))));
 }
 
 export default function BookingConfigurator() {
