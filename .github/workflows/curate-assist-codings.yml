@@ -1,0 +1,135 @@
+name: Curate assist coding list
+
+on:
+  push:
+    paths:
+      - '.github/workflows/curate-assist-codings.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  curate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update assist coding presentation
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('app/components/BookingConfigurator.tsx')
+          text = path.read_text(encoding='utf-8')
+
+          block = r'''
+type CuratedAssistRule = {
+  name: string;
+  price: number;
+  match: RegExp;
+};
+
+const curatedAssistRules: CuratedAssistRule[] = [
+  // Freischaltungen / Aktivierungen zuerst
+  { name: "Klassischen Tempomat freischalten", price: 25, match: /(klassisch.*tempomat|tempomat.*keine abstandsregelung|tempomat.*ohne abstandsregelung)/i },
+  { name: "Geschwindigkeitsbegrenzer freischalten", price: 25, match: /(geschwindigkeits.?begrenzer|geschwindigkeits.?limiter|speed.?limiter)/i },
+  { name: "Lane Assist – Freischaltung", price: 65, match: /(lane assist|spurhalteassistent).*(freischalt|aktivier)/i },
+  { name: "Traffic Jam Assist freischalten", price: 85, match: /(traffic jam assist|stauassistent)/i },
+  { name: "Emergency Assist freischalten", price: 85, match: /emergency assist/i },
+  { name: "Verkehrszeichenerkennung freischalten", price: 55, match: /verkehrszeichenerkennung/i },
+  { name: "Fernlichtassistent freischalten", price: 55, match: /(?=.*(fernlichtassistent|light assist|\bhba\b))(?=.*(freischalt|aktivier))(?!.*(dynamic|dynamisch|\bdla\b|matrix))/i },
+  { name: "Dynamisches Fernlicht / DLA freischalten", price: 75, match: /(dynamic light assist|dynamisches fernlicht|dynamischer lichtassistent|\bdla\b|matrix.?licht|matrix led)/i },
+  { name: "Trailer Assist freischalten", price: 55, match: /(anhängerrangierassistent|anhaengerrangierassistent|trailer assist)/i },
+  { name: "Park Assist freischalten", price: 55, match: /(intelligenter park assist|park assist|einparkassistent|parklenkassistent|\bipa\b)/i },
+  { name: "Manövrierassistent freischalten", price: 55, match: /(manövrierassistent|manövrierassistent|manoevrierassistent)/i },
+  { name: "Rückfahrkamera freischalten", price: 45, match: /(?=.*(rückfahrkamera|rueckfahrkamera|rear view))(?=.*(freischalt|aktivier|nachrüstung|nachruestung))/i },
+  { name: "Bergabfahrassistent freischalten", price: 35, match: /bergabfahrassistent/i },
+  { name: "Prädiktiven Effizienzassistenten aktivieren", price: 35, match: /(prädiktiv.*effizienz|praediktiv.*effizienz|effizienzassistent)/i },
+  { name: "Gespannstabilisierung aktivieren", price: 25, match: /gespannstabilisierung/i },
+
+  // Danach reine Einstellungen / Anpassungen
+  { name: "ACC Abstandseinstellung anpassen", price: 20, match: /acc.*abstandseinstellung/i },
+  { name: "ACC Fahrprofilauswahl aktivieren", price: 35, match: /acc.*fahrprofil/i },
+  { name: "ACC Schritteinstellung auf 1 km/h ändern", price: 25, match: /acc.*(schritteinstellung|1\s*km\/h|1km\/h)/i },
+  { name: "ACC Rechtsüberholsperre anpassen", price: 20, match: /(acc.*rechts.*überhol|rechtsüberholen.*acc)/i },
+  { name: "Lane Assist – Einstellungen anpassen", price: 20, match: /(?=.*(lane assist|spurhalteassistent))(?=.*(einstell|eingriff|warn|vibration|lenkunterstützung|lenkunterstuetzung|empfindlichkeit|fahrerinaktivität|fahrerinaktivitaet|speicher|inaktiv))(?!.*(freischalt|aktivier))/i },
+  { name: "Travel Assist Einstellungen anpassen", price: 55, match: /travel assist/i },
+  { name: "Front Assist Vorwarnung anpassen", price: 20, match: /front assist.*vorwarn/i },
+  { name: "Fernlichtassistent Einstellungen anpassen", price: 20, match: /(?=.*(fernlichtassistent|light assist|\bhba\b))(?=.*(einstell|reset|stadt|einschalt|ausschalt|speicher))(?!.*(dynamic|dynamisch|\bdla\b|matrix|freischalt|aktivier))/i },
+  { name: "Einparkhilfe automatisch aktivieren", price: 20, match: /einparkhilfe.*automatische aktivierung/i },
+  { name: "Einparkhilfe Abschaltgeschwindigkeit anpassen", price: 20, match: /einparkhilfe.*abschaltgeschwindigkeit/i },
+  { name: "Einparkhilfe Bordsteinabstand anpassen", price: 20, match: /einparkhilfe.*bordsteinabstand/i },
+  { name: "Einparkhilfe Anzeige anpassen", price: 20, match: /einparkhilfe.*(darstellung|anzeige|hilfslinien)/i },
+  { name: "Area View / Surround View Dual View aktivieren", price: 55, match: /(dual.*(area view|surround)|area view.*dual|surround.*dual)/i },
+  { name: "Rückfahrkamera Abschaltverhalten anpassen", price: 45, match: /(?=.*(rückfahrkamera|rueckfahrkamera|rear view))(?=.*(deaktivierung|abschalt|geschwindigkeit|heckklappe|waschfunktion))(?!.*(freischalt|aktivier|nachrüstung|nachruestung))/i },
+  { name: "Berganfahrassistent anpassen", price: 25, match: /berganfahrassistent/i },
+  { name: "Auto Hold anpassen", price: 20, match: /auto[ -]?hold/i },
+];
+
+function curateAssistEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  const assistCandidate = (entry: UnifiedCodingEntry) =>
+    entry.uiGroup === "Assistenz" ||
+    /(bergabfahrassistent|berganfahrassistent|auto[ -]?hold|gespannstabilisierung|manövrierassistent|manoevrierassistent|anhängerrangierassistent|anhaengerrangierassistent)/i.test(entry.name);
+
+  const candidates = entries.filter(assistCandidate);
+  const otherEntries = entries.filter((entry) => !assistCandidate(entry));
+
+  const curated = curatedAssistRules.flatMap((rule, index) => {
+    const matches = candidates.filter((entry) => rule.match.test(entry.name));
+    if (!matches.length) return [];
+
+    const source = matches[0];
+    const sfd = matches.some((entry) => entry.sfd === "Ja")
+      ? "Ja" as const
+      : matches.some((entry) => entry.sfd === "Unklar")
+        ? "Unklar" as const
+        : matches.some((entry) => entry.sfd === "Nein")
+          ? "Nein" as const
+          : undefined;
+
+    return [{
+      ...source,
+      id: `assist-curated-${index}`,
+      name: rule.name,
+      price: rule.price,
+      uiGroup: "Assistenz" as const,
+      sfd,
+    }];
+  });
+
+  return [...otherEntries, ...curated];
+}
+'''
+
+          if 'const curatedAssistRules: CuratedAssistRule[]' not in text:
+              anchor = 'function normalize(value: string) {'
+              if anchor not in text:
+                  raise SystemExit('Anchor for curated assist block not found')
+              text = text.replace(anchor, block + '\n' + anchor, 1)
+
+          old_no_source = 'if (!source) return vehicleEntries.filter((entry) => yearAllowed(entry.name, year));'
+          new_no_source = 'if (!source) return curateAssistEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year)));'
+          if old_no_source in text:
+              text = text.replace(old_no_source, new_no_source, 1)
+          elif new_no_source not in text:
+              raise SystemExit('No-source return anchor not found')
+
+          old_final = 'return Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year));'
+          new_final = 'return curateAssistEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year)));'
+          if old_final in text:
+              text = text.replace(old_final, new_final, 1)
+          elif new_final not in text:
+              raise SystemExit('Final return anchor not found')
+
+          path.write_text(text, encoding='utf-8')
+
+      - name: Commit website update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/components/BookingConfigurator.tsx
+          if git diff --cached --quiet; then
+            echo "No changes required"
+            exit 0
+          fi
+          git commit -m "Curate assist coding list and prices"
+          git push
