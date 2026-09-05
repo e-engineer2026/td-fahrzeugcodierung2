@@ -521,7 +521,6 @@ export default function BookingConfigurator() {
   const [brand, setBrand] = useState("");
   const [vehicleModel, setVehicleModel] = useState("");
   const [year, setYear] = useState(0);
-  const [vin, setVin] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [activeGroup, setActiveGroup] = useState<"Alle" | PlatformCodingGroup>("Alle");
@@ -582,7 +581,6 @@ export default function BookingConfigurator() {
     calParams.set("fahrzeug", `${brand} ${selectedVehicle.model}`);
     calParams.set("baujahr", String(year));
   }
-  if (vin) calParams.set("fin", vin);
   if (chosen) calParams.set("codierungen", chosen);
   calParams.set("gesamtpreis", `${total.toFixed(2)} EUR${sfdFee ? " inkl. 10 EUR SFD1" : ""}`);
   calParams.set(
@@ -610,13 +608,11 @@ export default function BookingConfigurator() {
     setBrand(value);
     setVehicleModel("");
     setYear(0);
-    setVin("");
     resetSelection();
   };
 
   const changeModel = (value: string) => {
     setVehicleModel(value);
-    setVin("");
     resetSelection();
     const vehicle = vehicles.find((item) => item.brand === brand && item.model === value);
     setYear(vehicle?.endYear ?? 0);
@@ -651,7 +647,6 @@ export default function BookingConfigurator() {
     window.localStorage.setItem("td_pending_booking", JSON.stringify({
       vehicle: `${brand} ${selectedVehicle.model}`,
       year,
-      vin,
       codings: chosen,
       total: Number(total.toFixed(2)),
       prepay: Number(prepay.toFixed(2)),
@@ -707,12 +702,7 @@ export default function BookingConfigurator() {
         <label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Modell / Generation</span><select value={vehicleModel} onChange={(e) => changeModel(e.target.value)} disabled={!brand}><option value="">Modell auswählen</option>{models.map((vehicle) => <option key={`${vehicle.brand}-${vehicle.model}`} value={vehicle.model}>{vehicle.model}</option>)}</select></label>
         <label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Baujahr</span><select value={year || ""} onChange={(e) => changeYear(Number(e.target.value))} disabled={!selectedVehicle}><option value="">Baujahr auswählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
       </div>
-      <div className="mt-3 grid gap-2 sm:gap-3 md:grid-cols-[1fr_2fr]">
-        <div>
-          <input value={vin} onChange={(e) => setVin(e.target.value.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, "").slice(0, 17))} maxLength={17} placeholder="FIN optional" disabled={!hasVehicle} />
-          {vin.length > 0 && vin.length !== 17 && <p className="mt-2 text-xs font-semibold text-amber-600">FIN muss 17 Zeichen enthalten · {vin.length}/17</p>}
-          {vin.length === 17 && <p className="mt-2 text-xs font-semibold text-emerald-600">FIN vollständig · 17/17</p>}
-        </div>
+      <div className="mt-3">
         {selectedVehicle ? <div className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-600">Erkannt: <strong>{platformLabels[selectedVehicle.platform] ?? selectedVehicle.platform}</strong>. Modell- und baujahrbezogene Vorauswahl aktiv; die technische Machbarkeit wird vor Durchführung geprüft.</div> : <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-500">Bitte zuerst Marke und Modell auswählen.</div>}
       </div>
       {isSfd1 && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"><b>SFD1:</b> Die einmalige Freischaltung von <strong>10,00 €</strong> wird nur berechnet, wenn mindestens eine ausgewählte Codierung SFD benötigt.</div>}
@@ -757,7 +747,7 @@ export default function BookingConfigurator() {
           </div>;
         })}</div>}
 
-      {hasVehicle && <div className="mt-5 rounded-xl bg-slate-50 p-4"><div className="flex justify-between text-sm"><span>Zwischensumme</span><b>{euro(subtotal)} €</b></div><div className="mt-1.5 flex justify-between text-sm text-blue-700"><span>Rabatt ({Math.round(rate * 100)} %)</span><b>-{euro(discount)} €</b></div>{sfdFee > 0 && <div className="mt-2 flex justify-between border-t pt-2 text-sm text-slate-700"><span>SFD-Freischaltung (einmalig)</span><b>+10,00 €</b></div>}<div className="mt-3 flex justify-between border-t pt-3 text-lg"><b>Gesamt</b><b>{euro(total)} €</b></div>{next ? <p className="mt-2 text-xs text-slate-600">Noch {euro(Math.max(0, next - subtotal))} € bis zur nächsten Rabattstufe ({next === 50 ? 5 : next === 100 ? 10 : next === 150 ? 15 : 20} %).</p> : <p className="mt-2 text-xs font-semibold text-blue-700">20 % Maximalrabatt erreicht.</p>}</div>}
+      {hasVehicle && <div className="mt-5 rounded-xl bg-slate-50 p-4"><div className="flex justify-between text-sm"><span>Zwischensumme</span><b>{euro(subtotal)} €</b></div><div className="mt-1.5 flex justify-between text-sm text-blue-700"><span>Rabatt ({Math.round(rate * 100)} %)</span><b>-{euro(discount)} €</b></div>{sfdFee > 0 && <div className="mt-2 flex justify-between border-t pt-2 text-sm text-slate-700"><span>SFD-Freischaltung (einmalig)</span><b>+10,00 €</b></div>}<div className="mt-3 flex justify-between border-t pt-3 text-lg"><b>Gesamt</b><b>{euro(total)} €</b></div><div className="mt-3 border-t border-slate-200 pt-3 text-xs font-semibold text-slate-600">Rabattstaffel: <span className="text-blue-700">5 % ab 50 € · 10 % ab 100 € · 15 % ab 150 € · 20 % ab 200 €</span></div>{next ? <p className="mt-2 text-xs text-slate-600">Noch {euro(Math.max(0, next - subtotal))} € bis zur nächsten Rabattstufe ({next === 50 ? 5 : next === 100 ? 10 : next === 150 ? 15 : 20} %).</p> : <p className="mt-2 text-xs font-semibold text-blue-700">20 % Maximalrabatt erreicht.</p>}</div>}
     </section>
 
     {mode === "remote" ? <section className="card p-4 sm:p-8">
