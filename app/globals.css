@@ -47,7 +47,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   line-height: 1.25rem;
 }
 
-#buchen .space-y-5 > section:nth-of-type(-n+5) .text-xs.font-bold.uppercase,
+#buchen .booking-flow > section:nth-of-type(-n+5) .text-xs.font-bold.uppercase,
 #buchen > div:first-child > .text-xs.font-bold.uppercase,
 #kontakt .container-x > div:first-child > .text-xs.font-bold.uppercase {
   font-size: 1rem;
@@ -55,12 +55,12 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 }
 
 /* Vor Ort: die drei Zahlungsarten auch mobil in einer Reihe anzeigen. */
-#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
+#buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .5rem;
 }
 
-#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
+#buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
   min-width: 0;
   padding: .75rem .5rem;
   text-align: center;
@@ -74,18 +74,18 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
     line-height: 1.75rem;
   }
 
-  #buchen .space-y-5 > section:nth-of-type(-n+5) .text-xs.font-bold.uppercase,
+  #buchen .booking-flow > section:nth-of-type(-n+5) .text-xs.font-bold.uppercase,
   #buchen > div:first-child > .text-xs.font-bold.uppercase,
   #kontakt .container-x > div:first-child > .text-xs.font-bold.uppercase {
     font-size: 1.125rem;
     line-height: 1.75rem;
   }
 
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
     gap: .75rem;
   }
 
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
     padding: 1rem;
     font-size: 1rem;
   }
@@ -113,7 +113,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 }
 
 /* Die separate Auswahl-Zusammenfassung oberhalb von „Häufig gewählt“ ausblenden. */
-#buchen .space-y-5 > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
+#buchen .booking-flow > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
   display: none;
 }
 
@@ -173,33 +173,34 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 }
 
 /* „Häufig gewählt“ als ersten Punkt der Codier-Tabelle darstellen. */
-#buchen .space-y-5 > section:nth-of-type(3) {
+#buchen .booking-flow > section:nth-of-type(3) {
   display: flex;
   flex-direction: column;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .flex.flex-col.gap-4 {
+#buchen .booking-flow > section:nth-of-type(3) > .flex.flex-col.gap-4 {
   order: 0;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
+#buchen .booking-flow > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
   order: 1;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .-mx-1.mt-4.flex {
+#buchen .booking-flow > section:nth-of-type(3) > .-mx-1.mt-4.flex {
   order: 2;
+  margin-top: .75rem;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) {
+#buchen .booking-flow > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) {
   order: 3;
-  margin-top: 1.25rem;
+  margin-top: .75rem;
   overflow: hidden;
   padding: 0;
   border-color: rgb(226 232 240);
   background: white;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) > div:first-child {
+#buchen .booking-flow > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) > div:first-child {
   min-height: 3rem;
   padding: .625rem .75rem;
   color: rgb(29 78 216);
@@ -208,28 +209,30 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   font-weight: 900;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) .lucide-sparkles {
+#buchen .booking-flow > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) .lucide-sparkles {
   display: none;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) > .mt-3 {
+#buchen .booking-flow > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) > .mt-3 {
   margin-top: 0;
   padding: .5rem;
   border-top: 1px solid rgb(226 232 240);
   background: rgb(248 250 252 / .6);
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .mt-5.space-y-2,
-#buchen .space-y-5 > section:nth-of-type(3) > .mt-6 {
+#buchen .booking-flow > section:nth-of-type(3) > .mt-5.space-y-2,
+#buchen .booking-flow > section:nth-of-type(3) > .mt-6 {
   order: 4;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .mt-5.space-y-2 {
+#buchen .booking-flow > section:nth-of-type(3) > .mt-5.space-y-2 {
   margin-top: .5rem;
 }
 
-#buchen .space-y-5 > section:nth-of-type(3) > .mt-5.rounded-xl.bg-slate-50.p-4 {
+#buchen .booking-flow > section:nth-of-type(3) > .mt-5.rounded-xl.bg-slate-50.p-4 {
   order: 5;
+  margin-top: .75rem;
+  padding: .75rem;
 }
 
 @media (max-width: 767px) {
@@ -244,14 +247,14 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   }
 
   /* Nur bei „Vor Ort in Leipzig-Süd“: Auswahl und Gesamtpreis in den linken mobilen Terminbutton integrieren. */
-  #buchen .space-y-5:has(> section:nth-of-type(5)):has(> section:nth-of-type(3) > .border-blue-200.bg-blue-50) > .fixed > div > :first-child {
+  #buchen .booking-flow:has(> section:nth-of-type(5)):has(> section:nth-of-type(3) > .border-blue-200.bg-blue-50) > .fixed > div > :first-child {
     height: 3.75rem;
     min-height: 3.75rem !important;
     padding-top: .35rem;
     padding-bottom: 1.05rem;
   }
 
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
     position: fixed;
     z-index: 60;
     left: max(.75rem, calc(50vw - 14rem));
@@ -268,7 +271,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
     pointer-events: none;
   }
 
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -281,24 +284,24 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
     color: white;
   }
 
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child > b {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child > b {
     font-size: .75rem;
     line-height: 1rem;
     font-weight: 700;
     color: white;
   }
 
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child > b:first-child::after {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child > b:first-child::after {
     content: " · ";
   }
 
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > button {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > button {
     display: none;
   }
 }
 
 /* Vor Ort: Bar · PayPal · Sofortüberweisung als ein gemeinsames Feld in einer Zeile. */
-#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
+#buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -310,7 +313,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   white-space: nowrap;
 }
 
-#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
+#buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
   min-width: 0;
   padding: 0 !important;
   border: 0 !important;
@@ -321,7 +324,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   font-size: .8125rem !important;
 }
 
-#buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div + div::before {
+#buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div + div::before {
   content: " · ";
   margin: 0 .35rem;
   color: rgb(100 116 139);
@@ -329,11 +332,11 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 }
 
 @media (min-width: 640px) {
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid {
     padding: .9rem 1rem;
   }
 
-  #buchen .space-y-5:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
+  #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
     font-size: 1rem !important;
   }
 }

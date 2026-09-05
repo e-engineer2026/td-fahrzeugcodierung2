@@ -685,29 +685,29 @@ export default function BookingConfigurator() {
     </a>
   );
 
-  return <div className="space-y-5 sm:space-y-8">
-    <section className="card p-4 sm:p-8">
+  return <div className="booking-flow space-y-3 sm:space-y-6">
+    <section className="card p-4 sm:p-6">
       <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">1 · Terminart</div>
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
-        <button type="button" onClick={() => changeMode("onsite")} className={`min-h-[132px] rounded-2xl border p-4 text-left transition ${mode === "onsite" ? "border-blue-600 bg-blue-50" : "border-slate-200 bg-white"}`}>
-          <MapPin className="h-7 w-7 text-blue-600" /><b className="mt-3 block">Vor Ort in Leipzig-Süd</b><span className="text-sm text-slate-600">Schenkendorfstraße 33, 04275 Leipzig</span>
+      <div className="mt-3 grid gap-2 sm:gap-3 md:grid-cols-2">
+        <button type="button" onClick={() => changeMode("onsite")} className={`min-h-[104px] rounded-2xl border p-3 text-left transition sm:min-h-[116px] sm:p-4 ${mode === "onsite" ? "border-blue-600 bg-blue-50" : "border-slate-200 bg-white"}`}>
+          <MapPin className="h-6 w-6 text-blue-600 sm:h-7 sm:w-7" /><b className="mt-2 block">Vor Ort in Leipzig-Süd</b><span className="mt-1 block text-sm leading-5 text-slate-600">Schenkendorfstraße 33, 04275 Leipzig</span>
         </button>
-        <button type="button" onClick={() => changeMode("remote")} className={`min-h-[132px] rounded-2xl border p-4 text-left transition ${mode === "remote" ? "border-blue-600 bg-blue-50" : "border-slate-200 bg-white"}`}>
-          <Laptop className="h-7 w-7 text-blue-600" /><b className="mt-3 block">Remote-Codierung</b><span className="mt-1 block text-sm leading-6 text-slate-600">Mit eigenem Diagnoseinterface, PC/Laptop, stabiler Internetverbindung und vereinbarter Remote-Software.</span>
+        <button type="button" onClick={() => changeMode("remote")} className={`min-h-[104px] rounded-2xl border p-3 text-left transition sm:min-h-[116px] sm:p-4 ${mode === "remote" ? "border-blue-600 bg-blue-50" : "border-slate-200 bg-white"}`}>
+          <Laptop className="h-6 w-6 text-blue-600 sm:h-7 sm:w-7" /><b className="mt-2 block">Remote-Codierung</b><span className="mt-1 block text-sm leading-5 text-slate-600">Mit eigenem Diagnoseinterface, PC/Laptop, stabiler Internetverbindung und vereinbarter Remote-Software.</span>
         </button>
       </div>
-      {mode === "remote" && <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50 p-4 text-sm leading-6 text-slate-700"><b>Voraussetzungen für Remote:</b> Eigenes kompatibles Diagnoseinterface (z. B. VCP, VCDS oder OBD11), stabile Internetverbindung, Windows-PC/Laptop am Fahrzeug und vereinbarte Remote-Software.</div>}
+      {mode === "remote" && <div className="mt-3 rounded-2xl border border-blue-100 bg-blue-50 p-3 text-sm leading-5 text-slate-700"><b>Voraussetzungen für Remote:</b> Eigenes kompatibles Diagnoseinterface (z. B. VCP, VCDS oder OBD11), stabile Internetverbindung, Windows-PC/Laptop am Fahrzeug und vereinbarte Remote-Software.</div>}
     </section>
 
-    <section className="card p-4 sm:p-8">
+    <section className="card p-4 sm:p-6">
       <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">2 · Fahrzeug</div>
-      <h3 className="mt-2 text-xl font-black sm:text-2xl">Marke, Modell und Baujahr</h3>
-      <div className="mt-4 grid gap-3 md:grid-cols-3">
-        <label><span className="mb-2 block text-sm font-semibold">Marke</span><select value={brand} onChange={(e) => changeBrand(e.target.value)}><option value="">Marke auswählen</option>{brands.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-        <label><span className="mb-2 block text-sm font-semibold">Modell / Generation</span><select value={vehicleModel} onChange={(e) => changeModel(e.target.value)} disabled={!brand}><option value="">Modell auswählen</option>{models.map((vehicle) => <option key={`${vehicle.brand}-${vehicle.model}`} value={vehicle.model}>{vehicle.model}</option>)}</select></label>
-        <label><span className="mb-2 block text-sm font-semibold">Baujahr</span><select value={year || ""} onChange={(e) => changeYear(Number(e.target.value))} disabled={!selectedVehicle}><option value="">Baujahr auswählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+      <h3 className="mt-1 text-xl font-black sm:mt-2 sm:text-2xl">Marke, Modell und Baujahr</h3>
+      <div className="mt-3 grid gap-2 sm:gap-3 md:grid-cols-3">
+        <label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Marke</span><select value={brand} onChange={(e) => changeBrand(e.target.value)}><option value="">Marke auswählen</option>{brands.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+        <label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Modell / Generation</span><select value={vehicleModel} onChange={(e) => changeModel(e.target.value)} disabled={!brand}><option value="">Modell auswählen</option>{models.map((vehicle) => <option key={`${vehicle.brand}-${vehicle.model}`} value={vehicle.model}>{vehicle.model}</option>)}</select></label>
+        <label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Baujahr</span><select value={year || ""} onChange={(e) => changeYear(Number(e.target.value))} disabled={!selectedVehicle}><option value="">Baujahr auswählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
       </div>
-      <div className="mt-4 grid gap-3 md:grid-cols-[1fr_2fr]">
+      <div className="mt-3 grid gap-2 sm:gap-3 md:grid-cols-[1fr_2fr]">
         <div>
           <input value={vin} onChange={(e) => setVin(e.target.value.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, "").slice(0, 17))} maxLength={17} placeholder="FIN optional" disabled={!hasVehicle} />
           {vin.length > 0 && vin.length !== 17 && <p className="mt-2 text-xs font-semibold text-amber-600">FIN muss 17 Zeichen enthalten · {vin.length}/17</p>}
@@ -715,11 +715,11 @@ export default function BookingConfigurator() {
         </div>
         {selectedVehicle ? <div className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-600">Erkannt: <strong>{platformLabels[selectedVehicle.platform] ?? selectedVehicle.platform}</strong>. Modell- und baujahrbezogene Vorauswahl aktiv; die technische Machbarkeit wird vor Durchführung geprüft.</div> : <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-500">Bitte zuerst Marke und Modell auswählen.</div>}
       </div>
-      {isSfd1 && <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"><b>SFD1:</b> Die einmalige Freischaltung von <strong>10,00 €</strong> wird nur berechnet, wenn mindestens eine ausgewählte Codierung SFD benötigt.</div>}
-      {isSfd2 && <div className="mt-4 rounded-xl border border-slate-200 bg-slate-100 p-3 text-sm leading-6 text-slate-700"><b>SFD2 / UNECE:</b> Für dieses Baujahr werden aktuell keine regulären Codierungsaufträge angeboten.</div>}
+      {isSfd1 && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"><b>SFD1:</b> Die einmalige Freischaltung von <strong>10,00 €</strong> wird nur berechnet, wenn mindestens eine ausgewählte Codierung SFD benötigt.</div>}
+      {isSfd2 && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-100 p-3 text-sm leading-6 text-slate-700"><b>SFD2 / UNECE:</b> Für dieses Baujahr werden aktuell keine regulären Codierungsaufträge angeboten.</div>}
     </section>
 
-    <section className="card p-4 sm:p-8">
+    <section className="card p-4 sm:p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">3 · Codierungen</div><h3 className="mt-2 text-xl font-black sm:text-2xl">{selectedVehicle && year ? `${brand} ${selectedVehicle.model} · ${year}` : "Fahrzeug auswählen"}</h3></div>
         <label className="relative block w-full md:max-w-xs"><span className="sr-only">Codierung suchen</span><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /><input className="w-full pl-10" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Codierung suchen …" disabled={!hasVehicle || !year || isSfd2} /></label>
