@@ -27,20 +27,6 @@ type UnifiedCodingEntry = {
   source: "vehicle" | "platform";
 };
 
-const platformLabels: Record<string, string> = {
-  MQB: "MQB",
-  MQBevo: "MQB evo",
-  MLBevo: "MLB evo",
-  MLB: "MLB",
-  PQ35: "PQ35",
-  PQ46: "PQ46",
-  PQ26: "PQ26",
-  PQ25: "PQ25",
-  MEB: "MEB",
-  T5: "T5 / T6",
-  PL71: "PL71",
-};
-
 const modelHintRules: Array<{ hint: RegExp; vehicle: RegExp }> = [
   { hint: /audi a3 8v/i, vehicle: /A3 \/ S3 8V/i },
   { hint: /audi a3 8y/i, vehicle: /A3 \/ S3 8Y/i },
@@ -260,20 +246,20 @@ type CuratedDisplayRule = {
 const curatedLightRules: CuratedDisplayRule[] = [
   { name: "Coming Home / Leaving Home aktivieren", price: 15, match: /(?=.*(coming home|leaving home))(?=.*(aktivier|freischalt))/i },
   { name: "Coming Home / Leaving Home Einstellungen anpassen", price: 15, match: /(?=.*(coming home|leaving home))(?!.*(aktivier|freischalt))/i },
-  { name: "Tagfahrlicht mit Heckleuchten aktivieren", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?=.*(heckleucht|r\u00fcckleucht|rueckleucht))/i },
-  { name: "Tagfahrlicht Einstellungen anpassen", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?!.*(heckleucht|r\u00fcckleucht|rueckleucht|us[- ]))/i },
+  { name: "Tagfahrlicht mit Heckleuchten aktivieren", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?=.*(heckleucht|rückleucht|rueckleucht))/i },
+  { name: "Tagfahrlicht Einstellungen anpassen", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?!.*(heckleucht|rückleucht|rueckleucht|us[- ]))/i },
   { name: "US-Standlicht / US-Tagfahrlicht aktivieren", price: 20, match: /(us[- ]?standlicht|us[- ]?tagfahrlicht)/i },
-  { name: "Abbiegelicht \u00fcber Nebelscheinwerfer aktivieren", price: 20, match: /abbiegelicht/i },
+  { name: "Abbiegelicht über Nebelscheinwerfer aktivieren", price: 20, match: /abbiegelicht/i },
   { name: "Nebelscheinwerfer Funktionen / LED anpassen", price: 20, match: /(?=.*nebelscheinwerfer)(?!.*abbiegelicht)/i },
   { name: "Standlicht / Parklicht anpassen", price: 15, match: /(?=.*(standlicht|parklicht))(?!.*us[- ])/i },
   { name: "Kennzeichenbeleuchtung auf LED anpassen", price: 15, match: /kennzeichenbeleuchtung/i },
-  { name: "Ambientebeleuchtung freischalten", price: 35, match: /(?=.*ambient)(?=.*(aktivier|freischalt|nachr\u00fcstung|nachruestung))/i },
-  { name: "Ambientebeleuchtung Farben / Verhalten anpassen", price: 20, match: /(?=.*ambient)(?!.*(aktivier|freischalt|nachr\u00fcstung|nachruestung))/i },
-  { name: "Fu\u00dfraumbeleuchtung freischalten / anpassen", price: 20, match: /(fu\u00dfraumbeleuchtung|fussraumbeleuchtung)/i },
+  { name: "Ambientebeleuchtung freischalten", price: 35, match: /(?=.*ambient)(?=.*(aktivier|freischalt|nachrüstung|nachruestung))/i },
+  { name: "Ambientebeleuchtung Farben / Verhalten anpassen", price: 20, match: /(?=.*ambient)(?!.*(aktivier|freischalt|nachrüstung|nachruestung))/i },
+  { name: "Fußraumbeleuchtung freischalten / anpassen", price: 20, match: /(fußraumbeleuchtung|fussraumbeleuchtung)/i },
   { name: "Umfeldbeleuchtung freischalten / anpassen", price: 25, match: /umfeldbeleuchtung/i },
   { name: "Innenbeleuchtung Einstellungen anpassen", price: 15, match: /(innenlicht|innenraum[- ]?licht|innenbeleuchtung)/i },
-  { name: "R\u00fccklicht-Inszenierung aktivieren", price: 20, match: /(r\u00fccklicht|ruecklicht).*inszenierung/i },
-  { name: "R\u00fcckleuchten / Heckleuchten Funktionen anpassen", price: 20, match: /(?=.*(r\u00fcckleucht|rueckleucht|heckleucht))(?!.*(tagfahrlicht|\btfl\b|inszenierung))/i },
+  { name: "Rücklicht-Inszenierung aktivieren", price: 20, match: /(rücklicht|ruecklicht).*inszenierung/i },
+  { name: "Rückleuchten / Heckleuchten Funktionen anpassen", price: 20, match: /(?=.*(rückleucht|rueckleucht|heckleucht))(?!.*(tagfahrlicht|\btfl\b|inszenierung))/i },
   { name: "Licht-/Regensensor Empfindlichkeit anpassen", price: 20, match: /(licht.*regensensor|regensensor.*licht|lichtsensorempfindlichkeit|lichtsensor.*empfindlichkeit)/i },
   { name: "Scheinwerfer Einstellungen / Reisemodus anpassen", price: 20, match: /scheinwerfer.*(reisemodus|einstellung|dauerfahrlicht|lichtschalter|blackout)/i },
   { name: "Scheinwerferreinigungsanlage / SWRA anpassen", price: 20, match: /(scheinwerferreinigungsanlage|\bswra\b)/i },
@@ -281,23 +267,23 @@ const curatedLightRules: CuratedDisplayRule[] = [
 ];
 
 const curatedInfotainmentRules: CuratedDisplayRule[] = [
-  { name: "Apple CarPlay / Android Auto Wireless freischalten", price: 45, match: /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt)/i },
-  { name: "Android Auto / Smartphone-Integration anpassen", price: 45, match: /^(?!.*(?:wireless carplay|apple.*carplay|carplay.*android auto))(?=.*(?:android auto|mirrorlink|smartphone.*integration)).*$/i },
+  { name: "Apple CarPlay / Android Auto Wireless freischalten", price: 35, match: /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt)/i },
+  { name: "Android Auto / Smartphone-Integration anpassen", price: 35, match: /^(?!.*(?:wireless carplay|apple.*carplay|carplay.*android auto))(?=.*(?:android auto|mirrorlink|smartphone.*integration)).*$/i },
   { name: "Bluetooth / Zweites Telefon anpassen", price: 15, match: /(zweites telefon|bluetooth.*telefon|telefon.*bluetooth)/i },
-  { name: "Green / Hidden / Developer Menu freischalten", price: 20, match: /(green menu|hidden menu|developer mode|entwicklermen\u00fc|entwicklermenu)/i },
+  { name: "Green / Hidden / Developer Menu freischalten", price: 20, match: /(green menu|hidden menu|developer mode|entwicklermenü|entwicklermenu)/i },
   { name: "Sprachbedienung aktivieren", price: 25, match: /sprachbedienung/i },
   { name: "WLAN / Media-Streaming aktivieren", price: 25, match: /(wlan.*stream|media.*stream|streaming)/i },
   { name: "Infotainment Startlogo / Bootanimation anpassen", price: 20, match: /(bootanimation|startlogo|startbildschirm)/i },
-  { name: "Infotainment Skin / Darstellung anpassen", price: 20, match: /(infotainment.*skin|discover pro.*skin|darstellung.*infotainment|skin \u00e4ndern|skin aendern)/i },
-  { name: "Begr\u00fc\u00dfungssound aktivieren", price: 15, match: /(begr\u00fc\u00dfungssound|begruessungssound|welcome sound)/i },
+  { name: "Infotainment Skin / Darstellung anpassen", price: 20, match: /(infotainment.*skin|discover pro.*skin|darstellung.*infotainment|skin ändern|skin aendern)/i },
+  { name: "Begrüßungssound aktivieren", price: 15, match: /(begrüßungssound|begruessungssound|welcome sound)/i },
   { name: "Radiofunktionen anpassen", price: 15, match: /(radio.*am deaktiv|radio-modulation am|hybridradio)/i },
   { name: "Offroad- / Zusatzanzeigen aktivieren", price: 20, match: /(offroadanzeige|offroad-anzeige|g-meter|beschleunigungsanzeige|beschleunigungsmessung)/i },
   { name: "Kombiinstrument Staging aktivieren", price: 15, match: /(zeigertest|needle sweep|staging)/i },
-  { name: "Kombiinstrument Zusatzanzeigen aktivieren", price: 15, match: /(\u00f6ltemperatur|oeltemperatur|laptimer|rundenz\u00e4hler|rundenzaehler|nachtank|nachzutank|act \/ cod|zylinderabschaltung)/i },
+  { name: "Kombiinstrument Zusatzanzeigen aktivieren", price: 15, match: /(öltemperatur|oeltemperatur|laptimer|rundenzähler|rundenzaehler|nachtank|nachzutank|act \/ cod|zylinderabschaltung)/i },
   { name: "Virtual Cockpit / Tacho Darstellung anpassen", price: 20, match: /(virtual cockpit|\bvc\b|\baid\b|\bfpk\b|tachomaximum|skalendarstellung|skaleneinteilung|tacho.*darstellung|kombiinstrument.*skin)/i },
   { name: "Ganganzeige / Fahrdatenanzeige anpassen", price: 15, match: /(ganganzeige|fahrdaten|schaltempfehlung)/i },
   { name: "Navigations- / Kartendarstellung anpassen", price: 20, match: /(kartendarstellung|navigation.*anzeige|karte.*kombiinstrument|kompass)/i },
-  { name: "Telefon / Freisprecheinrichtung anpassen", price: 15, match: /(mikrofonempfindlichkeit|freisprecheinrichtung|telefonieren \u00fcber|telefonieren ueber)/i },
+  { name: "Telefon / Freisprecheinrichtung anpassen", price: 15, match: /(mikrofonempfindlichkeit|freisprecheinrichtung|telefonieren über|telefonieren ueber)/i },
 ];
 
 function curateDisplayGroup(
@@ -701,9 +687,6 @@ export default function BookingConfigurator() {
         <label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Marke</span><select value={brand} onChange={(e) => changeBrand(e.target.value)}><option value="">Marke auswählen</option>{brands.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
         <label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Modell / Generation</span><select value={vehicleModel} onChange={(e) => changeModel(e.target.value)} disabled={!brand}><option value="">Modell auswählen</option>{models.map((vehicle) => <option key={`${vehicle.brand}-${vehicle.model}`} value={vehicle.model}>{vehicle.model}</option>)}</select></label>
         <label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Baujahr</span><select value={year || ""} onChange={(e) => changeYear(Number(e.target.value))} disabled={!selectedVehicle}><option value="">Baujahr auswählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-      </div>
-      <div className="mt-3">
-        {selectedVehicle ? <div className="rounded-xl bg-slate-50 p-3 text-sm leading-6 text-slate-600">Erkannt: <strong>{platformLabels[selectedVehicle.platform] ?? selectedVehicle.platform}</strong>. Modell- und baujahrbezogene Vorauswahl aktiv; die technische Machbarkeit wird vor Durchführung geprüft.</div> : <div className="rounded-xl bg-slate-50 p-3 text-sm text-slate-500">Bitte zuerst Marke und Modell auswählen.</div>}
       </div>
       {isSfd1 && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"><b>SFD1:</b> Die einmalige Freischaltung von <strong>10,00 €</strong> wird nur berechnet, wenn mindestens eine ausgewählte Codierung SFD benötigt.</div>}
       {isSfd2 && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-100 p-3 text-sm leading-6 text-slate-700"><b>SFD2 / UNECE:</b> Für dieses Baujahr werden aktuell keine regulären Codierungsaufträge angeboten.</div>}
