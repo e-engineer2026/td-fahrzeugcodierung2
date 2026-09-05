@@ -685,7 +685,7 @@ export default function BookingConfigurator() {
     </a>
   );
 
-  return <div className="booking-flow space-y-3 sm:space-y-6">
+  return <div id="konfigurator" className="booking-flow scroll-mt-14 space-y-3 sm:scroll-mt-16 sm:space-y-6">
     <section className="card p-4 sm:p-6">
       <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">1 · Terminart</div>
       <div className="mt-3 grid gap-2 sm:gap-3 md:grid-cols-2">

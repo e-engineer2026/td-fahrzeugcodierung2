@@ -31,8 +31,8 @@ export default function Home(){
         <p className="mt-3 max-w-xl text-base leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – mit Fahrzeugauswahl, transparenter Kalkulation und direkter Terminbuchung.</p>
 
         <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
-          <a href="#buchen" className="btn-primary w-full sm:w-auto">Konfigurator Codierung</a>
-          <Link href="/steuergeraete-flash" className="btn-primary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
+          <a href="#konfigurator" className="btn-primary w-full sm:w-auto">Konfigurator Codierung</a>
+          <Link href="/steuergeraete-flash" className="btn-secondary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
         </div>
       </div>
     </div>
