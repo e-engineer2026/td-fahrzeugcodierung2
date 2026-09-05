@@ -16,81 +16,12 @@ jobs:
       - name: Curate comfort functions
         shell: python
         run: |
+          import base64
           from pathlib import Path
 
           path = Path('app/components/BookingConfigurator.tsx')
           text = path.read_text(encoding='utf-8')
-
-          block = r'''
-type CuratedComfortRule = {
-  name: string;
-  price: number;
-  match: RegExp;
-};
-
-const curatedComfortRules: CuratedComfortRule[] = [
-  { name: "Auto-Lock / Auto-Unlock anpassen", price: 15, match: /(auto[- ]?lock|auto[- ]?unlock)/i },
-  { name: "KESSY / Keyless – Funktionen anpassen", price: 25, match: /(kessy|keyless)/i },
-  { name: "Automatisches Verriegeln / Entriegeln anpassen", price: 20, match: /(automatisch.*(verriegel|entriegel)|(verriegel|entriegel).*automatisch)/i },
-  { name: "Einzeltüröffnung / Safe-Lock anpassen", price: 20, match: /(einzeltüröffnung|einzeltueroeffnung|safe[- ]?lock)/i },
-  { name: "Akustische / optische Verriegelungsquittierung", price: 15, match: /(hornquittierung|quittierungston|quittierung.*(verriegel|entriegel)|optische rückmeldung|optischen rückmeld)/i },
-  { name: "Diebstahlwarnanlage – Einstellungen anpassen", price: 25, match: /(\bdwa\b|diebstahlwarnanlage)/i },
-
-  { name: "Komfort-Fensterbedienung aktivieren", price: 15, match: /(komfort[- ]?fensterbedienung|komfortbedienung.*fenster|fenster.*komfort)/i },
-  { name: "Fensterbedienung bei Zündung / Türöffnung anpassen", price: 20, match: /(fensterbedienung|fensterheber|freigabenachlauf|short[- ]?drop)/i },
-  { name: "Regenschließen aktivieren", price: 25, match: /regenschließ|regenschliess/i },
-  { name: "Schiebedach – Komfortöffnen / Komfortschließen", price: 20, match: /schiebedach.*komfort(öffnen|oeffnen|schließen|schliessen)/i },
-  { name: "Schiebedach – Einstellungen anpassen", price: 20, match: /schiebedach/i },
-
-  { name: "Außenspiegel automatisch anklappen", price: 25, match: /spiegel.*(anklapp|anklap)/i },
-  { name: "Beifahrerspiegelabsenkung aktivieren", price: 25, match: /(spiegel.*absenk|beifahrer.*spiegel.*absenk|bordsteinautomatik)/i },
-  { name: "Außenspiegel – Einstellungen anpassen", price: 20, match: /spiegel.*(heizung|synchron|einstellung|verstellung)/i },
-
-  { name: "Elektrische Heckklappe – Funktionen anpassen", price: 30, match: /(elektr.*heckklappe|heckklappe \(elektrisch\)|heckklappe.*(taster|ffb|öffnungshöhe|oeffnungshoehe|warnsignal|schlüssel|schluessel|nahbereich))/i },
-  { name: "Easy Open / Easy Close anpassen", price: 30, match: /(easy ?open|easy ?close)/i },
-
-  { name: "Heckwischer – Verhalten anpassen", price: 15, match: /(heckwischer|heckscheibenwischer)/i },
-  { name: "Tränenwischen Front / Heck aktivieren", price: 15, match: /(tränenwischen|traenenwischen|tropfenwischen)/i },
-
-  { name: "Easy Entry / Komforteinstieg aktivieren", price: 25, match: /(easy entry|komforteinstieg)/i },
-  { name: "Sitzheizung – Einstellungen & Speicherfunktion", price: 20, match: /sitzheizung/i },
-  { name: "Sitzmemory / Schlüsselzuordnung anpassen", price: 30, match: /(sitzmemory|sitz-memory|sitze.*funkschlüssel|sitze.*funkschluessel|schlüssel.*sitz|schluessel.*sitz)/i },
-  { name: "Air Care / Klimaeinstellungen anpassen", price: 20, match: /(air ?care|klimaanlage|klimaeinstellung|gebläse|geblaese|umluft)/i },
-
-  { name: "Komfortblinken anpassen", price: 15, match: /komfortblinken/i },
-  { name: "Komfortaktionen per Fernbedienung bei laufendem Motor", price: 20, match: /komfortaktionen.*(ffb|fernbedienung).*(zündung|zuendung|motorlauf|motor)/i },
-];
-
-function curateComfortEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
-  const candidates = entries.filter((entry) => entry.uiGroup === "Komfort");
-  const otherEntries = entries.filter((entry) => entry.uiGroup !== "Komfort");
-
-  const curated = curatedComfortRules.flatMap((rule, index) => {
-    const matches = candidates.filter((entry) => rule.match.test(entry.name));
-    if (!matches.length) return [];
-
-    const source = matches[0];
-    const sfd = matches.some((entry) => entry.sfd === "Ja")
-      ? "Ja" as const
-      : matches.some((entry) => entry.sfd === "Unklar")
-        ? "Unklar" as const
-        : matches.some((entry) => entry.sfd === "Nein")
-          ? "Nein" as const
-          : undefined;
-
-    return [{
-      ...source,
-      id: `comfort-curated-${index}`,
-      name: rule.name,
-      price: rule.price,
-      uiGroup: "Komfort" as const,
-      sfd,
-    }];
-  });
-
-  return [...otherEntries, ...curated];
-}
-'''
+          block = base64.b64decode('dHlwZSBDdXJhdGVkQ29tZm9ydFJ1bGUgPSB7CiAgbmFtZTogc3RyaW5nOwogIHByaWNlOiBudW1iZXI7CiAgbWF0Y2g6IFJlZ0V4cDsKfTsKCmNvbnN0IGN1cmF0ZWRDb21mb3J0UnVsZXM6IEN1cmF0ZWRDb21mb3J0UnVsZVtdID0gWwogIHsgbmFtZTogIkF1dG8tTG9jayAvIEF1dG8tVW5sb2NrIGFucGFzc2VuIiwgcHJpY2U6IDE1LCBtYXRjaDogLyhhdXRvWy0gXT9sb2NrfGF1dG9bLSBdP3VubG9jaykvaSB9LAogIHsgbmFtZTogIktFU1NZIC8gS2V5bGVzcyDigJMgRnVua3Rpb25lbiBhbnBhc3NlbiIsIHByaWNlOiAyNSwgbWF0Y2g6IC8oa2Vzc3l8a2V5bGVzcykvaSB9LAogIHsgbmFtZTogIkF1dG9tYXRpc2NoZXMgVmVycmllZ2VsbiAvIEVudHJpZWdlbG4gYW5wYXNzZW4iLCBwcmljZTogMjAsIG1hdGNoOiAvKGF1dG9tYXRpc2NoLioodmVycmllZ2VsfGVudHJpZWdlbCl8KHZlcnJpZWdlbHxlbnRyaWVnZWwpLiphdXRvbWF0aXNjaCkvaSB9LAogIHsgbmFtZTogIkVpbnplbHTDvHLDtmZmbnVuZyAvIFNhZmUtTG9jayBhbnBhc3NlbiIsIHByaWNlOiAyMCwgbWF0Y2g6IC8oZWluemVsdMO8csO2ZmZudW5nfGVpbnplbHR1ZXJvZWZmbnVuZ3xzYWZlWy0gXT9sb2NrKS9pIH0sCiAgeyBuYW1lOiAiQWt1c3Rpc2NoZSAvIG9wdGlzY2hlIFZlcnJpZWdlbHVuZ3NxdWl0dGllcnVuZyIsIHByaWNlOiAxNSwgbWF0Y2g6IC8oaG9ybnF1aXR0aWVydW5nfHF1aXR0aWVydW5nc3RvbnxxdWl0dGllcnVuZy4qKHZlcnJpZWdlbHxlbnRyaWVnZWwpfG9wdGlzY2hlIHLDvGNrbWVsZHVuZ3xvcHRpc2NoZW4gcsO8Y2ttZWxkKS9pIH0sCiAgeyBuYW1lOiAiRGllYnN0YWhsd2FybmFubGFnZSDigJMgRWluc3RlbGx1bmdlbiBhbnBhc3NlbiIsIHByaWNlOiAyNSwgbWF0Y2g6IC8oXGJkd2FcYnxkaWVic3RhaGx3YXJuYW5sYWdlKS9pIH0sCgogIHsgbmFtZTogIktvbWZvcnQtRmVuc3RlcmJlZGllbnVuZyBha3RpdmllcmVuIiwgcHJpY2U6IDE1LCBtYXRjaDogLyhrb21mb3J0Wy0gXT9mZW5zdGVyYmVkaWVudW5nfGtvbWZvcnRiZWRpZW51bmcuKmZlbnN0ZXJ8ZmVuc3Rlci4qa29tZm9ydCkvaSB9LAogIHsgbmFtZTogIkZlbnN0ZXJiZWRpZW51bmcgYmVpIFrDvG5kdW5nIC8gVMO8csO2ZmZudW5nIGFucGFzc2VuIiwgcHJpY2U6IDIwLCBtYXRjaDogLyhmZW5zdGVyYmVkaWVudW5nfGZlbnN0ZXJoZWJlcnxmcmVpZ2FiZW5hY2hsYXVmfHNob3J0Wy0gXT9kcm9wKS9pIH0sCiAgeyBuYW1lOiAiUmVnZW5zY2hsaWXDn2VuIGFrdGl2aWVyZW4iLCBwcmljZTogMjUsIG1hdGNoOiAvcmVnZW5zY2hsaWXDn3xyZWdlbnNjaGxpZXNzL2kgfSwKICB7IG5hbWU6ICJTY2hpZWJlZGFjaCDigJMgS29tZm9ydMO2ZmZuZW4gLyBLb21mb3J0c2NobGllw59lbiIsIHByaWNlOiAyMCwgbWF0Y2g6IC9zY2hpZWJlZGFjaC4qa29tZm9ydCjDtmZmbmVufG9lZmZuZW58c2NobGllw59lbnxzY2hsaWVzc2VuKS9pIH0sCiAgeyBuYW1lOiAiU2NoaWViZWRhY2gg4oCTIEVpbnN0ZWxsdW5nZW4gYW5wYXNzZW4iLCBwcmljZTogMjAsIG1hdGNoOiAvc2NoaWViZWRhY2gvaSB9LAoKICB7IG5hbWU6ICJBdcOfZW5zcGllZ2VsIGF1dG9tYXRpc2NoIGFua2xhcHBlbiIsIHByaWNlOiAyNSwgbWF0Y2g6IC9zcGllZ2VsLiooYW5rbGFwcHxhbmtsYXApL2kgfSwKICB7IG5hbWU6ICJCZWlmYWhyZXJzcGllZ2VsYWJzZW5rdW5nIGFrdGl2aWVyZW4iLCBwcmljZTogMjUsIG1hdGNoOiAvKHNwaWVnZWwuKmFic2Vua3xiZWlmYWhyZXIuKnNwaWVnZWwuKmFic2Vua3xib3Jkc3RlaW5hdXRvbWF0aWspL2kgfSwKICB7IG5hbWU6ICJBdcOfZW5zcGllZ2VsIOKAkyBFaW5zdGVsbHVuZ2VuIGFucGFzc2VuIiwgcHJpY2U6IDIwLCBtYXRjaDogL3NwaWVnZWwuKihoZWl6dW5nfHN5bmNocm9ufGVpbnN0ZWxsdW5nfHZlcnN0ZWxsdW5nKS9pIH0sCgogIHsgbmFtZTogIkVsZWt0cmlzY2hlIEhlY2trbGFwcGUg4oCTIEZ1bmt0aW9uZW4gYW5wYXNzZW4iLCBwcmljZTogMzAsIG1hdGNoOiAvKGVsZWt0ci4qaGVja2tsYXBwZXxoZWNra2xhcHBlIFwoZWxla3RyaXNjaFwpfGhlY2trbGFwcGUuKih0YXN0ZXJ8ZmZifMO2ZmZudW5nc2jDtmhlfG9lZmZudW5nc2hvZWhlfHdhcm5zaWduYWx8c2NobMO8c3NlbHxzY2hsdWVzc2VsfG5haGJlcmVpY2gpKS9pIH0sCiAgeyBuYW1lOiAiRWFzeSBPcGVuIC8gRWFzeSBDbG9zZSBhbnBhc3NlbiIsIHByaWNlOiAzMCwgbWF0Y2g6IC8oZWFzeSA/b3BlbnxlYXN5ID9jbG9zZSkvaSB9LAoKICB7IG5hbWU6ICJIZWNrd2lzY2hlciDigJMgVmVyaGFsdGVuIGFucGFzc2VuIiwgcHJpY2U6IDE1LCBtYXRjaDogLyhoZWNrd2lzY2hlcnxoZWNrc2NoZWliZW53aXNjaGVyKS9pIH0sCiAgeyBuYW1lOiAiVHLDpG5lbndpc2NoZW4gRnJvbnQgLyBIZWNrIGFrdGl2aWVyZW4iLCBwcmljZTogMTUsIG1hdGNoOiAvKHRyw6RuZW53aXNjaGVufHRyYWVuZW53aXNjaGVufHRyb3BmZW53aXNjaGVuKS9pIH0sCgogIHsgbmFtZTogIkVhc3kgRW50cnkgLyBLb21mb3J0ZWluc3RpZWcgYWt0aXZpZXJlbiIsIHByaWNlOiAyNSwgbWF0Y2g6IC8oZWFzeSBlbnRyeXxrb21mb3J0ZWluc3RpZWcpL2kgfSwKICB7IG5hbWU6ICJTaXR6aGVpenVuZyDigJMgRWluc3RlbGx1bmdlbiAmIFNwZWljaGVyZnVua3Rpb24iLCBwcmljZTogMjAsIG1hdGNoOiAvc2l0emhlaXp1bmcvaSB9LAogIHsgbmFtZTogIlNpdHptZW1vcnkgLyBTY2hsw7xzc2VsenVvcmRudW5nIGFucGFzc2VuIiwgcHJpY2U6IDMwLCBtYXRjaDogLyhzaXR6bWVtb3J5fHNpdHotbWVtb3J5fHNpdHplLipmdW5rc2NobMO8c3NlbHxzaXR6ZS4qZnVua3NjaGx1ZXNzZWx8c2NobMO8c3NlbC4qc2l0enxzY2hsdWVzc2VsLipzaXR6KS9pIH0sCiAgeyBuYW1lOiAiQWlyIENhcmUgLyBLbGltYWVpbnN0ZWxsdW5nZW4gYW5wYXNzZW4iLCBwcmljZTogMjAsIG1hdGNoOiAvKGFpciA/Y2FyZXxrbGltYWFubGFnZXxrbGltYWVpbnN0ZWxsdW5nfGdlYmzDpHNlfGdlYmxhZXNlfHVtbHVmdCkvaSB9LAoKICB7IG5hbWU6ICJLb21mb3J0YmxpbmtlbiBhbnBhc3NlbiIsIHByaWNlOiAxNSwgbWF0Y2g6IC9rb21mb3J0Ymxpbmtlbi9pIH0sCiAgeyBuYW1lOiAiS29tZm9ydGFrdGlvbmVuIHBlciBGZXJuYmVkaWVudW5nIGJlaSBsYXVmZW5kZW0gTW90b3IiLCBwcmljZTogMjAsIG1hdGNoOiAva29tZm9ydGFrdGlvbmVuLiooZmZifGZlcm5iZWRpZW51bmcpLiooesO8bmR1bmd8enVlbmR1bmd8bW90b3JsYXVmfG1vdG9yKS9pIH0sCl07CgpmdW5jdGlvbiBjdXJhdGVDb21mb3J0RW50cmllcyhlbnRyaWVzOiBVbmlmaWVkQ29kaW5nRW50cnlbXSk6IFVuaWZpZWRDb2RpbmdFbnRyeVtdIHsKICBjb25zdCBjYW5kaWRhdGVzID0gZW50cmllcy5maWx0ZXIoKGVudHJ5KSA9PiBlbnRyeS51aUdyb3VwID09PSAiS29tZm9ydCIpOwogIGNvbnN0IG90aGVyRW50cmllcyA9IGVudHJpZXMuZmlsdGVyKChlbnRyeSkgPT4gZW50cnkudWlHcm91cCAhPT0gIktvbWZvcnQiKTsKCiAgY29uc3QgY3VyYXRlZCA9IGN1cmF0ZWRDb21mb3J0UnVsZXMuZmxhdE1hcCgocnVsZSwgaW5kZXgpID0+IHsKICAgIGNvbnN0IG1hdGNoZXMgPSBjYW5kaWRhdGVzLmZpbHRlcigoZW50cnkpID0+IHJ1bGUubWF0Y2gudGVzdChlbnRyeS5uYW1lKSk7CiAgICBpZiAoIW1hdGNoZXMubGVuZ3RoKSByZXR1cm4gW107CgogICAgY29uc3Qgc291cmNlID0gbWF0Y2hlc1swXTsKICAgIGNvbnN0IHNmZCA9IG1hdGNoZXMuc29tZSgoZW50cnkpID0+IGVudHJ5LnNmZCA9PT0gIkphIikKICAgICAgPyAiSmEiIGFzIGNvbnN0CiAgICAgIDogbWF0Y2hlcy5zb21lKChlbnRyeSkgPT4gZW50cnkuc2ZkID09PSAiVW5rbGFyIikKICAgICAgICA/ICJVbmtsYXIiIGFzIGNvbnN0CiAgICAgICAgOiBtYXRjaGVzLnNvbWUoKGVudHJ5KSA9PiBlbnRyeS5zZmQgPT09ICJOZWluIikKICAgICAgICAgID8gIk5laW4iIGFzIGNvbnN0CiAgICAgICAgICA6IHVuZGVmaW5lZDsKCiAgICByZXR1cm4gW3sKICAgICAgLi4uc291cmNlLAogICAgICBpZDogYGNvbWZvcnQtY3VyYXRlZC0ke2luZGV4fWAsCiAgICAgIG5hbWU6IHJ1bGUubmFtZSwKICAgICAgcHJpY2U6IHJ1bGUucHJpY2UsCiAgICAgIHVpR3JvdXA6ICJLb21mb3J0IiBhcyBjb25zdCwKICAgICAgc2ZkLAogICAgfV07CiAgfSk7CgogIHJldHVybiBbLi4ub3RoZXJFbnRyaWVzLCAuLi5jdXJhdGVkXTsKfQo=').decode('utf-8')
 
           if 'const curatedComfortRules: CuratedComfortRule[]' not in text:
               anchor = 'function normalize(value: string) {'
