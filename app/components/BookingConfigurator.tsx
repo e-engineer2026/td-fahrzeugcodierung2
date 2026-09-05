@@ -182,6 +182,75 @@ function curateAssistEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[
   return [...otherEntries, ...curated];
 }
 
+type CuratedComfortRule = {
+  name: string;
+  price: number;
+  match: RegExp;
+};
+
+const curatedComfortRules: CuratedComfortRule[] = [
+  { name: "Auto-Lock / Auto-Unlock anpassen", price: 15, match: /(auto[- ]?lock|auto[- ]?unlock)/i },
+  { name: "KESSY / Keyless – Funktionen anpassen", price: 25, match: /(kessy|keyless)/i },
+  { name: "Automatisches Verriegeln / Entriegeln anpassen", price: 20, match: /(automatisch.*(verriegel|entriegel)|(verriegel|entriegel).*automatisch)/i },
+  { name: "Einzeltüröffnung / Safe-Lock anpassen", price: 20, match: /(einzeltüröffnung|einzeltueroeffnung|safe[- ]?lock)/i },
+  { name: "Akustische / optische Verriegelungsquittierung", price: 15, match: /(hornquittierung|quittierungston|quittierung.*(verriegel|entriegel)|optische rückmeldung|optischen rückmeld)/i },
+  { name: "Diebstahlwarnanlage – Einstellungen anpassen", price: 25, match: /(\bdwa\b|diebstahlwarnanlage)/i },
+
+  { name: "Komfort-Fensterbedienung aktivieren", price: 15, match: /(komfort[- ]?fensterbedienung|komfortbedienung.*fenster|fenster.*komfort)/i },
+  { name: "Fensterbedienung bei Zündung / Türöffnung anpassen", price: 20, match: /(fensterbedienung|fensterheber|freigabenachlauf|short[- ]?drop)/i },
+  { name: "Regenschließen aktivieren", price: 25, match: /regenschließ|regenschliess/i },
+  { name: "Schiebedach – Komfortöffnen / Komfortschließen", price: 20, match: /schiebedach.*komfort(öffnen|oeffnen|schließen|schliessen)/i },
+  { name: "Schiebedach – Einstellungen anpassen", price: 20, match: /schiebedach/i },
+
+  { name: "Außenspiegel automatisch anklappen", price: 25, match: /spiegel.*(anklapp|anklap)/i },
+  { name: "Beifahrerspiegelabsenkung aktivieren", price: 25, match: /(spiegel.*absenk|beifahrer.*spiegel.*absenk|bordsteinautomatik)/i },
+  { name: "Außenspiegel – Einstellungen anpassen", price: 20, match: /spiegel.*(heizung|synchron|einstellung|verstellung)/i },
+
+  { name: "Elektrische Heckklappe – Funktionen anpassen", price: 30, match: /(elektr.*heckklappe|heckklappe \(elektrisch\)|heckklappe.*(taster|ffb|öffnungshöhe|oeffnungshoehe|warnsignal|schlüssel|schluessel|nahbereich))/i },
+  { name: "Easy Open / Easy Close anpassen", price: 30, match: /(easy ?open|easy ?close)/i },
+
+  { name: "Heckwischer – Verhalten anpassen", price: 15, match: /(heckwischer|heckscheibenwischer)/i },
+  { name: "Tränenwischen Front / Heck aktivieren", price: 15, match: /(tränenwischen|traenenwischen|tropfenwischen)/i },
+
+  { name: "Easy Entry / Komforteinstieg aktivieren", price: 25, match: /(easy entry|komforteinstieg)/i },
+  { name: "Sitzheizung – Einstellungen & Speicherfunktion", price: 20, match: /sitzheizung/i },
+  { name: "Sitzmemory / Schlüsselzuordnung anpassen", price: 30, match: /(sitzmemory|sitz-memory|sitze.*funkschlüssel|sitze.*funkschluessel|schlüssel.*sitz|schluessel.*sitz)/i },
+  { name: "Air Care / Klimaeinstellungen anpassen", price: 20, match: /(air ?care|klimaanlage|klimaeinstellung|gebläse|geblaese|umluft)/i },
+
+  { name: "Komfortblinken anpassen", price: 15, match: /komfortblinken/i },
+  { name: "Komfortaktionen per Fernbedienung bei laufendem Motor", price: 20, match: /komfortaktionen.*(ffb|fernbedienung).*(zündung|zuendung|motorlauf|motor)/i },
+];
+
+function curateComfortEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  const candidates = entries.filter((entry) => entry.uiGroup === "Komfort");
+  const otherEntries = entries.filter((entry) => entry.uiGroup !== "Komfort");
+
+  const curated = curatedComfortRules.flatMap((rule, index) => {
+    const matches = candidates.filter((entry) => rule.match.test(entry.name));
+    if (!matches.length) return [];
+
+    const source = matches[0];
+    const sfd = matches.some((entry) => entry.sfd === "Ja")
+      ? "Ja" as const
+      : matches.some((entry) => entry.sfd === "Unklar")
+        ? "Unklar" as const
+        : matches.some((entry) => entry.sfd === "Nein")
+          ? "Nein" as const
+          : undefined;
+
+    return [{
+      ...source,
+      id: `comfort-curated-${index}`,
+      name: rule.name,
+      price: rule.price,
+      uiGroup: "Komfort" as const,
+      sfd,
+    }];
+  });
+
+  return [...otherEntries, ...curated];
+}
+
 function normalize(value: string) {
   return value
     .toLocaleLowerCase("de")
@@ -319,7 +388,7 @@ function vehicleSpecificCodings(
   }));
 
   const source = codingSources.find((item) => item.platform === vehicle.platform);
-  if (!source) return curateAssistEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year)));
+  if (!source) return curateComfortEntries(curateAssistEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year))));
 
   const allowedCapabilities = new Set(
     vehicleCatalog.map((coding) => capabilityForName(coding.name)).filter((value): value is string => Boolean(value))
@@ -354,7 +423,7 @@ function vehicleSpecificCodings(
     const key = normalize(entry.name);
     if (!byName.has(key) || entry.source === "vehicle") byName.set(key, entry);
   }
-  return curateAssistEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year)));
+  return curateComfortEntries(curateAssistEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year))));
 }
 
 export default function BookingConfigurator() {
