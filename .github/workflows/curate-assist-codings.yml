@@ -28,16 +28,12 @@ jobs:
           block = block.replace('\\\\b', '\\b').replace('\\\\s', '\\s').replace('\\\\/', '\\/')
           text = text[:start] + block + text[end:]
 
-          old_candidate = '''  const assistCandidate = (entry: UnifiedCodingEntry) =>
-            entry.uiGroup === "Assistenz" ||
-            /(bergabfahrassistent|berganfahrassistent|auto[ -]?hold|gespannstabilisierung|manövrierassistent|manoevrierassistent|anhängerrangierassistent|anhaengerrangierassistent)/i.test(entry.name);'''
-          new_candidate = '''  const assistCandidate = (entry: UnifiedCodingEntry) =>
-            entry.uiGroup === "Assistenz" ||
-            /(tempomat|speed.?limiter|geschwindigkeits.?begrenzer|geschwindigkeits.?limiter|bergabfahrassistent|berganfahrassistent|auto[ -]?hold|gespannstabilisierung|manövrierassistent|manoevrierassistent|anhängerrangierassistent|anhaengerrangierassistent)/i.test(entry.name);'''
-          if old_candidate in text:
-              text = text.replace(old_candidate, new_candidate, 1)
-          elif new_candidate not in text:
-              raise SystemExit('assistCandidate anchor not found')
+          old_regex = '/(bergabfahrassistent|berganfahrassistent|auto[ -]?hold|gespannstabilisierung|manövrierassistent|manoevrierassistent|anhängerrangierassistent|anhaengerrangierassistent)/i.test(entry.name);'
+          new_regex = '/(tempomat|speed.?limiter|geschwindigkeits.?begrenzer|geschwindigkeits.?limiter|bergabfahrassistent|berganfahrassistent|auto[ -]?hold|gespannstabilisierung|manövrierassistent|manoevrierassistent|anhängerrangierassistent|anhaengerrangierassistent)/i.test(entry.name);'
+          if old_regex in text:
+              text = text.replace(old_regex, new_regex, 1)
+          elif new_regex not in text:
+              raise SystemExit('assistCandidate regex not found')
 
           old_other = '  const otherEntries = entries.filter((entry) => !assistCandidate(entry));'
           new_other = '''  const otherEntries = entries.filter((entry) =>
@@ -46,7 +42,7 @@ jobs:
           );'''
           if old_other in text:
               text = text.replace(old_other, new_other, 1)
-          elif new_other not in text:
+          elif 'ausstiegswarnung|front.*kamera.*kalibrier' not in text:
               raise SystemExit('otherEntries anchor not found')
 
           path.write_text(text, encoding='utf-8')
