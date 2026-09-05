@@ -40,6 +40,8 @@ function normalizeName(name:string):string {
     "Rückfahrkamera aktivieren":"Rückfahrkamera aktivieren",
     "Laptimer / Rundenzähler aktivieren":"Laptimer / Rundenzähler aktivieren",
     "Laptimer aktivieren":"Laptimer aktivieren",
+    "Start-Stopp deaktivieren über Spannungsgrenze":"Start-Stopp deaktivieren",
+    "Start-Stopp-System deaktivieren":"Start-Stopp deaktivieren",
   };
   return aliases[name] || name;
 }
