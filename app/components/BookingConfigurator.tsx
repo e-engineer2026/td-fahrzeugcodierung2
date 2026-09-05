@@ -281,8 +281,8 @@ const curatedLightRules: CuratedDisplayRule[] = [
 ];
 
 const curatedInfotainmentRules: CuratedDisplayRule[] = [
-  { name: "Apple Wireless CarPlay aktivieren", price: 45, match: /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt)/i },
-  { name: "Android Auto / Smartphone-Integration anpassen", price: 45, match: /(android auto|mirrorlink|smartphone.*integration)/i },
+  { name: "Apple CarPlay / Android Auto Wireless freischalten", price: 45, match: /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt)/i },
+  { name: "Android Auto / Smartphone-Integration anpassen", price: 45, match: /^(?!.*(?:wireless carplay|apple.*carplay|carplay.*android auto))(?=.*(?:android auto|mirrorlink|smartphone.*integration)).*$/i },
   { name: "Bluetooth / Zweites Telefon anpassen", price: 15, match: /(zweites telefon|bluetooth.*telefon|telefon.*bluetooth)/i },
   { name: "Green / Hidden / Developer Menu freischalten", price: 20, match: /(green menu|hidden menu|developer mode|entwicklermen\u00fc|entwicklermenu)/i },
   { name: "Sprachbedienung aktivieren", price: 25, match: /sprachbedienung/i },
@@ -398,6 +398,7 @@ function track(event: string, params: Record<string, string | number | boolean> 
 
 function yearAllowed(name: string, year: number) {
   if (year > 2014 && /(video in motion|\bvim\b)/i.test(name)) return false;
+  if (year < 2021 && /(wireless carplay|apple.*carplay|carplay.*android auto)/i.test(name)) return false;
   const until = name.match(/\bbis (?:mj\s*)?(\d{4})\b/i);
   if (until && year > Number(until[1])) return false;
   const from = name.match(/\bab (?:mj\s*)?(\d{4})\b/i);
