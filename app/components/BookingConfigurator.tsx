@@ -116,10 +116,10 @@ const curatedAssistRules: CuratedAssistRule[] = [
   { name: "Traffic Jam Assist freischalten", price: 85, match: /(traffic jam assist|stauassistent)/i },
   { name: "Emergency Assist freischalten", price: 85, match: /emergency assist/i },
   { name: "Verkehrszeichenerkennung freischalten", price: 55, match: /verkehrszeichenerkennung/i },
-  { name: "Fernlichtassistent freischalten", price: 55, match: /(?=.*(fernlichtassistent|light assist|\\bhba\\b))(?=.*(freischalt|aktivier))(?!.*(dynamic|dynamisch|\\bdla\\b|matrix))/i },
-  { name: "Dynamisches Fernlicht / DLA freischalten", price: 75, match: /(dynamic light assist|dynamisches fernlicht|dynamischer lichtassistent|\\bdla\\b|matrix.?licht|matrix led)/i },
+  { name: "Fernlichtassistent freischalten", price: 55, match: /(?=.*(fernlichtassistent|light assist|\bhba\b))(?=.*(freischalt|aktivier))(?!.*(dynamic|dynamisch|\bdla\b|matrix))/i },
+  { name: "Dynamisches Fernlicht / DLA freischalten", price: 75, match: /(dynamic light assist|dynamisches fernlicht|dynamischer lichtassistent|\bdla\b|matrix.?licht|matrix led)/i },
   { name: "Trailer Assist freischalten", price: 55, match: /(anhängerrangierassistent|anhaengerrangierassistent|trailer assist)/i },
-  { name: "Park Assist freischalten", price: 55, match: /(intelligenter park assist|park assist|einparkassistent|parklenkassistent|\\bipa\\b)/i },
+  { name: "Park Assist freischalten", price: 55, match: /(intelligenter park assist|park assist|einparkassistent|parklenkassistent|\bipa\b)/i },
   { name: "Manövrierassistent freischalten", price: 55, match: /(manövrierassistent|manoevrierassistent)/i },
   { name: "Rückfahrkamera freischalten", price: 45, match: /(?=.*(rückfahrkamera|rueckfahrkamera|rear view))(?=.*(freischalt|aktivier|nachrüstung|nachruestung))/i },
   { name: "Bergabfahrassistent freischalten", price: 35, match: /bergabfahrassistent/i },
@@ -129,12 +129,12 @@ const curatedAssistRules: CuratedAssistRule[] = [
   // Danach reine Einstellungen / Anpassungen
   { name: "ACC Abstandseinstellung anpassen", price: 20, match: /acc.*abstandseinstellung/i },
   { name: "ACC Fahrprofilauswahl aktivieren", price: 35, match: /acc.*fahrprofil/i },
-  { name: "ACC Schritteinstellung auf 1 km/h ändern", price: 25, match: /acc.*(schritteinstellung|1\\s*km\\/h|1km\\/h)/i },
+  { name: "ACC Schritteinstellung auf 1 km/h ändern", price: 25, match: /acc.*(schritteinstellung|1\s*km\/h|1km\/h)/i },
   { name: "ACC Rechtsüberholsperre anpassen", price: 20, match: /(acc.*rechts.*überhol|rechtsüberholen.*acc)/i },
   { name: "Lane Assist – Einstellungen anpassen", price: 20, match: /(?=.*(lane assist|spurhalteassistent))(?=.*(einstell|eingriff|warn|vibration|lenkunterstützung|lenkunterstuetzung|empfindlichkeit|fahrerinaktivität|fahrerinaktivitaet|speicher|inaktiv))(?!.*(freischalt|aktivier))/i },
   { name: "Travel Assist Einstellungen anpassen", price: 55, match: /travel assist/i },
   { name: "Front Assist Vorwarnung anpassen", price: 20, match: /front assist.*vorwarn/i },
-  { name: "Fernlichtassistent Einstellungen anpassen", price: 20, match: /(?=.*(fernlichtassistent|light assist|\\bhba\\b))(?=.*(einstell|reset|stadt|einschalt|ausschalt|speicher))(?!.*(dynamic|dynamisch|\\bdla\\b|matrix|freischalt|aktivier))/i },
+  { name: "Fernlichtassistent Einstellungen anpassen", price: 20, match: /(?=.*(fernlichtassistent|light assist|\bhba\b))(?=.*(einstell|reset|stadt|einschalt|ausschalt|speicher))(?!.*(dynamic|dynamisch|\bdla\b|matrix|freischalt|aktivier))/i },
   { name: "Einparkhilfe automatisch aktivieren", price: 20, match: /einparkhilfe.*automatische aktivierung/i },
   { name: "Einparkhilfe Abschaltgeschwindigkeit anpassen", price: 20, match: /einparkhilfe.*abschaltgeschwindigkeit/i },
   { name: "Einparkhilfe Bordsteinabstand anpassen", price: 20, match: /einparkhilfe.*bordsteinabstand/i },
@@ -148,10 +148,13 @@ const curatedAssistRules: CuratedAssistRule[] = [
 function curateAssistEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
   const assistCandidate = (entry: UnifiedCodingEntry) =>
     entry.uiGroup === "Assistenz" ||
-    /(bergabfahrassistent|berganfahrassistent|auto[ -]?hold|gespannstabilisierung|manövrierassistent|manoevrierassistent|anhängerrangierassistent|anhaengerrangierassistent)/i.test(entry.name);
+    /(tempomat|speed.?limiter|geschwindigkeits.?begrenzer|geschwindigkeits.?limiter|bergabfahrassistent|berganfahrassistent|auto[ -]?hold|gespannstabilisierung|manövrierassistent|manoevrierassistent|anhängerrangierassistent|anhaengerrangierassistent)/i.test(entry.name);
 
   const candidates = entries.filter(assistCandidate);
-  const otherEntries = entries.filter((entry) => !assistCandidate(entry));
+  const otherEntries = entries.filter((entry) =>
+  !assistCandidate(entry) &&
+  !/(ausstiegswarnung|front.*kamera.*kalibrier|vorfeldkamera.*kalibrier)/i.test(entry.name)
+);
 
   const curated = curatedAssistRules.flatMap((rule, index) => {
     const matches = candidates.filter((entry) => rule.match.test(entry.name));
