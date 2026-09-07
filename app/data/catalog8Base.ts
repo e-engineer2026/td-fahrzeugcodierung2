@@ -81,7 +81,7 @@ function adjustedPrice(coding: Coding): number {
 function compactCodingName(name: string): string {
   const normalized = name.toLocaleLowerCase("de");
   if (normalized.includes("zeigertest") || normalized.includes("needle sweep") || normalized.includes("staging")) {
-    return "Zeigertest";
+    return "Kombiinstrument Zeigertest aktivieren";
   }
   return name;
 }
