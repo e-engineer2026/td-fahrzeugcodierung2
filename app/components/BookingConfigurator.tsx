@@ -241,11 +241,12 @@ type CuratedDisplayRule = {
   name: string;
   price: number;
   match: RegExp;
+  hardware?: string | null;
 };
 
 const curatedLightRules: CuratedDisplayRule[] = [
-  { name: "Coming Home / Leaving Home aktivieren", price: 15, match: /(?=.*(coming home|leaving home))(?=.*(aktivier|freischalt))/i },
-  { name: "Coming Home / Leaving Home Einstellungen anpassen", price: 15, match: /(?=.*(coming home|leaving home))(?!.*(aktivier|freischalt))/i },
+  { name: "Coming Home / Leaving Home aktivieren", price: 30, match: /(?=.*(coming home|leaving home))(?=.*(aktivier|freischalt))/i, hardware: "Entsprechende Leuchten/LED-Module und Verkabelung sowie kompatibles BCM müssen vorhanden sein." },
+  { name: "Coming Home / Leaving Home Einstellungen anpassen", price: 15, match: /(?=.*(coming home|leaving home))(?!.*(aktivier|freischalt))/i, hardware: null },
   { name: "Tagfahrlicht mit Heckleuchten aktivieren", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?=.*(heckleucht|rückleucht|rueckleucht))/i },
   { name: "Tagfahrlicht Einstellungen anpassen", price: 15, match: /(?=.*(tagfahrlicht|\btfl\b))(?!.*(heckleucht|rückleucht|rueckleucht|us[- ]))/i },
   { name: "US-Standlicht / US-Tagfahrlicht aktivieren", price: 20, match: /(us[- ]?standlicht|us[- ]?tagfahrlicht)/i },
@@ -314,6 +315,7 @@ function curateDisplayGroup(
       name: rule.name,
       price: rule.price,
       uiGroup: group,
+      hardware: rule.hardware === null ? undefined : rule.hardware ?? source.hardware,
       sfd,
     }];
   });
