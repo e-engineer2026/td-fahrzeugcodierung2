@@ -3,6 +3,7 @@ import Link from "next/link";
 import { MapPin, ShieldCheck, Wrench } from "lucide-react";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
+import HeaderBookingSummary from "./components/HeaderBookingSummary";
 
 export default function Home(){
  return <main>
@@ -14,6 +15,7 @@ export default function Home(){
       </a>
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#leistungen">Leistungen</a><a href="#buchen">Codierungen</a><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <HeaderBookingSummary />
         <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 lg:inline-flex">Direkt anfragen</a>
       </div>
     </div>
