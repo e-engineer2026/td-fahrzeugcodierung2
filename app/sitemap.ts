@@ -14,6 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: base, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${base}/fahrzeugcodierung-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${base}/vw-codierung-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${base}/audi-codierung-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${base}/skoda-codierung-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${base}/remote-fahrzeugcodierung`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/steuergeraete-flash`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/fahrzeuge`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     ...vehiclePages,

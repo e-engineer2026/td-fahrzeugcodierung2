@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "./components/GoogleAnalytics";
+import MobileContactBar from "./components/MobileContactBar";
 import "./globals.css";
 import "./booking-overrides.css";
 
 const siteUrl = "https://td-fahrzeugcodierung.vercel.app";
 const gaId = "G-T8R5MJJW2P";
+const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -20,7 +22,8 @@ const structuredData = {
       description:
         "VAG Fahrzeugcodierung und Fahrzeugdiagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – persönlich in Leipzig-Süd oder per Remote.",
       telephone: "+4915563047044",
-      email: "td.codierung@gmail.com",
+      email: "info@td-fahrzeugcodierung.com",
+      sameAs: [googleMapsUrl],
       address: {
         "@type": "PostalAddress",
         streetAddress: "Schenkendorfstraße 33",
@@ -37,6 +40,7 @@ const structuredData = {
         "Fahrzeugdiagnose",
         "VCDS",
         "VCP",
+        "ODIS",
         "Remote-Codierung",
         "Volkswagen",
         "Audi",
@@ -77,11 +81,11 @@ export const metadata: Metadata = {
     "Fahrzeugcodierung Leipzig",
     "VCDS Codierung Leipzig",
     "Remote Codierung VAG",
-    "VW Codierung",
-    "Audi Codierung",
-    "Škoda Codierung",
-    "SEAT Codierung",
-    "CUPRA Codierung",
+    "VW Codierung Leipzig",
+    "Audi Codierung Leipzig",
+    "Škoda Codierung Leipzig",
+    "SEAT Codierung Leipzig",
+    "CUPRA Codierung Leipzig",
     "Fahrzeugdiagnose Leipzig",
   ],
   alternates: { canonical: "/" },
@@ -133,6 +137,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
+        <MobileContactBar />
         <GoogleAnalytics />
         <Analytics />
       </body>
