@@ -34,11 +34,11 @@ export default function HeaderBookingSummary() {
   return (
     <a
       href="#konfigurator"
-      className="flex min-w-[92px] flex-col items-end rounded-xl border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-right leading-tight text-blue-800 transition hover:border-blue-300 hover:bg-blue-100 sm:min-w-0 sm:flex-row sm:items-center sm:gap-2 sm:px-3 sm:py-2"
-      aria-label={`${summary.count} Codierungen gewählt, Gesamtpreis ${summary.total} Euro`}
+      className="flex min-w-[104px] flex-col rounded-xl bg-blue-600 px-3 py-1.5 leading-tight text-white shadow-sm transition hover:bg-blue-700 sm:min-w-0 sm:flex-row sm:items-center sm:gap-2 sm:py-2"
+      aria-label={`${summary.count} Codierungen gewählt, Gesamtpreis ${summary.total} Euro, Auswahl öffnen`}
     >
-      <span className="text-[11px] font-bold sm:text-sm">{summary.count} gewählt</span>
-      <span className="text-sm font-black sm:text-base">{summary.total} €</span>
+      <span className="text-[10px] font-bold uppercase tracking-wide text-blue-100 sm:text-xs">Auswahl · {summary.count}</span>
+      <span className="text-sm font-black sm:text-base">{summary.total} € <span aria-hidden="true">→</span></span>
     </a>
   );
 }
