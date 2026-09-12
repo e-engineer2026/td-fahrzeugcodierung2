@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { curateCodingEntries } from "../../../lib/codingDisplay";
 import { codingCatalog, codingGroups, codingsForVehicle } from "../../../data/catalog";
 import { findVehicleBySlugs, seoVehicles, vehicleBrandSlug, vehicleModelSlug } from "../../../lib/vehicleSeo";
 
@@ -56,7 +57,11 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
 
   const codingIds = new Set(codingsForVehicle(vehicle));
   const codings = codingCatalog.filter((coding) => codingIds.has(coding.id));
-  const serviceCodings = codings.filter((coding) => coding.id !== "diagnose");
+  const serviceCodings = curateCodingEntries(
+    codings
+      .filter((coding) => coding.id !== "diagnose")
+      .map((coding) => ({ ...coding, source: "vehicle" as const }))
+  );
   const years = vehicle.endYear >= 2026 ? `ab ${vehicle.startYear}` : `${vehicle.startYear}–${vehicle.endYear}`;
   const name = `${shortBrand(vehicle.brand)} ${vehicle.model}`;
 
