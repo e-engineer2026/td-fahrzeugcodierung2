@@ -1,21 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
+import { MapPin, ShieldCheck, Star, Wrench } from "lucide-react";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
 
+const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
+
 export default function Home(){
- return <main className="pb-24 md:pb-0">
+ return <main>
   <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
     <div className="container-x flex h-14 items-center justify-between gap-2 sm:h-16 sm:gap-3">
       <a href="#" className="flex min-w-0 items-center" aria-label="TD Fahrzeugcodierung – Startseite">
         <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-9 w-auto sm:h-11" priority />
         <span className="ml-2 whitespace-nowrap text-xs font-black text-slate-950 sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
       </a>
-      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#buchen">Codierungen</a><a href="#faq">FAQ</a></nav>
+      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#leistungen">Leistungen</a><a href="#buchen">Codierungen</a><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 lg:inline-flex">
-          Direkt anfragen
-        </a>
+        <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 lg:inline-flex">Direkt anfragen</a>
       </div>
     </div>
   </header>
@@ -34,6 +35,37 @@ export default function Home(){
           <Link href="/fahrzeuge" className="btn-secondary w-full sm:w-auto">Fahrzeuge &amp; Preise</Link>
           <Link href="/steuergeraete-flash" className="btn-secondary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section className="container-x py-10 sm:py-14" aria-labelledby="vertrauen-heading">
+    <div className="max-w-3xl">
+      <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">Bewertungen &amp; Vertrauen</div>
+      <h2 id="vertrauen-heading" className="mt-2 text-2xl font-black sm:text-3xl">Technisch klar, transparent und direkt erreichbar.</h2>
+    </div>
+    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <a href={googleMapsUrl} target="_blank" rel="noreferrer" className="card p-5 transition hover:-translate-y-0.5 hover:shadow-md">
+        <Star className="h-6 w-6 text-blue-600" />
+        <h3 className="mt-3 font-black">Google-Bewertungen</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Kundenfeedback direkt im Google-Unternehmensprofil ansehen.</p>
+        <span className="mt-3 inline-flex text-sm font-bold text-blue-700">Bewertungen ansehen →</span>
+      </a>
+      <div className="card p-5"><MapPin className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">Leipzig &amp; Remote</h3><p className="mt-2 text-sm leading-6 text-slate-600">Vor-Ort-Termine in Leipzig-Süd und geeignete Codierungen deutschlandweit per Remote.</p></div>
+      <div className="card p-5"><Wrench className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">VCDS · VCP · ODIS</h3><p className="mt-2 text-sm leading-6 text-slate-600">Diagnose- und Codierwerkzeuge passend zur jeweiligen Fahrzeugplattform und Aufgabe.</p></div>
+      <div className="card p-5"><ShieldCheck className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">Vorprüfung &amp; klare Preise</h3><p className="mt-2 text-sm leading-6 text-slate-600">Machbarkeit wird fahrzeugbezogen geprüft; hinterlegte Leistungen sind direkt kalkulierbar.</p></div>
+    </div>
+  </section>
+
+  <section id="leistungen" className="scroll-mt-20 border-y border-blue-100 bg-white">
+    <div className="container-x py-10 sm:py-14">
+      <div className="max-w-3xl"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">Leipzig &amp; Remote</div><h2 className="mt-2 text-2xl font-black sm:text-3xl">Direkte Seiten für deine Fahrzeugmarke.</h2><p className="mt-3 leading-7 text-slate-600">Schneller zur passenden Leistung, zum Fahrzeugkatalog und zur Terminbuchung.</p></div>
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <Link href="/fahrzeugcodierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Fahrzeugcodierung Leipzig →</Link>
+        <Link href="/vw-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">VW Codierung Leipzig →</Link>
+        <Link href="/audi-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Audi Codierung Leipzig →</Link>
+        <Link href="/skoda-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Škoda Codierung Leipzig →</Link>
+        <Link href="/remote-fahrzeugcodierung" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Remote Fahrzeugcodierung →</Link>
       </div>
     </div>
   </section>
@@ -58,6 +90,5 @@ export default function Home(){
   </div></div></section>
 
   <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:py-10"><div className="flex items-center gap-3"><Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></div></div></footer>
-
  </main>
 }
