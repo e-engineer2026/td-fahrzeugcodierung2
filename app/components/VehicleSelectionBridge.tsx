@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 type VehiclePrefill = {
   brand: string;
@@ -32,8 +33,10 @@ function vehicleFromPage(): VehiclePrefill | null {
 }
 
 export default function VehicleSelectionBridge() {
+  const pathname = usePathname();
+
   useEffect(() => {
-    const onVehiclePage = window.location.pathname.startsWith("/fahrzeuge/");
+    const onVehiclePage = pathname.startsWith("/fahrzeuge/");
 
     if (onVehiclePage) {
       const rememberVehicle = (event: Event) => {
@@ -49,11 +52,12 @@ export default function VehicleSelectionBridge() {
       return () => document.removeEventListener("click", rememberVehicle);
     }
 
-    if (window.location.pathname !== "/") return;
+    if (pathname !== "/") return;
 
     let prefill: VehiclePrefill | null = null;
-    const brandParam = new URLSearchParams(window.location.search).get("brand");
-    const modelParam = new URLSearchParams(window.location.search).get("model");
+    const params = new URLSearchParams(window.location.search);
+    const brandParam = params.get("brand");
+    const modelParam = params.get("model");
 
     if (brandParam && modelParam) {
       prefill = { brand: brandParam, model: modelParam };
@@ -109,7 +113,7 @@ export default function VehicleSelectionBridge() {
     }, 75);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [pathname]);
 
   return null;
 }
