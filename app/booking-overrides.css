@@ -2,3 +2,8 @@
 #buchen .rounded-xl:has(.lucide-sparkles) {
   display: none !important;
 }
+
+/* Die globale mobile Kontaktleiste ersetzt die bisherige Konfigurator-Bottom-Bar. */
+.booking-flow > .fixed.inset-x-0.bottom-0 {
+  display: none !important;
+}
