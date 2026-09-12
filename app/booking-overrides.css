@@ -7,3 +7,18 @@
 .booking-flow > .fixed.inset-x-0.bottom-0 {
   display: none !important;
 }
+
+/* Rabattstaffel und Hinweis bis zur nächsten Stufe deutlich größer darstellen. */
+#buchen .booking-flow > section:nth-of-type(3) > .mt-5.rounded-xl.bg-slate-50.p-4 > .mt-3.border-t.border-slate-200.pt-3.text-xs,
+#buchen .booking-flow > section:nth-of-type(3) > .mt-5.rounded-xl.bg-slate-50.p-4 > p.mt-2.text-xs {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  #buchen .booking-flow > section:nth-of-type(3) > .mt-5.rounded-xl.bg-slate-50.p-4 > .mt-3.border-t.border-slate-200.pt-3.text-xs,
+  #buchen .booking-flow > section:nth-of-type(3) > .mt-5.rounded-xl.bg-slate-50.p-4 > p.mt-2.text-xs {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+}
