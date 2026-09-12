@@ -17,6 +17,7 @@ export type SeoServicePageProps = {
 };
 
 const whatsapp = "https://wa.me/4915563047044";
+const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
 
 export default function SeoServicePage({
   eyebrow,
@@ -29,8 +30,26 @@ export default function SeoServicePage({
   details,
   faq,
 }: SeoServicePageProps) {
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <main className="bg-[#f7fbff] text-slate-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+      />
+
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
@@ -61,6 +80,13 @@ export default function SeoServicePage({
             const Icon = [CheckCircle2, MapPin, Wrench, ShieldCheck][index % 4];
             return <div key={item} className="card p-5"><Icon className="h-6 w-6 text-blue-600" /><p className="mt-3 font-bold leading-6">{item}</p></div>;
           })}
+        </div>
+        <div className="mt-5 flex flex-col gap-4 rounded-2xl border border-blue-100 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-black text-slate-900">TD Fahrzeugcodierung · Leipzig-Süd</p>
+            <p className="mt-1 text-sm leading-6 text-slate-600">Schenkendorfstraße 33 · 04275 Leipzig · Vor-Ort-Termine nach Vereinbarung</p>
+          </div>
+          <a href={googleMapsUrl} target="_blank" rel="noreferrer" className="btn-secondary shrink-0">Google-Unternehmensprofil &amp; Standort</a>
         </div>
       </section>
 
@@ -110,7 +136,7 @@ export default function SeoServicePage({
       <footer className="border-t border-blue-100 bg-white">
         <div className="container-x flex flex-col gap-4 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 TD Fahrzeugcodierung · Leipzig &amp; Remote</span>
-          <div className="flex flex-wrap gap-4"><Link href="/">Startseite</Link><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link></div>
+          <div className="flex flex-wrap gap-4"><Link href="/">Startseite</Link><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href={googleMapsUrl} target="_blank" rel="noreferrer">Google-Profil</a><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link></div>
         </div>
       </footer>
     </main>
