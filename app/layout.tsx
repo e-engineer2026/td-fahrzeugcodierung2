@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 import MobileContactBar from "./components/MobileContactBar";
+import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
 import "./globals.css";
 import "./booking-overrides.css";
 
@@ -136,6 +137,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <VehicleSelectionBridge />
         {children}
         <MobileContactBar />
         <GoogleAnalytics />
