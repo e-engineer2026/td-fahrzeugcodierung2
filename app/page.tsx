@@ -8,6 +8,8 @@ import HeaderBookingSummary from "./components/HeaderBookingSummary";
 import HeroVehicleQuickSelect from "./components/HeroVehicleQuickSelect";
 import SeoFunctionLinks from "./components/SeoFunctionLinks";
 
+const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
+
 export default function Home(){
  return <main>
   <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
@@ -48,10 +50,11 @@ export default function Home(){
       <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">Vertrauen</div>
       <h2 id="vertrauen-heading" className="mt-2 text-2xl font-black sm:text-3xl">Technisch klar, transparent und direkt erreichbar.</h2>
     </div>
-    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <div className="card p-5"><MapPin className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">Leipzig &amp; Remote</h3><p className="mt-2 text-sm leading-6 text-slate-600">Vor-Ort-Termine in Leipzig-Süd und geeignete Codierungen deutschlandweit per Remote.</p></div>
       <div className="card p-5"><Wrench className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">VCDS · VCP · ODIS</h3><p className="mt-2 text-sm leading-6 text-slate-600">Diagnose- und Codierwerkzeuge passend zur jeweiligen Fahrzeugplattform und Aufgabe.</p></div>
       <div className="card p-5"><ShieldCheck className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">Vorprüfung &amp; klare Preise</h3><p className="mt-2 text-sm leading-6 text-slate-600">Machbarkeit wird fahrzeugbezogen geprüft; hinterlegte Leistungen sind direkt kalkulierbar.</p></div>
+      <div className="card p-5"><MapPin className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">Google-Unternehmensprofil</h3><p className="mt-2 text-sm leading-6 text-slate-600">TD Fahrzeugcodierung · Schenkendorfstraße 33 · 04275 Leipzig.</p><a href={googleMapsUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex text-sm font-bold text-blue-700 hover:underline">Standort &amp; Google-Profil öffnen →</a></div>
     </div>
   </section>
 
@@ -91,6 +94,6 @@ export default function Home(){
    <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Wie bezahle ich?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Vor Ort bar, per PayPal oder per Sofortüberweisung beim Termin. Remote per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Codierung.</p></details>
   </div></div></section>
 
-  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:py-10"><div className="flex items-center gap-3"><Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></div></div></footer>
+  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:py-10"><div className="flex items-center gap-3"><Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href={googleMapsUrl} target="_blank" rel="noreferrer">Google-Profil</a><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></div></div></footer>
  </main>
 }
