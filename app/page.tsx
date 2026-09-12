@@ -60,11 +60,13 @@ export default function Home(){
   <section id="leistungen" className="scroll-mt-20 border-y border-blue-100 bg-white">
     <div className="container-x py-10 sm:py-14">
       <div className="max-w-3xl"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">Leipzig &amp; Remote</div><h2 className="mt-2 text-2xl font-black sm:text-3xl">Direkte Seiten für deine Fahrzeugmarke.</h2><p className="mt-3 leading-7 text-slate-600">Schneller zur passenden Leistung, zum Fahrzeugkatalog und zur Terminbuchung.</p></div>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Link href="/fahrzeugcodierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Fahrzeugcodierung Leipzig →</Link>
         <Link href="/vw-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">VW Codierung Leipzig →</Link>
         <Link href="/audi-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Audi Codierung Leipzig →</Link>
         <Link href="/skoda-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Škoda Codierung Leipzig →</Link>
+        <Link href="/seat-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">SEAT Codierung Leipzig →</Link>
+        <Link href="/cupra-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">CUPRA Codierung Leipzig →</Link>
         <Link href="/remote-fahrzeugcodierung" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Remote Fahrzeugcodierung →</Link>
       </div>
     </div>
