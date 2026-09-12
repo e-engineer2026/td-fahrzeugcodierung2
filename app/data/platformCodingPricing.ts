@@ -17,17 +17,27 @@ export type {
 const smartphoneIntegrationPattern = /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt|android auto|mirrorlink|smartphone.*integration)/i;
 const smartphoneIntegrationName = "Apple CarPlay / Android Auto Wireless freischalten";
 const smartphoneIntegrationHardware = "Kompatibles Infotainmentsystem/Smartphone-Schnittstelle; Funktionsfreigabe muss vom System unterstützt werden.";
+const assistanceLightPattern = /(fernlichtassistent|light assist|dynamic light assist|dynamischer lichtassistent|matrix led|matrix-licht|matrix licht)/i;
 
 export function pricePlatformSource(source: PlatformCodingSource): BasePricedPlatformCodingEntry[] {
   return basePricePlatformSource(source).map((entry) => {
-    if (!smartphoneIntegrationPattern.test(entry.name)) return entry;
+    if (smartphoneIntegrationPattern.test(entry.name)) {
+      return {
+        ...entry,
+        name: smartphoneIntegrationName,
+        price: 35,
+        uiGroup: "Infotainment",
+        hardware: smartphoneIntegrationHardware,
+      };
+    }
 
-    return {
-      ...entry,
-      name: smartphoneIntegrationName,
-      price: 35,
-      uiGroup: "Infotainment",
-      hardware: smartphoneIntegrationHardware,
-    };
+    if (assistanceLightPattern.test(entry.name)) {
+      return {
+        ...entry,
+        price: Math.max(0, entry.price - 10),
+      };
+    }
+
+    return entry;
   });
 }
