@@ -13,15 +13,25 @@ export { codingGroups, vehicles, brands, codingsForVehicle };
 const smartphoneIntegrationPattern = /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt|android auto|mirrorlink|smartphone.*integration)/i;
 const smartphoneIntegrationName = "Apple CarPlay / Android Auto Wireless freischalten";
 const smartphoneIntegrationHardware = "Kompatibles Infotainmentsystem/Smartphone-Schnittstelle; Funktionsfreigabe muss vom System unterstützt werden.";
+const assistanceLightPattern = /(fernlichtassistent|light assist|dynamic light assist|dynamischer lichtassistent|matrix led|matrix-licht|matrix licht)/i;
 
 export const codingCatalog: Coding[] = baseCodingCatalog.map((coding) => {
-  if (!smartphoneIntegrationPattern.test(coding.name)) return coding;
+  if (smartphoneIntegrationPattern.test(coding.name)) {
+    return {
+      ...coding,
+      name: smartphoneIntegrationName,
+      price: 35,
+      hardware: smartphoneIntegrationHardware,
+      requirements: undefined,
+    };
+  }
 
-  return {
-    ...coding,
-    name: smartphoneIntegrationName,
-    price: 35,
-    hardware: smartphoneIntegrationHardware,
-    requirements: undefined,
-  };
+  if (assistanceLightPattern.test(coding.name)) {
+    return {
+      ...coding,
+      price: Math.max(0, coding.price - 10),
+    };
+  }
+
+  return coding;
 });
