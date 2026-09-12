@@ -21,7 +21,7 @@ export default function ContactBox() {
 
   const whatsappNumber = "4915563047044";
   const phoneDisplay = "01556 3047044";
-  const email = "td.codierung@gmail.com";
+  const email = "info@td-fahrzeugcodierung.com";
 
   const whatsappText = encodeURIComponent(
     `Hallo, ich möchte eine Codierung vorprüfen lassen.\n\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
