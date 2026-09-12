@@ -14,6 +14,7 @@ const smartphoneIntegrationPattern = /(wireless carplay|apple.*carplay|carplay.*
 const smartphoneIntegrationName = "Apple CarPlay / Android Auto Wireless freischalten";
 const smartphoneIntegrationHardware = "Kompatibles Infotainmentsystem/Smartphone-Schnittstelle; Funktionsfreigabe muss vom System unterstützt werden.";
 const assistanceLightPattern = /(fernlichtassistent|light assist|dynamic light assist|dynamischer lichtassistent|matrix led|matrix-licht|matrix licht)/i;
+const reducedAssistancePattern = /(verkehrszeichenerkennung|\bvze\b|traffic jam assist|stauassistent|\btja\b)/i;
 
 export const codingCatalog: Coding[] = baseCodingCatalog.map((coding) => {
   if (smartphoneIntegrationPattern.test(coding.name)) {
@@ -26,7 +27,7 @@ export const codingCatalog: Coding[] = baseCodingCatalog.map((coding) => {
     };
   }
 
-  if (assistanceLightPattern.test(coding.name)) {
+  if (assistanceLightPattern.test(coding.name) || reducedAssistancePattern.test(coding.name)) {
     return {
       ...coding,
       price: Math.max(0, coding.price - 10),
