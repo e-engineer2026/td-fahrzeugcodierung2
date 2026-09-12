@@ -5,7 +5,6 @@ import BookingConfigurator from "./components/BookingConfigurator";
 import ConfiguratorLiveActions from "./components/ConfiguratorLiveActions";
 import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
-import HeroVehicleQuickSelect from "./components/HeroVehicleQuickSelect";
 import SeoFunctionLinks from "./components/SeoFunctionLinks";
 
 const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
@@ -40,7 +39,6 @@ export default function Home(){
           <Link href="/fahrzeuge" className="btn-secondary w-full sm:w-auto">Fahrzeuge &amp; Preise</Link>
           <Link href="/steuergeraete-flash" className="btn-secondary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
         </div>
-        <HeroVehicleQuickSelect />
       </div>
     </div>
   </section>
