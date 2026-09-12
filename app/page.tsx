@@ -2,8 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, ShieldCheck, Wrench } from "lucide-react";
 import BookingConfigurator from "./components/BookingConfigurator";
+import ConfiguratorLiveActions from "./components/ConfiguratorLiveActions";
 import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
+import HeroVehicleQuickSelect from "./components/HeroVehicleQuickSelect";
+import SeoFunctionLinks from "./components/SeoFunctionLinks";
 
 export default function Home(){
  return <main>
@@ -23,7 +26,7 @@ export default function Home(){
 
   <section className="hero-grid border-b border-blue-100 bg-white">
     <div className="container-x py-8 sm:py-12 lg:py-16">
-      <div className="max-w-4xl">
+      <div className="max-w-5xl">
         <div className="max-w-[620px]">
           <div className="min-w-0"><div className="text-4xl font-black leading-none tracking-tight sm:text-6xl"><span className="text-slate-950">TD</span> <span className="text-blue-600">Fahrzeugcodierung</span></div><div className="mt-2 h-1 w-full rounded-full bg-blue-600 sm:mt-3" /></div>
         </div>
@@ -35,6 +38,7 @@ export default function Home(){
           <Link href="/fahrzeuge" className="btn-secondary w-full sm:w-auto">Fahrzeuge &amp; Preise</Link>
           <Link href="/steuergeraete-flash" className="btn-secondary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
         </div>
+        <HeroVehicleQuickSelect />
       </div>
     </div>
   </section>
@@ -66,7 +70,9 @@ export default function Home(){
     </div>
   </section>
 
-  <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen &amp; Termin konfigurieren.</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><div className="mt-5 sm:mt-7"><BookingConfigurator/></div></section>
+  <SeoFunctionLinks />
+
+  <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen &amp; Termin konfigurieren.</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><div className="mt-5 sm:mt-7"><BookingConfigurator/><ConfiguratorLiveActions /></div></section>
 
   <section id="kontakt" className="scroll-mt-20 border-y border-blue-100 bg-white">
     <div className="container-x py-14 sm:py-20">
