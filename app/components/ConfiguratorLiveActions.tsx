@@ -108,9 +108,10 @@ export default function ConfiguratorLiveActions() {
             {snapshot.mode === "onsite" && <a href={snapshot.calUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
               <CalendarDays className="h-5 w-5" /> Termin online vereinbaren
             </a>}
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 font-bold text-white transition hover:brightness-95 sm:w-auto">
+            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="mt-4 hidden items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 font-bold text-white transition hover:brightness-95 md:inline-flex">
               <MessageCircle className="h-5 w-5" /> Auswahl per WhatsApp senden
             </a>
+            <p className="mt-3 text-sm font-semibold text-slate-600 md:hidden">Mobil: Auswahl über den WhatsApp-Button unten links senden.</p>
           </>
         ) : (
           <>
