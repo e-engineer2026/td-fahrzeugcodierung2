@@ -131,11 +131,11 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 }
 
 #buchen :is(button, a):has(.lucide-calendar-days) > span:first-of-type::before {
-  content: "Termin mit Daten an";
+  content: "Termin online";
 }
 
 #buchen :is(button, a):has(.lucide-calendar-days) > span:first-of-type::after {
-  content: "Cal.com übergeben";
+  content: "vereinbaren";
 }
 
 #buchen .fixed > div > :first-child {
@@ -155,7 +155,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 }
 
 #buchen .fixed > div > :first-child::after {
-  content: "Termin mit Daten an\A Cal.com übergeben";
+  content: "Termin online\A vereinbaren";
   white-space: pre-line;
   font-size: .8125rem;
   line-height: 1.125rem;
