@@ -5,7 +5,6 @@ import BookingConfigurator from "./components/BookingConfigurator";
 import ConfiguratorLiveActions from "./components/ConfiguratorLiveActions";
 import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
-import SeoFunctionLinks from "./components/SeoFunctionLinks";
 
 const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
 
@@ -55,23 +54,6 @@ export default function Home(){
       <span className="shrink-0 text-sm font-bold text-blue-700">Google-Unternehmensprofil öffnen →</span>
     </a>
   </section>
-
-  <section id="leistungen" className="scroll-mt-20 border-y border-blue-100 bg-white">
-    <details className="container-x py-4 sm:py-5">
-      <summary className="cursor-pointer text-lg font-bold text-blue-700">Direkte Seiten für deine Fahrzeugmarke</summary>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Link href="/fahrzeugcodierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Fahrzeugcodierung Leipzig →</Link>
-        <Link href="/vw-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">VW Codierung Leipzig →</Link>
-        <Link href="/audi-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Audi Codierung Leipzig →</Link>
-        <Link href="/skoda-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Škoda Codierung Leipzig →</Link>
-        <Link href="/seat-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">SEAT Codierung Leipzig →</Link>
-        <Link href="/cupra-codierung-leipzig" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">CUPRA Codierung Leipzig →</Link>
-        <Link href="/remote-fahrzeugcodierung" className="card p-4 font-bold text-slate-900 transition hover:border-blue-300 hover:text-blue-700">Remote Fahrzeugcodierung →</Link>
-      </div>
-    </details>
-  </section>
-
-  <SeoFunctionLinks />
 
   <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen &amp; Termin konfigurieren.</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><div className="mt-5 sm:mt-7"><BookingConfigurator/><ConfiguratorLiveActions /></div></section>
 
