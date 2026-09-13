@@ -123,10 +123,6 @@ function discountRate(value: number) {
   return value >= 200 ? 0.2 : value >= 150 ? 0.15 : value >= 100 ? 0.1 : value >= 50 ? 0.05 : 0;
 }
 
-function nextTier(value: number) {
-  return value < 50 ? 50 : value < 100 ? 100 : value < 150 ? 150 : value < 200 ? 200 : null;
-}
-
 function euro(value: number) {
   return value.toFixed(2).replace(".", ",");
 }
@@ -295,7 +291,6 @@ export default function BookingConfigurator() {
   const rate = discountRate(subtotal);
   const discount = subtotal * rate;
   const total = subtotal - discount + sfdFee;
-  const next = nextTier(subtotal);
   const chosen = selectedEntries.map((entry) => entry.name).join(", ");
   const prepay = total * 0.7;
   const finalpay = total * 0.3;
@@ -485,7 +480,6 @@ export default function BookingConfigurator() {
           </div>;
         })}</div>}
 
-      {hasVehicle && <div className="mt-5 rounded-xl bg-slate-50 p-4"><div className="flex justify-between text-sm"><span>Zwischensumme</span><b>{euro(subtotal)} €</b></div><div className="mt-1.5 flex justify-between text-sm text-blue-700"><span>Rabatt ({Math.round(rate * 100)} %)</span><b>-{euro(discount)} €</b></div>{sfdFee > 0 && <div className="mt-2 flex justify-between border-t pt-2 text-sm text-slate-700"><span>SFD-Freischaltung (einmalig)</span><b>+10,00 €</b></div>}<div className="mt-3 flex justify-between border-t pt-3 text-lg"><b>Gesamt</b><b>{euro(total)} €</b></div><div className="mt-3 border-t border-slate-200 pt-3 text-xs font-semibold text-slate-600">Rabattstaffel: <span className="text-blue-700">5 % ab 50 € · 10 % ab 100 € · 15 % ab 150 € · 20 % ab 200 €</span></div>{next ? <p className="mt-2 text-xs text-slate-600">Noch {euro(Math.max(0, next - subtotal))} € bis zur nächsten Rabattstufe ({next === 50 ? 5 : next === 100 ? 10 : next === 150 ? 15 : 20} %).</p> : <p className="mt-2 text-xs font-semibold text-blue-700">20 % Maximalrabatt erreicht.</p>}</div>}
     </section>
 
     {mode === "remote" ? <section className="card p-4 sm:p-8">
