@@ -98,8 +98,8 @@ export default function ConfiguratorLiveActions() {
               <div className="rounded-xl bg-blue-600 p-3 text-white"><div className="text-xs text-blue-100">Dein Preis</div><div className="mt-1 font-black">{snapshot.total} €</div></div>
             </div>
             <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
-              <div><b className="text-slate-800">Rabattstufen:</b> 5 % ab 50 € · 10 % ab 100 € · 15 % ab 150 € · 20 % ab 200 €</div>
-              <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 5 : snapshot.nextTier === "100" ? 10 : snapshot.nextTier === "150" ? 15 : 20} % Rabatt).` : "20 % Maximalrabatt erreicht."}</div>
+              <div><b className="text-slate-800">Rabattstufen:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 200 €</div>
+              <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 10 : snapshot.nextTier === "100" ? 15 : 20} % Rabatt).` : "20 % Maximalrabatt erreicht."}</div>
             </div>
             <div className="mt-3 rounded-xl border border-blue-100 bg-white p-3 text-sm leading-6 text-slate-700">
               <b>Zahlungsmöglichkeiten</b>

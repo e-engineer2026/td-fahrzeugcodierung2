@@ -120,7 +120,7 @@ function tokenRelated(a: string, b: string) {
 }
 
 function discountRate(value: number) {
-  return value >= 200 ? 0.2 : value >= 150 ? 0.15 : value >= 100 ? 0.1 : value >= 50 ? 0.05 : 0;
+  return value >= 200 ? 0.2 : value >= 100 ? 0.15 : value >= 50 ? 0.1 : 0;
 }
 
 function euro(value: number) {
@@ -128,7 +128,7 @@ function euro(value: number) {
 }
 
 function nextTier(value: number) {
-  return value < 50 ? 50 : value < 100 ? 100 : value < 150 ? 150 : value < 200 ? 200 : null;
+  return value < 50 ? 50 : value < 100 ? 100 : value < 200 ? 200 : null;
 }
 
 function track(event: string, params: Record<string, string | number | boolean> = {}) {
