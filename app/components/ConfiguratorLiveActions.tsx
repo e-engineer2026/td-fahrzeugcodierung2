@@ -8,6 +8,11 @@ type Snapshot = {
   subtotal: string;
   discount: string;
   total: string;
+  rate: number;
+  nextTier: string;
+  nextDifference: string;
+  mode: "onsite" | "remote";
+  calUrl: string;
   vehicle: string;
   codings: string[];
 };
@@ -16,28 +21,31 @@ const onsiteCalendar = "https://cal.com/timo-drechsler-lej6jm/vag-codierung-vor-
 const remoteCalendar = "https://cal.com/timo-drechsler-lej6jm/remote-codierung";
 
 function readSnapshot(): Snapshot | null {
-  const section = document.querySelector<HTMLElement>("#konfigurator > section:nth-of-type(3)");
-  if (!section) return null;
+  const configurator = document.querySelector<HTMLElement>("#konfigurator");
+  const section = configurator?.querySelector<HTMLElement>(":scope > section:nth-of-type(3)");
+  if (!configurator || !section) return null;
 
-  const selectedBox = Array.from(section.querySelectorAll<HTMLElement>(".border-blue-200.bg-blue-50"))
-    .find((element) => /Codierung\(en\) gewählt/.test(element.textContent ?? ""));
-  const selectedText = selectedBox?.textContent ?? "";
-  const count = Number(selectedText.match(/(\d+)\s+Codierung\(en\) gewählt/)?.[1] ?? 0);
-  const subtotal = selectedText.match(/([\d.]+,\d{2})\s*€\s*Zwischensumme/)?.[1] ?? "0,00";
-  const total = selectedText.match(/([\d.]+,\d{2})\s*€\s*gesamt/)?.[1] ?? "0,00";
+  const count = Number(configurator.dataset.selectionCount ?? 0);
 
   if (!count) return null;
 
-  const priceBox = Array.from(section.querySelectorAll<HTMLElement>(".rounded-xl.bg-slate-50"))
-    .find((element) => /Zwischensumme/.test(element.textContent ?? "") && /Gesamt/.test(element.textContent ?? ""));
-  const priceText = priceBox?.textContent ?? "";
-  const discount = priceText.match(/Rabatt\s*\([^)]*\)\s*-\s*([\d.]+,\d{2})\s*€/)?.[1] ?? "0,00";
-  const vehicle = section.querySelector("h3")?.textContent?.trim() ?? "Fahrzeug";
   const codings = Array.from(section.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked'))
     .map((input) => input.nextElementSibling?.textContent?.trim() ?? "")
     .filter(Boolean);
 
-  return { count, subtotal, discount, total, vehicle, codings };
+  return {
+    count,
+    subtotal: configurator.dataset.subtotal ?? "0,00",
+    discount: configurator.dataset.discount ?? "0,00",
+    total: configurator.dataset.total ?? "0,00",
+    rate: Number(configurator.dataset.discountRate ?? 0),
+    nextTier: configurator.dataset.nextTier ?? "",
+    nextDifference: configurator.dataset.nextDifference ?? "",
+    mode: configurator.dataset.bookingMode === "remote" ? "remote" : "onsite",
+    calUrl: configurator.dataset.calUrl ?? onsiteCalendar,
+    vehicle: configurator.dataset.vehicle || "Fahrzeug",
+    codings,
+  };
 }
 
 export default function ConfiguratorLiveActions() {
@@ -87,9 +95,16 @@ export default function ConfiguratorLiveActions() {
             </div>
             <div className="mt-4 grid grid-cols-3 gap-2 text-center">
               <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Normalpreis</div><div className="mt-1 font-black">{snapshot.subtotal} €</div></div>
-              <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Rabatt</div><div className="mt-1 font-black text-blue-700">−{snapshot.discount} €</div></div>
+              <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Rabatt ({snapshot.rate} %)</div><div className="mt-1 font-black text-blue-700">−{snapshot.discount} €</div></div>
               <div className="rounded-xl bg-blue-600 p-3 text-white"><div className="text-xs text-blue-100">Dein Preis</div><div className="mt-1 font-black">{snapshot.total} €</div></div>
             </div>
+            <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
+              <div><b className="text-slate-800">Rabattstufen:</b> 5 % ab 50 € · 10 % ab 100 € · 15 % ab 150 € · 20 % ab 200 €</div>
+              <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 5 : snapshot.nextTier === "100" ? 10 : snapshot.nextTier === "150" ? 15 : 20} % Rabatt).` : "20 % Maximalrabatt erreicht."}</div>
+            </div>
+            {snapshot.mode === "onsite" && <a href={snapshot.calUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
+              <CalendarDays className="h-5 w-5" /> Termin online vereinbaren
+            </a>}
             <a href={whatsappUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 py-3 font-bold text-white transition hover:brightness-95 sm:w-auto">
               <MessageCircle className="h-5 w-5" /> Auswahl per WhatsApp senden
             </a>
