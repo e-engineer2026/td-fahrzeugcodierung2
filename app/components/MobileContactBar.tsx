@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, MessageCircle, Phone } from "lucide-react";
+import { MessageCircle, Phone } from "lucide-react";
 
 function track(channel: string) {
   if (typeof window === "undefined") return;
@@ -9,7 +9,6 @@ function track(channel: string) {
 }
 
 export default function MobileContactBar() {
-  const onsiteCalendar = "https://cal.com/timo-drechsler-lej6jm/vag-codierung-vor-ort";
 
   return (
     <>
@@ -32,13 +31,11 @@ export default function MobileContactBar() {
             <Phone className="h-4 w-4" /> Anrufen
           </a>
           <a
-            href={onsiteCalendar}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => track("mobile_booking")}
+            href="/#kontakt"
+            onClick={() => track("mobile_direct_inquiry")}
             className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white"
           >
-            <CalendarDays className="h-4 w-4" /> Termin
+            Direktanfrage
           </a>
         </div>
       </div>
