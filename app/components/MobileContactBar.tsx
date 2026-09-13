@@ -11,12 +11,16 @@ function track(channel: string) {
 
 export default function MobileContactBar() {
   const [hasSelection, setHasSelection] = useState(false);
+  const [calendarUrl, setCalendarUrl] = useState("/#kontakt");
 
   useEffect(() => {
     const update = () => {
       const configurator = document.querySelector<HTMLElement>("#konfigurator");
       const count = Number(configurator?.dataset.selectionCount ?? 0);
+      const calUrl = configurator?.dataset.calUrl;
+
       setHasSelection(count > 0);
+      setCalendarUrl(count > 0 && calUrl ? calUrl : "/#kontakt");
     };
 
     update();
@@ -26,7 +30,7 @@ export default function MobileContactBar() {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ["data-selection-count"],
+      attributeFilter: ["data-selection-count", "data-cal-url"],
     });
     document.addEventListener("change", update);
 
@@ -57,7 +61,9 @@ export default function MobileContactBar() {
             <Phone className="h-4 w-4" /> Anrufen
           </a>
           <a
-            href="/#kontakt"
+            href={calendarUrl}
+            target={hasSelection ? "_blank" : undefined}
+            rel={hasSelection ? "noreferrer" : undefined}
             onClick={() => track(hasSelection ? "mobile_appointment_inquiry" : "mobile_direct_inquiry")}
             className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white"
           >
