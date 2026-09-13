@@ -101,6 +101,10 @@ export default function ConfiguratorLiveActions() {
               <div><b className="text-slate-800">Rabattstufen:</b> 5 % ab 50 € · 10 % ab 100 € · 15 % ab 150 € · 20 % ab 200 €</div>
               <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 5 : snapshot.nextTier === "100" ? 10 : snapshot.nextTier === "150" ? 15 : 20} % Rabatt).` : "20 % Maximalrabatt erreicht."}</div>
             </div>
+            <div className="mt-3 rounded-xl border border-blue-100 bg-white p-3 text-sm leading-6 text-slate-700">
+              <b>Zahlungsmöglichkeiten</b>
+              <p>{snapshot.mode === "onsite" ? "Bar · PayPal · Sofortüberweisung – Zahlung beim Termin." : "PayPal – 70 % vorab, 30 % nach Durchführung."}</p>
+            </div>
             {snapshot.mode === "onsite" && <a href={snapshot.calUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
               <CalendarDays className="h-5 w-5" /> Termin online vereinbaren
             </a>}
