@@ -16,7 +16,7 @@ export default function Home(){
         <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-9 w-auto sm:h-11" priority />
         <span className="ml-2 whitespace-nowrap text-xs font-black text-slate-950 sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
       </a>
-      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#leistungen">Leistungen</a><a href="#buchen">Codierungen</a><a href="#faq">FAQ</a></nav>
+      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#buchen">Codierungen</a><a href="#kontakt">Kontakt</a><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <HeaderBookingSummary />
         <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 lg:inline-flex">Direkt anfragen</a>
@@ -27,8 +27,20 @@ export default function Home(){
   <section className="hero-grid border-b border-blue-100 bg-white">
     <div className="container-x py-8 sm:py-12 lg:py-16">
       <div className="max-w-5xl">
-        <div className="overflow-hidden rounded-2xl border border-blue-200 bg-slate-950 shadow-lg sm:rounded-3xl">
-          <Image src="/td-hero-sign.jpg" alt="TD Fahrzeugcodierung Schriftzug in blauer Leuchtschrift" width={800} height={305} className="h-auto w-full" priority />
+        <div className="relative mx-auto w-full overflow-hidden bg-white">
+          <Image
+            src="/td-hero-sign.jpg"
+            alt="TD Fahrzeugcodierung Schriftzug in blauer Leuchtschrift"
+            width={1536}
+            height={585}
+            sizes="(max-width: 768px) 100vw, 1024px"
+            className="block h-auto w-full object-contain"
+            priority
+          />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-white via-white/70 to-transparent sm:w-14" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white via-white/70 to-transparent sm:w-14" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-5 bg-gradient-to-b from-white/70 to-transparent sm:h-8" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white via-white/60 to-transparent sm:h-14" />
         </div>
         <h1 className="mt-5 text-xl font-bold leading-snug text-slate-900 sm:mt-6 sm:text-2xl">Fahrzeugcodierung &amp; Diagnose in Leipzig – auch per Remote</h1>
         <p className="mt-3 max-w-xl text-base leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – mit Fahrzeugauswahl, transparenter Kalkulation und direkter Terminbuchung.</p>
