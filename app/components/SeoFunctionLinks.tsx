@@ -2,9 +2,6 @@ import Link from "next/link";
 
 const links = [
   ["Assistenzsysteme codieren", "/assistenzsysteme-codieren-leipzig"],
-  ["Verkehrszeichenerkennung codieren", "/verkehrszeichenerkennung-codieren-leipzig"],
-  ["Lane Assist codieren", "/lane-assist-codieren-leipzig"],
-  ["Fernlichtassistent codieren", "/fernlichtassistent-codieren-leipzig"],
   ["Steuergeräte-Diagnose Leipzig", "/steuergeraete-diagnose-leipzig"],
   ["SFD1-Freischaltung Leipzig", "/sfd-freischaltung-leipzig"],
   ["Apple CarPlay freischalten", "/carplay-freischalten-leipzig"],
