@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { MessageCircle, Phone } from "lucide-react";
 
 function track(channel: string) {
@@ -9,6 +10,31 @@ function track(channel: string) {
 }
 
 export default function MobileContactBar() {
+  const [hasSelection, setHasSelection] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      const configurator = document.querySelector<HTMLElement>("#konfigurator");
+      const count = Number(configurator?.dataset.selectionCount ?? 0);
+      setHasSelection(count > 0);
+    };
+
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-selection-count"],
+    });
+    document.addEventListener("change", update);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("change", update);
+    };
+  }, []);
 
   return (
     <>
@@ -32,10 +58,10 @@ export default function MobileContactBar() {
           </a>
           <a
             href="/#kontakt"
-            onClick={() => track("mobile_direct_inquiry")}
+            onClick={() => track(hasSelection ? "mobile_appointment_inquiry" : "mobile_direct_inquiry")}
             className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white"
           >
-            Direktanfrage
+            {hasSelection ? "Termin anfragen" : "Direktanfrage"}
           </a>
         </div>
       </div>
