@@ -127,6 +127,10 @@ function euro(value: number) {
   return value.toFixed(2).replace(".", ",");
 }
 
+function nextTier(value: number) {
+  return value < 50 ? 50 : value < 100 ? 100 : value < 150 ? 150 : value < 200 ? 200 : null;
+}
+
 function track(event: string, params: Record<string, string | number | boolean> = {}) {
   if (typeof window === "undefined") return;
   const gtag = (window as typeof window & { gtag?: (...args: unknown[]) => void }).gtag;
@@ -291,6 +295,7 @@ export default function BookingConfigurator() {
   const rate = discountRate(subtotal);
   const discount = subtotal * rate;
   const total = subtotal - discount + sfdFee;
+  const upcomingTier = nextTier(subtotal);
   const chosen = selectedEntries.map((entry) => entry.name).join(", ");
   const prepay = total * 0.7;
   const finalpay = total * 0.3;
@@ -405,18 +410,31 @@ export default function BookingConfigurator() {
   const calButton = (className: string, save = false) => bookingDisabled ? (
     <button type="button" disabled className={`inline-flex cursor-not-allowed flex-wrap items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-200 px-5 py-3 font-semibold text-slate-500 ${className}`}>
       <CalendarDays className="h-5 w-5" />
-      <span>Termin mit Daten an Cal.com übergeben</span>
+      <span>Termin online vereinbaren</span>
       {mode === "onsite" && <span className="rounded-lg bg-slate-300 px-2 py-1 text-slate-700">Gesamtsumme: {euro(total)} €</span>}
     </button>
   ) : (
     <a href={calUrl} onClick={() => openBooking(save)} target="_blank" rel="noreferrer" className={`btn-primary flex-wrap gap-2 ${className}`}>
       <CalendarDays className="h-5 w-5" />
-      <span>Termin mit Daten an Cal.com übergeben</span>
+      <span>Termin online vereinbaren</span>
       {mode === "onsite" && <span className="rounded-lg bg-white/15 px-2 py-1">Gesamtsumme: {euro(total)} €</span>}
     </a>
   );
 
-  return <div id="konfigurator" className="booking-flow scroll-mt-14 space-y-3 sm:scroll-mt-16 sm:space-y-6">
+  return <div
+    id="konfigurator"
+    className="booking-flow scroll-mt-14 space-y-3 sm:scroll-mt-16 sm:space-y-6"
+    data-booking-mode={mode}
+    data-cal-url={calUrl}
+    data-selection-count={selectedEntries.length}
+    data-subtotal={euro(subtotal)}
+    data-discount={euro(discount)}
+    data-total={euro(total)}
+    data-discount-rate={Math.round(rate * 100)}
+    data-next-tier={upcomingTier ?? ""}
+    data-next-difference={upcomingTier ? euro(upcomingTier - subtotal) : ""}
+    data-vehicle={selectedVehicle && year ? `${brand} ${selectedVehicle.model} · ${year}` : ""}
+  >
     <section className="card p-4 sm:p-6">
       <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">1 · Terminart</div>
       <div className="mt-3 grid gap-2 sm:gap-3 md:grid-cols-2">
@@ -490,7 +508,7 @@ export default function BookingConfigurator() {
       <div className={`mt-5 grid gap-3 ${bookingDisabled ? "" : "sm:grid-cols-2"}`}>{calButton("w-full text-center", true)}{!bookingDisabled && <a href="/zahlung" onClick={() => { savePendingBooking(); track("payment_opened", { method: "paypal", amount: Number(prepay.toFixed(2)) }); }} className="btn-secondary flex w-full flex-col text-center"><span>Termin gebucht? Jetzt 70 % vorauszahlen</span><span className="mt-1 text-sm font-black">Betrag: {euro(prepay)} €</span></a>}</div>
     </section> : <>
       <section className="card p-4 sm:p-8"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">4 · Zahlungsmöglichkeiten</div><p className="mt-3 text-sm text-slate-600">Die Zahlung erfolgt beim Termin.</p><div className="mt-5 grid gap-3 sm:grid-cols-3"><div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><b>Bar</b></div><div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><b>PayPal</b></div><div className="rounded-xl border border-slate-200 bg-slate-50 p-4"><b>Sofortüberweisung</b></div></div></section>
-      <section className="card p-4 sm:p-8"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">5 · Termin</div>{selectedVehicle && <div className="mt-4 rounded-2xl border border-blue-100 p-4 text-sm leading-6"><b>Vor Ort</b> · {brand} {selectedVehicle.model} · Baujahr {year}<br />{selected.length} Codierung(en) · {Math.round(rate * 100)} % Rabatt · <b>{euro(total)} €</b></div>}<div className="mt-5">{calButton("w-full text-center sm:w-auto")}</div></section>
+      <section className="hidden" aria-hidden="true" />
     </>}
 
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-100 bg-white/95 p-3 shadow-[0_-8px_30px_rgba(15,23,42,.08)] backdrop-blur md:hidden"><div className="mx-auto grid max-w-md grid-cols-[2fr_1fr] gap-2">{bookingDisabled ? <button type="button" disabled className="inline-flex min-h-16 w-full items-center justify-center rounded-xl border border-slate-300 bg-slate-200 px-3 py-2 text-center text-[11px] font-semibold text-slate-500">Termin mit Daten an Cal.com übergeben</button> : <a href={calUrl} onClick={() => openBooking(mode === "remote")} target="_blank" rel="noreferrer" className="inline-flex min-h-16 w-full items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-center text-[11px] font-semibold text-white">Termin mit Daten an Cal.com übergeben</a>}<a href="#kontakt" className="inline-flex min-h-16 items-center justify-center rounded-xl border border-blue-200 bg-white px-3 py-2 text-center text-sm font-bold text-blue-700">Direktkontakt</a></div></div>
