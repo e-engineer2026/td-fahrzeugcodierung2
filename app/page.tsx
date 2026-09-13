@@ -24,6 +24,14 @@ export default function Home(){
     </div>
   </header>
 
+  <section className="border-b border-blue-700 bg-blue-600 text-white" aria-label="Automatische Rabattstufen">
+    <div className="container-x flex flex-col gap-1 py-3 text-center sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-4 sm:py-3.5">
+      <strong className="text-sm font-black sm:text-base">Automatischer Rabatt</strong>
+      <span className="text-sm font-bold sm:text-base">10 % ab 50 € · 15 % ab 100 € · 20 % ab 200 €</span>
+      <span className="text-xs font-medium text-blue-100 sm:text-sm">Wird im Konfigurator automatisch berechnet und vom Preis abgezogen.</span>
+    </div>
+  </section>
+
   <section className="hero-grid border-b border-blue-100 bg-white">
     <div className="container-x py-8 sm:py-12 lg:py-16">
       <div className="max-w-5xl">
