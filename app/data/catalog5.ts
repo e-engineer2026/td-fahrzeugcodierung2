@@ -20,6 +20,15 @@ const allAssistIds = Array.from(assistIdSet);
 // MQB: breite VCDS-Kandidatenliste, weiterhin mit Hardware-/Software-Vorprüfung.
 const mqbAssistIds = allAssistIds;
 
+// MQB evo / SFD1 bis einschließlich MJ 2023:
+// Nur vorhandene Assistenzsysteme anpassen. Reine Aktivierungen/Freischaltungen
+// werden im Konfigurator bei SFD1 weiterhin ausgefiltert.
+const mqbevoSfd1AssistIds = [
+  "vcds-lane-memory",
+  "vcds-lane-warning",
+  "vcds-front-assist",
+];
+
 // MLB: konservativ nach Baureihe. Keine pauschalen MQB-spezifischen DLA-/pACC-/Limiter-Funktionen.
 const mlbAssistByModel: Record<string, string[]> = {
   "Audi|A4 / S4 8K": [
@@ -173,6 +182,7 @@ function keyFor(vehicle: Vehicle): string {
 
 function assistIdsForVehicle(vehicle: Vehicle): string[] {
   if (vehicle.platform === "MQB") return mqbAssistIds;
+  if (vehicle.platform === "MQBevo" && vehicle.sfd1From) return mqbevoSfd1AssistIds;
   if (vehicle.platform === "MLB") return mlbAssistByModel[keyFor(vehicle)] ?? [];
   if (vehicle.platform === "MLBevo" && !vehicle.sfd1From) {
     return mlbevoAssistByModel[keyFor(vehicle)] ?? [];
