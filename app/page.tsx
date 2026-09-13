@@ -25,8 +25,9 @@ export default function Home(){
   </header>
 
   <section className="w-full border-b border-red-700 bg-red-600 text-white" aria-label="Automatischer Rabatt bei Konfiguration">
-    <div className="container-x py-2.5 text-center sm:py-3">
+    <div className="container-x flex flex-col items-center justify-center gap-1 py-2.5 text-center sm:flex-row sm:flex-wrap sm:gap-x-3 sm:py-3">
       <strong className="text-sm font-black sm:text-base">Automatischer Rabatt bei Konfiguration</strong>
+      <span className="text-sm font-bold sm:text-base">10 % ab 50 € · 15 % ab 100 € · 20 % ab 200 €</span>
     </div>
   </section>
 
