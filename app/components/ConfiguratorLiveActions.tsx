@@ -18,7 +18,6 @@ type Snapshot = {
 };
 
 const onsiteCalendar = "https://cal.com/timo-drechsler-lej6jm/vag-codierung-vor-ort";
-const remoteCalendar = "https://cal.com/timo-drechsler-lej6jm/remote-codierung";
 
 function readSnapshot(): Snapshot | null {
   const configurator = document.querySelector<HTMLElement>("#konfigurator");
@@ -82,7 +81,7 @@ export default function ConfiguratorLiveActions() {
   }, [snapshot]);
 
   return (
-    <div className="mt-4 grid gap-3 lg:grid-cols-[1.15fr_.85fr]">
+    <div className="mt-4">
       <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4 sm:p-5">
         {snapshot ? (
           <>
@@ -118,14 +117,6 @@ export default function ConfiguratorLiveActions() {
         )}
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
-        <div className="flex items-center gap-2 font-black text-slate-950"><CalendarDays className="h-5 w-5 text-blue-600" /> Nächste freie Termine</div>
-        <p className="mt-2 text-sm leading-6 text-slate-600">Die aktuell freien Zeiten werden live im Terminkalender angezeigt.</p>
-        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-          <a href={onsiteCalendar} target="_blank" rel="noreferrer" className="btn-primary text-center">Vor Ort ansehen</a>
-          <a href={remoteCalendar} target="_blank" rel="noreferrer" className="btn-secondary text-center">Remote ansehen</a>
-        </div>
-      </div>
     </div>
   );
 }
