@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, ShieldCheck, Wrench } from "lucide-react";
+import { MapPin } from "lucide-react";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ConfiguratorLiveActions from "./components/ConfiguratorLiveActions";
 import ContactBox from "./components/ContactBox";
@@ -43,17 +43,17 @@ export default function Home(){
     </div>
   </section>
 
-  <section className="container-x py-10 sm:py-14" aria-labelledby="vertrauen-heading">
-    <div className="max-w-3xl">
-      <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">Vertrauen</div>
-      <h2 id="vertrauen-heading" className="mt-2 text-2xl font-black sm:text-3xl">Technisch klar, transparent und direkt erreichbar.</h2>
-    </div>
-    <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <div className="card p-5"><MapPin className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">Leipzig &amp; Remote</h3><p className="mt-2 text-sm leading-6 text-slate-600">Vor-Ort-Termine in Leipzig-Süd und geeignete Codierungen deutschlandweit per Remote.</p></div>
-      <div className="card p-5"><Wrench className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">VCDS · VCP · ODIS</h3><p className="mt-2 text-sm leading-6 text-slate-600">Diagnose- und Codierwerkzeuge passend zur jeweiligen Fahrzeugplattform und Aufgabe.</p></div>
-      <div className="card p-5"><ShieldCheck className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">Vorprüfung &amp; klare Preise</h3><p className="mt-2 text-sm leading-6 text-slate-600">Machbarkeit wird fahrzeugbezogen geprüft; hinterlegte Leistungen sind direkt kalkulierbar.</p></div>
-      <div className="card p-5"><MapPin className="h-6 w-6 text-blue-600" /><h3 className="mt-3 font-black">Google-Unternehmensprofil</h3><p className="mt-2 text-sm leading-6 text-slate-600">TD Fahrzeugcodierung · Schenkendorfstraße 33 · 04275 Leipzig.</p><a href={googleMapsUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex text-sm font-bold text-blue-700 hover:underline">Standort &amp; Google-Profil öffnen →</a></div>
-    </div>
+  <section className="container-x py-8 sm:py-10" aria-labelledby="standort-heading">
+    <a href={googleMapsUrl} target="_blank" rel="noreferrer" className="card flex flex-col gap-4 p-5 transition hover:border-blue-300 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+      <div className="flex items-start gap-4">
+        <MapPin className="mt-0.5 h-7 w-7 shrink-0 text-blue-600" />
+        <div>
+          <h2 id="standort-heading" className="text-xl font-black sm:text-2xl">Standort in Leipzig-Süd</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-600 sm:text-base">TD Fahrzeugcodierung · Schenkendorfstraße 33 · 04275 Leipzig</p>
+        </div>
+      </div>
+      <span className="shrink-0 text-sm font-bold text-blue-700">Google-Unternehmensprofil öffnen →</span>
+    </a>
   </section>
 
   <section id="leistungen" className="scroll-mt-20 border-y border-blue-100 bg-white">
