@@ -12,15 +12,44 @@ function track(channel: string) {
 export default function MobileContactBar() {
   const [hasSelection, setHasSelection] = useState(false);
   const [calendarUrl, setCalendarUrl] = useState("/#kontakt");
+  const [whatsappUrl, setWhatsappUrl] = useState("https://wa.me/4915563047044");
 
   useEffect(() => {
     const update = () => {
       const configurator = document.querySelector<HTMLElement>("#konfigurator");
+      const section = configurator?.querySelector<HTMLElement>(":scope > section:nth-of-type(3)");
       const count = Number(configurator?.dataset.selectionCount ?? 0);
       const calUrl = configurator?.dataset.calUrl;
+      const selected = count > 0;
 
-      setHasSelection(count > 0);
-      setCalendarUrl(count > 0 && calUrl ? calUrl : "/#kontakt");
+      setHasSelection(selected);
+      setCalendarUrl(selected && calUrl ? calUrl : "/#kontakt");
+
+      if (selected && configurator && section) {
+        const codings = Array.from(section.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked'))
+          .map((input) => input.nextElementSibling?.textContent?.trim() ?? "")
+          .filter(Boolean);
+        const vehicle = configurator.dataset.vehicle || "Fahrzeug";
+        const subtotal = configurator.dataset.subtotal ?? "0,00";
+        const discount = configurator.dataset.discount ?? "0,00";
+        const total = configurator.dataset.total ?? "0,00";
+        const lines = [
+          "Hallo, ich möchte folgende Codierungen anfragen:",
+          "",
+          `Fahrzeug: ${vehicle}`,
+          "Codierungen:",
+          ...codings.map((coding) => `• ${coding}`),
+          "",
+          `Normalpreis: ${subtotal} €`,
+          `Rabatt: -${discount} €`,
+          `Mein Preis: ${total} €`,
+          "",
+          "Bitte kurz Machbarkeit und Termin bestätigen.",
+        ];
+        setWhatsappUrl(`https://wa.me/4915563047044?text=${encodeURIComponent(lines.join("\n"))}`);
+      } else {
+        setWhatsappUrl("https://wa.me/4915563047044");
+      }
     };
 
     update();
@@ -30,7 +59,14 @@ export default function MobileContactBar() {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ["data-selection-count", "data-cal-url"],
+      attributeFilter: [
+        "data-selection-count",
+        "data-cal-url",
+        "data-vehicle",
+        "data-subtotal",
+        "data-discount",
+        "data-total",
+      ],
     });
     document.addEventListener("change", update);
 
@@ -45,13 +81,13 @@ export default function MobileContactBar() {
       <div className="fixed inset-x-0 bottom-0 z-[70] border-t border-slate-200 bg-white/95 px-2 py-2 shadow-[0_-8px_30px_rgba(15,23,42,0.12)] backdrop-blur md:hidden">
         <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
           <a
-            href="https://wa.me/4915563047044"
+            href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            onClick={() => track("mobile_whatsapp")}
+            onClick={() => track(hasSelection ? "mobile_whatsapp_selection" : "mobile_whatsapp")}
             className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-2 text-xs font-bold text-white"
           >
-            <MessageCircle className="h-4 w-4" /> WhatsApp
+            <MessageCircle className="h-4 w-4" /> {hasSelection ? "Auswahl senden" : "WhatsApp"}
           </a>
           <a
             href="tel:+4915563047044"
