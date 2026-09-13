@@ -9,6 +9,8 @@ function track(channel: string) {
 }
 
 export default function MobileContactBar() {
+  const onsiteCalendar = "https://cal.com/timo-drechsler-lej6jm/vag-codierung-vor-ort";
+
   return (
     <>
       <div className="fixed inset-x-0 bottom-0 z-[70] border-t border-slate-200 bg-white/95 px-2 py-2 shadow-[0_-8px_30px_rgba(15,23,42,0.12)] backdrop-blur md:hidden">
@@ -30,7 +32,9 @@ export default function MobileContactBar() {
             <Phone className="h-4 w-4" /> Anrufen
           </a>
           <a
-            href="/#buchen"
+            href={onsiteCalendar}
+            target="_blank"
+            rel="noreferrer"
             onClick={() => track("mobile_booking")}
             className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white"
           >
