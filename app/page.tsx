@@ -27,10 +27,10 @@ export default function Home(){
   <section className="hero-grid border-b border-blue-100 bg-white">
     <div className="container-x py-8 sm:py-12 lg:py-16">
       <div className="max-w-5xl">
-        <div className="max-w-[620px]">
-          <div className="min-w-0"><div className="text-4xl font-black leading-none tracking-tight sm:text-6xl"><span className="text-slate-950">TD</span> <span className="text-blue-600">Fahrzeugcodierung</span></div><div className="mt-2 h-1 w-full rounded-full bg-blue-600 sm:mt-3" /></div>
+        <div className="overflow-hidden rounded-2xl border border-blue-200 bg-slate-950 shadow-lg sm:rounded-3xl">
+          <Image src="/td-hero-sign.jpg" alt="TD Fahrzeugcodierung Schriftzug in blauer Leuchtschrift" width={800} height={305} className="h-auto w-full" priority />
         </div>
-        <h1 className="mt-3 text-xl font-bold leading-snug text-slate-900 sm:mt-4 sm:text-2xl">Fahrzeugcodierung &amp; Diagnose in Leipzig – auch per Remote</h1>
+        <h1 className="mt-5 text-xl font-bold leading-snug text-slate-900 sm:mt-6 sm:text-2xl">Fahrzeugcodierung &amp; Diagnose in Leipzig – auch per Remote</h1>
         <p className="mt-3 max-w-xl text-base leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – mit Fahrzeugauswahl, transparenter Kalkulation und direkter Terminbuchung.</p>
 
         <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
