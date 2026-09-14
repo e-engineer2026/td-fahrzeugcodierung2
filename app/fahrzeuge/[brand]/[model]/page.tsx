@@ -16,6 +16,12 @@ function shortBrand(brand: string): string {
   return brand;
 }
 
+function vehicleDisplayName(vehicle: (typeof seoVehicles)[number]): string {
+  const brand = shortBrand(vehicle.brand);
+  if (brand === "SEAT / CUPRA" && /^(SEAT|CUPRA)\s/i.test(vehicle.model)) return vehicle.model;
+  return `${brand} ${vehicle.model}`;
+}
+
 export function generateStaticParams(): PageParams[] {
   return seoVehicles.map((vehicle) => ({
     brand: vehicleBrandSlug(vehicle),
@@ -28,14 +34,13 @@ export async function generateMetadata(props: { params: Promise<PageParams> }): 
   const vehicle = findVehicleBySlugs(params.brand, params.model);
   if (!vehicle) return {};
 
-  const name = `${shortBrand(vehicle.brand)} ${vehicle.model}`;
+  const name = vehicleDisplayName(vehicle);
   const url = `${BASE}/fahrzeuge/${params.brand}/${params.model}`;
-  const title = `${name} Codierung Leipzig`;
-  const fullTitle = `${title} | TD Fahrzeugcodierung`;
-  const description = `Codierungen und Diagnose für ${name} in Leipzig-Süd oder per Remote. Fahrzeugbezogene Funktionen und Preise ansehen und Termin online konfigurieren.`;
+  const fullTitle = `${name} Codierung Leipzig | TD`;
+  const description = `Codierung und Diagnose für ${name} in Leipzig oder per Remote. Funktionen, Voraussetzungen und Preise prüfen und Termin direkt konfigurieren.`;
 
   return {
-    title,
+    title: { absolute: fullTitle },
     description,
     alternates: { canonical: url },
     robots: { index: true, follow: true },
@@ -63,14 +68,14 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
       .map((coding) => ({ ...coding, source: "vehicle" as const }))
   );
   const years = vehicle.endYear >= 2026 ? `ab ${vehicle.startYear}` : `${vehicle.startYear}–${vehicle.endYear}`;
-  const name = `${shortBrand(vehicle.brand)} ${vehicle.model}`;
+  const name = vehicleDisplayName(vehicle);
 
   return (
     <main className="min-h-screen bg-white text-slate-950">
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-            <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-10 w-auto" priority />
+            <Image src="/td-logo-icon.png" alt="TD Fahrzeugcodierung Logo" width={128} height={85} className="h-10 w-auto" priority />
             <span className="ml-2 whitespace-nowrap text-xs font-black sm:text-sm">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
@@ -133,6 +138,21 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
                 );
               })}
             </div>
+
+            <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+              <h2 className="text-2xl font-black">Technische Vorprüfung beim {name}</h2>
+              <p className="mt-3 leading-7 text-slate-600">
+                Der {name} gehört zur Plattform {vehicle.platform} und wurde {years} angeboten. Vor einer Codierung prüfen wir deshalb die tatsächlich verbauten Steuergeräte, den Softwarestand und die vorhandene Hardware. So lässt sich vermeiden, dass eine Funktion ausgewählt wird, die bei einer bestimmten Ausstattung oder einem abweichenden Modelljahr technisch nicht unterstützt wird.
+              </p>
+              <p className="mt-3 leading-7 text-slate-600">
+                Je nach gewünschter Funktion erfolgt die Umsetzung über Codierung, Anpassung oder Grundeinstellung. Bei Remote-Terminen prüfen wir zusätzlich, ob das verwendete Diagnoseinterface und die Verbindung für die jeweilige Arbeit geeignet sind. Vor-Ort-Termine in Leipzig eignen sich besonders für Funktionen, bei denen nach der Codierung eine direkte Funktionskontrolle am Fahrzeug sinnvoll ist.
+              </p>
+              {vehicle.sfd1From && (
+                <p className="mt-3 leading-7 text-slate-600">
+                  Ab Modelljahr {vehicle.sfd1From} kann bei dieser Baureihe SFD relevant sein. Ob eine SFD-Freischaltung benötigt wird, hängt vom konkreten Steuergerät und der gewünschten Anpassung ab und wird vor der Durchführung geprüft.
+                </p>
+              )}
+            </section>
 
             <div className="mt-10 rounded-2xl border border-blue-100 bg-blue-50 p-5 sm:p-6">
               <h3 className="text-xl font-black">Fehlerdiagnose ebenfalls möglich</h3>
