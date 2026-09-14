@@ -21,16 +21,14 @@ const onsiteCalendar = "https://cal.com/timo-drechsler-lej6jm/vag-codierung-vor-
 
 function readSnapshot(): Snapshot | null {
   const configurator = document.querySelector<HTMLElement>("#konfigurator");
-  const section = configurator?.querySelector<HTMLElement>(":scope > section:nth-of-type(3)");
-  if (!configurator || !section) return null;
+
+  if (!configurator) return null;
 
   const count = Number(configurator.dataset.selectionCount ?? 0);
 
   if (!count) return null;
 
-  const codings = Array.from(section.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked'))
-    .map((input) => input.nextElementSibling?.textContent?.trim() ?? "")
-    .filter(Boolean);
+  const codings = JSON.parse(configurator.dataset.codings || "[]") as string[];
 
   return {
     count,
