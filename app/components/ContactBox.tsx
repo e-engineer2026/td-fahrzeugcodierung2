@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Mail, MessageCircle, Phone } from "lucide-react";
 
 function track(event: string, params: Record<string, string | number | boolean> = {}) {
@@ -18,6 +18,33 @@ export default function ContactBox() {
   const [website, setWebsite] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  const previousPrefill = useRef({ vehicle: "", year: "", coding: "" });
+
+  useEffect(() => {
+    const root = document.getElementById("konfigurator");
+    if (!root) return;
+    const update = () => {
+      const next = {
+        vehicle: root.dataset.contactVehicle ?? "",
+        year: root.dataset.contactYear ?? "",
+        coding: (JSON.parse(root.dataset.codings || "[]") as string[]).join(", "),
+      };
+      const previous = previousPrefill.current;
+      // Keep customer edits; refresh only empty or previously automatic values.
+      setVehicle((current) => !current || current === previous.vehicle ? next.vehicle : current);
+      setYear((current) => !current || current === previous.year ? next.year : current);
+      setCoding((current) => !current || current === previous.coding ? next.coding : current);
+      previousPrefill.current = next;
+    };
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ["data-contact-vehicle", "data-contact-year", "data-codings"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   const whatsappNumber = "4915563047044";
   const phoneDisplay = "01556 3047044";
