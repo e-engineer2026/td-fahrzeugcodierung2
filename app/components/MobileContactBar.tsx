@@ -17,7 +17,7 @@ export default function MobileContactBar() {
   useEffect(() => {
     const update = () => {
       const configurator = document.querySelector<HTMLElement>("#konfigurator");
-      const section = configurator?.querySelector<HTMLElement>(":scope > section:nth-of-type(3)");
+
       const count = Number(configurator?.dataset.selectionCount ?? 0);
       const calUrl = configurator?.dataset.calUrl;
       const selected = count > 0;
@@ -25,10 +25,8 @@ export default function MobileContactBar() {
       setHasSelection(selected);
       setCalendarUrl(selected && calUrl ? calUrl : "/#kontakt");
 
-      if (selected && configurator && section) {
-        const codings = Array.from(section.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked'))
-          .map((input) => input.nextElementSibling?.textContent?.trim() ?? "")
-          .filter(Boolean);
+      if (selected && configurator) {
+        const codings = JSON.parse(configurator.dataset.codings || "[]") as string[];
         const vehicle = configurator.dataset.vehicle || "Fahrzeug";
         const subtotal = configurator.dataset.subtotal ?? "0,00";
         const discount = configurator.dataset.discount ?? "0,00";
@@ -61,6 +59,7 @@ export default function MobileContactBar() {
       attributes: true,
       attributeFilter: [
         "data-selection-count",
+        "data-codings",
         "data-cal-url",
         "data-vehicle",
         "data-subtotal",
