@@ -356,7 +356,7 @@ export default function BookingConfigurator() {
     setVehicleModel(value);
     resetSelection();
     const vehicle = vehicles.find((item) => item.brand === brand && item.model === value);
-    setYear(vehicle?.endYear ?? 0);
+    setYear(0);
     if (vehicle) track("vehicle_selected", { brand: vehicle.brand, model: vehicle.model, platform: vehicle.platform });
   };
 
@@ -424,6 +424,9 @@ export default function BookingConfigurator() {
   return <div
     id="konfigurator"
     className="booking-flow scroll-mt-14 space-y-3 sm:scroll-mt-16 sm:space-y-6"
+    data-codings={JSON.stringify(selectedEntries.map((entry) => entry.name))}
+    data-contact-vehicle={selectedVehicle ? `${brand} ${selectedVehicle.model}` : ""}
+    data-contact-year={year || ""}
     data-booking-mode={mode}
     data-cal-url={calUrl}
     data-selection-count={selectedEntries.length}
