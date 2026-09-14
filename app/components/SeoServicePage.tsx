@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CheckCircle2, MapPin, MessageCircle, ShieldCheck, Wrench } from "lucide-react";
 
 export type SeoFaq = { question: string; answer: string };
+export type SeoRelatedLink = { href: string; label: string; description?: string };
 
 export type SeoServicePageProps = {
   eyebrow: string;
@@ -14,6 +15,8 @@ export type SeoServicePageProps = {
   detailsTitle: string;
   details: string[];
   faq: SeoFaq[];
+  relatedLinks?: SeoRelatedLink[];
+  relatedLinksTitle?: string;
 };
 
 const whatsapp = "https://wa.me/4915563047044";
@@ -29,6 +32,8 @@ export default function SeoServicePage({
   detailsTitle,
   details,
   faq,
+  relatedLinks,
+  relatedLinksTitle = "Passende Leistungen und Informationen",
 }: SeoServicePageProps) {
   const faqStructuredData = {
     "@context": "https://schema.org",
@@ -53,7 +58,7 @@ export default function SeoServicePage({
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-            <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-10 w-auto" />
+            <Image src="/td-logo-icon.png" alt="TD Fahrzeugcodierung Leipzig" width={128} height={85} className="h-10 w-auto" />
             <span className="ml-2 text-sm font-black sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
           </Link>
           <Link href="/fahrzeuge" className="text-sm font-bold text-blue-700 hover:underline">Fahrzeuge &amp; Preise</Link>
@@ -116,6 +121,22 @@ export default function SeoServicePage({
             {models.map(model => <span key={model} className="rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">{model}</span>)}
           </div>
           <Link href="/fahrzeuge" className="mt-6 inline-flex font-bold text-blue-700 hover:underline">Alle unterstützten Fahrzeuge und Preise ansehen →</Link>
+        </section>
+      ) : null}
+
+      {relatedLinks?.length ? (
+        <section className="border-y border-blue-100 bg-white">
+          <div className="container-x py-12 sm:py-16">
+            <h2 className="text-2xl font-black sm:text-3xl">{relatedLinksTitle}</h2>
+            <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {relatedLinks.map(item => (
+                <Link key={item.href} href={item.href} className="card p-5 transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md">
+                  <p className="font-black text-blue-700">{item.label} →</p>
+                  {item.description ? <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p> : null}
+                </Link>
+              ))}
+            </div>
+          </div>
         </section>
       ) : null}
 
