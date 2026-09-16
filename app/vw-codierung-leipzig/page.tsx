@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import SeoServicePage from "../components/SeoServicePage";
 
 export const metadata: Metadata = {
-  title: "VW Codierung Leipzig",
-  description: "VW Codierung in Leipzig für Golf, Passat, Tiguan, Polo, T-Roc, Touran, Caddy, Transporter und weitere Modelle. Preise und Termin direkt prüfen.",
+  title: "VW Codierung Leipzig | Golf 7, Golf 8, Tiguan & Passat",
+  description: "VW Codierung in Leipzig für Golf 5 bis 8, Passat, Tiguan, Polo, T-Roc, Touran, Caddy und Transporter. VCDS, VCP und ODIS je nach Fahrzeug und Aufgabe.",
   alternates: { canonical: "/vw-codierung-leipzig" },
 };
 
@@ -11,7 +11,7 @@ export default function Page() {
   return <SeoServicePage
     eyebrow="Volkswagen · Leipzig"
     title="VW Codierung in Leipzig"
-    intro="Codierungen und Diagnose für zahlreiche Volkswagen-Modelle – von PQ-Plattformen bis MQB und MQB evo. Je nach Fahrzeug können Komfort-, Licht-, Infotainment- und Assistenzfunktionen angepasst werden."
+    intro="Codierungen und Diagnose für zahlreiche Volkswagen-Modelle in Leipzig – von Golf 5, Golf 6 und Tiguan 5N bis Golf 7, Golf 8, Passat B8/B9 und aktuelle MQB-evo-Fahrzeuge. Je nach Fahrzeug können Komfort-, Licht-, Infotainment- und Assistenzfunktionen mit VCDS, VCP oder ODIS angepasst werden."
     benefits={["VW-Spezialisierung", "Vor Ort in Leipzig-Süd", "VCDS · VCP · ODIS je nach Aufgabe", "Machbarkeit vor Durchführung prüfen"]}
     models={["Golf 5 / 6 / 7 / 8", "Passat B6 / B7 / B8 / B9", "Tiguan 5N / Tiguan II", "Polo 6R / AW", "T-Roc", "Touran", "Caddy", "Transporter T5 / T6 / T6.1", "Touareg"]}
     detailsTitle="Typische VW-Codierungen und Anpassungen"
@@ -26,8 +26,8 @@ export default function Page() {
       { href: "/fahrzeuge/vw/golf-7-5g-codierung", label: "Golf 7 Codierungen", description: "Verfügbare Funktionen und Preise für VW Golf 7 / 5G ansehen." },
       { href: "/fahrzeuge/vw/golf-8-cd-codierung", label: "Golf 8 Codierungen", description: "Codiermöglichkeiten für Golf 8 inklusive technischer Hinweise zu neueren Steuergeräten." },
       { href: "/fahrzeuge/vw/tiguan-5n-codierung", label: "Tiguan 5N Codierungen", description: "Typische Komfort-, Licht- und Diagnoseanpassungen für den Tiguan 5N." },
+      { href: "/fahrzeuge/vw/passat-b8-3g-codierung", label: "Passat B8 Codierungen", description: "Codierungen und Anpassungen für den Passat B8 / 3G mit MQB-Technik." },
       { href: "/assistenzsysteme-codieren-leipzig", label: "VW Assistenzsysteme", description: "VZE, Lane Assist, Fernlichtassistent und weitere unterstützte Assistenzfunktionen prüfen." },
-      { href: "/sfd-freischaltung-leipzig", label: "SFD1 Freischaltung", description: "Hinweise zu geschützten Anpassungen bei neueren Volkswagen-Modellen." },
       { href: "/remote-fahrzeugcodierung", label: "VW Remote-Codierung", description: "Geeignete Volkswagen-Codierungen deutschlandweit per Remote durchführen lassen." }
     ]}
     faq={[
