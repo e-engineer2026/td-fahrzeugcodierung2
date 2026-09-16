@@ -45,6 +45,14 @@ export default function Home(){
           <Link href="/fahrzeuge" className="btn-secondary w-full sm:w-auto">Fahrzeuge &amp; Preise</Link>
           <Link href="/steuergeraete-flash" className="btn-secondary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
         </div>
+        <nav aria-label="Direkte Links zu Fahrzeugcodierung und Diagnose" className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-blue-700">
+          <Link href="/fahrzeugcodierung-leipzig" className="hover:underline">Fahrzeugcodierung Leipzig</Link>
+          <Link href="/vw-codierung-leipzig" className="hover:underline">VW Codierung Leipzig</Link>
+          <Link href="/audi-codierung-leipzig" className="hover:underline">Audi Codierung Leipzig</Link>
+          <Link href="/skoda-codierung-leipzig" className="hover:underline">Škoda Codierung Leipzig</Link>
+          <Link href="/vcds-codierung-leipzig" className="hover:underline">VCDS Codierung Leipzig</Link>
+          <Link href="/remote-fahrzeugcodierung" className="hover:underline">Remote-Codierung</Link>
+        </nav>
       </div>
     </div>
   </section>
@@ -81,6 +89,6 @@ export default function Home(){
    <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Wie bezahle ich?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Vor Ort bar, per PayPal oder per Sofortüberweisung beim Termin. Remote per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Codierung.</p></details>
   </div></div></section>
 
-  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:py-10"><div className="flex items-center gap-3"><Image src="/td-logo-icon.png" alt="TD Fahrzeugcodierung Logo" width={128} height={85} className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href={googleMapsUrl} target="_blank" rel="noreferrer">Google-Profil</a><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></div></div></footer>
+  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:py-10"><div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-center gap-3"><Image src="/td-logo-icon.png" alt="TD Fahrzeugcodierung Logo" width={128} height={85} className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href={googleMapsUrl} target="_blank" rel="noreferrer">Google-Profil</a><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></div></div><nav aria-label="Leistungen und Marken" className="flex flex-wrap gap-x-5 gap-y-2 border-t border-blue-50 pt-4 text-xs sm:text-sm"><Link href="/fahrzeugcodierung-leipzig">Fahrzeugcodierung Leipzig</Link><Link href="/vw-codierung-leipzig">VW Codierung Leipzig</Link><Link href="/audi-codierung-leipzig">Audi Codierung Leipzig</Link><Link href="/skoda-codierung-leipzig">Škoda Codierung Leipzig</Link><Link href="/assistenzsysteme-codieren-leipzig">Assistenzsysteme</Link><Link href="/vcds-codierung-leipzig">VCDS Codierung</Link><Link href="/remote-fahrzeugcodierung">Remote</Link></nav></div></footer>
  </main>
 }
