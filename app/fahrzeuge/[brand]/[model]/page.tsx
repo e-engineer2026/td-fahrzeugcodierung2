@@ -9,6 +9,86 @@ import { findVehicleBySlugs, seoVehicles, vehicleBrandSlug, vehicleModelSlug } f
 const BASE = "https://td-fahrzeugcodierung.vercel.app";
 
 type PageParams = { brand: string; model: string };
+type PrioritySeo = {
+  label: string;
+  title: string;
+  description: string;
+  intro: string;
+  focus: string[];
+};
+
+const prioritySeoByPath: Record<string, PrioritySeo> = {
+  "vw/golf-7-5g-codierung": {
+    label: "VW Golf 7 (5G)",
+    title: "VW Golf 7 (5G) Codierung Leipzig | VCDS & Diagnose | TD",
+    description: "VW Golf 7 Codierung in Leipzig-Süd oder per Remote: Komfort, Licht, Assistenzsysteme und Diagnose. Funktionen und Preise fahrzeugbezogen prüfen.",
+    intro: "Beim VW Golf 7 (5G) lassen sich abhängig von Baujahr, Ausstattung und Steuergeräten zahlreiche Komfort-, Licht- und Assistenzfunktionen anpassen. Vor der Durchführung prüfen wir die konkrete Fahrzeugkonfiguration und den Softwarestand.",
+    focus: ["Coming Home / Leaving Home und Lichtfunktionen", "Spiegelanklappen, Spiegelabsenkung und Fensterkomfort", "Staging / Zeigertest und weitere Komfortfunktionen", "Assistenzfunktionen nur bei vorhandener kompatibler Hardware"],
+  },
+  "vw/golf-8-cd-codierung": {
+    label: "VW Golf 8 (CD)",
+    title: "VW Golf 8 (CD) Codierung Leipzig | SFD1, VAG Diagnose | TD",
+    description: "VW Golf 8 Codierung in Leipzig-Süd: SFD1-relevante Anpassungen, Assistenzfunktionen, Komfort und Diagnose. Technische Machbarkeit vorab prüfen.",
+    intro: "Der VW Golf 8 (CD) nutzt eine neuere VAG-Elektronikarchitektur. Deshalb werden Codierung, Anpassung, SFD-Relevanz und die verbaute Hardware vor jeder Änderung gezielt geprüft.",
+    focus: ["SFD1-relevante Anpassungen, soweit technisch möglich", "Assistenzsysteme bei passender Serienhardware", "Komfort- und Anzeigeanpassungen", "Diagnose und Prüfung von Steuergeräte-Konfigurationen"],
+  },
+  "vw/tiguan-5n-codierung": {
+    label: "VW Tiguan 5N",
+    title: "VW Tiguan 5N Codierung Leipzig | VCDS Licht & Komfort | TD",
+    description: "VW Tiguan 5N Codierung in Leipzig oder Remote: Lichtüberwachung, Komfortfunktionen, Diagnose und weitere Anpassungen. Voraussetzungen vorab prüfen.",
+    intro: "Beim VW Tiguan 5N sind besonders Licht-, Komfort- und Diagnoseanpassungen gefragt. Welche Kanäle verfügbar sind, hängt unter anderem vom Bordnetzsteuergerät, Baujahr und der vorhandenen Ausstattung ab.",
+    focus: ["LED-Umrüstungen und Lampenüberwachung technisch prüfen", "Coming Home / Leaving Home und weitere Lichtfunktionen", "Komfortfunktionen wie Spiegel und Verriegelung", "Fehlerspeicher, Diagnose und Steuergeräteprüfung"],
+  },
+  "vw/passat-b8-3g-codierung": {
+    label: "VW Passat B8 (3G)",
+    title: "VW Passat B8 (3G) Codierung Leipzig | VCDS, VCP & Diagnose | TD",
+    description: "VW Passat B8 Codierung in Leipzig-Süd oder Remote: Komfort, Licht, Assistenzsysteme und Diagnose. Preise und technische Voraussetzungen direkt prüfen.",
+    intro: "Der VW Passat B8 (3G) bietet je nach Ausstattung viele codierbare Komfort-, Licht- und Assistenzfunktionen. Vor Änderungen werden Steuergeräte, Softwarestand und vorhandene Sensorik geprüft.",
+    focus: ["Komfort- und Verriegelungsfunktionen", "Licht- und Tagfahrlicht-Anpassungen", "Assistenzsysteme bei geeigneter Hardware", "Diagnose, Grundeinstellungen und Codierprüfung"],
+  },
+  "skoda/octavia-3-5e-codierung": {
+    label: "Škoda Octavia 3 (5E)",
+    title: "Škoda Octavia 3 (5E) Codierung Leipzig | VCDS & Diagnose | TD",
+    description: "Škoda Octavia 3 Codierung in Leipzig oder Remote: Komfort, Licht, Assistenzsysteme, Diagnose und Anpassungen. Fahrzeugbezogene Prüfung vorab.",
+    intro: "Beim Škoda Octavia 3 (5E) sind zahlreiche Komfort-, Licht- und Assistenzanpassungen möglich, sofern Steuergeräte und Hardware die gewünschte Funktion unterstützen. Die konkrete Ausstattung wird vorab geprüft.",
+    focus: ["Spiegelabsenkung, Spiegelanklappen und Fensterkomfort", "Coming Home / Leaving Home und Lichtfunktionen", "Staging / Zeigertest und Komfortanzeigen", "VZE, Lane Assist oder FLA nur bei geeigneter Hardware"],
+  },
+  "skoda/octavia-4-nx-codierung": {
+    label: "Škoda Octavia 4 (NX)",
+    title: "Škoda Octavia 4 (NX) Codierung Leipzig | SFD1 & Diagnose | TD",
+    description: "Škoda Octavia 4 Codierung in Leipzig-Süd: SFD1-relevante Anpassungen, Assistenzfunktionen, Komfort und Diagnose. Machbarkeit vorab prüfen.",
+    intro: "Beim Škoda Octavia 4 (NX) spielen SFD, Softwarestand und die Ausstattung der Assistenzsysteme eine wichtige Rolle. Deshalb erfolgt vor jeder Anpassung eine fahrzeugbezogene Prüfung.",
+    focus: ["SFD1-relevante Anpassungen, soweit unterstützt", "Anzeige- und Komfortanpassungen", "Assistenzsysteme bei vorhandener Serienhardware", "Diagnose und Prüfung der Steuergeräte-Konfiguration"],
+  },
+  "audi/a4-s4-b9-codierung": {
+    label: "Audi A4 / S4 B9",
+    title: "Audi A4 B9 Codierung Leipzig | VCDS, VCP & Diagnose | TD",
+    description: "Audi A4 B9 Codierung in Leipzig-Süd oder Remote: Komfort, Licht, Assistenzsysteme und Diagnose. Voraussetzungen und Preise vorab prüfen.",
+    intro: "Beim Audi A4 B9 hängen viele Anpassungen von Ausstattung, MMI-Variante, Assistenzhardware und Softwarestand ab. Vor der Codierung wird deshalb die konkrete Fahrzeugkonfiguration geprüft.",
+    focus: ["Komfort- und Zentralverriegelungsfunktionen", "Licht- und Anzeigeanpassungen", "Assistenzfunktionen bei kompatibler Hardware", "Diagnose und Prüfung nach Nachrüstung oder Steuergerätetausch"],
+  },
+  "audi/a5-s5-f5-codierung": {
+    label: "Audi A5 / S5 F5",
+    title: "Audi A5 F5 Codierung Leipzig | VCDS, VCP & Diagnose | TD",
+    description: "Audi A5 F5 Codierung in Leipzig oder Remote: Komfort, Licht, Assistenzsysteme und Diagnose. Technische Voraussetzungen fahrzeugbezogen prüfen.",
+    intro: "Beim Audi A5 F5 werden gewünschte Anpassungen anhand von Ausstattung, verbauten Steuergeräten und Softwarestand geprüft. Das gilt besonders für Assistenz-, Licht- und Infotainmentfunktionen.",
+    focus: ["Komfort- und Verriegelungsanpassungen", "Licht- und Anzeigeoptionen", "Assistenzsysteme bei geeigneter Kamera- und Sensorhardware", "Diagnose und Codierprüfung nach Reparatur oder Nachrüstung"],
+  },
+  "audi/a3-s3-8v-codierung": {
+    label: "Audi A3 / S3 8V",
+    title: "Audi A3 8V Codierung Leipzig | VCDS Komfort & Diagnose | TD",
+    description: "Audi A3 8V Codierung in Leipzig oder Remote: Komfort, Licht, Anzeige, Assistenzsysteme und Diagnose. Funktionen und Preise vorab prüfen.",
+    intro: "Der Audi A3 8V bietet je nach Ausstattung zahlreiche Möglichkeiten für Komfort-, Licht- und Anzeigeanpassungen. Assistenzfunktionen werden nur bei passender Hardware und Steuergeräte-Konfiguration freigeschaltet.",
+    focus: ["Komfortfunktionen und Zentralverriegelung", "Coming Home / Leaving Home und Lichtoptionen", "Staging / Anzeigeanpassungen", "Assistenzfunktionen nur mit kompatibler Hardware"],
+  },
+  "audi/a6-s6-c7-codierung": {
+    label: "Audi A6 / S6 C7 (4G)",
+    title: "Audi A6 C7 (4G) Codierung Leipzig | VCDS, VCP & Diagnose | TD",
+    description: "Audi A6 C7 Codierung in Leipzig oder Remote: Komfort, Licht, MMI-nahe Anpassungen, Assistenzsysteme und Diagnose. Vorab technisch prüfen.",
+    intro: "Beim Audi A6 C7 (4G) sind je nach Ausstattung viele Komfort-, Licht- und Assistenzanpassungen möglich. Bei MMI- und Steuergerätefunktionen werden Softwarestand und Varianten vorab besonders sorgfältig geprüft.",
+    focus: ["Komfort- und Verriegelungsfunktionen", "Licht- und Anzeigeanpassungen", "Assistenzsysteme bei geeigneter Hardware", "Diagnose und Prüfung von Steuergeräte- oder MMI-Konfigurationen"],
+  },
+};
 
 function shortBrand(brand: string): string {
   if (brand === "Volkswagen") return "VW";
@@ -20,6 +100,14 @@ function vehicleDisplayName(vehicle: (typeof seoVehicles)[number]): string {
   const brand = shortBrand(vehicle.brand);
   if (brand === "SEAT / CUPRA" && /^(SEAT|CUPRA)\s/i.test(vehicle.model)) return vehicle.model;
   return `${brand} ${vehicle.model}`;
+}
+
+function brandLanding(brand: string): { href: string; label: string } | null {
+  if (brand === "Volkswagen") return { href: "/vw-codierung-leipzig", label: "VW Codierung Leipzig" };
+  if (brand === "Audi") return { href: "/audi-codierung-leipzig", label: "Audi Codierung Leipzig" };
+  if (brand === "Škoda") return { href: "/skoda-codierung-leipzig", label: "Škoda Codierung Leipzig" };
+  if (brand === "SEAT / CUPRA") return { href: "/seat-codierung-leipzig", label: "SEAT / CUPRA Codierung Leipzig" };
+  return null;
 }
 
 export function generateStaticParams(): PageParams[] {
@@ -36,8 +124,9 @@ export async function generateMetadata(props: { params: Promise<PageParams> }): 
 
   const name = vehicleDisplayName(vehicle);
   const url = `${BASE}/fahrzeuge/${params.brand}/${params.model}`;
-  const fullTitle = `${name} Codierung Leipzig | TD`;
-  const description = `Codierung und Diagnose für ${name} in Leipzig oder per Remote. Funktionen, Voraussetzungen und Preise prüfen und Termin direkt konfigurieren.`;
+  const priority = prioritySeoByPath[`${params.brand}/${params.model}`];
+  const fullTitle = priority?.title ?? `${name} Codierung Leipzig | TD`;
+  const description = priority?.description ?? `Codierung und Diagnose für ${name} in Leipzig oder per Remote. Funktionen, Voraussetzungen und Preise prüfen und Termin direkt konfigurieren.`;
 
   return {
     title: { absolute: fullTitle },
@@ -60,18 +149,67 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
   const vehicle = findVehicleBySlugs(params.brand, params.model);
   if (!vehicle) notFound();
 
+  const seoKey = `${params.brand}/${params.model}`;
+  const priority = prioritySeoByPath[seoKey];
   const codingIds = new Set(codingsForVehicle(vehicle));
   const codings = codingCatalog.filter((coding) => codingIds.has(coding.id));
   const serviceCodings = curateCodingEntries(
-    codings
-      .filter((coding) => coding.id !== "diagnose")
-      .map((coding) => ({ ...coding, source: "vehicle" as const }))
+    codings.filter((coding) => coding.id !== "diagnose").map((coding) => ({ ...coding, source: "vehicle" as const }))
   );
   const years = vehicle.endYear >= 2026 ? `ab ${vehicle.startYear}` : `${vehicle.startYear}–${vehicle.endYear}`;
   const name = vehicleDisplayName(vehicle);
+  const url = `${BASE}/fahrzeuge/${params.brand}/${params.model}`;
+  const landing = brandLanding(vehicle.brand);
+  const relatedPriority = Object.entries(prioritySeoByPath)
+    .filter(([key]) => key !== seoKey && key.startsWith(`${params.brand}/`))
+    .slice(0, 4);
+  const faq = priority
+    ? [
+        {
+          question: `Welche Codierungen sind beim ${name} möglich?`,
+          answer: `Das hängt von Baujahr, Ausstattung, Steuergeräten und Softwarestand ab. Besonders häufig werden ${priority.focus.slice(0, 3).join(", ")} geprüft. Die konkrete Machbarkeit wird vor der Durchführung bestätigt.`,
+        },
+        {
+          question: `Kann der ${name} auch per Remote codiert werden?`,
+          answer: "Für technisch geeignete Arbeiten ist Remote-Codierung möglich. Voraussetzung sind ein kompatibles Diagnoseinterface, ein Windows-PC, eine stabile Internetverbindung und eine Funktion, die sich sicher aus der Ferne umsetzen lässt.",
+        },
+        {
+          question: `Was wird vor der Codierung beim ${name} geprüft?`,
+          answer: "Geprüft werden die tatsächlich verbauten Steuergeräte, der Softwarestand, die vorhandene Hardware und – sofern relevant – Schutzmechanismen wie SFD. Dadurch werden ungeeignete oder nicht unterstützte Anpassungen vorab ausgeschlossen.",
+        },
+      ]
+    : [];
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        name: `${name} Codierung und Diagnose`,
+        serviceType: ["Fahrzeugcodierung", "Fahrzeugdiagnose"],
+        url,
+        areaServed: { "@type": "City", name: "Leipzig" },
+        provider: { "@type": "LocalBusiness", name: "TD Fahrzeugcodierung", url: BASE },
+      },
+      ...(faq.length
+        ? [
+            {
+              "@type": "FAQPage",
+              mainEntity: faq.map((item) => ({
+                "@type": "Question",
+                name: item.question,
+                acceptedAnswer: { "@type": "Answer", text: item.answer },
+              })),
+            },
+          ]
+        : []),
+    ],
+  };
 
   return (
     <main className="min-h-screen bg-white text-slate-950">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
@@ -97,14 +235,30 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
           <div className="mt-6 max-w-4xl">
             <div className="inline-flex rounded-full border border-blue-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-[.14em] text-blue-700">{vehicle.platform} · {years}</div>
             <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight sm:text-5xl">{name} Codierung in Leipzig</h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">Codierungen und Fahrzeugdiagnose für den {name} – persönlich in Leipzig-Süd oder, je nach Funktion, per Remote. Die unten aufgeführten Leistungen stammen direkt aus unserem fahrzeugbezogenen Codierkatalog.</p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">
+              {priority?.intro ?? `Codierungen und Fahrzeugdiagnose für den ${name} – persönlich in Leipzig-Süd oder, je nach Funktion, per Remote. Die unten aufgeführten Leistungen stammen direkt aus unserem fahrzeugbezogenen Codierkatalog.`}
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link href="/#buchen" className="btn-primary w-full text-center sm:w-auto">Codierung auswählen & Preis berechnen</Link>
               <Link href="/#kontakt" className="btn-secondary w-full text-center sm:w-auto">Machbarkeit anfragen</Link>
+              {landing ? <Link href={landing.href} className="btn-secondary w-full text-center sm:w-auto">{landing.label}</Link> : null}
             </div>
           </div>
         </div>
       </section>
+
+      {priority ? (
+        <section className="container-x py-10 sm:py-12">
+          <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6">
+            <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600">Häufig geprüft</div>
+            <h2 className="mt-2 text-2xl font-black">Typische Themen beim {priority.label}</h2>
+            <div className="mt-5 grid gap-3 md:grid-cols-2">
+              {priority.focus.map((item) => <div key={item} className="rounded-xl border border-slate-200 bg-slate-50 p-4 font-semibold leading-6 text-slate-800">{item}</div>)}
+            </div>
+            <p className="mt-4 text-sm leading-6 text-slate-600">Die Auflistung beschreibt typische Prüf- und Codierthemen. Ob eine konkrete Funktion verfügbar ist, hängt immer von der tatsächlichen Fahrzeugausstattung ab.</p>
+          </div>
+        </section>
+      ) : null}
 
       <section className="container-x py-12 sm:py-16 lg:py-20">
         <div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:gap-10">
@@ -141,17 +295,9 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
 
             <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
               <h2 className="text-2xl font-black">Technische Vorprüfung beim {name}</h2>
-              <p className="mt-3 leading-7 text-slate-600">
-                Der {name} gehört zur Plattform {vehicle.platform} und wurde {years} angeboten. Vor einer Codierung prüfen wir deshalb die tatsächlich verbauten Steuergeräte, den Softwarestand und die vorhandene Hardware. So lässt sich vermeiden, dass eine Funktion ausgewählt wird, die bei einer bestimmten Ausstattung oder einem abweichenden Modelljahr technisch nicht unterstützt wird.
-              </p>
-              <p className="mt-3 leading-7 text-slate-600">
-                Je nach gewünschter Funktion erfolgt die Umsetzung über Codierung, Anpassung oder Grundeinstellung. Bei Remote-Terminen prüfen wir zusätzlich, ob das verwendete Diagnoseinterface und die Verbindung für die jeweilige Arbeit geeignet sind. Vor-Ort-Termine in Leipzig eignen sich besonders für Funktionen, bei denen nach der Codierung eine direkte Funktionskontrolle am Fahrzeug sinnvoll ist.
-              </p>
-              {vehicle.sfd1From && (
-                <p className="mt-3 leading-7 text-slate-600">
-                  Ab Modelljahr {vehicle.sfd1From} kann bei dieser Baureihe SFD relevant sein. Ob eine SFD-Freischaltung benötigt wird, hängt vom konkreten Steuergerät und der gewünschten Anpassung ab und wird vor der Durchführung geprüft.
-                </p>
-              )}
+              <p className="mt-3 leading-7 text-slate-600">Der {name} gehört zur Plattform {vehicle.platform} und wurde {years} angeboten. Vor einer Codierung prüfen wir deshalb die tatsächlich verbauten Steuergeräte, den Softwarestand und die vorhandene Hardware. So lässt sich vermeiden, dass eine Funktion ausgewählt wird, die bei einer bestimmten Ausstattung oder einem abweichenden Modelljahr technisch nicht unterstützt wird.</p>
+              <p className="mt-3 leading-7 text-slate-600">Je nach gewünschter Funktion erfolgt die Umsetzung über Codierung, Anpassung oder Grundeinstellung. Bei Remote-Terminen prüfen wir zusätzlich, ob das verwendete Diagnoseinterface und die Verbindung für die jeweilige Arbeit geeignet sind. Vor-Ort-Termine in Leipzig eignen sich besonders für Funktionen, bei denen nach der Codierung eine direkte Funktionskontrolle am Fahrzeug sinnvoll ist.</p>
+              {vehicle.sfd1From && <p className="mt-3 leading-7 text-slate-600">Ab Modelljahr {vehicle.sfd1From} kann bei dieser Baureihe SFD relevant sein. Ob eine SFD-Freischaltung benötigt wird, hängt vom konkreten Steuergerät und der gewünschten Anpassung ab und wird vor der Durchführung geprüft.</p>}
             </section>
 
             <div className="mt-10 rounded-2xl border border-blue-100 bg-blue-50 p-5 sm:p-6">
@@ -168,15 +314,34 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               <div><dt className="text-slate-500">Baujahre</dt><dd className="font-semibold">{years}</dd></div>
               <div><dt className="text-slate-500">Plattform</dt><dd className="font-semibold">{vehicle.platform}</dd></div>
             </dl>
-            {vehicle.sfd1From && (
-              <div className="mt-5 rounded-xl border border-blue-200 bg-white p-3 text-xs leading-5 text-slate-700">
-                SFD ist bei dieser Baureihe ab Modelljahr {vehicle.sfd1From} relevant. Die konkrete Buchbarkeit wird in der Fahrzeugauswahl nach Baujahr gesteuert.
-              </div>
-            )}
+            {vehicle.sfd1From && <div className="mt-5 rounded-xl border border-blue-200 bg-white p-3 text-xs leading-5 text-slate-700">SFD ist bei dieser Baureihe ab Modelljahr {vehicle.sfd1From} relevant. Die konkrete Buchbarkeit wird in der Fahrzeugauswahl nach Baujahr gesteuert.</div>}
             <Link href="/#buchen" className="btn-primary mt-5 w-full text-center">Jetzt konfigurieren</Link>
           </aside>
         </div>
       </section>
+
+      {priority && faq.length ? (
+        <section className="border-t border-blue-100 bg-white">
+          <div className="container-x py-12 sm:py-16">
+            <h2 className="text-2xl font-black sm:text-3xl">Häufige Fragen zum {priority.label}</h2>
+            <div className="mt-6 space-y-3">
+              {faq.map((item) => <details key={item.question} className="rounded-2xl border border-slate-200 bg-white p-5"><summary className="cursor-pointer font-bold">{item.question}</summary><p className="mt-3 leading-7 text-slate-600">{item.answer}</p></details>)}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {priority && (relatedPriority.length || landing) ? (
+        <section className="border-t border-blue-100 bg-slate-50">
+          <div className="container-x py-12 sm:py-16">
+            <h2 className="text-2xl font-black">Weitere passende Fahrzeugseiten</h2>
+            <div className="mt-5 flex flex-wrap gap-3">
+              {landing ? <Link href={landing.href} className="rounded-xl border border-blue-200 bg-white px-4 py-3 font-bold text-blue-700 hover:border-blue-300">{landing.label}</Link> : null}
+              {relatedPriority.map(([key, item]) => <Link key={key} href={`/fahrzeuge/${key}`} className="rounded-xl border border-slate-200 bg-white px-4 py-3 font-semibold text-slate-700 hover:border-blue-200 hover:text-blue-700">{item.label}</Link>)}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="border-t border-blue-100 bg-slate-50">
         <div className="container-x py-12 sm:py-16">
@@ -189,7 +354,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
       <footer className="border-t border-blue-100 bg-white">
         <div className="container-x flex flex-col gap-4 py-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 TD Fahrzeugcodierung</span>
-          <div className="flex flex-wrap gap-5"><Link href="/fahrzeuge">Fahrzeuge</Link><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link></div>
+          <div className="flex flex-wrap gap-5"><Link href="/fahrzeuge">Fahrzeuge</Link><Link href="/fahrzeugcodierung-leipzig">Fahrzeugcodierung Leipzig</Link><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link></div>
         </div>
       </footer>
     </main>
