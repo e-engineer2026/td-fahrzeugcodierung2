@@ -12,7 +12,6 @@ interface PendingBooking {
   prepay:number;
   finalpay:number;
   paypalUrl:string;
-  savedAt:number;
 }
 
 export default function ZahlungPage(){
@@ -23,7 +22,17 @@ export default function ZahlungPage(){
   useEffect(()=>{
     try{
       const raw=window.localStorage.getItem("td_pending_booking");
-      if(raw) setBooking(JSON.parse(raw));
+      if(raw) {
+        const value = JSON.parse(raw) as PendingBooking;
+        if (typeof value.vehicle === "string" && typeof value.codings === "string" &&
+            Number.isInteger(value.year) && Number.isFinite(value.total) && value.total > 0) {
+          const cents = Math.round(value.total * 100);
+          const prepay = Math.round(cents * 0.7) / 100;
+          setBooking({ ...value, total: cents / 100, prepay,
+            finalpay: (cents - Math.round(cents * 0.7)) / 100,
+            paypalUrl: `https://paypal.me/TiDrechsler/${prepay.toFixed(2)}EUR` });
+        }
+      }
     }catch{}
     setLoaded(true);
   },[]);
@@ -34,9 +43,9 @@ export default function ZahlungPage(){
       <Link href="/" className="text-sm font-semibold text-blue-700 hover:underline">← Zurück zur Startseite</Link>
 
       <section className="card mt-5 p-5 sm:p-8">
-        <div className="text-xs font-bold uppercase tracking-[.18em] text-blue-600">Termin gebucht</div>
-        <h1 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Jetzt Vorauszahlung abschließen</h1>
-        <p className="mt-4 leading-7 text-slate-600">Vielen Dank für deine Terminbuchung. Für Remote-Termine sind jetzt 70 % des Gesamtbetrags per PayPal vorauszuzahlen. Nach Eingang der Vorauszahlung gilt der Termin als verbindlich bestätigt.</p>
+        <div className="text-xs font-bold uppercase tracking-[.18em] text-blue-600">Remote-Zahlung</div>
+        <h1 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Deine Remote-Zahlungsübersicht</h1>
+        <p className="mt-4 leading-7 text-slate-600">Nach Abstimmung der Machbarkeit und deiner Terminbuchung zahlst du 70 % des Gesamtbetrags per PayPal voraus. Die restlichen 30 % werden nach Durchführung fällig. Diese Übersicht bestätigt keine Buchung und keinen Zahlungseingang.</p>
 
         {!loaded ? <div className="mt-6 rounded-2xl bg-slate-50 p-5 text-slate-600">Buchungsdaten werden geladen …</div>
         : booking ? <>
@@ -50,23 +59,23 @@ export default function ZahlungPage(){
           </div>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200 bg-white p-4"><span className="text-sm text-slate-500">Gesamt</span><b className="mt-1 block text-2xl">{booking.total.toFixed(2)} €</b></div>
-            <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4"><span className="text-sm text-blue-700">Jetzt 70 %</span><b className="mt-1 block text-2xl text-blue-900">{booking.prepay.toFixed(2)} €</b></div>
-            <div className="rounded-2xl border border-slate-200 bg-white p-4"><span className="text-sm text-slate-500">Danach 30 %</span><b className="mt-1 block text-2xl">{booking.finalpay.toFixed(2)} €</b></div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-4"><span className="text-sm text-slate-500">Gesamt</span><b className="mt-1 block text-2xl">{booking.total.toFixed(2).replace(".", ",")} €</b></div>
+            <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4"><span className="text-sm text-blue-700">Jetzt 70 %</span><b className="mt-1 block text-2xl text-blue-900">{booking.prepay.toFixed(2).replace(".", ",")} €</b></div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-4"><span className="text-sm text-slate-500">Danach 30 %</span><b className="mt-1 block text-2xl">{booking.finalpay.toFixed(2).replace(".", ",")} €</b></div>
           </div>
 
           <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-5">
             <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-700">1 · Vorauszahlung vor dem Termin</div>
             <h2 className="mt-2 text-xl font-black">70 % jetzt bezahlen</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">Die Vorauszahlung bestätigt deinen Remote-Termin nach Zahlungseingang verbindlich.</p>
-            <a href={booking.paypalUrl} target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full text-center sm:w-auto">Jetzt {booking.prepay.toFixed(2)} € per PayPal vorauszahlen</a>
+            <a href={booking.paypalUrl} target="_blank" rel="noreferrer" className="btn-primary mt-4 w-full text-center sm:w-auto">Jetzt {booking.prepay.toFixed(2).replace(".", ",")} € per PayPal vorauszahlen</a>
           </div>
 
           <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-5">
             <div className="text-xs font-bold uppercase tracking-[.16em] text-slate-500">2 · Restbetrag nach Durchführung</div>
             <h2 className="mt-2 text-xl font-black">30 % nach erfolgreicher Codierung</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">Dieser Restbetrag wird erst nach Durchführung der vereinbarten Codierung fällig.</p>
-            <a href={`https://paypal.me/TiDrechsler/${booking.finalpay.toFixed(2)}`} target="_blank" rel="noreferrer" className="btn-secondary mt-4 w-full text-center sm:w-auto">{booking.finalpay.toFixed(2)} € Restbetrag per PayPal zahlen</a>
+            <a href={`https://paypal.me/TiDrechsler/${booking.finalpay.toFixed(2)}EUR`} target="_blank" rel="noreferrer" className="btn-secondary mt-4 w-full text-center sm:w-auto">{booking.finalpay.toFixed(2).replace(".", ",")} € Restbetrag per PayPal zahlen</a>
           </div>
 
           <div className="mt-5 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-slate-700">

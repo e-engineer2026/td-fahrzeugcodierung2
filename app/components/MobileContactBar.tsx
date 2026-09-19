@@ -23,7 +23,7 @@ export default function MobileContactBar() {
       const selected = count > 0;
 
       setHasSelection(selected);
-      setCalendarUrl(selected && calUrl ? calUrl : "/#kontakt");
+      setCalendarUrl(selected && calUrl ? "#termin-zahlung" : "/#kontakt");
 
       if (selected && configurator) {
         const codings = JSON.parse(configurator.dataset.codings || "[]") as string[];
@@ -34,12 +34,14 @@ export default function MobileContactBar() {
         const lines = [
           "Hallo, ich möchte folgende Codierungen anfragen:",
           "",
+          `Terminart: ${configurator.dataset.bookingMode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd"}`,
           `Fahrzeug: ${vehicle}`,
           "Codierungen:",
           ...codings.map((coding) => `• ${coding}`),
           "",
           `Normalpreis: ${subtotal} €`,
           `Rabatt: -${discount} €`,
+          ...(Number((configurator.dataset.sfdFee || "0").replace(",", ".")) > 0 ? [`SFD1-Freischaltung: ${configurator.dataset.sfdFee} €`] : []),
           `Mein Preis: ${total} €`,
           "",
           "Bitte kurz Machbarkeit und Termin bestätigen.",
@@ -65,6 +67,8 @@ export default function MobileContactBar() {
         "data-subtotal",
         "data-discount",
         "data-total",
+        "data-booking-mode",
+        "data-sfd-fee",
       ],
     });
     document.addEventListener("change", update);
@@ -77,14 +81,14 @@ export default function MobileContactBar() {
 
   return (
     <>
-      <div className="fixed inset-x-0 bottom-0 z-[70] border-t border-slate-200 bg-white/95 px-2 py-2 shadow-[0_-8px_30px_rgba(15,23,42,0.12)] backdrop-blur md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-[70] border-t border-slate-200 bg-white/95 px-2 pt-2 pb-[max(.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_rgba(15,23,42,0.12)] backdrop-blur md:hidden">
         <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
             onClick={() => track(hasSelection ? "mobile_whatsapp_selection" : "mobile_whatsapp")}
-            className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-2 text-xs font-bold text-white"
+            className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-xl bg-emerald-700 px-2 text-xs font-bold text-white"
           >
             <MessageCircle className="h-4 w-4" /> {hasSelection ? "Auswahl senden" : "WhatsApp"}
           </a>
@@ -97,8 +101,6 @@ export default function MobileContactBar() {
           </a>
           <a
             href={calendarUrl}
-            target={hasSelection ? "_blank" : undefined}
-            rel={hasSelection ? "noreferrer" : undefined}
             onClick={() => track(hasSelection ? "mobile_appointment_inquiry" : "mobile_direct_inquiry")}
             className="inline-flex min-h-12 items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white"
           >

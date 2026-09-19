@@ -20,6 +20,14 @@ export function hardwareForName(name:string):string|undefined {
   if(n.includes("anhängerkupplung")) return "Anhängerkupplung mit kompatiblem Anhängersteuergerät/Gateway-Anbindung erforderlich.";
 
   // Spiegel / Komfort
+  if(n.includes("diebstahlwarnanlage") || /\bdwa\b/.test(n)) return "Vorhandene Diebstahlwarnanlage mit kompatiblem Alarm-/Komfortsteuergerät; Umfang abhängig von verbauter Sensorik und Alarmhorn.";
+  if(n.includes("easy open") || n.includes("easy close")) return "Passende Heckklappen-Sensorik und Zugangssteuerung; für motorisches Öffnen/Schließen zusätzlich elektrische Heckklappenbetätigung erforderlich.";
+  if(n.includes("kessy") || n.includes("keyless")) return "KESSY/Keyless Access mit kompatibler Zugangssteuerung und passender Antennen-/Türgriffsensorik erforderlich.";
+  if(n.includes("schiebedach")) return "Elektrisches Schiebe-/Panoramadach und kompatible Dach-/Komfortsteuerung erforderlich.";
+  if(n.includes("automatisches verriegeln") || n.includes("auto-lock")) return "Kompatible Zentralverriegelungs-/Komfortsteuerung; Entriegeln über die Wählhebelstellung P setzt ein entsprechendes Automatikgetriebe voraus.";
+  if(n.includes("verriegelungsquittierung")) return "Kompatible Zentralverriegelung; für akustische Rückmeldung geeignetes Alarmhorn bzw. eine vom Fahrzeug unterstützte Hupe erforderlich.";
+  if(n.includes("sitzmemory") || n.includes("sitz-memory")) return "Elektrische Sitzverstellung mit Positionsspeicher und kompatiblem Sitz-/Memory-Steuergerät erforderlich.";
+  if(n.includes("spiegel") && n.includes("anklapp")) return "Elektrisch anklappbare Außenspiegel und kompatible Türsteuergeräte erforderlich.";
   if(n.includes("elektrisch anklappbare spiegel") || n.includes("spiegelanklappen")) return "Elektrisch anklappbare Außenspiegel und kompatible Türsteuergeräte erforderlich.";
   if(n.includes("spiegelabsenkung") || n.includes("bordsteinautomatik")) return "Kompatible Beifahrerspiegel-/Türsteuergeräte; je nach Fahrzeug Spiegelpositionsspeicher erforderlich.";
   if(n.includes("elektrische heckklappe") || n.includes("heckklappe per") || n.includes("innentaster")) return "Elektrische Heckklappenbetätigung und kompatibles Heckklappensteuergerät erforderlich.";

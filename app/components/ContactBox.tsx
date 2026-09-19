@@ -10,6 +10,7 @@ function track(event: string, params: Record<string, string | number | boolean> 
 }
 
 export default function ContactBox() {
+  const [mode, setMode] = useState<"onsite" | "remote">("onsite");
   const [name, setName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [vehicle, setVehicle] = useState("");
@@ -25,6 +26,7 @@ export default function ContactBox() {
     const root = document.getElementById("konfigurator");
     if (!root) return;
     const update = () => {
+      setMode(root.dataset.bookingMode === "remote" ? "remote" : "onsite");
       const next = {
         vehicle: root.dataset.contactVehicle ?? "",
         year: root.dataset.contactYear ?? "",
@@ -41,7 +43,7 @@ export default function ContactBox() {
     const observer = new MutationObserver(update);
     observer.observe(root, {
       attributes: true,
-      attributeFilter: ["data-contact-vehicle", "data-contact-year", "data-codings"],
+      attributeFilter: ["data-contact-vehicle", "data-contact-year", "data-codings", "data-booking-mode"],
     });
     return () => observer.disconnect();
   }, []);
@@ -51,7 +53,7 @@ export default function ContactBox() {
   const email = "td.codierung@gmail.com";
 
   const whatsappText = encodeURIComponent(
-    `Hallo, ich möchte eine Codierung vorprüfen lassen.\n\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
+    `Hallo, ich möchte eine Codierung vorprüfen lassen.\n\nTerminart: ${mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd"}\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
   );
 
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -76,6 +78,7 @@ export default function ContactBox() {
           _url: "https://td-fahrzeugcodierung.vercel.app/#kontakt",
           Name: name,
           "E-Mail": customerEmail,
+          Terminart: mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd",
           Fahrzeug: vehicle,
           Baujahr: year,
           Codierung: coding,
@@ -83,7 +86,7 @@ export default function ContactBox() {
       });
 
       const result = await response.json();
-      if (!response.ok || result.success === false) throw new Error("Formularversand fehlgeschlagen");
+      if (!response.ok || String(result.success) !== "true") throw new Error("Formularversand fehlgeschlagen");
 
       track("inquiry_sent", { channel: "form", vehicle, year, coding });
       setName("");
@@ -102,7 +105,7 @@ export default function ContactBox() {
   return (
     <div className="grid gap-4 sm:gap-6 lg:grid-cols-[.9fr_1.1fr]">
       <div className="card p-4 sm:p-8">
-        <div className="grid h-12 w-12 place-items-center rounded-2xl bg-[#25D366] text-white">
+        <div className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-700 text-white">
           <MessageCircle className="h-7 w-7" />
         </div>
 
@@ -182,7 +185,7 @@ export default function ContactBox() {
             onClick={() => track("contact_clicked", { channel: "whatsapp_form" })}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-5 py-3 font-semibold text-white transition hover:brightness-95 sm:w-auto"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white transition hover:brightness-95 sm:w-auto"
           >
             <MessageCircle className="mr-2 h-4 w-4" />
             Per WhatsApp senden
