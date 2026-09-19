@@ -1,14 +1,42 @@
 import {
   codingCatalog as baseCodingCatalog,
   codingGroups,
-  vehicles,
+  vehicles as baseVehicles,
   brands,
   codingsForVehicle as baseCodingsForVehicle,
 } from "./catalog7";
 import type { Coding, CodingGroup, Platform, Vehicle } from "./catalog7";
 
 export type { Coding, CodingGroup, Platform, Vehicle };
-export { codingGroups, vehicles, brands };
+export { codingGroups, brands };
+
+const additionalVolkswagenVehicles: Vehicle[] = [
+  {
+    brand: "Volkswagen",
+    model: "T-Cross C1",
+    startYear: 2019,
+    endYear: 2026,
+    platform: "MQB",
+  },
+  {
+    brand: "Volkswagen",
+    model: "Taigo CS",
+    startYear: 2021,
+    endYear: 2026,
+    platform: "MQB",
+  },
+];
+
+export const vehicles: Vehicle[] = [
+  ...baseVehicles.filter(
+    (vehicle) =>
+      !(
+        vehicle.brand === "Volkswagen" &&
+        (vehicle.model.startsWith("T-Cross") || vehicle.model.startsWith("Taigo"))
+      )
+  ),
+  ...additionalVolkswagenVehicles,
+];
 
 const caddyCodings: Coding[] = [
   // Caddy III / IV (2K / SA)
