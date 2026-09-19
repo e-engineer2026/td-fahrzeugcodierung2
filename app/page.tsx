@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import BookingConfigurator from "./components/BookingConfigurator";
-import ConfiguratorLiveActions from "./components/ConfiguratorLiveActions";
 import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
 
@@ -35,7 +34,7 @@ export default function Home(){
     <div className="container-x py-8 sm:py-12 lg:py-16">
       <div className="max-w-5xl">
         <div className="max-w-[620px]">
-          <div className="min-w-0"><div className="text-4xl font-black leading-none tracking-tight sm:text-6xl"><span className="text-slate-950">TD</span> <span className="text-blue-600">Fahrzeugcodierung</span></div><div className="mt-2 h-1 w-full rounded-full bg-blue-600 sm:mt-3" /></div>
+          <div className="min-w-0"><div className="text-[clamp(1.6rem,7.8vw,2.25rem)] font-black leading-tight tracking-tight sm:text-6xl"><span className="text-slate-950">TD</span> <span className="text-blue-600">Fahrzeugcodierung</span></div><div className="mt-2 h-1 w-full rounded-full bg-blue-600 sm:mt-3" /></div>
         </div>
         <h1 className="mt-3 text-xl font-bold leading-snug text-slate-900 sm:mt-4 sm:text-2xl">Fahrzeugcodierung &amp; Diagnose in Leipzig – auch per Remote</h1>
         <p className="mt-3 max-w-xl text-base leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – mit Fahrzeugauswahl, transparenter Kalkulation und direkter Terminbuchung.</p>
@@ -45,14 +44,7 @@ export default function Home(){
           <Link href="/fahrzeuge" className="btn-secondary w-full sm:w-auto">Fahrzeuge &amp; Preise</Link>
           <Link href="/steuergeraete-flash" className="btn-secondary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
         </div>
-        <nav aria-label="Direkte Links zu Fahrzeugcodierung und Diagnose" className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-blue-700">
-          <Link href="/fahrzeugcodierung-leipzig" className="hover:underline">Fahrzeugcodierung Leipzig</Link>
-          <Link href="/vw-codierung-leipzig" className="hover:underline">VW Codierung Leipzig</Link>
-          <Link href="/audi-codierung-leipzig" className="hover:underline">Audi Codierung Leipzig</Link>
-          <Link href="/skoda-codierung-leipzig" className="hover:underline">Škoda Codierung Leipzig</Link>
-          <Link href="/vcds-codierung-leipzig" className="hover:underline">VCDS Codierung Leipzig</Link>
-          <Link href="/remote-fahrzeugcodierung" className="hover:underline">Remote-Codierung</Link>
-        </nav>
+
       </div>
     </div>
   </section>
@@ -70,7 +62,7 @@ export default function Home(){
     </a>
   </section>
 
-  <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen &amp; Termin konfigurieren.</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><div className="mt-5 sm:mt-7"><BookingConfigurator/><ConfiguratorLiveActions /></div></section>
+  <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen &amp; Termin konfigurieren.</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><div className="mt-5 sm:mt-7"><BookingConfigurator/></div></section>
 
   <section id="kontakt" className="scroll-mt-20 border-y border-blue-100 bg-white">
     <div className="container-x py-14 sm:py-20">

@@ -1,4 +1,5 @@
 import type { PlatformCodingGroup } from "../data/platformCodingPricing";
+import { hardwareForName } from "../data/hardware";
 
 export type UnifiedCodingEntry = {
   id: string;
@@ -151,6 +152,7 @@ function curateComfortEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry
       ...source,
       id: `comfort-curated-${index}`,
       name: rule.name,
+      hardware: hardwareForName(rule.name) ?? source.hardware,
       price: rule.price,
       uiGroup: "Komfort" as const,
       sfd,

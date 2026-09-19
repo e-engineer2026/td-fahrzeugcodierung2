@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { curateCodingEntries, type UnifiedCodingEntry } from "../lib/codingDisplay";
-import { CalendarDays, ChevronDown, Laptop, MapPin, Search, Sparkles } from "lucide-react";
+import { ChevronDown, Laptop, MapPin, Search, Sparkles } from "lucide-react";
+import ConfiguratorLiveActions from "./ConfiguratorLiveActions";
 import { brands, codingCatalog, codingsForVehicle, vehicles, type Vehicle } from "../data/catalog";
 import { platformCodingSources } from "../data/platformCodingLists";
 import type { PlatformCodingEntry, PlatformCodingSource } from "../data/platformCodingLists";
@@ -234,16 +235,13 @@ function vehicleSpecificCodings(
       return vehicleCatalog.some((coding) => tokenRelated(entry.name, coding.name));
     })
     .map((entry) => {
-      const capability = capabilityForName(entry.name);
-      const reference = capability
-        ? vehicleCatalog.find((coding) => capabilityForName(coding.name) === capability)
-        : vehicleCatalog.find((coding) => tokenRelated(entry.name, coding.name));
       return {
         id: entry.id,
         name: entry.name,
         price: entry.price,
         uiGroup: entry.uiGroup,
-        hardware: reference?.hardware ?? reference?.requirements ?? entry.hardware,
+        // Similar names can select a capability, but cannot establish its hardware.
+        hardware: entry.hardware,
         sfd: entry.sfd,
         source: "platform" as const,
       };
@@ -297,10 +295,11 @@ export default function BookingConfigurator() {
   const total = subtotal - discount + sfdFee;
   const upcomingTier = nextTier(subtotal);
   const chosen = selectedEntries.map((entry) => entry.name).join(", ");
-  const prepay = total * 0.7;
-  const finalpay = total * 0.3;
+  const totalCents = Math.round(total * 100);
+  const prepay = Math.round(totalCents * 0.7) / 100;
+  const finalpay = (totalCents - Math.round(totalCents * 0.7)) / 100;
   const bookingDisabled = !hasVehicle || !year || isSfd2 || selected.length === 0;
-  const paypalUrl = `https://paypal.me/TiDrechsler/${prepay.toFixed(2)}`;
+  const paypalUrl = `https://paypal.me/TiDrechsler/${prepay.toFixed(2)}EUR`;
 
   const popular = useMemo(() => {
     const result: UnifiedCodingEntry[] = [];
@@ -385,7 +384,7 @@ export default function BookingConfigurator() {
 
   const savePendingBooking = () => {
     if (typeof window === "undefined" || mode !== "remote" || !selectedVehicle || selected.length === 0) return;
-    window.localStorage.setItem("td_pending_booking", JSON.stringify({
+    try { window.localStorage.setItem("td_pending_booking", JSON.stringify({
       vehicle: `${brand} ${selectedVehicle.model}`,
       year,
       codings: chosen,
@@ -393,8 +392,7 @@ export default function BookingConfigurator() {
       prepay: Number(prepay.toFixed(2)),
       finalpay: Number(finalpay.toFixed(2)),
       paypalUrl,
-      savedAt: Date.now(),
-    }));
+    })); } catch { /* Direct payment links remain usable without browser storage. */ }
   };
 
   const openBooking = (save: boolean) => {
@@ -406,20 +404,6 @@ export default function BookingConfigurator() {
       model: selectedVehicle?.model ?? "",
     });
   };
-
-  const calButton = (className: string, save = false) => bookingDisabled ? (
-    <button type="button" disabled className={`inline-flex cursor-not-allowed flex-wrap items-center justify-center gap-2 rounded-xl border border-slate-300 bg-slate-200 px-5 py-3 font-semibold text-slate-500 ${className}`}>
-      <CalendarDays className="h-5 w-5" />
-      <span>Termin online vereinbaren</span>
-      {mode === "onsite" && <span className="rounded-lg bg-slate-300 px-2 py-1 text-slate-700">Gesamtsumme: {euro(total)} €</span>}
-    </button>
-  ) : (
-    <a href={calUrl} onClick={() => openBooking(save)} target="_blank" rel="noreferrer" className={`btn-primary flex-wrap gap-2 ${className}`}>
-      <CalendarDays className="h-5 w-5" />
-      <span>Termin online vereinbaren</span>
-      {mode === "onsite" && <span className="rounded-lg bg-white/15 px-2 py-1">Gesamtsumme: {euro(total)} €</span>}
-    </a>
-  );
 
   return <div
     id="konfigurator"
@@ -433,6 +417,7 @@ export default function BookingConfigurator() {
     data-subtotal={euro(subtotal)}
     data-discount={euro(discount)}
     data-total={euro(total)}
+    data-sfd-fee={euro(sfdFee)}
     data-discount-rate={Math.round(rate * 100)}
     data-next-tier={upcomingTier ?? ""}
     data-next-difference={upcomingTier ? euro(upcomingTier - subtotal) : ""}
@@ -503,16 +488,17 @@ export default function BookingConfigurator() {
 
     </section>
 
-    {mode === "remote" ? <section className="card p-4 sm:p-8">
-      <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">4 · Termin und Zahlung</div>
-      {selectedVehicle && <div className="mt-4 rounded-2xl border border-blue-100 p-4 text-sm leading-6"><b>Remote</b> · {brand} {selectedVehicle.model} · Baujahr {year}<br />{selected.length} Codierung(en) · {Math.round(rate * 100)} % Rabatt · <b>{euro(total)} €</b><br />70 % vorab: {euro(prepay)} € · 30 % danach: {euro(finalpay)} €</div>}
-      <div className="mt-4 rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm leading-6 text-blue-950"><b>Ablauf:</b> Termin auswählen, anschließend 70 % vorauszahlen. <strong>Der Termin wird nach Eingang der Vorauszahlung verbindlich bestätigt.</strong></div>
-      <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">Zahlungsmöglichkeit: <b>PayPal</b></div>
-      <div className={`mt-5 grid gap-3 ${bookingDisabled ? "" : "sm:grid-cols-2"}`}>{calButton("w-full text-center", true)}{!bookingDisabled && <a href="/zahlung" onClick={() => { savePendingBooking(); track("payment_opened", { method: "paypal", amount: Number(prepay.toFixed(2)) }); }} className="btn-secondary flex w-full flex-col text-center"><span>Termin gebucht? Jetzt 70 % vorauszahlen</span><span className="mt-1 text-sm font-black">Betrag: {euro(prepay)} €</span></a>}</div>
-    </section> : <>
-      <section className="hidden" aria-hidden="true" />
-    </>}
-
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-blue-100 bg-white/95 p-3 shadow-[0_-8px_30px_rgba(15,23,42,.08)] backdrop-blur md:hidden"><div className="mx-auto grid max-w-md grid-cols-[2fr_1fr] gap-2">{bookingDisabled ? <button type="button" disabled className="inline-flex min-h-16 w-full items-center justify-center rounded-xl border border-slate-300 bg-slate-200 px-3 py-2 text-center text-[11px] font-semibold text-slate-500">Termin mit Daten an Cal.com übergeben</button> : <a href={calUrl} onClick={() => openBooking(mode === "remote")} target="_blank" rel="noreferrer" className="inline-flex min-h-16 w-full items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-center text-[11px] font-semibold text-white">Termin mit Daten an Cal.com übergeben</a>}<a href="#kontakt" className="inline-flex min-h-16 items-center justify-center rounded-xl border border-blue-200 bg-white px-3 py-2 text-center text-sm font-bold text-blue-700">Direktkontakt</a></div></div>
+    <ConfiguratorLiveActions
+      snapshot={bookingDisabled ? null : {
+        count: selectedEntries.length, subtotal: euro(subtotal), discount: euro(discount),
+        total: euro(total), sfdFee, rate: Math.round(rate * 100),
+        nextTier: upcomingTier ? String(upcomingTier) : "",
+        nextDifference: upcomingTier ? euro(upcomingTier - subtotal) : "",
+        mode, calUrl, vehicle: `${brand} ${selectedVehicle?.model} · ${year}`,
+        codings: selectedEntries.map((entry) => entry.name), prepay, finalpay,
+      }}
+      onBook={() => openBooking(mode === "remote")}
+      onPayment={savePendingBooking}
+    />
   </div>;
 }
