@@ -20,6 +20,11 @@ export default function Page() {
       "Nicht jede Aufgabe lässt sich ausschließlich mit VCDS lösen. Bei Parametrierung, Flash oder bestimmten neueren Plattformen können VCP, ODIS oder zusätzliche Freischaltungen erforderlich sein.",
       "Der Konfigurator zeigt für viele Fahrzeuge bereits hinterlegte Codierungen und Preise."
     ]}
+    relatedLinks={[
+      { href: "/vcp-codierung-leipzig", label: "VCP Codierung Leipzig", description: "VCP für geeignete Codierungs-, Parametrierungs-, Diagnose- und Flash-Aufgaben." },
+      { href: "/steuergeraete-flash", label: "Steuergeräte-Flash", description: "Softwarestände und Flash-Anfragen fahrzeugbezogen prüfen lassen." },
+      { href: "/remote-fahrzeugcodierung", label: "Remote Fahrzeugcodierung", description: "Geeignete Aufgaben nach Vorprüfung deutschlandweit per Remote." },
+    ]}
     faq={[
       { question: "Welche Marken werden mit VCDS unterstützt?", answer: "Der Schwerpunkt liegt auf Fahrzeugen des Volkswagen-Konzerns, insbesondere VW, Audi, Škoda, SEAT und CUPRA." },
       { question: "Kann jede Codierung mit VCDS durchgeführt werden?", answer: "Nein. Je nach Fahrzeug und Aufgabe können VCP, ODIS, SFD-Freischaltungen oder andere Verfahren erforderlich sein." },
