@@ -19,6 +19,10 @@ export default function Page() {
       "Vor dem Termin werden Fahrzeug, Baujahr, gewünschte Funktionen und die vorhandene Diagnosehardware abgestimmt. So lässt sich vermeiden, dass ein Termin für eine technisch nicht geeignete Kombination gebucht wird.",
       "Bei Remote-Aufträgen erfolgt die Zahlung gemäß Buchungsablauf zu 70 % vor Beginn und zu 30 % nach Durchführung der vereinbarten Codierung."
     ]}
+    relatedLinks={[
+      { href: "/vcp-codierung-leipzig", label: "VCP Codierung Leipzig", description: "VCP für geeignete Codierungs-, Parametrierungs-, Diagnose- und Flash-Aufgaben." },
+      { href: "/vcds-codierung-leipzig", label: "VCDS Codierung Leipzig", description: "VCDS für klassische VAG-Codierungen, Anpassungen und Diagnose." },
+    ]}
     faq={[
       { question: "Brauche ich zwingend ein Diagnoseinterface?", answer: "Ja. Für die Remote-Durchführung muss ein passendes Interface am Fahrzeug vorhanden sein. Welches geeignet ist, hängt von Fahrzeug und Aufgabe ab." },
       { question: "Welche Software wird für den Fernzugriff verwendet?", answer: "Die Remote-Software wird vor dem Termin abgestimmt. Wichtig sind ein Windows-PC oder Laptop und eine stabile Internetverbindung." },
