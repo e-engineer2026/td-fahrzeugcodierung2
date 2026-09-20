@@ -28,7 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/steuergeraete-diagnose-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/sfd-freischaltung-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/carplay-freischalten-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
-    { url: `${base}/vcds-codierung-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${base}/vcds-codierung-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },\n    { url: `${base}/vcp-codierung-leipzig`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/steuergeraete-flash`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/fahrzeuge`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     ...vehiclePages,
