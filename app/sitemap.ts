@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { seoVehicles, vehiclePath } from "./lib/vehicleSeo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://td-fahrzeugcodierung.vercel.app";
+  const base = "https://td-fahrzeugcodierung.de";
   const now = new Date();
 
   const vehiclePages: MetadataRoute.Sitemap = seoVehicles.map((vehicle) => ({

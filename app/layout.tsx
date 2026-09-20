@@ -7,7 +7,7 @@ import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
 import "./globals.css";
 import "./booking-overrides.css";
 
-const siteUrl = "https://td-fahrzeugcodierung.vercel.app";
+const siteUrl = "https://td-fahrzeugcodierung.de";
 const gaId = "G-T8R5MJJW2P";
 const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
 

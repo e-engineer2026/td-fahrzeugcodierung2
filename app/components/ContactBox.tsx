@@ -75,7 +75,7 @@ export default function ContactBox() {
           _captcha: "false",
           _honey: website,
           _replyto: customerEmail,
-          _url: "https://td-fahrzeugcodierung.vercel.app/#kontakt",
+          _url: "https://td-fahrzeugcodierung.de/#kontakt",
           Name: name,
           "E-Mail": customerEmail,
           Terminart: mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd",

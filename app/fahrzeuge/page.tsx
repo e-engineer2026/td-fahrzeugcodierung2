@@ -6,12 +6,12 @@ import { seoVehicles, vehiclePath } from "../lib/vehicleSeo";
 export const metadata: Metadata = {
   title: "Fahrzeugcodierungen VW Audi Škoda SEAT CUPRA",
   description: "Fahrzeugbezogene Codiermöglichkeiten und Preise für Volkswagen, Audi, Škoda, SEAT und CUPRA. Modell auswählen und Codierungen ansehen.",
-  alternates: { canonical: "https://td-fahrzeugcodierung.vercel.app/fahrzeuge" },
+  alternates: { canonical: "https://td-fahrzeugcodierung.de/fahrzeuge" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Fahrzeugcodierungen VW Audi Škoda SEAT CUPRA | TD Fahrzeugcodierung",
     description: "Fahrzeugbezogene Codiermöglichkeiten und Preise für Volkswagen, Audi, Škoda, SEAT und CUPRA.",
-    url: "https://td-fahrzeugcodierung.vercel.app/fahrzeuge",
+    url: "https://td-fahrzeugcodierung.de/fahrzeuge",
     siteName: "TD Fahrzeugcodierung",
     locale: "de_DE",
     type: "website",

@@ -7,7 +7,7 @@ import { codingCatalog, codingGroups, codingsForVehicle } from "../../../data/ca
 import { priorityVehicleSeoByPath as prioritySeoByPath } from "../../../lib/priorityVehicleSeo";
 import { findVehicleBySlugs, seoVehicles, vehicleBrandSlug, vehicleModelSlug } from "../../../lib/vehicleSeo";
 
-const BASE = "https://td-fahrzeugcodierung.vercel.app";
+const BASE = "https://td-fahrzeugcodierung.de";
 type PageParams = { brand: string; model: string };
 
 function shortBrand(brand: string): string {
