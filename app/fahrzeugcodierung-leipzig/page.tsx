@@ -27,7 +27,8 @@ export default function Page() {
       { href: "/audi-codierung-leipzig", label: "Audi Codierung Leipzig", description: "Audi-spezifische Codierungen, Anpassungen und Diagnose für A1, A3, A4, A5, A6, A7 und Q-Modelle." },
       { href: "/skoda-codierung-leipzig", label: "Škoda Codierung Leipzig", description: "Codierungen für Octavia 3 und 4, Superb, Fabia, Kodiaq, Karoq, Enyaq und weitere Baureihen." },
       { href: "/assistenzsysteme-codieren-leipzig", label: "Assistenzsysteme codieren", description: "Informationen zu VZE, Lane Assist, Fernlichtassistent und weiteren unterstützten Funktionen." },
-      { href: "/vcds-codierung-leipzig", label: "VCDS Codierung Leipzig", description: "VCDS-basierte Anpassungen, Diagnose und technische Vorprüfung für viele VAG-Fahrzeuge." },\n      { href: "/vcp-codierung-leipzig", label: "VCP Codierung Leipzig", description: "VCP für Codierung, Diagnose sowie geeignete Parametrierungs- und Flash-Aufgaben." },
+      { href: "/vcds-codierung-leipzig", label: "VCDS Codierung Leipzig", description: "VCDS-basierte Anpassungen, Diagnose und technische Vorprüfung für viele VAG-Fahrzeuge." },
+      { href: "/vcp-codierung-leipzig", label: "VCP Codierung Leipzig", description: "VCP für Codierung, Diagnose sowie geeignete Parametrierungs- und Flash-Aufgaben." },
       { href: "/remote-fahrzeugcodierung", label: "Remote Fahrzeugcodierung", description: "Geeignete Codierungen deutschlandweit per Remote durchführen lassen." }
     ]}
     faq={[
