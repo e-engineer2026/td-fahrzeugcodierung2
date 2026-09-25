@@ -53,7 +53,7 @@ export default function ContactBox() {
   const email = "td.codierung@gmail.com";
 
   const whatsappText = encodeURIComponent(
-    `Hallo, ich möchte eine Codierung vorprüfen lassen.\n\nTerminart: ${mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd"}\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
+    `Hallo, ich möchte eine Codierung prüfen lassen.\n\nTerminart: ${mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd"}\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
   );
 
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -147,7 +147,7 @@ export default function ContactBox() {
       </div>
 
       <form onSubmit={submit} className="card p-4 sm:p-8">
-        <h3 className="text-xl font-black sm:text-2xl">Codierung vorprüfen lassen</h3>
+        <h3 className="text-xl font-black sm:text-2xl">Codierung prüfen lassen</h3>
         <p className="mt-3 text-sm leading-6 text-slate-600">
           Formular ausfüllen und direkt absenden. Wir melden uns per E-Mail zurück.
         </p>
