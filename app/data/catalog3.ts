@@ -14,7 +14,7 @@ export type Coding = {
   sourceUrl?: string;
 };
 
-export type Platform = "PQ35" | "PQ46" | "PQ26" | "MQB" | "MQBevo" | "MLB" | "MLBevo" | "MEB" | "T5" | "PL71" | "PQ25";
+export type Platform = "PQ35" | "PQ46" | "PQ26" | "PQ12" | "MQB" | "MQB-A0" | "MQBevo" | "MLB" | "MLBevo" | "PPC" | "PPE" | "MEB" | "T5" | "PL71" | "PQ25";
 
 export type Vehicle = {
   brand: string;
@@ -24,6 +24,10 @@ export type Vehicle = {
   platform: Platform;
   sfd1From?: number;
   sourceUrl?: string;
+  /** Short generation note for variants already included in a broader model entry. */
+  modelNote?: string;
+  /** Keep separately listed models visible when only diagnosis is currently offered. */
+  diagnosticsOnly?: boolean;
 };
 
 function normalizeName(name:string):string {
@@ -119,13 +123,19 @@ export const vehicles:Vehicle[] = [
   {brand:"Volkswagen",model:"Golf Plus 5M",startYear:2005,endYear:2014,platform:"PQ35",sourceUrl:`${A}/vw-golf-plus-5m/`},
   {brand:"Volkswagen",model:"Golf 5 (1K)",startYear:2003,endYear:2008,platform:"PQ35",sourceUrl:`${A}/tag/vw-golf-5-1k/`},
   {brand:"Volkswagen",model:"Golf 6 (1K)",startYear:2008,endYear:2012,platform:"PQ35",sourceUrl:`${A}/vw-golf-5-6-1k/`},
-  {brand:"Volkswagen",model:"Golf 7 (5G)",startYear:2012,endYear:2020,platform:"MQB",sourceUrl:`${A}/codierungen-fuer-vw-golf-7/`},
+  {brand:"Volkswagen",model:"Golf 7 (5G)",startYear:2012,endYear:2020,platform:"MQB",sourceUrl:`${A}/codierungen-fuer-vw-golf-7/`,modelNote:"Golf 7.5 Facelift ab 2017 eingeschlossen"},
   {brand:"Volkswagen",model:"Golf 8 (CD)",startYear:2019,endYear:2026,platform:"MQBevo",sfd1From:2019,sourceUrl:`${A}/vw-golf-8/`},
   {brand:"Volkswagen",model:"Passat B6 (3C)",startYear:2005,endYear:2010,platform:"PQ46",sourceUrl:`${A}/vw-passat-b6-c3/`},
   {brand:"Volkswagen",model:"Passat B7 (3C)",startYear:2010,endYear:2014,platform:"PQ46",sourceUrl:`${A}/vw-passat-b7/`},
   {brand:"Volkswagen",model:"Passat B8 (3G)",startYear:2014,endYear:2023,platform:"MQB",sourceUrl:`${A}/vw-passat-b8/`},
   {brand:"Volkswagen",model:"Passat B9",startYear:2023,endYear:2026,platform:"MQBevo",sfd1From:2023,sourceUrl:`${A}/vw-passat-b9/`},
   {brand:"Volkswagen",model:"T-Roc A11",startYear:2017,endYear:2026,platform:"MQB",sourceUrl:`${A}/vw-t-roc-a11/`},
+  {brand:"Volkswagen",model:"Arteon 3H",startYear:2017,endYear:2024,platform:"MQB"},
+  {brand:"Volkswagen",model:"up! (1S)",startYear:2011,endYear:2023,platform:"PQ12"},
+  {brand:"Volkswagen",model:"ID.3 (E11)",startYear:2020,endYear:2026,platform:"MEB",sfd1From:2020},
+  {brand:"Volkswagen",model:"ID.4 (E21)",startYear:2021,endYear:2026,platform:"MEB",sfd1From:2021},
+  {brand:"Volkswagen",model:"ID.5 (E39)",startYear:2022,endYear:2026,platform:"MEB",sfd1From:2022},
+  {brand:"Volkswagen",model:"Tayron II (R4)",startYear:2025,endYear:2026,platform:"MQBevo",sfd1From:2025},
   {brand:"Volkswagen",model:"Tiguan 5N",startYear:2007,endYear:2016,platform:"PQ35",sourceUrl:`${A}/vw-tiguan-1-5n/`},
   {brand:"Volkswagen",model:"Tiguan II (AD/BW)",startYear:2016,endYear:2023,platform:"MQB",sourceUrl:`${A}/codierungen-fuer-vw-tiguan-2-ad/`},
   {brand:"Volkswagen",model:"Touran 1T",startYear:2003,endYear:2015,platform:"PQ35",sourceUrl:`${A}/vw-touran-1-1t/`},
@@ -145,7 +155,7 @@ export const vehicles:Vehicle[] = [
   {brand:"Audi",model:"A4 / S4 B9",startYear:2015,endYear:2024,platform:"MLBevo",sourceUrl:`${A}/audi-a4-8w/`},
   {brand:"Audi",model:"A5 / S5 8T",startYear:2007,endYear:2016,platform:"MLB",sourceUrl:`${A}/audi-a5-8t/`},
   {brand:"Audi",model:"A5 / S5 F5",startYear:2016,endYear:2024,platform:"MLBevo",sourceUrl:`${A}/audi-a5-f5-3/`},
-  {brand:"Audi",model:"A5 / S5 FU",startYear:2024,endYear:2026,platform:"MLBevo",sfd1From:2024,sourceUrl:`${A}/audi-a5-fu/`},
+  {brand:"Audi",model:"A5 / S5 FU",startYear:2024,endYear:2026,platform:"PPC",sfd1From:2024,sourceUrl:`${A}/audi-a5-fu/`},
   {brand:"Audi",model:"A6 / S6 C6",startYear:2004,endYear:2011,platform:"MLB",sourceUrl:`${A}/audi-a6-c6/`},
   {brand:"Audi",model:"A6 / S6 C7",startYear:2011,endYear:2018,platform:"MLB",sourceUrl:`${A}/audi-a6-c7/`},
   {brand:"Audi",model:"A6 / S6 C8",startYear:2018,endYear:2026,platform:"MLBevo",sourceUrl:`${A}/audi-a6-c8/`},
@@ -154,6 +164,13 @@ export const vehicles:Vehicle[] = [
   {brand:"Audi",model:"TT 8J",startYear:2006,endYear:2014,platform:"PQ35",sourceUrl:`${A}/audi-tt-8j/`},
   {brand:"Audi",model:"TT 8S",startYear:2014,endYear:2023,platform:"MQB",sourceUrl:`${A}/audi-tt-8s/`},
   {brand:"Audi",model:"Q3 8U",startYear:2011,endYear:2018,platform:"PQ35",sourceUrl:`${A}/audi-q3-8u/`},
+  {brand:"Audi",model:"Q2 GA",startYear:2016,endYear:2026,platform:"MQB"},
+  {brand:"Audi",model:"Q3 F3",startYear:2018,endYear:2026,platform:"MQB"},
+  {brand:"Audi",model:"Q4 e-tron (FZ)",startYear:2021,endYear:2026,platform:"MEB",sfd1From:2021},
+  {brand:"Audi",model:"Q6 e-tron (GF)",startYear:2024,endYear:2026,platform:"PPE",diagnosticsOnly:true},
+  {brand:"Audi",model:"A8 D3 (4E)",startYear:2002,endYear:2010,platform:"MLB"},
+  {brand:"Audi",model:"A8 D4 (4H)",startYear:2010,endYear:2017,platform:"MLB"},
+  {brand:"Audi",model:"A8 D5 (4N)",startYear:2017,endYear:2026,platform:"MLBevo"},
   {brand:"Audi",model:"Q5 8R",startYear:2008,endYear:2017,platform:"MLB",sourceUrl:`${A}/audi-q5-8r/`},
   {brand:"Audi",model:"Q5 FY",startYear:2017,endYear:2024,platform:"MLBevo",sourceUrl:`${A}/audi-q5-fy-n/`},
   {brand:"Audi",model:"Q5 GU",startYear:2024,endYear:2026,platform:"MLBevo",sfd1From:2024,sourceUrl:`${A}/audi-q5-gu/`},
@@ -174,12 +191,16 @@ export const vehicles:Vehicle[] = [
   {brand:"Škoda",model:"Rapid NH ab MJ 2016",startYear:2016,endYear:2019,platform:"PQ25",sourceUrl:`${A}/skoda-rapid-nh-ab-mj-2016/`},
   {brand:"Škoda",model:"Yeti 5L",startYear:2009,endYear:2017,platform:"PQ35",sourceUrl:`${A}/skoda-yeti-5l/`},
   {brand:"Škoda",model:"Kodiaq NS",startYear:2016,endYear:2023,platform:"MQB",sourceUrl:`${A}/skoda-kodiaq-ns/`},
-  {brand:"Škoda",model:"Karoq NU",startYear:2017,endYear:2026,platform:"MQB",sourceUrl:`${A}/skoda-karoq-nu/`},
+  {brand:"Škoda",model:"Karoq NU",startYear:2017,endYear:2026,platform:"MQB",sourceUrl:`${A}/skoda-karoq-nu/`,modelNote:"Facelift ab 2022 eingeschlossen"},
+  {brand:"Škoda",model:"Scala NW",startYear:2019,endYear:2026,platform:"MQB-A0"},
+  {brand:"Škoda",model:"Kodiaq II (PS)",startYear:2024,endYear:2026,platform:"MQBevo",sfd1From:2024},
   {brand:"Škoda",model:"Kamiq NW",startYear:2019,endYear:2026,platform:"MQB",sourceUrl:`${A}/skoda-kamiq-nw/`},
   {brand:"Škoda",model:"Citigo AA",startYear:2011,endYear:2020,platform:"PQ25",sourceUrl:`${A}/skoda-citigo-aa/`},
-  {brand:"Škoda",model:"Enyaq 5A",startYear:2020,endYear:2026,platform:"MEB",sfd1From:2020,sourceUrl:`${A}/skoda-enyaq-5a/`},
+  {brand:"Škoda",model:"Enyaq 5A",startYear:2020,endYear:2026,platform:"MEB",sfd1From:2020,sourceUrl:`${A}/skoda-enyaq-5a/`,modelNote:"Facelift ab 2025 eingeschlossen"},
 
   {brand:"SEAT / CUPRA",model:"SEAT Leon 5F",startYear:2012,endYear:2020,platform:"MQB",sourceUrl:`${A}/seat-leon-3-5f/`},
+  {brand:"SEAT / CUPRA",model:"SEAT Leon 1P",startYear:2005,endYear:2012,platform:"PQ35"},
+  {brand:"SEAT / CUPRA",model:"SEAT Ateca KH7",startYear:2016,endYear:2026,platform:"MQB"},
   {brand:"SEAT / CUPRA",model:"SEAT Ibiza KJ",startYear:2017,endYear:2026,platform:"MQB",sourceUrl:`${A}/seat-ibiza-5-kj/`},
   {brand:"SEAT / CUPRA",model:"SEAT Altea / Altea XL 5P",startYear:2004,endYear:2015,platform:"PQ35",sourceUrl:`${A}/seat-altea-altea-xl-5p/`},
   {brand:"SEAT / CUPRA",model:"SEAT Toledo 4 NH",startYear:2012,endYear:2019,platform:"PQ25",sourceUrl:`${A}/seat-toledo-4-nh/`},
@@ -190,6 +211,7 @@ export const vehicles:Vehicle[] = [
   {brand:"SEAT / CUPRA",model:"CUPRA Leon KL",startYear:2020,endYear:2026,platform:"MQBevo",sfd1From:2020,sourceUrl:`${A}/cupra-leon-kl/`},
   {brand:"SEAT / CUPRA",model:"CUPRA Formentor KM",startYear:2020,endYear:2026,platform:"MQBevo",sfd1From:2020,sourceUrl:`${A}/cupra-formentor-km/`},
   {brand:"SEAT / CUPRA",model:"CUPRA Born K11",startYear:2021,endYear:2026,platform:"MEB",sfd1From:2021,sourceUrl:`${A}/cupra-born-k11/`},
+  {brand:"SEAT / CUPRA",model:"CUPRA Tavascan (KX)",startYear:2024,endYear:2026,platform:"MEB",sfd1From:2024},
 ];
 
 export function codingsForVehicle(vehicle:Vehicle):string[] {
