@@ -69,8 +69,9 @@ export default function FahrzeugePage() {
                         className="rounded-xl border border-slate-200 bg-white px-4 py-4 transition hover:border-blue-300 hover:bg-blue-50/40"
                       >
                         <div className="font-black text-slate-950">{vehicle.model}</div>
+                        {vehicle.modelNote && <div className="mt-1 text-xs font-medium text-blue-700">{vehicle.modelNote}</div>}
                         <div className="mt-1 text-sm text-slate-500">{vehicle.platform} · {vehicle.startYear}–{vehicle.endYear >= 2026 ? "heute" : vehicle.endYear}</div>
-                        <div className="mt-2 text-sm font-semibold text-blue-700">Codierungen &amp; Preise ansehen →</div>
+                        <div className="mt-2 text-sm font-semibold text-blue-700">{vehicle.diagnosticsOnly ? "Diagnose & Preise ansehen →" : "Codierungen & Preise ansehen →"}</div>
                       </Link>
                     ))}
                   </div>

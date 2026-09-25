@@ -30,7 +30,7 @@ export function vehiclePath(vehicle: Vehicle): string {
 }
 
 export const seoVehicles = vehicles.filter((vehicle) =>
-  codingsForVehicle(vehicle).some((id) => id !== "diagnose")
+  vehicle.diagnosticsOnly || codingsForVehicle(vehicle).some((id) => id !== "diagnose")
 );
 
 export function findVehicleBySlugs(brand: string, model: string): Vehicle | undefined {

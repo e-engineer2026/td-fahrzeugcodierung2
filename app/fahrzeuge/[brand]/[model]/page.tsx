@@ -42,8 +42,10 @@ export async function generateMetadata(props: { params: Promise<PageParams> }): 
   const name = vehicleDisplayName(vehicle);
   const url = `${BASE}/fahrzeuge/${params.brand}/${params.model}`;
   const priority = prioritySeoByPath[`${params.brand}/${params.model}`];
-  const fullTitle = priority?.title ?? `${name} Codierung Leipzig | TD`;
-  const description = priority?.description ?? `Codierung und Diagnose für ${name} in Leipzig oder per Remote. Funktionen, Voraussetzungen und Preise prüfen und Termin direkt konfigurieren.`;
+  const fullTitle = priority?.title ?? (vehicle.diagnosticsOnly ? `${name} Diagnose Leipzig | TD Fahrzeugcodierung` : `${name} Codierung Leipzig | TD`);
+  const description = priority?.description ?? (vehicle.diagnosticsOnly
+    ? `Fahrzeugdiagnose für ${name} in Leipzig. Für diese neue PPE-Plattform sind Codierfunktionen derzeit noch nicht im Baukasten hinterlegt.`
+    : `Codierung und Diagnose für ${name} in Leipzig oder per Remote. Funktionen, Voraussetzungen und Preise prüfen und Termin direkt konfigurieren.`);
 
   return {
     title: { absolute: fullTitle },
@@ -94,8 +96,8 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
     "@graph": [
       {
         "@type": "Service",
-        name: `${name} Codierung und Diagnose`,
-        serviceType: ["Fahrzeugcodierung", "Fahrzeugdiagnose"],
+        name: vehicle.diagnosticsOnly ? `${name} Fahrzeugdiagnose` : `${name} Codierung und Diagnose`,
+        serviceType: vehicle.diagnosticsOnly ? ["Fahrzeugdiagnose"] : ["Fahrzeugcodierung", "Fahrzeugdiagnose"],
         url,
         areaServed: { "@type": "City", name: "Leipzig" },
         provider: { "@type": "LocalBusiness", name: "TD Fahrzeugcodierung", url: BASE },
@@ -128,11 +130,13 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
           </nav>
           <div className="mt-6 max-w-4xl">
             <div className="inline-flex rounded-full border border-blue-200 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-[.14em] text-blue-700">{vehicle.platform} · {years}</div>
-            <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight sm:text-5xl">{name} Codierung in Leipzig</h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">{priority?.intro ?? `Codierungen und Fahrzeugdiagnose für den ${name} – persönlich in Leipzig-Süd oder, je nach Funktion, per Remote. Die verfügbaren Leistungen werden fahrzeugbezogen geprüft.`}</p>
+            <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight sm:text-5xl">{name} {vehicle.diagnosticsOnly ? "Diagnose" : "Codierung"} in Leipzig</h1>
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">{priority?.intro ?? (vehicle.diagnosticsOnly
+              ? `Fahrzeugdiagnose für den ${name} in Leipzig-Süd. Für die PPE-Plattform sind aktuell noch keine Codierungen im Baukasten freigegeben.`
+              : `Codierungen und Fahrzeugdiagnose für den ${name} – persönlich in Leipzig-Süd oder, je nach Funktion, per Remote. Die verfügbaren Leistungen werden fahrzeugbezogen geprüft.`)}</p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link href="/#buchen" className="btn-primary w-full text-center sm:w-auto">Codierung auswählen & Preis berechnen</Link>
-              <Link href="/#kontakt" className="btn-secondary w-full text-center sm:w-auto">Machbarkeit anfragen</Link>
+              <Link href="/#buchen" className="btn-primary w-full text-center sm:w-auto">{vehicle.diagnosticsOnly ? "Diagnose auswählen & Preis berechnen" : "Codierung auswählen & Preis berechnen"}</Link>
+              <Link href="/#kontakt" className="btn-secondary w-full text-center sm:w-auto">{vehicle.diagnosticsOnly ? "Diagnose anfragen" : "Machbarkeit anfragen"}</Link>
               {landing ? <Link href={landing.href} className="btn-secondary w-full text-center sm:w-auto">{landing.label}</Link> : null}
             </div>
           </div>
@@ -156,10 +160,13 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
         <div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:gap-10">
           <div>
             <div className="max-w-3xl">
-              <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600">Codiermöglichkeiten</div>
-              <h2 className="mt-2 text-3xl font-black">Funktionen für {name}</h2>
-              <p className="mt-3 leading-7 text-slate-600">Preise gelten je ausgewählter Funktion. Mehrere Codierungen werden auf der Hauptseite automatisch nach der aktuellen Rabattstaffel zusammengefasst.</p>
+              <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600">{vehicle.diagnosticsOnly ? "Verfügbare Leistung" : "Codiermöglichkeiten"}</div>
+              <h2 className="mt-2 text-3xl font-black">{vehicle.diagnosticsOnly ? `Diagnose für ${name}` : `Funktionen für ${name}`}</h2>
+              <p className="mt-3 leading-7 text-slate-600">{vehicle.diagnosticsOnly
+                ? "Für diese Baureihe ist derzeit die Fehlerdiagnose hinterlegt. Codierungen werden erst ergänzt, wenn passende Funktionen für Plattform und Steuergeräte verifiziert sind."
+                : "Preise gelten je ausgewählter Funktion. Mehrere Codierungen werden auf der Hauptseite automatisch nach der aktuellen Rabattstaffel zusammengefasst."}</p>
             </div>
+            {vehicle.diagnosticsOnly && <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 leading-7 text-slate-700">Fehlerspeicher auslesen und Steuergeräte prüfen: <strong>39 €</strong>. Für den Audi Q6 e-tron (PPE) sind noch keine Codierungen zur Auswahl freigegeben.</div>}
             <div className="mt-8 space-y-9">
               {codingGroups.map((group) => {
                 const list = serviceCodings.filter((coding) => coding.uiGroup === group);
@@ -183,7 +190,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
 
             <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
               <h2 className="text-2xl font-black">Technische Vorprüfung beim {name}</h2>
-              <p className="mt-3 leading-7 text-slate-600">Der {name} gehört zur Plattform {vehicle.platform} und wurde {years} angeboten. Vor einer Codierung prüfen wir die tatsächlich verbauten Steuergeräte, den Softwarestand und die vorhandene Hardware. So lassen sich nicht unterstützte Funktionen vorab ausschließen.</p>
+              <p className="mt-3 leading-7 text-slate-600">Der {name} gehört zur Plattform {vehicle.platform} und wurde {years} angeboten. Vor einer {vehicle.diagnosticsOnly ? "Diagnose" : "Codierung"} prüfen wir die tatsächlich verbauten Steuergeräte, den Softwarestand und die vorhandene Hardware. So lassen sich nicht unterstützte Funktionen vorab ausschließen.</p>
               <p className="mt-3 leading-7 text-slate-600">Je nach gewünschter Funktion erfolgt die Umsetzung über Codierung, Anpassung oder Grundeinstellung. Für Remote-Termine wird zusätzlich geprüft, ob Diagnoseinterface und Verbindung für die jeweilige Arbeit geeignet sind.</p>
               {vehicle.sfd1From && <p className="mt-3 leading-7 text-slate-600">Ab Modelljahr {vehicle.sfd1From} kann bei dieser Baureihe SFD relevant sein. Ob eine SFD-Freischaltung benötigt wird, hängt vom konkreten Steuergerät und der gewünschten Anpassung ab.</p>}
             </section>
@@ -203,7 +210,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               <div><dt className="text-slate-500">Plattform</dt><dd className="font-semibold">{vehicle.platform}</dd></div>
             </dl>
             {vehicle.sfd1From && <div className="mt-5 rounded-xl border border-blue-200 bg-white p-3 text-xs leading-5 text-slate-700">SFD ist bei dieser Baureihe ab Modelljahr {vehicle.sfd1From} relevant. Die konkrete Buchbarkeit wird nach Baujahr und Steuergerät geprüft.</div>}
-            <Link href="/#buchen" className="btn-primary mt-5 w-full text-center">Jetzt konfigurieren</Link>
+            <Link href="/#buchen" className="btn-primary mt-5 w-full text-center">{vehicle.diagnosticsOnly ? "Diagnose konfigurieren" : "Jetzt konfigurieren"}</Link>
           </aside>
         </div>
       </section>
@@ -233,7 +240,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
 
       <section className="border-t border-blue-100 bg-slate-50">
         <div className="container-x py-12 sm:py-16">
-          <h2 className="text-2xl font-black">{name} codieren lassen</h2>
+          <h2 className="text-2xl font-black">{vehicle.diagnosticsOnly ? `${name} diagnostizieren lassen` : `${name} codieren lassen`}</h2>
           <p className="mt-3 max-w-3xl leading-7 text-slate-600">Wähle auf der Hauptseite Vor Ort oder Remote, anschließend Marke, Modell und Baujahr. Danach erscheinen die für diese Baureihe hinterlegten Codierungen inklusive Preisberechnung.</p>
           <Link href="/#buchen" className="btn-primary mt-6 inline-flex">Zur Fahrzeugauswahl</Link>
         </div>

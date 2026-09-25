@@ -456,6 +456,15 @@ export const ascodingModelCodings: Record<string,string[]> = {
   "Audi|TT 8J": pq35Standard,
   "Audi|TT 8S": mqbStandard,
   "Audi|Q3 8U": pq35Standard,
+  "Audi|Q2 GA": mqbStandard,
+  "Audi|Q3 F3": mqbStandard,
+  "Audi|Q4 e-tron (FZ)": meb,
+  // PPE uses a newer electronic architecture. Until its functions are checked
+  // individually, the website offers diagnosis only for the Q6 e-tron.
+  "Audi|Q6 e-tron (GF)": [],
+  "Audi|A8 D3 (4E)": oldMmi,
+  "Audi|A8 D4 (4H)": mlbStandard,
+  "Audi|A8 D5 (4N)": mlbEvoSuv,
   "Audi|Q5 8R": mlbStandard,
   "Audi|Q5 FY": mlbEvoF5,
   "Audi|Q5 GU": [],
@@ -477,6 +486,12 @@ export const ascodingModelCodings: Record<string,string[]> = {
   "Volkswagen|Passat B8 (3G)": mqbExtended,
   "Volkswagen|Passat B9": mqbEvo,
   "Volkswagen|T-Roc A11": mqbStandard,
+  "Volkswagen|Arteon 3H": mqbExtended,
+  "Volkswagen|up! (1S)": cityCitigo,
+  "Volkswagen|ID.3 (E11)": meb,
+  "Volkswagen|ID.4 (E21)": meb,
+  "Volkswagen|ID.5 (E39)": meb,
+  "Volkswagen|Tayron II (R4)": mqbEvo,
   "Volkswagen|Tiguan 5N": pq35Standard,
   "Volkswagen|Tiguan II (AD/BW)": mqbExtended,
   "Volkswagen|Touran 1T": pq35Standard,
@@ -501,12 +516,16 @@ export const ascodingModelCodings: Record<string,string[]> = {
   "Škoda|Yeti 5L": pq35Standard,
   "Škoda|Kodiaq NS": mqbSuv,
   "Škoda|Karoq NU": mqbStandard,
+  "Škoda|Scala NW": mqbStandard,
+  "Škoda|Kodiaq II (PS)": mqbEvo,
   "Škoda|Kamiq NW": mqbStandard,
   "Škoda|Citigo AA": cityCitigo,
   "Škoda|Enyaq 5A": meb,
 
   // Seat / Cupra
   "SEAT / CUPRA|SEAT Leon 5F": mqbStandard,
+  "SEAT / CUPRA|SEAT Leon 1P": pq35Standard,
+  "SEAT / CUPRA|SEAT Ateca KH7": mqbSuv,
   "SEAT / CUPRA|SEAT Ibiza KJ": mqbStandard,
   "SEAT / CUPRA|SEAT Altea / Altea XL 5P": pq35Standard,
   "SEAT / CUPRA|SEAT Toledo 4 NH": pq25Standard,
@@ -517,6 +536,7 @@ export const ascodingModelCodings: Record<string,string[]> = {
   "SEAT / CUPRA|CUPRA Leon KL": mqbEvo,
   "SEAT / CUPRA|CUPRA Formentor KM": mqbEvo,
   "SEAT / CUPRA|CUPRA Born K11": meb,
+  "SEAT / CUPRA|CUPRA Tavascan (KX)": meb,
 };
 
 export const ascodingCodingNames = Array.from(new Set(Object.values(ascodingModelCodings).flat()));
