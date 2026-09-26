@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/patch-mqb-lane.cjs && next build",
     "lint": "eslint .",
     "start": "next start"
   },
@@ -27,7 +27,6 @@
     "typescript": "5.7.2"
   },
   "overrides": {
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.5"
+    "@types/react": "19.2.18"
   }
 }
