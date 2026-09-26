@@ -16,6 +16,17 @@ const smartphoneIntegrationHardware = "Kompatibles Infotainmentsystem/Smartphone
 const assistanceLightPattern = /(fernlichtassistent|light assist|dynamic light assist|dynamischer lichtassistent|matrix led|matrix-licht|matrix licht)/i;
 const reducedAssistancePattern = /(verkehrszeichenerkennung|\bvze\b|traffic jam assist|stauassistent|\btja\b)/i;
 
+const mqbevoFlaMemoryCoding: Coding = {
+  id: "mqbevo-fla-memory",
+  name: "Fernlichtassistent – letzte Einstellung speichern (bis 2023)",
+  price: 20,
+  category: "Assistenzsysteme",
+  uiGroup: "Assistenz",
+  interfaceInfo: "VCDS – abhängig von Steuergerät und Softwarestand",
+  hardware: "Fernlichtassistent / Light Assist muss bereits vorhanden sein.",
+  requirements: "Nur bei unterstütztem MQB-evo-Steuergerät und Softwarestand. Nur bis Baujahr/Modelljahr 2023; nicht für SFD2-Fahrzeuge.",
+};
+
 // MQB-evo Spurhalteassistent: nur bis einschließlich 2023; SFD2 ab 2024 bleibt ausgeschlossen.
 const mqbevoLaneCodings: Coding[] = [
   {
@@ -62,12 +73,13 @@ export const codingCatalog: Coding[] = [
     return coding;
   }),
   ...mqbevoLaneCodings,
+  mqbevoFlaMemoryCoding,
 ];
 
 export function codingsForVehicle(vehicle: Vehicle): string[] {
   const baseIds = baseCodingsForVehicle(vehicle);
   if (vehicle.platform === "MQBevo") {
-    return Array.from(new Set([...baseIds, ...mqbevoLaneCodings.map((coding) => coding.id)]));
+    return Array.from(new Set([...baseIds, ...mqbevoLaneCodings.map((coding) => coding.id), mqbevoFlaMemoryCoding.id]));
   }
   return baseIds;
 }
