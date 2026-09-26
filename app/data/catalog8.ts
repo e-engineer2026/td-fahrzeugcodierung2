@@ -19,23 +19,23 @@ const reducedAssistancePattern = /(verkehrszeichenerkennung|\bvze\b|traffic jam 
 const mqbevoLaneCodings: Coding[] = [
   {
     id: "mqbevo-lane-onstate",
-    name: "Spurhalteassistent / Spurverlassenwarnung – Einschaltzustand anpassen",
+    name: "Spurhalteassistent / Spurverlassenwarnung – Einschaltzustand anpassen (bis 2023)",
     price: 29,
     category: "Assistenzsysteme",
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – abhängig von Kamera- und Softwarestand",
     hardware: "Spurhalteassistent / Frontkamera muss bereits vorhanden sein.",
-    requirements: "Nur bei unterstütztem MQB-evo-Steuergerät und Softwarestand.",
+    requirements: "Nur bei unterstütztem MQB-evo-Steuergerät und Softwarestand. Nur bis Baujahr/Modelljahr 2023; nicht für SFD2-Fahrzeuge.",
   },
   {
     id: "mqbevo-adaptive-lane",
-    name: "Adaptive Spurführung aktivieren",
+    name: "Adaptive Spurführung aktivieren (bis 2023)",
     price: 29,
     category: "Assistenzsysteme",
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – abhängig von Kamera- und Softwarestand",
     hardware: "Geeignete Frontkamera und kompatibles Fahrerassistenz-Steuergerät erforderlich.",
-    requirements: "Nur bei unterstütztem MQB-evo-Steuergerät. Nicht möglich bei Fahrzeugen mit Travel Assist ab Werk.",
+    requirements: "Nur bei unterstütztem MQB-evo-Steuergerät und Softwarestand. Nur bis Baujahr/Modelljahr 2023; nicht für SFD2-Fahrzeuge. Nicht möglich bei Fahrzeugen mit Travel Assist ab Werk.",
   },
 ];
 
