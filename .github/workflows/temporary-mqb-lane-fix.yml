@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   patch:
-    if: "!contains(github.event.head_commit.message, '[mqb-lane-fix]')"
+    if: ${{ !contains(github.event.head_commit.message, '[mqb-lane-fix]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,26 +22,26 @@ jobs:
           old = '  if (isSfd2) return [];\n\n  const ids = new Set(codingsForVehicle(vehicle));'
           new = '''  const ids = new Set(codingsForVehicle(vehicle));
 
-  if (isSfd2) {
-    if (vehicle.platform !== "MQBevo") return [];
-    const mqbevoLaneIds = new Set(["mqbevo-lane-onstate", "mqbevo-adaptive-lane"]);
-    return curateCodingEntries(
-      codingCatalog
-        .filter((coding) => ids.has(coding.id) && mqbevoLaneIds.has(coding.id))
-        .map((coding) => ({
-          id: `vehicle-${coding.id}`,
-          name: coding.name,
-          price: coding.price,
-          uiGroup: coding.uiGroup as PlatformCodingGroup,
-          hardware: coding.hardware ?? coding.requirements,
-          source: "vehicle" as const,
-        }))
-        .filter((entry) => yearAllowed(entry.name, year))
-    );
-  }
+          if (isSfd2) {
+            if (vehicle.platform !== "MQBevo") return [];
+            const mqbevoLaneIds = new Set(["mqbevo-lane-onstate", "mqbevo-adaptive-lane"]);
+            return curateCodingEntries(
+              codingCatalog
+                .filter((coding) => ids.has(coding.id) && mqbevoLaneIds.has(coding.id))
+                .map((coding) => ({
+                  id: `vehicle-${coding.id}`,
+                  name: coding.name,
+                  price: coding.price,
+                  uiGroup: coding.uiGroup as PlatformCodingGroup,
+                  hardware: coding.hardware ?? coding.requirements,
+                  source: "vehicle" as const,
+                }))
+                .filter((entry) => yearAllowed(entry.name, year))
+            );
+          }
 
-  const vehicleCatalog = codingCatalog
-    .filter((coding) => ids.has(coding.id))'''
+          const vehicleCatalog = codingCatalog
+            .filter((coding) => ids.has(coding.id));'''
           if old not in s:
               raise SystemExit('Expected target text not found')
           s = s.replace(old, new, 1)
