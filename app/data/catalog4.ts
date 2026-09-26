@@ -12,9 +12,6 @@ export { vehicles, brands, codingGroups };
 
 export const VCDS_WIKI_HOME = "https://wiki-online.vcds.de/de/home";
 
-// Standard-, Komfort-, Licht-, Infotainment- und Fahrdynamikfunktionen bleiben
-// aus dem bisherigen modellbezogenen Katalog erhalten. Assistenzsysteme werden
-// separat als VCDS-Kandidatenliste gepflegt und immer vorab fahrzeugspezifisch geprüft.
 const standardCatalog = baseCodingCatalog.filter((coding) => coding.uiGroup !== "Assistenz");
 
 const vcdsAssistCatalog: Coding[] = [
@@ -184,6 +181,7 @@ const assistIds = vcdsAssistCatalog.map((coding) => coding.id);
 
 function getsVcdsAssistList(vehicle: Vehicle): boolean {
   if (vehicle.platform === "MQB") return true;
+  if (vehicle.platform === "MQBevo") return true;
   if (vehicle.platform === "MLB") return true;
   if (vehicle.platform === "MLBevo" && !vehicle.sfd1From) return true;
   return false;
