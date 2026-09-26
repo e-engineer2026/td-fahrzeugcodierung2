@@ -27,6 +27,8 @@ const mqbevoSfd1AssistIds = [
   "vcds-lane-memory",
   "vcds-lane-warning",
   "vcds-front-assist",
+  "mqbevo-lane-onstate",
+  "mqbevo-adaptive-lane",
 ];
 
 // MLB: konservativ nach Baureihe. Keine pauschalen MQB-spezifischen DLA-/pACC-/Limiter-Funktionen.
