@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/prepare-mqbevo.js && next build",
+    "build": "next build",
     "lint": "eslint .",
     "start": "next start"
   },
