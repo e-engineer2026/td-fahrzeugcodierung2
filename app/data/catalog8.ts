@@ -23,7 +23,7 @@ const mqbevoFlaMemoryCoding: Coding = {
   category: "Assistenzsysteme",
   uiGroup: "Assistenz",
   interfaceInfo: "VCDS – abhängig von Steuergerät und Softwarestand",
-  hardware: "Fernlichtassistent / Light Assist muss bereits vorhanden sein.",
+  hardware: "Fernlichtassistent / Light Assist muss bereits vorhanden und funktionsfähig sein; Speicherfunktion abhängig von Steuergeräte- und Softwarestand.",
   requirements: "Nur bei unterstütztem MQB-evo-Steuergerät und Softwarestand. Nur bis Baujahr/Modelljahr 2023; nicht für SFD2-Fahrzeuge.",
 };
 
@@ -36,7 +36,7 @@ const mqbevoLaneCodings: Coding[] = [
     category: "Assistenzsysteme",
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – abhängig von Kamera- und Softwarestand",
-    hardware: "Spurhalteassistent / Frontkamera muss bereits vorhanden sein.",
+    hardware: "Spurhalteassistent mit kompatibler Frontkamera muss bereits vorhanden und funktionsfähig sein; Anpassung abhängig von Kamera-/Softwarestand.",
     requirements: "Nur bei unterstütztem MQB-evo-Steuergerät und Softwarestand. Nur bis Baujahr/Modelljahr 2023; nicht für SFD2-Fahrzeuge.",
   },
   {
@@ -46,7 +46,7 @@ const mqbevoLaneCodings: Coding[] = [
     category: "Assistenzsysteme",
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – abhängig von Kamera- und Softwarestand",
-    hardware: "Geeignete Frontkamera und kompatibles Fahrerassistenz-Steuergerät erforderlich.",
+    hardware: "Kompatible Frontkamera und Fahrerassistenz-/Lenkungssteuerung erforderlich; Funktion abhängig von Kamera-, Lenkungs- und Softwarestand.",
     requirements: "Nur bei unterstütztem MQB-evo-Steuergerät und Softwarestand. Nur bis Baujahr/Modelljahr 2023; nicht für SFD2-Fahrzeuge. Nicht möglich bei Fahrzeugen mit Travel Assist ab Werk.",
   },
 ];
