@@ -33,7 +33,7 @@ const vehicleFunction = `function vehicleSpecificCodings(
     price: coding.price,
     uiGroup: coding.uiGroup as PlatformCodingGroup,
     hardware: coding.hardware ?? coding.requirements,
-    source: "vehicle",
+    source: "vehicle" as const,
   }));
 
   if (isMqbevoSfd2) {
