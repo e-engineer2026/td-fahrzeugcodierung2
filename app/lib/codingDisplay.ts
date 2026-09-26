@@ -48,7 +48,7 @@ const curatedAssistRules: CuratedAssistRule[] = [
   { name: "Lane Assist – Einstellungen anpassen", price: 20, match: /(?=.*(lane assist|spurhalteassistent))(?=.*(einstell|eingriff|warn|vibration|lenkunterstützung|lenkunterstuetzung|empfindlichkeit|fahrerinaktivität|fahrerinaktivitaet|speicher|inaktiv))(?!.*(freischalt|aktivier))/i },
   { name: "Travel Assist Einstellungen anpassen", price: 55, match: /travel assist/i },
   { name: "Front Assist Vorwarnung anpassen", price: 20, match: /front assist.*vorwarn/i },
-  { name: "Fernlichtassistent Einstellungen anpassen", price: 20, match: /(?=.*(fernlichtassistent|light assist|\bhba\b))(?=.*(einstell|reset|stadt|einschalt|ausschalt|speicher))(?!.*(dynamic|dynamisch|\bdla\b|matrix|freischalt|aktivier))/i },
+  { name: "Fernlichtassistent – letzte Einstellung speichern", price: 20, match: /(?=.*(fernlichtassistent|light assist|\bhba\b))(?=.*(einstell|reset|stadt|einschalt|ausschalt|speicher|memory|letzte))(?!.*(dynamic|dynamisch|\bdla\b|matrix|freischalt|aktivier))/i },
   { name: "Einparkhilfe automatisch aktivieren", price: 20, match: /einparkhilfe.*automatische aktivierung/i },
   { name: "Einparkhilfe Abschaltgeschwindigkeit anpassen", price: 20, match: /einparkhilfe.*abschaltgeschwindigkeit/i },
   { name: "Einparkhilfe Bordsteinabstand anpassen", price: 20, match: /einparkhilfe.*bordsteinabstand/i },
