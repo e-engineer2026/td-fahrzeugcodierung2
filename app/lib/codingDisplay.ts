@@ -20,6 +20,10 @@ type CuratedAssistRule = {
 
 const curatedAssistRules: CuratedAssistRule[] = [
   // Freischaltungen / Aktivierungen zuerst
+  // MQB-evo Spurhalteassistent – ausschließlich bis einschließlich 2023
+  { name: "Spurhalteassistent / Spurverlassenwarnung – Einschaltzustand anpassen (bis 2023)", price: 29, match: /spurhalteassistent.*spurverlassenwarnung.*einschaltzustand/i },
+  { name: "Adaptive Spurführung aktivieren (bis 2023)", price: 29, match: /adaptive spurführung.*aktivier/i },
+
   { name: "Klassischen Tempomat freischalten", price: 25, match: /(klassisch.*tempomat|tempomat.*keine abstandsregelung|tempomat.*ohne abstandsregelung)/i },
   { name: "Geschwindigkeitsbegrenzer freischalten", price: 25, match: /(geschwindigkeits.?begrenzer|geschwindigkeits.?limiter|speed.?limiter)/i },
   { name: "Lane Assist – Freischaltung", price: 65, match: /(lane assist|spurhalteassistent).*(freischalt|aktivier)/i },
