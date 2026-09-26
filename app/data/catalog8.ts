@@ -16,6 +16,7 @@ const smartphoneIntegrationHardware = "Kompatibles Infotainmentsystem/Smartphone
 const assistanceLightPattern = /(fernlichtassistent|light assist|dynamic light assist|dynamischer lichtassistent|matrix led|matrix-licht|matrix licht)/i;
 const reducedAssistancePattern = /(verkehrszeichenerkennung|\bvze\b|traffic jam assist|stauassistent|\btja\b)/i;
 
+// MQB-evo Spurhalteassistent: nur bis einschließlich 2023; SFD2 ab 2024 bleibt ausgeschlossen.
 const mqbevoLaneCodings: Coding[] = [
   {
     id: "mqbevo-lane-onstate",
