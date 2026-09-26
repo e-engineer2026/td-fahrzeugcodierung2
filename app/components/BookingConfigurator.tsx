@@ -207,6 +207,7 @@ function vehicleSpecificCodings(
     .filter((coding) => ids.has(coding.id))
     .filter((coding) => {
       if (!isSfd1 || coding.category !== "Assistenzsysteme") return true;
+      if (coding.id === "mqbevo-lane-onstate" || coding.id === "mqbevo-adaptive-lane") return true;
       return !/(aktivieren|freischalten|codieren|parametrieren)/i.test(coding.name);
     });
 
