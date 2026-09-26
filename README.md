@@ -397,3 +397,9 @@ Trailer Assist und Stauassistent werden bei MQBevo nicht mehr in der direkten As
 ## v8.53
 - Einen IndexNow-Verifizierungsschlüssel für Bing und weitere unterstützte Suchmaschinen veröffentlicht.
 - Die vorhandenen Sitemap-URLs für die erstmalige IndexNow-Übermittlung vorbereitet.
+
+## v8.54
+- Für MQB evo wurden zwei zusätzliche Spurhalteassistent-Optionen im Fahrzeugkonfigurator ergänzt:
+  - Spurhalteassistent / Spurverlassenwarnung – Einschaltzustand anpassen
+  - Adaptive Spurführung aktivieren
+- Bei der adaptiven Spurführung wird darauf hingewiesen, dass sie bei Fahrzeugen mit Travel Assist ab Werk nicht möglich ist.
