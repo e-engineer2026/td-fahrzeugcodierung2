@@ -200,9 +200,28 @@ function vehicleSpecificCodings(
   isSfd1: boolean,
   isSfd2: boolean
 ): UnifiedCodingEntry[] {
-  if (isSfd2) return [];
-
   const ids = new Set(codingsForVehicle(vehicle));
+
+if (isSfd2) {
+  if (vehicle.platform !== "MQBevo") return [];
+  const mqbevoLaneIds = new Set(["mqbevo-lane-onstate", "mqbevo-adaptive-lane"]);
+  return curateCodingEntries(
+    codingCatalog
+      .filter((coding) => ids.has(coding.id) && mqbevoLaneIds.has(coding.id))
+      .map((coding) => ({
+        id: `vehicle-${coding.id}`,
+        name: coding.name,
+        price: coding.price,
+        uiGroup: coding.uiGroup as PlatformCodingGroup,
+        hardware: coding.hardware ?? coding.requirements,
+        source: "vehicle" as const,
+      }))
+      .filter((entry) => yearAllowed(entry.name, year))
+  );
+}
+
+const vehicleCatalog = codingCatalog
+  .filter((coding) => ids.has(coding.id));
   const vehicleCatalog = codingCatalog
     .filter((coding) => ids.has(coding.id))
     .filter((coding) => {
