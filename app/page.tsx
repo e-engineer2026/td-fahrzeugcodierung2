@@ -50,6 +50,10 @@ export default function Home(){
 
         <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-[0_22px_55px_rgba(15,40,75,0.14)] sm:rounded-3xl">
           <Image src="/td-hero-performance.webp" alt="Roter Performancewagen in einer hellen Studio-Szene mit blauen Lichtakzenten" width={1400} height={934} sizes="(max-width: 1024px) 100vw, 56vw" className="aspect-[1.55/1] w-full object-cover" priority />
+          <a href={googleMapsUrl} target="_blank" rel="noreferrer" aria-label="Standort in Leipzig-Süd in Google Maps öffnen" className="absolute bottom-[52px] left-3 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-800 shadow-sm backdrop-blur transition hover:border-blue-400 hover:text-blue-700 sm:bottom-[60px] sm:left-4 sm:px-4 sm:py-2 sm:text-sm">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white"><MapPin className="h-4 w-4" /></span>
+            <span>Standort Leipzig-Süd</span>
+          </a>
           <div className="absolute bottom-3 left-3 rounded-lg border border-white/70 bg-white/90 px-3 py-2 text-xs font-bold text-slate-800 shadow-sm backdrop-blur sm:bottom-4 sm:left-4 sm:px-4 sm:py-2.5 sm:text-sm">
             Vor Ort in Leipzig <span className="px-1 text-blue-600">·</span> Remote deutschlandweit
           </div>
