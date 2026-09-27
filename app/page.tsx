@@ -69,19 +69,6 @@ export default function Home(){
     </div>
   </section>
 
-  <section className="container-x py-8 sm:py-10" aria-labelledby="standort-heading">
-    <a href={googleMapsUrl} target="_blank" rel="noreferrer" className="card flex flex-col gap-4 p-5 transition hover:border-blue-300 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-      <div className="flex items-start gap-4">
-        <MapPin className="mt-0.5 h-7 w-7 shrink-0 text-blue-600" />
-        <div>
-          <h2 id="standort-heading" className="text-xl font-black sm:text-2xl">Standort in Leipzig-Süd</h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600 sm:text-base">TD Fahrzeugcodierung · Schenkendorfstraße 33 · 04275 Leipzig</p>
-        </div>
-      </div>
-      <span className="shrink-0 text-sm font-bold text-blue-700">Google-Unternehmensprofil öffnen →</span>
-    </a>
-  </section>
-
   <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug prüfen &amp; Termin konfigurieren.</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><div className="mt-5 sm:mt-7"><BookingConfigurator/></div></section>
 
   <section id="kontakt" className="scroll-mt-20 border-y border-blue-100 bg-white">
