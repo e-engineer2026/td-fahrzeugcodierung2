@@ -34,10 +34,6 @@ export default function Home(){
     <div className="container-x py-8 sm:py-12 lg:py-14">
       <div className="grid items-center gap-7 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
         <div className="max-w-2xl">
-          <div className="mb-4 flex items-center gap-2 text-xs font-black uppercase tracking-[.13em] text-blue-700 sm:text-sm">
-            <span className="h-1 w-8 rounded-full bg-blue-600" />
-            <span>Leipzig-Süd <span className="px-1 text-slate-400">·</span> Deutschlandweit per Remote</span>
-          </div>
           <h1 className="text-3xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-[3.25rem]">Fahrzeugcodierung &amp; Diagnose in Leipzig</h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, Škoda, SEAT und CUPRA – mit transparenter Kalkulation und direkter Terminbuchung.</p>
 
