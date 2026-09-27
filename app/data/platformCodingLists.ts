@@ -1,4 +1,4 @@
-export type PlatformCodingEntry = { name: string; sfd?: "Ja" | "Nein" | "Unklar"; status?: "Getestet" | "Ungetestet" };
+export type PlatformCodingEntry = { name: string; sfd?: "Ja" | "Nein" | "Unklar"; status?: "Getestet" | "Ungetestet"; interfaceInfo?: string };
 export type PlatformCodingSource = { id: string; platform: "MQB" | "MQBevo" | "MLBevo"; title: string; scope: string; description: string; referenceModels?: string[]; entries: PlatformCodingEntry[] };
 
 export const platformCodingSources: PlatformCodingSource[] = [
