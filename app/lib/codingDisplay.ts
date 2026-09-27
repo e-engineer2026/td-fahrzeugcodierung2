@@ -8,6 +8,7 @@ export type UnifiedCodingEntry = {
   uiGroup: PlatformCodingGroup;
   hardware?: string;
   requirements?: string;
+  interfaceInfo?: string;
   sfd?: "Ja" | "Nein" | "Unklar";
   source: "vehicle" | "platform";
 };
