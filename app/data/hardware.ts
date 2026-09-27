@@ -7,7 +7,7 @@ export function hardwareForName(name:string):string|undefined {
   const n=name.toLowerCase();
 
   // Fahrerassistenz
-  if(n.includes("verkehrszeichen")) return "Frontkamera/Fahrerassistenzkamera sowie kompatibles Kombiinstrument und Infotainment erforderlich.";
+  if(n.includes("verkehrszeichen")) return "VZE-fähige Frontkamera sowie kompatibles Kombiinstrument und Infotainment erforderlich; je nach System werden Navigationsdaten benötigt.";
   if(n.includes("lane assist")) return "Frontkamera/Fahrerassistenzkamera und kompatible Lenkungs-/Assistenzsteuergeräte erforderlich.";
   if(n.includes("fernlichtassistent")) return "Geeignete Frontkamera bzw. Fernlichtassistenz-Sensorik und kompatible Lichtsteuerung erforderlich.";
   if(n.includes("acc ") || n.startsWith("acc")) return "ACC-Radarsensor und kompatible Fahrerassistenz-/Gateway-Hardware erforderlich.";
