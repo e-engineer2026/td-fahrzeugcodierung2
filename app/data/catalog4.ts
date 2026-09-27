@@ -132,8 +132,8 @@ const vcdsAssistCatalog: Coding[] = [
     category: "Assistenzsysteme",
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – abhängig von Frontkamera, Kombiinstrument und Infotainment",
-    hardware: "Geeignete Frontkamera sowie kompatibles Kombiinstrument/Infotainment erforderlich.",
-    requirements: "Vorprüfung der Kamera-, Navigations- und Anzeigeunterstützung erforderlich.",
+    hardware: "VZE-fähige Frontkamera sowie kompatibles Kombiinstrument/Infotainment erforderlich.",
+    requirements: "Navigationsdaten je nach System erforderlich. Nach Ausbau, Tausch oder Arbeiten an der Kamera kann eine Kalibrierung nötig sein; Kamera-, Navigations- und Anzeigeunterstützung vorab prüfen.",
     sourceUrl: VCDS_WIKI_HOME,
   },
   {
