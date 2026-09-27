@@ -37,9 +37,7 @@ input:focus, select:focus, textarea:focus {
 
 .hero-grid {
   background-image:
-    linear-gradient(rgba(37, 99, 235, .05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(37, 99, 235, .05) 1px, transparent 1px);
-  background-size: 38px 38px;
+    linear-gradient(115deg, rgb(239 246 255 / .95) 0%, rgb(255 255 255 / .98) 44%, rgb(239 246 255 / .78) 100%);
 }
 
 header a[aria-label^="TD Fahrzeugcodierung"] > span {

@@ -12,8 +12,8 @@ export default function Home(){
   <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
     <div className="container-x flex h-14 items-center justify-between gap-2 sm:h-16 sm:gap-3">
       <a href="#" className="flex min-w-0 items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-        <Image src="/td-logo-icon.png" alt="TD Fahrzeugcodierung Logo" width={128} height={85} className="h-9 w-auto sm:h-11" priority />
-        <span className="ml-2 whitespace-nowrap text-xs font-black text-slate-950 sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
+        <Image src="/td-logo-icon.png" alt="TD" width={225} height={80} className="h-8 w-auto sm:h-10" priority />
+        <span className="ml-2 whitespace-nowrap text-xs font-black text-slate-950 sm:text-base"><span className="text-blue-600">Fahrzeugcodierung</span></span>
       </a>
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#buchen">Codierungen</a><a href="#kontakt">Kontakt</a><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -23,28 +23,44 @@ export default function Home(){
     </div>
   </header>
 
-  <section className="w-full border-b border-red-700 bg-red-600 text-white" aria-label="Automatischer Rabatt bei Konfiguration">
+  <section className="w-full border-y border-blue-950 bg-slate-950 text-white" aria-label="Automatischer Rabatt bei Konfiguration">
     <div className="container-x flex flex-col items-center justify-center gap-1 py-2.5 text-center sm:flex-row sm:flex-wrap sm:gap-x-3 sm:py-3">
       <strong className="text-sm font-black sm:text-base">Automatischer Rabatt bei Konfiguration</strong>
-      <span className="text-sm font-bold sm:text-base">10 % ab 50 € · 15 % ab 100 € · 20 % ab 200 €</span>
+      <span className="text-sm font-bold text-sky-300 sm:text-base">10 % ab 50 € · 15 % ab 100 € · 20 % ab 200 €</span>
     </div>
   </section>
 
-  <section className="hero-grid border-b border-blue-100 bg-white">
-    <div className="container-x py-8 sm:py-12 lg:py-16">
-      <div className="max-w-5xl">
-        <div className="max-w-[620px]">
-          <div className="min-w-0"><div className="text-[clamp(1.6rem,7.8vw,2.25rem)] font-black leading-tight tracking-tight sm:text-6xl"><span className="text-slate-950">TD</span> <span className="text-blue-600">Fahrzeugcodierung</span></div><div className="mt-2 h-1 w-full rounded-full bg-blue-600 sm:mt-3" /></div>
-        </div>
-        <h1 className="mt-3 text-xl font-bold leading-snug text-slate-900 sm:mt-4 sm:text-2xl">Fahrzeugcodierung &amp; Diagnose in Leipzig – auch per Remote</h1>
-        <p className="mt-3 max-w-xl text-base leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – mit Fahrzeugauswahl, transparenter Kalkulation und direkter Terminbuchung.</p>
+  <section className="hero-grid overflow-hidden border-b border-blue-100">
+    <div className="container-x py-8 sm:py-12 lg:py-14">
+      <div className="grid items-center gap-7 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
+        <div className="max-w-2xl">
+          <div className="mb-4 flex items-center gap-2 text-xs font-black uppercase tracking-[.13em] text-blue-700 sm:text-sm">
+            <span className="h-1 w-8 rounded-full bg-blue-600" />
+            <span>Leipzig-Süd <span className="px-1 text-slate-400">·</span> Deutschlandweit per Remote</span>
+          </div>
+          <h1 className="text-3xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-[3.25rem]">Fahrzeugcodierung &amp; Diagnose in Leipzig</h1>
+          <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, Škoda, SEAT und CUPRA – mit transparenter Kalkulation und direkter Terminbuchung.</p>
 
-        <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
-          <a href="#konfigurator" className="btn-primary w-full sm:w-auto">Zum Fahrzeugkonfigurator</a>
-          <Link href="/fahrzeuge" className="btn-secondary w-full sm:w-auto">Fahrzeuge &amp; Preise</Link>
-          <Link href="/steuergeraete-flash" className="btn-secondary w-full sm:w-auto">Steuergeräte-Flash &amp; Softwareupdate</Link>
+          <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
+            <a href="#buchen" className="btn-primary w-full sm:w-auto">Fahrzeug jetzt auswählen <span aria-hidden="true" className="ml-2">→</span></a>
+            <Link href="/fahrzeuge" className="btn-secondary w-full sm:w-auto">Fahrzeuge &amp; Preise</Link>
+          </div>
+          <Link href="/steuergeraete-flash" className="mt-3 inline-flex rounded-md py-1 text-sm font-bold text-blue-700 underline decoration-blue-200 underline-offset-4 hover:text-blue-900">Steuergeräte-Flash &amp; Softwareupdate</Link>
         </div>
 
+        <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-[0_22px_55px_rgba(15,40,75,0.14)] sm:rounded-3xl">
+          <Image src="/td-hero-performance.webp" alt="Roter Performancewagen in einer hellen Studio-Szene mit blauen Lichtakzenten" width={1400} height={934} sizes="(max-width: 1024px) 100vw, 56vw" className="aspect-[1.55/1] w-full object-cover" priority />
+          <div className="absolute bottom-3 left-3 rounded-lg border border-white/70 bg-white/90 px-3 py-2 text-xs font-bold text-slate-800 shadow-sm backdrop-blur sm:bottom-4 sm:left-4 sm:px-4 sm:py-2.5 sm:text-sm">
+            Vor Ort in Leipzig <span className="px-1 text-blue-600">·</span> Remote deutschlandweit
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-7 border-t border-blue-100 pt-4 sm:mt-9 sm:pt-5">
+        <p className="mb-3 text-[11px] font-black uppercase tracking-[.15em] text-slate-500">VAG-Codierung für</p>
+        <div className="flex flex-wrap gap-2 sm:gap-3" aria-label="Unterstützte Fahrzeugmarken">
+          {["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand} className="rounded-lg border border-blue-100 bg-white px-4 py-2 text-xs font-black tracking-wide text-slate-800 shadow-sm sm:min-w-32 sm:text-sm">{brand}</span>)}
+        </div>
       </div>
     </div>
   </section>
