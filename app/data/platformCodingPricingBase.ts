@@ -248,7 +248,7 @@ export function hardwareForPlatformCoding(name: string): string | undefined {
     return "Geeignete Fahrerassistenz-Sensorik; für Lane/Spurhaltefunktionen Frontkamera und kompatible Lenk-/Assistenzsteuergeräte, für Side Assist passende Radarsensorik.";
   }
   if (includesAny(n, ["verkehrszeichen", "vze"])) {
-    return "Geeignete Frontkamera sowie kompatibles Kombiinstrument/Infotainment; je nach System zusätzlich Navigationsdaten erforderlich.";
+    return "VZE-fähige Frontkamera sowie kompatibles Kombiinstrument/Infotainment erforderlich; je nach System werden zusätzlich Navigationsdaten benötigt.";
   }
   if (includesAny(n, ["dynamic light assist", "dynamischer lichtassistent", "matrix led", "matrix-licht", "matrix licht"])) {
     return "Frontkamera sowie DLA-/Matrix-fähige Scheinwerfer und passende Lichtsteuergeräte.";
