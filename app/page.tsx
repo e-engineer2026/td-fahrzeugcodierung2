@@ -56,12 +56,6 @@ export default function Home(){
         </div>
       </div>
 
-      <div className="mt-7 border-t border-blue-100 pt-4 sm:mt-9 sm:pt-5">
-        <p className="mb-3 text-[11px] font-black uppercase tracking-[.15em] text-slate-500">VAG-Codierung für</p>
-        <div className="flex flex-wrap gap-2 sm:gap-3" aria-label="Unterstützte Fahrzeugmarken">
-          {["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand} className="rounded-lg border border-blue-100 bg-white px-4 py-2 text-xs font-black tracking-wide text-slate-800 shadow-sm sm:min-w-32 sm:text-sm">{brand}</span>)}
-        </div>
-      </div>
     </div>
   </section>
 
