@@ -111,7 +111,7 @@ export default function ContactBox() {
 
         <h3 className="mt-5 text-xl font-black sm:mt-6 sm:text-2xl">Direkt Kontakt aufnehmen</h3>
         <p className="mt-3 leading-7 text-slate-600">
-          Schick uns Fahrzeug, Baujahr und Codierung. Wir prüfen vorab, ob die gewünschte Codierung grundsätzlich möglich ist.
+          Für eine schnelle Vorprüfung benötigen wir Fahrzeugmodell, Baujahr und die gewünschte Codierung. Beim WhatsApp-Kontakt kannst du die vorbereitete Nachricht noch ergänzen.
         </p>
 
         <div className="mt-5 space-y-3 sm:mt-6">
