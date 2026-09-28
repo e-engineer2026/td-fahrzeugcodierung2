@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { ClerkProvider } from "@clerk/nextjs";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 import MobileContactBar from "./components/MobileContactBar";
 import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
@@ -113,6 +114,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
+    <ClerkProvider>
     <html lang="de" data-scroll-behavior="smooth">
       <head>
         <script
@@ -148,5 +150,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
       </body>
     </html>
+    </ClerkProvider>
   );
 }

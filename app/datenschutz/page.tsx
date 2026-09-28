@@ -41,19 +41,22 @@ export default function Page() {
           <section><h2 className="text-xl font-bold text-slate-900">10. Lokaler Buchungsspeicher im Browser</h2>
           <p className="mt-2">Für den Remote-Buchungsablauf werden die ausgewählten Auftragsdaten vorübergehend im lokalen Speicher Ihres Browsers (Local Storage) abgelegt. Dies dient dazu, Fahrzeug, Codierungen sowie 70-%-Vorauszahlung und 30-%-Restbetrag auf der Zahlungsseite anzuzeigen. Die Daten verbleiben grundsätzlich auf dem verwendeten Endgerät und werden nicht allein durch diese Speicherung an unseren Server übertragen. Sie können den lokalen Speicher jederzeit über die Browser-Einstellungen löschen.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">11. Zahlung über PayPal</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">11. Kundenkonto und gespeicherte Fahrzeuge</h2>
+          <p className="mt-2">Sie können optional ein Kundenkonto anlegen oder sich anmelden. Für die Anmeldung und Kontoverwaltung verwenden wir Clerk. Wenn Sie angemeldet eine Fahrzeugauswahl speichern, verarbeiten und speichern wir Ihre Marke, Ihr Modell, das Baujahr sowie die von Ihnen ausgewählten Codierungen zusammen mit einer internen Konto-ID in unserer Datenbank bei Neon. Die Speicherung erfolgt, damit Sie Ihre Auswahl später in Ihrem Konto wiederfinden und verwalten können. Sie können gespeicherte Fahrzeugauswahlen dort selbst löschen. Für die Löschung Ihres Kontos wenden Sie sich bitte an td.codierung@gmail.com; damit löschen wir auch die zugehörigen gespeicherten Fahrzeugauswahlen, soweit keine gesetzlichen Pflichten entgegenstehen. Maßgeblich sind ergänzend die Datenschutzinformationen von <a href="https://clerk.com/legal/privacy" target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">Clerk</a> und <a href="https://neon.tech/privacy-policy" target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">Neon</a>.</p></section>
+
+          <section><h2 className="text-xl font-bold text-slate-900">12. Zahlung über PayPal</h2>
           <p className="mt-2">Bei Nutzung der PayPal-Zahlungslinks werden Sie zu PayPal weitergeleitet. PayPal verarbeitet die für die Zahlung erforderlichen Daten in eigener Verantwortung. Für diese Verarbeitung gelten ergänzend die Datenschutzbestimmungen von PayPal.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">12. Remote-Zugriff</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">13. Remote-Zugriff</h2>
           <p className="mt-2">Bei Remote-Dienstleistungen kann nach Vereinbarung Fernwartungssoftware eingesetzt werden. Der Zugriff erfolgt nur zur Durchführung des vereinbarten Auftrags. Der Kunde muss die Remote-Verbindung aktiv freigeben und kann sie beenden. Zugangsdaten sollten nicht dauerhaft gespeichert oder weitergegeben werden.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">13. Speicherdauer</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">14. Speicherdauer</h2>
           <p className="mt-2">Daten werden nur so lange gespeichert, wie dies für den jeweiligen Zweck erforderlich ist. Gesetzliche handels- und steuerrechtliche Aufbewahrungspflichten bleiben unberührt.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">14. Ihre Rechte</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">15. Ihre Rechte</h2>
           <p className="mt-2">Sie haben nach Maßgabe der DSGVO insbesondere Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Zudem besteht ein Beschwerderecht bei einer zuständigen Datenschutzaufsichtsbehörde.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">15. Stand</h2><p className="mt-2">Stand: September 2026.</p></section>
+          <section><h2 className="text-xl font-bold text-slate-900">16. Stand</h2><p className="mt-2">Stand: September 2026.</p></section>
 
         </div>
       </div>
