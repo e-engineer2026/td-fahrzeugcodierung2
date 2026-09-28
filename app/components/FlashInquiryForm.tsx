@@ -171,6 +171,11 @@ export default function FlashInquiryForm() {
         </label>
       )}
 
+      <label className="mt-4 flex items-start gap-3 rounded-xl border border-white/15 bg-white/5 p-3 text-sm leading-6 text-blue-100">
+        <input type="checkbox" name="Datenschutz" value="akzeptiert" required className="mt-1 h-4 w-4 shrink-0" />
+        <span>Ich habe die <a href="/datenschutz" target="_blank" rel="noreferrer" className="font-bold text-white underline">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Angaben sowie einer optional hochgeladenen Diagnosedatei zur Bearbeitung der Anfrage zu.</span>
+      </label>
+
       <button type="submit" className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[#25D366] px-5 py-3 font-bold text-white transition hover:brightness-95">
         Formular senden
         <ArrowRight className="ml-2 h-4 w-4" />
