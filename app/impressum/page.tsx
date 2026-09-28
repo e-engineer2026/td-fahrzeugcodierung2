@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+export const metadata: Metadata = {
+  title: { absolute: "Impressum | TD Fahrzeugcodierung" },
+  description: "Impressum und Anbieterkennzeichnung von TD Fahrzeugcodierung in Leipzig.",
+  alternates: { canonical: "/impressum" },
+  robots: { index: true, follow: true },
+};
+
 
 export default function Impressum() {
   return (
