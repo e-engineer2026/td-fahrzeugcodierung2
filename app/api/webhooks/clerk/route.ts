@@ -21,6 +21,15 @@ export async function POST(request: NextRequest) {
     const databaseUrl = process.env.DATABASE_URL;
     if (!databaseUrl) throw new Error("DATABASE_URL is not configured");
     const sql = neon(databaseUrl);
+    await sql`CREATE TABLE IF NOT EXISTS saved_vehicles (
+      id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      clerk_user_id text NOT NULL,
+      brand varchar(50) NOT NULL,
+      model varchar(120) NOT NULL,
+      year smallint NOT NULL,
+      codings jsonb NOT NULL DEFAULT '[]'::jsonb,
+      created_at timestamptz NOT NULL DEFAULT now()
+    )`;
     await sql`DELETE FROM saved_vehicles WHERE clerk_user_id = ${userId}`;
     return NextResponse.json({ received: true });
   } catch {
