@@ -3,7 +3,10 @@ import Link from "next/link";
 import { Show } from "@clerk/nextjs";
 import SavedVehiclesAccount from "../components/SavedVehiclesAccount";
 
-export const metadata: Metadata = { title: "Mein Konto" };
+export const metadata: Metadata = {
+  title: { absolute: "Mein Konto | TD Fahrzeugcodierung" },
+  robots: { index: false, follow: false },
+};
 
 export default function AccountPage() {
   return <main className="container-x min-h-[70vh] py-8 sm:py-12">
