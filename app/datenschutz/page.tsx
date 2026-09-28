@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+export const metadata: Metadata = {
+  title: { absolute: "Datenschutzerklärung | TD Fahrzeugcodierung" },
+  description: "Datenschutzerklärung von TD Fahrzeugcodierung in Leipzig.",
+  alternates: { canonical: "/datenschutz" },
+  robots: { index: true, follow: true },
+};
+
 
 export default function Page() {
   return (
