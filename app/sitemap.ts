@@ -5,7 +5,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://td-fahrzeugcodierung.de";
   const vehiclePages: MetadataRoute.Sitemap = seoVehicles.map((vehicle) => ({
     url: `${base}${vehiclePath(vehicle)}`,
-    lastModified: now,
     changeFrequency: "weekly",
     priority: 0.7,
   }));
