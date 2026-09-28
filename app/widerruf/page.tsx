@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+export const metadata: Metadata = {
+  title: { absolute: "Widerrufsbelehrung | TD Fahrzeugcodierung" },
+  description: "Widerrufsbelehrung und Muster-Widerrufsformular von TD Fahrzeugcodierung.",
+  alternates: { canonical: "/widerruf" },
+  robots: { index: true, follow: true },
+};
+
 
 export default function Page() {
   return (
