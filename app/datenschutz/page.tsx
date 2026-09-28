@@ -41,19 +41,23 @@ export default function Page() {
           <section><h2 className="text-xl font-bold text-slate-900">10. Lokaler Buchungsspeicher im Browser</h2>
           <p className="mt-2">Für den Remote-Buchungsablauf werden die ausgewählten Auftragsdaten vorübergehend im lokalen Speicher Ihres Browsers (Local Storage) abgelegt. Dies dient dazu, Fahrzeug, Codierungen sowie 70-%-Vorauszahlung und 30-%-Restbetrag auf der Zahlungsseite anzuzeigen. Die Daten verbleiben grundsätzlich auf dem verwendeten Endgerät und werden nicht allein durch diese Speicherung an unseren Server übertragen. Sie können den lokalen Speicher jederzeit über die Browser-Einstellungen löschen.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">11. Zahlung über PayPal</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">11. Kundenkonto und gespeicherte Fahrzeuge</h2>
+          <p className="mt-2">Das Kundenkonto ist freiwillig. Wenn Sie es nutzen, verarbeitet Clerk die für Anmeldung und Kontoverwaltung erforderlichen Kontodaten, insbesondere Ihre E-Mail-Adresse, eine Clerk-Konto-ID sowie technische Authentifizierungs- und Sitzungsdaten. Wenn Sie eine Fahrzeugauswahl speichern, speichern wir Marke, Modell, Baujahr, ausgewählte Codierungen und die Clerk-Konto-ID in einer Neon-Datenbank. Diese Angaben werden verwendet, um die angeforderte Konto- und Speicherfunktion bereitzustellen (Art. 6 Abs. 1 lit. b DSGVO). Sie können einzelne Fahrzeugauswahlen jederzeit im Konto löschen; dort können Sie auch Ihr Konto löschen. Beim Löschen des Kontos werden die damit verknüpften Fahrzeugauswahlen aus unserer aktiven Datenbank entfernt. Technische Sicherungskopien können im Rahmen der üblichen, von den Anbietern festgelegten Sicherungszyklen noch befristet fortbestehen.</p>
+          <p className="mt-2">Clerk, Inc. stellt die Anmeldung und Kontoverwaltung bereit. Clerk verarbeitet Daten nach eigenen Angaben in den USA und bietet keine regionale Datenhaltung in der EU an. Neon, Inc. stellt die Datenbank bereit; unsere Datenbank ist in Frankfurt (EU) gehostet. Neon beschreibt in seinen Datenschutz- und Vertragsunterlagen eine Verarbeitung europäischer Kundendaten durch Neon in den USA. Soweit personenbezogene Daten in die USA übertragen werden, stützen die Anbieter die Übermittlung nach ihren Angaben auf das EU-US Data Privacy Framework, soweit anwendbar, und andernfalls auf geeignete Garantien wie Standardvertragsklauseln. Empfänger sind Clerk und Neon als technische Dienstleister. Weitere Informationen: <a href="https://clerk.com/legal/privacy" target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">Clerk Datenschutz</a>, <a href="https://clerk.com/legal/dpa" target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">Clerk Auftragsverarbeitungsvertrag</a>, <a href="https://neon.tech/privacy-policy" target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">Neon Datenschutz</a> und <a href="https://neon.tech/dpa" target="_blank" rel="noreferrer" className="font-semibold text-blue-700 hover:underline">Neon Auftragsverarbeitungsvertrag</a>.</p></section>
+
+          <section><h2 className="text-xl font-bold text-slate-900">12. Zahlung über PayPal</h2>
           <p className="mt-2">Bei Nutzung der PayPal-Zahlungslinks werden Sie zu PayPal weitergeleitet. PayPal verarbeitet die für die Zahlung erforderlichen Daten in eigener Verantwortung. Für diese Verarbeitung gelten ergänzend die Datenschutzbestimmungen von PayPal.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">12. Remote-Zugriff</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">13. Remote-Zugriff</h2>
           <p className="mt-2">Bei Remote-Dienstleistungen kann nach Vereinbarung Fernwartungssoftware eingesetzt werden. Der Zugriff erfolgt nur zur Durchführung des vereinbarten Auftrags. Der Kunde muss die Remote-Verbindung aktiv freigeben und kann sie beenden. Zugangsdaten sollten nicht dauerhaft gespeichert oder weitergegeben werden.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">13. Speicherdauer</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">14. Speicherdauer</h2>
           <p className="mt-2">Daten werden nur so lange gespeichert, wie dies für den jeweiligen Zweck erforderlich ist. Gesetzliche handels- und steuerrechtliche Aufbewahrungspflichten bleiben unberührt.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">14. Ihre Rechte</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">15. Ihre Rechte</h2>
           <p className="mt-2">Sie haben nach Maßgabe der DSGVO insbesondere Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Zudem besteht ein Beschwerderecht bei einer zuständigen Datenschutzaufsichtsbehörde.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">15. Stand</h2><p className="mt-2">Stand: September 2026.</p></section>
+          <section><h2 className="text-xl font-bold text-slate-900">16. Stand</h2><p className="mt-2">Stand: September 2026.</p></section>
 
         </div>
       </div>

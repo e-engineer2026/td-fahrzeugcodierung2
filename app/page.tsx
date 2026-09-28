@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
+import { Show, UserButton } from "@clerk/nextjs";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
@@ -18,6 +19,12 @@ export default function Home(){
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#buchen">Codierungen</a><a href="#kontakt">Kontakt</a><a href="#faq">FAQ</a></nav>
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <HeaderBookingSummary />
+        <Show when="signed-in" fallback={<Link href="/sign-in?redirect_url=%2Fkonto" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-blue-200 bg-white px-3 text-sm font-bold text-blue-700 transition hover:bg-blue-50 sm:px-4">Anmelden</Link>}>
+          <div className="flex items-center gap-2">
+            <Link href="/konto" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-blue-200 bg-white px-3 text-sm font-bold text-blue-700 transition hover:bg-blue-50 sm:px-4">Mein Konto</Link>
+            <UserButton />
+          </div>
+        </Show>
         <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 lg:inline-flex">Direkt anfragen</a>
       </div>
     </div>
