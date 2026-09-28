@@ -69,7 +69,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
   const landing = brandLanding(vehicle.brand);
   const codingIds = new Set(codingsForVehicle(vehicle));
   const serviceCodings = curateCodingEntries(
-    codingCatalog.filter((coding) => codingIds.has(coding.id) && coding.id !== "diagnose").map((coding) => ({ ...coding, source: "vehicle" as const }))
+    codingCatalog.filter((coding) => codingIds.has(coding.id) && coding.id !== "diagnose" && (vehicle.platform === "MQBevo" || !["mqbevo-lane-onstate", "mqbevo-adaptive-lane", "mqbevo-fla-memory"].includes(coding.id))).map((coding) => ({ ...coding, source: "vehicle" as const }))
   );
   const relatedPriority = Object.entries(prioritySeoByPath)
     .filter(([key]) => key !== seoKey && key.startsWith(`${params.brand}/`))
