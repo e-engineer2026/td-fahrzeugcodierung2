@@ -102,7 +102,7 @@ function vehicleSpecificCodings(vehicle: Vehicle, year: number, isSfd1: boolean,
       return !/(aktivieren|freischalten|codieren|parametrieren)/i.test(coding.name);
     });
 
-  const vehicleEntries: UnifiedCodingEntry[] = vehicleCatalog.map((coding) => ({ id: `vehicle-${coding.id}`, name: coding.name, price: coding.price, uiGroup: coding.uiGroup as PlatformCodingGroup, hardware: coding.hardware, requirements: coding.requirements, interfaceInfo: coding.interfaceInfo, sfd: coding.sfd, source: "vehicle" }));
+  const vehicleEntries: UnifiedCodingEntry[] = vehicleCatalog.map((coding) => ({ id: `vehicle-${coding.id}`, name: coding.name, price: coding.price, uiGroup: coding.uiGroup as PlatformCodingGroup, hardware: coding.hardware, requirements: coding.requirements, interfaceInfo: coding.interfaceInfo, sfd: coding.sfd, source: "vehicle" as const }));
   const source = codingSources.find((item) => item.platform === vehicle.platform);
   if (!source) return curateCodingEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year)));
   const allowedCapabilities = new Set(vehicleCatalog.map((coding) => capabilityForName(coding.name)).filter((value): value is string => Boolean(value)));
