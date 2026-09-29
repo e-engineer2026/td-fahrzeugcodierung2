@@ -209,7 +209,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               <div><dt className="text-slate-500">Baujahre</dt><dd className="font-semibold">{years}</dd></div>
               <div><dt className="text-slate-500">Plattform</dt><dd className="font-semibold">{vehicle.platform}</dd></div>
             </dl>
-            {vehicle.sfd1From && <div className="mt-5 rounded-xl border border-blue-200 bg-white p-3 text-xs leading-5 text-slate-700">SFD ist bei dieser Baureihe ab Modelljahr {vehicle.sfd1From} relevant. Die konkrete Buchbarkeit wird nach Baujahr und Steuergerät geprüft.</div>}
+            {vehicle.sfd1From && vehicle.endYear >= 2024 ? <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-slate-700"><b>SFD2 / UNECE ab 2024:</b> Für SFD2-Fahrzeuge werden keine Codierungen angeboten. Die aufgeführten Codiermöglichkeiten gelten nur für unterstützte Fahrzeuge/Baujahre vor SFD2. Diagnose und technische Prüfung bleiben möglich.</div> : vehicle.sfd1From ? <div className="mt-5 rounded-xl border border-blue-200 bg-white p-3 text-xs leading-5 text-slate-700">SFD ist bei dieser Baureihe ab Modelljahr {vehicle.sfd1From} relevant. Die konkrete Buchbarkeit wird nach Baujahr und Steuergerät geprüft.</div> : null}
             <Link href="/#buchen" className="btn-primary mt-5 w-full text-center">{vehicle.diagnosticsOnly ? "Diagnose konfigurieren" : "Jetzt konfigurieren"}</Link>
           </aside>
         </div>
