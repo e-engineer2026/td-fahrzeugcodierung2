@@ -66,7 +66,10 @@ export default function Home(){
     </div>
   </section>
 
-  <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug konfigurieren &amp; Termin prüfen</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><div className="mt-5 sm:mt-7"><BookingConfigurator/></div></section>
+  <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug konfigurieren &amp; Termin prüfen</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><a href="https://wa.me/4915563047044?text=Hallo%2C%20ich%20m%C3%B6chte%20eine%20Codierung%20pr%C3%BCfen%20lassen.%20Mein%20Fahrzeug%3A%20%5BModell%2C%20Baujahr%5D.%20Gew%C3%BCnschte%20Funktion%3A%20%5BWunsch%5D." target="_blank" rel="noreferrer" className="mt-4 flex flex-col gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-950 transition hover:bg-emerald-100 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+      <span><strong className="block">Unsicher oder Funktion nicht gefunden?</strong><span className="mt-1 block text-sm leading-6">Sende Modell, Baujahr und Wunschfunktion direkt per WhatsApp zur Vorprüfung.</span></span>
+      <span className="inline-flex shrink-0 items-center justify-center rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white">Per WhatsApp anfragen</span>
+    </a><div className="mt-5 sm:mt-7"><BookingConfigurator/></div></section>
 
   <section id="kontakt" className="scroll-mt-20 border-y border-blue-100 bg-white">
     <div className="container-x py-14 sm:py-20">
