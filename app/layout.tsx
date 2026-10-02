@@ -16,6 +16,15 @@ const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "TD Fahrzeugcodierung",
+      alternateName: "TD Fahrzeugcodierung Leipzig",
+      inLanguage: "de-DE",
+      publisher: { "@id": `${siteUrl}/#business` },
+    },
+    {
       "@type": "LocalBusiness",
       "@id": `${siteUrl}/#business`,
       name: "TD Fahrzeugcodierung",
