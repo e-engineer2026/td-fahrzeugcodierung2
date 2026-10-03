@@ -5,6 +5,7 @@ import SavedVehiclesAccount from "../components/SavedVehiclesAccount";
 
 export const metadata: Metadata = {
   title: { absolute: "Mein Konto | TD Fahrzeugcodierung" },
+  alternates: { canonical: "/konto" },
   robots: { index: false, follow: false },
 };
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SignIn } from "@clerk/nextjs";
 export const metadata: Metadata = {
   title: { absolute: "Anmelden | TD Fahrzeugcodierung" },
+  alternates: { canonical: "/sign-in" },
   robots: { index: false, follow: false },
 };
 

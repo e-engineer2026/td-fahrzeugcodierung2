@@ -50,7 +50,8 @@ export default function ContactBox() {
 
   const whatsappNumber = "4915563047044";
   const phoneDisplay = "01556 3047044";
-  const email = "td.codierung@gmail.com";
+  const email = "info@td-fahrzeugcodierung.de";
+  const formRecipientEmail = "td.codierung@gmail.com";
 
   const whatsappText = encodeURIComponent(
     `Hallo, ich möchte eine Codierung prüfen lassen.\n\nTerminart: ${mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd"}\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
@@ -63,7 +64,7 @@ export default function ContactBox() {
     setStatus("sending");
 
     try {
-      const response = await fetch(`https://formsubmit.co/ajax/${email}`, {
+      const response = await fetch(`https://formsubmit.co/ajax/${formRecipientEmail}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

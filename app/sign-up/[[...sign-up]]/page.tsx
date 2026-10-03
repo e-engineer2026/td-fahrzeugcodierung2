@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SignUp } from "@clerk/nextjs";
 export const metadata: Metadata = {
   title: { absolute: "Konto erstellen | TD Fahrzeugcodierung" },
+  alternates: { canonical: "/sign-up" },
   robots: { index: false, follow: false },
 };
 

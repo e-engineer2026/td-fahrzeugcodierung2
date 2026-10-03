@@ -5,6 +5,7 @@ import { CheckCircle2, ChevronLeft } from "lucide-react";
 export const metadata: Metadata = {
   title: "Anfrage gesendet",
   description: "Bestätigung für eine gesendete Flash-Anfrage.",
+  alternates: { canonical: "/flash-anfrage-gesendet" },
   robots: { index: false, follow: false },
 };
 

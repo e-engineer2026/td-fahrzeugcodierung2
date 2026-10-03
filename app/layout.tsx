@@ -33,7 +33,7 @@ const structuredData = {
       description:
         "VAG Fahrzeugcodierung und Fahrzeugdiagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – persönlich in Leipzig-Süd oder per Remote.",
       telephone: "+4915563047044",
-      email: "td.codierung@gmail.com",
+      email: "info@td-fahrzeugcodierung.de",
       sameAs: [googleMapsUrl],
       address: {
         "@type": "PostalAddress",
