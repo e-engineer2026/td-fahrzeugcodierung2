@@ -30,11 +30,14 @@ export default function Home(){
     </div>
   </header>
 
-  <section className="w-full border-y border-red-900 bg-red-700 text-white" aria-label="Neukundenrabatt auf die erste Buchung">
-    <div className="container-x flex flex-col items-center justify-center gap-1 py-2.5 text-center sm:flex-row sm:flex-wrap sm:gap-x-3 sm:py-3">
-      <strong className="text-sm font-black sm:text-base">Neukundenrabatt · erste Buchung</strong>
-      <span className="text-xs font-semibold text-red-50 sm:text-sm">Nach Anmeldung · gültig bis einschließlich 30.11.2026</span>
-      <span className="text-sm font-bold text-white sm:text-base">10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</span>
+  <section className="relative w-full overflow-hidden border-y-2 border-amber-300 bg-gradient-to-r from-rose-800 via-red-600 to-rose-800 text-white shadow-xl" aria-label="Neukundenrabatt auf die erste Buchung">
+    <div className="container-x flex flex-col items-center justify-center gap-2.5 py-3.5 text-center sm:flex-row sm:gap-4 sm:py-4">
+      <span className="inline-flex rounded-full bg-amber-300 px-3 py-1 text-[11px] font-black uppercase tracking-[.12em] text-red-950 shadow-md sm:text-xs">Neukundenaktion</span>
+      <div className="flex flex-col items-center gap-1">
+        <strong className="text-base font-black sm:text-lg">Neukundenrabatt auf die erste Buchung</strong>
+        <span className="text-sm font-black text-amber-200 sm:text-base">10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</span>
+        <span className="text-xs font-semibold text-white sm:text-sm">Nach Anmeldung · gültig bis einschließlich 30.11.2026</span>
+      </div>
     </div>
   </section>
 
