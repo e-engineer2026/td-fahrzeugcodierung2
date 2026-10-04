@@ -34,7 +34,7 @@ export default function Home(){
     <div className="container-x flex flex-col items-center justify-center gap-1 py-2.5 text-center sm:flex-row sm:flex-wrap sm:gap-x-3 sm:py-3">
       <strong className="text-sm font-black sm:text-base">Neukundenrabatt · erste Buchung</strong>
       <span className="text-xs font-semibold text-red-50 sm:text-sm">Nach Anmeldung · gültig bis einschließlich 30.11.2026</span>
-      <span className="text-sm font-bold text-white sm:text-base">5 % ab 50 € · 10 % ab 100 € · 15 % ab 150 € · 20 % ab 200 €</span>
+      <span className="text-sm font-bold text-white sm:text-base">10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</span>
     </div>
   </section>
 

@@ -70,7 +70,7 @@ function capabilityForName(name: string): string | undefined { const n = name.to
 function popularLabel(name: string) { if (/tagfahrlicht.*rückleuchten zusätzlich aktiv/i.test(name)) return "TFL mit Heckleuchten"; if (/zeigertest|needle sweep|staging/i.test(name)) return "Zeigertest"; return name; }
 function meaningfulTokens(name: string): string[] { const stop = new Set(["aktivieren", "deaktivieren", "anpassen", "andern", "aendern", "freischaltung", "freischalten", "einstellen", "funktion", "funktionen", "variante", "moglich", "moeglich", "uber", "ueber", "oder", "und", "bei", "mit", "ohne", "des", "der", "die", "das", "fur", "fuer", "von", "auf", "im", "menu", "anzeige"]); return normalize(name).split(" ").filter((token) => token.length >= 4 && !stop.has(token)); }
 function tokenRelated(a: string, b: string) { const left = new Set(meaningfulTokens(a)); const right = meaningfulTokens(b); return right.some((token) => left.has(token)); }
-function discountRate(value: number) { return value >= 200 ? 0.2 : value >= 150 ? 0.15 : value >= 100 ? 0.1 : value >= 50 ? 0.05 : 0; }
+function discountRate(value: number) { return value >= 200 ? 0.25 : value >= 150 ? 0.2 : value >= 100 ? 0.15 : value >= 50 ? 0.1 : 0; }
 function euro(value: number) { return value.toFixed(2).replace(".", ","); }
 function nextTier(value: number) { return value < 50 ? 50 : value < 100 ? 100 : value < 150 ? 150 : value < 200 ? 200 : null; }
 function track(event: string, params: Record<string, string | number | boolean> = {}) { if (typeof window === "undefined") return; const gtag = (window as typeof window & { gtag?: (...args: unknown[]) => void }).gtag; gtag?.("event", event, params); }
