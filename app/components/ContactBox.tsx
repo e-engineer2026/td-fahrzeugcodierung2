@@ -13,6 +13,7 @@ export default function ContactBox() {
   const [mode, setMode] = useState<"onsite" | "remote">("onsite");
   const [name, setName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
   const [vehicle, setVehicle] = useState("");
   const [year, setYear] = useState("");
   const [coding, setCoding] = useState("");
@@ -54,7 +55,7 @@ export default function ContactBox() {
   const formRecipientEmail = "info@td-fahrzeugcodierung.de";
 
   const whatsappText = encodeURIComponent(
-    `Hallo, ich möchte eine Codierung prüfen lassen.\n\nTerminart: ${mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd"}\nName: ${name || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
+    `Hallo, ich möchte eine Codierung prüfen lassen.\n\nTerminart: ${mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd"}\nName: ${name || "-"}\nTelefonnummer: ${customerPhone || "-"}\nFahrzeug: ${vehicle || "-"}\nBaujahr: ${year || "-"}\nCodierung: ${coding || "-"}`
   );
 
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -79,6 +80,7 @@ export default function ContactBox() {
           _url: "https://td-fahrzeugcodierung.de/#kontakt",
           Name: name,
           "E-Mail": customerEmail,
+          Telefonnummer: customerPhone,
           Terminart: mode === "remote" ? "Remote-Codierung" : "Vor Ort in Leipzig-Süd",
           Fahrzeug: vehicle,
           Baujahr: year,
@@ -92,6 +94,7 @@ export default function ContactBox() {
       track("inquiry_sent", { channel: "form", vehicle, year, coding });
       setName("");
       setCustomerEmail("");
+      setCustomerPhone("");
       setVehicle("");
       setYear("");
       setCoding("");
@@ -150,12 +153,13 @@ export default function ContactBox() {
       <form onSubmit={submit} className="card p-4 sm:p-8">
         <h3 className="text-xl font-black sm:text-2xl">Codierung prüfen lassen</h3>
         <p className="mt-3 text-sm leading-6 text-slate-600">
-          Formular ausfüllen und direkt absenden. Wir melden uns per E-Mail zurück.
+          Formular ausfüllen und direkt absenden. Wir melden uns per E-Mail oder telefonisch zurück.
         </p>
 
         <div className="mt-5 grid gap-3 sm:mt-6 sm:gap-4">
           <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" autoComplete="name" required />
           <input type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} placeholder="E-Mail für Rückmeldung" autoComplete="email" required />
+          <input type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} placeholder="Telefonnummer für Rückfragen" autoComplete="tel" inputMode="tel" required />
           <input value={vehicle} onChange={e => setVehicle(e.target.value)} placeholder="Fahrzeug, z. B. Audi A4 B9" required />
           <input value={year} onChange={e => setYear(e.target.value)} placeholder="Baujahr" inputMode="numeric" pattern="[0-9]{4}" required />
           <input value={coding} onChange={e => setCoding(e.target.value)} placeholder="Codierung" required />
@@ -171,7 +175,7 @@ export default function ContactBox() {
         </label>
 
         <div className="mt-4" aria-live="polite">
-          {status === "success" && <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-semibold text-emerald-800">Anfrage erfolgreich gesendet. Wir melden uns schnellstmöglich per E-Mail.</p>}
+          {status === "success" && <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-semibold text-emerald-800">Anfrage erfolgreich gesendet. Wir melden uns schnellstmöglich per E-Mail oder telefonisch.</p>}
           {status === "error" && <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">Die Anfrage konnte nicht gesendet werden. Bitte nutze WhatsApp oder schreibe direkt an <a href={`mailto:${email}`} className="font-semibold underline">{email}</a>.</p>}
         </div>
 
