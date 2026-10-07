@@ -70,12 +70,18 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
               <a href="/sign-up" target="_blank" rel="noreferrer" className="mt-1 inline-block font-bold text-blue-700 underline">Jetzt anmelden</a>
             </div>
             <div className="mt-3 rounded-xl border border-blue-100 bg-white p-3 text-sm leading-6 text-slate-700">
-              <b>Zahlungsmöglichkeiten</b>
-              <p>{snapshot.mode === "onsite" ? "Bar · PayPal · Sofortüberweisung – Zahlung beim Termin." : "PayPal – 70 % vorab, 30 % nach Durchführung."}</p>
+              <b>Zahlung</b>
+              {snapshot.mode === "onsite" ? <div className="mt-1">
+                <p><b>Im Voraus:</b> PayPal</p>
+                <p><b>Direkt beim Termin:</b> Bar · PayPal · Sofortüberweisung</p>
+              </div> : <p>PayPal – 70 % vorab, 30 % nach Durchführung.</p>}
             </div>
             <a href={snapshot.calUrl} onClick={onBook} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
               <CalendarDays className="h-5 w-5" /> Termin online vereinbaren
             </a>
+            {snapshot.mode === "onsite" ? <a href={`https://paypal.me/TiDrechsler/${snapshot.total.replace(/\./g, "").replace(",", ".")}EUR`} onClick={onPayment} target="_blank" rel="noreferrer" className="btn-secondary mt-3 w-full flex-col gap-1 text-center">
+              <span>Gesamtbetrag im Voraus per PayPal zahlen</span><strong>{snapshot.total} €</strong>
+            </a> : null}
             {snapshot.mode === "remote" && <div className="mt-4 space-y-3">
               <p className="text-sm leading-6 text-slate-700">Erst Machbarkeit abstimmen und Termin buchen, dann 70 % vorauszahlen. Der Termin wird nach Zahlungseingang verbindlich bestätigt. Die restlichen 30 % sind nach Durchführung fällig.</p>
               <div className="grid gap-3 sm:grid-cols-2">
