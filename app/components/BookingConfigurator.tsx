@@ -155,7 +155,7 @@ export default function BookingConfigurator() {
   if (selectedVehicle) { calParams.set("fahrzeug", `${brand} ${selectedVehicle.model}`); calParams.set("baujahr", String(year)); }
   if (chosen) calParams.set("codierungen", chosen);
   calParams.set("gesamtpreis", `${total.toFixed(2)} EUR${sfdFee ? " inkl. 10 EUR SFD1" : ""}`);
-  calParams.set("zahlung", mode === "remote" ? `PayPal 70% vorab (${prepay.toFixed(2)} EUR) / 30% danach (${finalpay.toFixed(2)} EUR)` : "Bar, PayPal oder Sofortüberweisung (beim Termin)");
+  calParams.set("zahlung", mode === "remote" ? `PayPal 70% vorab (${prepay.toFixed(2)} EUR) / 30% danach (${finalpay.toFixed(2)} EUR)` : "Im Voraus: PayPal; direkt beim Termin: Bar, PayPal oder Sofortüberweisung");
   const calUrl = `${calBase}?${calParams.toString()}`;
   const resetSelection = () => { setSelected([]); setSearch(""); setActiveGroup("Alle"); setExpandedGroups([]); setShowSelectedOnly(false); };
   const changeMode = (value: "remote" | "onsite") => { setMode(value); track("booking_mode_selected", { mode: value }); };
