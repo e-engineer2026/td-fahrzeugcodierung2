@@ -6,6 +6,14 @@ import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Fahrzeugcodierung Leipzig für VW, Audi & Škoda",
+  description: "Fahrzeugcodierung & Diagnose in Leipzig-Süd für VW, Audi, Škoda, SEAT und CUPRA. VCDS, VCP und ODIS. Preise berechnen, Codierung prüfen und Termin buchen.",
+  alternates: { canonical: "/" },
+};
+
 const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
 
 export default function Home(){
@@ -46,7 +54,7 @@ export default function Home(){
       <div className="grid items-center gap-7 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
         <div className="max-w-2xl">
           <h1 className="text-3xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-[3.25rem]">Fahrzeugcodierung &amp; Diagnose in Leipzig</h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, Škoda, SEAT und CUPRA – mit transparenter Kalkulation und direkter Terminbuchung.</p>
+          <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">VW, Audi, Škoda, SEAT und CUPRA codieren und diagnostizieren lassen – vor Ort in Leipzig-Süd oder deutschlandweit per Remote. Preise direkt berechnen und Termin vereinbaren.</p>
 
           <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
             <a href="#fahrzeugauswahl" className="btn-primary w-full sm:w-auto">Fahrzeug jetzt auswählen <span aria-hidden="true" className="ml-2">→</span></a>
