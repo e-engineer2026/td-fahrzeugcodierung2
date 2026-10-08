@@ -12,7 +12,8 @@ function track(channel: string) {
 export default function MobileContactBar() {
   const [hasSelection, setHasSelection] = useState(false);
   const [calendarUrl, setCalendarUrl] = useState("/#kontakt");
-  const [whatsappUrl, setWhatsappUrl] = useState("https://wa.me/4915563047044");
+  const initialWhatsappUrl = `https://wa.me/4915563047044?text=${encodeURIComponent("Hallo, ich möchte eine Codierung prüfen lassen.\n\nFahrzeug (Marke / Modell): \nBaujahr: \nGewünschte Funktion: \nTerminart (Vor Ort / Remote): ")}`;
+  const [whatsappUrl, setWhatsappUrl] = useState(initialWhatsappUrl);
 
   useEffect(() => {
     const update = () => {
@@ -48,7 +49,7 @@ export default function MobileContactBar() {
         ];
         setWhatsappUrl(`https://wa.me/4915563047044?text=${encodeURIComponent(lines.join("\n"))}`);
       } else {
-        setWhatsappUrl("https://wa.me/4915563047044");
+        setWhatsappUrl(initialWhatsappUrl);
       }
     };
 
