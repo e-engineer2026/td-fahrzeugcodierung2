@@ -27,6 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/carplay-freischalten-leipzig`, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/vcds-codierung-leipzig`, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/vcp-codierung-leipzig`, changeFrequency: "monthly", priority: 0.85 },
+    { url: `${base}/schluessel-anlernen-leipzig`, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/steuergeraete-flash`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/fahrzeuge`, changeFrequency: "weekly", priority: 0.8 },
     ...vehiclePages,
