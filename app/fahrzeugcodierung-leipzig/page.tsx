@@ -29,6 +29,7 @@ export default function Page() {
       { href: "/assistenzsysteme-codieren-leipzig", label: "Assistenzsysteme codieren", description: "Informationen zu VZE, Lane Assist, Fernlichtassistent und weiteren unterstützten Funktionen." },
       { href: "/vcds-codierung-leipzig", label: "VCDS Codierung Leipzig", description: "VCDS-basierte Anpassungen, Diagnose und technische Vorprüfung für viele VAG-Fahrzeuge." },
       { href: "/vcp-codierung-leipzig", label: "VCP Codierung Leipzig", description: "VCP für Codierung, Diagnose sowie geeignete Parametrierungs- und Flash-Aufgaben." },
+      { href: "/schluessel-anlernen-leipzig", label: "Schlüssel anlernen Leipzig", description: "PIN/Login auslesen und passende Schlüssel an die Wegfahrsperre anlernen lassen." },
       { href: "/remote-fahrzeugcodierung", label: "Remote Fahrzeugcodierung", description: "Geeignete Codierungen deutschlandweit per Remote durchführen lassen." }
     ]}
     faq={[
