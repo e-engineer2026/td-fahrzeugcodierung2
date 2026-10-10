@@ -54,10 +54,12 @@ export default function MobileContactBar() {
 
     update();
 
+    // Nur Änderungen am Konfigurator beobachten, nicht jede DOM-Mutation der Seite.
+    const configurator = document.getElementById("konfigurator");
     const observer = new MutationObserver(update);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
+    observer.observe(configurator ?? document.body, {
+      childList: !configurator,
+      subtree: !configurator,
       attributes: true,
       attributeFilter: [
         "data-selection-count",

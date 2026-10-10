@@ -13,7 +13,7 @@ export default function Home(){
   <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
     <div className="container-x flex h-14 items-center justify-between gap-2 sm:h-16 sm:gap-3">
       <a href="#" className="flex min-w-0 items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-        <Image src="/td-logo-icon.png" alt="TD" width={225} height={80} className="h-8 w-auto sm:h-10" priority />
+        <Image src="/td-logo-icon.png" alt="TD" width={225} height={80} className="h-8 w-auto sm:h-10" />
         <span className="ml-2 whitespace-nowrap text-xs font-black text-slate-950 sm:text-base"><span className="text-blue-600">Fahrzeugcodierung</span></span>
       </a>
       <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#buchen">Codierungen</a><a href="#kontakt">Kontakt</a><a href="#faq">FAQ</a></nav>
@@ -56,7 +56,7 @@ export default function Home(){
         </div>
 
         <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-[0_22px_55px_rgba(15,40,75,0.14)] sm:rounded-3xl">
-          <Image src="/td-hero-performance.webp" alt="Roter Performancewagen in einer hellen Studio-Szene mit blauen Lichtakzenten" width={1400} height={934} sizes="(max-width: 1024px) 100vw, 56vw" className="aspect-[1.55/1] w-full object-cover" priority />
+          <Image src="/td-hero-performance.webp" alt="Roter Performancewagen in einer hellen Studio-Szene mit blauen Lichtakzenten" width={1400} height={934} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 52vw" className="aspect-[1.55/1] w-full object-cover" priority />
           <a href={googleMapsUrl} target="_blank" rel="noreferrer" aria-label="Standort in Leipzig-Süd in Google Maps öffnen" className="absolute bottom-[52px] left-3 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-800 shadow-sm backdrop-blur transition hover:border-blue-400 hover:text-blue-700 sm:bottom-[60px] sm:left-4 sm:px-4 sm:py-2 sm:text-sm">
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white"><MapPin className="h-4 w-4" /></span>
             <span>Standort Leipzig-Süd</span>
