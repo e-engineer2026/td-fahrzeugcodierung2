@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import SeoServicePage from "../components/SeoServicePage";
 
 export const metadata: Metadata = {
-  title: "Remote Fahrzeugcodierung VAG",
-  description: "Remote Fahrzeugcodierung für VW, Audi, Škoda, SEAT und CUPRA. Voraussetzungen prüfen, Codierungen auswählen und Termin online konfigurieren.",
+  title: "Remote Fahrzeugcodierung für VW, Audi & Škoda",
+  description: "VW, Audi, Škoda, SEAT und CUPRA deutschlandweit per Remote codieren lassen. Mit VCDS oder VCP bei geeigneten Fahrzeugen. Voraussetzungen prüfen und Termin anfragen.",
   alternates: { canonical: "/remote-fahrzeugcodierung" },
 };
 
