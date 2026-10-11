@@ -1,10 +1,9 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-// The marketing pages, robots.txt, and sitemap.xml are public. Keep Clerk's
-// request middleware on account and API routes only so crawlers can fetch the
-// public site even if the Clerk browser handshake is unavailable.
+// Public marketing pages, robots.txt, and sitemap.xml should stay directly
+// crawlable. Run Clerk only on account, authentication, and API routes.
 export default clerkMiddleware();
 
 export const config = {
-  matcher: ["/konto(.*)", "/api(.*)", "/trpc(.*)"],
+  matcher: ["/konto(.*)", "/sign-in(.*)", "/sign-up(.*)", "/api(.*)", "/trpc(.*)"],
 };
