@@ -35,7 +35,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
       ...snapshot.codings.map((coding) => `• ${coding}`),
       "",
       `Normalpreis: ${snapshot.subtotal} €`,
-      `Neukundenrabatt (Erstbuchung): -${snapshot.discount} €`,
+      `Aktionsrabatt (Erstbuchung): -${snapshot.discount} €`,
       "Nur für angemeldete Neukunden, gültig bis 30.11.2026; Erstbuchung wird geprüft.",
       ...(snapshot.sfdFee ? [`SFD1-Freischaltung: ${snapshot.sfdFee.toFixed(2).replace(".", ",")} €`] : []),
       `Mein Preis: ${snapshot.total} €`,
@@ -59,12 +59,12 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
             </div>
             <div className="mt-4 grid gap-2 text-center min-[380px]:grid-cols-3">
               <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Normalpreis</div><div className="mt-1 font-black">{snapshot.subtotal} €</div></div>
-              <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Neukundenrabatt ({snapshot.rate} %)</div><div className="mt-1 font-black text-blue-700">−{snapshot.discount} €</div></div>
+              <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Aktionsrabatt ({snapshot.rate} %)</div><div className="mt-1 font-black text-blue-700">−{snapshot.discount} €</div></div>
               <div className="rounded-xl bg-blue-600 p-3 text-white"><div className="text-xs text-blue-100">Dein Preis</div><div className="mt-1 font-black">{snapshot.total} €</div></div>
             </div>
             {snapshot.sfdFee > 0 && <p className="mt-2 text-sm text-slate-700">Im Gesamtpreis enthalten: {snapshot.sfdFee.toFixed(2).replace(".", ",")} € SFD1-Freischaltung (ohne Rabatt).</p>}
             <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
-              <div><b className="text-slate-800">Neukundenrabatt auf die erste Buchung:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</div>
+              <div><b className="text-slate-800">Aktionsrabatt auf die erste Buchung:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</div>
               <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 10 : snapshot.nextTier === "100" ? 15 : snapshot.nextTier === "150" ? 20 : 25} % Rabatt).` : "25 % Maximalrabatt erreicht."}</div>
               <p className="mt-2">Gültig nach Anmeldung vom 04.10.2026 bis einschließlich 30.11.2026. Die Erstbuchung wird bei der Anfrage geprüft.</p>
               <a href="/sign-up" target="_blank" rel="noreferrer" className="mt-1 inline-block font-bold text-blue-700 underline">Jetzt anmelden</a>
@@ -103,7 +103,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
             <div className="text-xs font-black uppercase tracking-[.14em] text-blue-700">Schnell anfragen</div>
             <div className="mt-1 font-black text-slate-950">Codierungen auswählen und komplette Auswahl direkt per WhatsApp senden.</div>
             <button type="button" disabled className="mt-4 w-full cursor-not-allowed rounded-xl bg-slate-200 px-5 py-3 font-semibold text-slate-500">Termin online vereinbaren – zuerst Codierungen auswählen</button>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Terminart, Fahrzeug, Codierungen, Neukundenrabatt und Gesamtpreis werden automatisch in die Nachricht übernommen.</p>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Terminart, Fahrzeug, Codierungen, Aktionsrabatt und Gesamtpreis werden automatisch in die Nachricht übernommen.</p>
           </>
         )}
       </div>
