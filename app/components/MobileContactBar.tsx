@@ -41,7 +41,7 @@ export default function MobileContactBar() {
           "",
           `Normalpreis: ${subtotal} €`,
           `Rabatt: -${discount} €`,
-          ...(Number((configurator.dataset.sfdFee || "0").replace(",", ".")) > 0 ? [`SFD1-Freischaltung: ${configurator.dataset.sfdFee} €`] : []),
+          ...(Number((configurator.dataset.sfdFee || "0").replace(",", ".")) > 0 ? [`Im Normalpreis enthalten: SFD1-Freischaltung ${configurator.dataset.sfdFee} € (Aktionsrabatt berücksichtigt).`] : []),
           `Mein Preis: ${total} €`,
           "",
           "Bitte kurz Machbarkeit und Termin bestätigen.",

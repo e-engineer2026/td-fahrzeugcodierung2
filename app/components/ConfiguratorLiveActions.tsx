@@ -37,7 +37,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
       `Normalpreis: ${snapshot.subtotal} €`,
       `Aktionsrabatt (${snapshot.rate} %): -${snapshot.discount} €`,
       "Für alle Kunden ohne Anmeldung, gültig bis einschließlich 30.11.2026.",
-      ...(snapshot.sfdFee ? [`SFD1-Freischaltung: ${snapshot.sfdFee.toFixed(2).replace(".", ",")} €`] : []),
+      ...(snapshot.sfdFee ? [`Im Normalpreis enthalten: SFD1-Freischaltung ${snapshot.sfdFee.toFixed(2).replace(".", ",")} € (Aktionsrabatt berücksichtigt).`] : []),
       `Mein Preis: ${snapshot.total} €`,
       "",
       "Bitte kurz Machbarkeit und Termin bestätigen.",
@@ -62,11 +62,11 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
               <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Aktionsrabatt ({snapshot.rate} %)</div><div className="mt-1 font-black text-blue-700">−{snapshot.discount} €</div></div>
               <div className="rounded-xl bg-blue-600 p-3 text-white"><div className="text-xs text-blue-100">Dein Preis</div><div className="mt-1 font-black">{snapshot.total} €</div></div>
             </div>
-            {snapshot.sfdFee > 0 && <p className="mt-2 text-sm text-slate-700">Im Gesamtpreis enthalten: {snapshot.sfdFee.toFixed(2).replace(".", ",")} € SFD1-Freischaltung (ohne Rabatt).</p>}
+            {snapshot.sfdFee > 0 && <p className="mt-2 text-sm text-slate-700">Der Normalpreis enthält {snapshot.sfdFee.toFixed(2).replace(".", ",")} € für die einmalige SFD1-Freischaltung. Der Aktionsrabatt gilt auch dafür.</p>}
             <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
               <div><b className="text-slate-800">Aktionsrabatt für alle:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</div>
               <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 10 : snapshot.nextTier === "100" ? 15 : snapshot.nextTier === "150" ? 20 : 25} % Rabatt).` : "25 % Maximalrabatt erreicht."}</div>
-              <p className="mt-2">Automatisch für alle Kunden ohne Anmeldung – auch bei weiteren Buchungen. Gültig vom 04.10.2026 bis einschließlich 30.11.2026.</p>
+              <p className="mt-2">Automatisch für alle Kunden ohne Anmeldung – auch bei weiteren Buchungen. Eine erforderliche SFD1-Freischaltung zählt zum Auftragswert und wird mitrabattiert. Gültig vom 04.10.2026 bis einschließlich 30.11.2026.</p>
             </div>
             <div className="mt-3 rounded-xl border border-blue-100 bg-white p-3 text-sm leading-6 text-slate-700">
               <b>Zahlung</b>
