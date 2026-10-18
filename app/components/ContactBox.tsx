@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Mail, MessageCircle, Phone } from "lucide-react";
+import ArrivalGuide from "./ArrivalGuide";
 
 function track(event: string, params: Record<string, string | number | boolean> = {}) {
   if (typeof window === "undefined") return;
@@ -20,6 +21,7 @@ export default function ContactBox() {
   const [website, setWebsite] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [showArrival, setShowArrival] = useState(false);
 
   const previousPrefill = useRef({ vehicle: "", year: "", coding: "" });
 
@@ -121,7 +123,7 @@ export default function ContactBox() {
         <div className="mt-5 space-y-3 sm:mt-6">
           <a
             href={`https://wa.me/${whatsappNumber}?text=${whatsappText}`}
-            onClick={() => track("contact_clicked", { channel: "whatsapp" })}
+            onClick={() => { track("contact_clicked", { channel: "whatsapp" }); if (mode === "onsite") setShowArrival(true); }}
             target="_blank"
             rel="noreferrer"
             className="flex min-w-0 items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-100 sm:text-base"
@@ -148,6 +150,7 @@ export default function ContactBox() {
             {email}
           </a>
         </div>
+        {showArrival && mode === "onsite" && <div className="mt-4" aria-live="polite"><ArrivalGuide compact /></div>}
       </div>
 
       <form onSubmit={submit} className="card p-4 sm:p-8">
@@ -187,7 +190,7 @@ export default function ContactBox() {
 
           <a
             href={`https://wa.me/${whatsappNumber}?text=${whatsappText}`}
-            onClick={() => track("contact_clicked", { channel: "whatsapp_form" })}
+            onClick={() => { track("contact_clicked", { channel: "whatsapp_form" }); if (mode === "onsite") setShowArrival(true); }}
             target="_blank"
             rel="noreferrer"
             className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white transition hover:brightness-95 sm:w-auto"

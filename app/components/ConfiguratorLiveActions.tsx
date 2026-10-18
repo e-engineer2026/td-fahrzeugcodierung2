@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { CalendarDays, MessageCircle } from "lucide-react";
+import ArrivalGuide from "./ArrivalGuide";
 
 type Snapshot = {
   count: number;
@@ -24,6 +26,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
   onBook: () => void;
   onPayment: () => void;
 }) {
+  const [showArrival, setShowArrival] = useState(false);
   const whatsappUrl = (() => {
     if (!snapshot) return "https://wa.me/4915563047044";
     const lines = [
@@ -75,7 +78,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
                 <p><b>Direkt beim Termin:</b> Bar · PayPal · Sofortüberweisung</p>
               </div> : <p>PayPal – 70 % vorab, 30 % nach Durchführung.</p>}
             </div>
-            <a href={snapshot.calUrl} onClick={onBook} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
+            <a href={snapshot.calUrl} onClick={() => { onBook(); if (snapshot.mode === "onsite") setShowArrival(true); }} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
               <CalendarDays className="h-5 w-5" /> Termin online vereinbaren
             </a>
             {snapshot.mode === "onsite" ? <a href={`https://paypal.me/TiDrechsler/${snapshot.total.replace(/\./g, "").replace(",", ".")}EUR`} onClick={onPayment} target="_blank" rel="noreferrer" className="btn-secondary mt-3 w-full flex-col gap-1 text-center">
@@ -93,9 +96,10 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
               </div>
               <a href="/zahlung" onClick={onPayment} className="inline-block text-sm font-semibold text-blue-700 underline">Zahlungsübersicht öffnen</a>
             </div>}
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 font-bold text-white transition hover:brightness-95 sm:w-auto">
+            <a href={whatsappUrl} onClick={() => { if (snapshot.mode === "onsite") setShowArrival(true); }} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 font-bold text-white transition hover:brightness-95 sm:w-auto">
               <MessageCircle className="h-5 w-5" /> Auswahl per WhatsApp senden
             </a>
+            {showArrival && snapshot.mode === "onsite" && <div className="mt-4" aria-live="polite"><ArrivalGuide compact /></div>}
           </>
         ) : (
           <>
