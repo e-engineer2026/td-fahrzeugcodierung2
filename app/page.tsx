@@ -1,97 +1,82 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
 import { Show, UserButton } from "@clerk/nextjs";
+import { ArrowRight, ChevronDown, Lightbulb, MapPin, MessageCircle, MonitorPlay, Phone, Radar, Settings2, Tag, UserRound } from "lucide-react";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
+import HomeMenu from "./components/HomeMenu";
+import HomeVehicleFinder from "./components/HomeVehicleFinder";
+import "./redesign.css";
 
-const googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
+const whatsapp = "https://wa.me/4915563047044";
+const maps = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
+const services = [
+  { Icon: Lightbulb, title: "Komfort & Licht", copy: "Funktionen im Alltag anpassen.", href: "#fahrzeugauswahl" },
+  { Icon: Radar, title: "Assistenzsysteme", copy: "Vorhandene Technik sinnvoll nutzen.", href: "/assistenzsysteme-codieren-leipzig" },
+  { Icon: MonitorPlay, title: "Infotainment", copy: "Smartphone und Fahrzeug verbinden.", href: "#fahrzeugauswahl" },
+  { Icon: Settings2, title: "Diagnose & Software", copy: "Fehler prüfen. Software aktualisieren.", href: "/steuergeraete-diagnose-leipzig" },
+];
 
-export default function Home(){
- return <main>
-  <header className="sticky top-0 z-50 border-b border-blue-100 bg-white/95 backdrop-blur">
-    <div className="container-x flex h-14 items-center justify-between gap-2 sm:h-16 sm:gap-3">
-      <a href="#" className="flex min-w-0 items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-        <Image src="/td-logo-icon.png" alt="TD" width={225} height={80} className="h-8 w-auto sm:h-10" priority />
-        <span className="ml-2 whitespace-nowrap text-xs font-black text-slate-950 sm:text-base"><span className="text-blue-600">Fahrzeugcodierung</span></span>
-      </a>
-      <nav className="hidden gap-6 text-sm text-slate-600 md:flex"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href="#buchen">Codierungen</a><a href="#kontakt">Kontakt</a><a href="#faq">FAQ</a></nav>
-      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-        <HeaderBookingSummary />
-        <Show when="signed-in" fallback={<Link href="/sign-in?redirect_url=%2Fkonto" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-blue-200 bg-white px-3 text-sm font-bold text-blue-700 transition hover:bg-blue-50 sm:px-4">Anmelden</Link>}>
-          <div className="flex items-center gap-2">
-            <Link href="/konto" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-blue-200 bg-white px-3 text-sm font-bold text-blue-700 transition hover:bg-blue-50 sm:px-4">Mein Konto</Link>
-            <UserButton />
-          </div>
-        </Show>
-        <a href="#kontakt" className="hidden items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 lg:inline-flex">Direkt anfragen</a>
+export default function Home() {
+  return <main className="td-home">
+    <a href="#fahrzeugauswahl" className="td-skip">Direkt zur Fahrzeugauswahl</a>
+    <header className="td-header">
+      <div className="td-container td-header-inner">
+        <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-icon.png" alt="TD" width={225} height={80} priority /><span>Fahrzeugcodierung</span></Link>
+        <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
+        <div className="td-header-actions"><HeaderBookingSummary /><div className="td-account"><Show when="signed-in" fallback={<Link href="/sign-in?redirect_url=%2Fkonto"><UserRound aria-hidden="true" />Anmelden</Link>}><Link href="/konto">Mein Konto</Link><UserButton /></Show></div><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <section className="relative w-full overflow-hidden border-y-2 border-amber-300 bg-gradient-to-r from-rose-800 via-red-600 to-rose-800 text-white shadow-xl" aria-label="Aktionsrabatt auf die erste Buchung">
-    <div className="container-x flex flex-col items-center justify-center gap-2.5 py-3.5 text-center sm:flex-row sm:gap-4 sm:py-4">
-      <span className="inline-flex rounded-full bg-amber-300 px-3 py-1 text-[11px] font-black uppercase tracking-[.12em] text-red-950 shadow-md sm:text-xs">Aktionsrabatt</span>
-      <div className="flex flex-col items-center gap-1">
-        <strong className="text-base font-black sm:text-lg">Aktionsrabatt auf die erste Buchung</strong>
-        <span className="flex flex-wrap items-center justify-center gap-x-2 text-sm font-black text-amber-200 sm:text-base"><span className="whitespace-nowrap">10 % ab 50 €</span><span className="whitespace-nowrap">15 % ab 100 €</span><span className="whitespace-nowrap">20 % ab 150 €</span><span className="whitespace-nowrap">25 % ab 200 €</span></span>
-        <span className="text-xs font-semibold text-white sm:text-sm">Nach Anmeldung · gültig bis einschließlich 30.11.2026</span>
-      </div>
-    </div>
-  </section>
+    <aside className="td-offer" aria-label="Aktionsrabatt auf die erste Buchung">
+      <details className="td-container">
+        <summary><span className="td-offer-title"><Tag aria-hidden="true" /><strong>Aktionsrabatt: bis zu 25 %<span> auf deine erste Buchung</span></strong></span><span className="td-offer-condition">Nach Anmeldung · bis einschließlich 30.11.2026</span><ChevronDown className="td-offer-chevron" aria-hidden="true" /></summary>
+        <div className="td-offer-details"><div className="td-offer-tiers">{[[10, 50], [15, 100], [20, 150], [25, 200]].map(([rate, amount]) => <span key={rate}><b>{rate} %</b> ab {amount} €</span>)}</div><p>Für angemeldete Neukunden auf die erste Buchung vom 04.10.2026 bis einschließlich 30.11.2026. Die Erstbuchung wird bei der Anfrage geprüft. Die SFD1-Freischaltung ist vom Rabatt ausgenommen.</p><Link href="/sign-up">Für den Aktionsrabatt anmelden <ArrowRight aria-hidden="true" /></Link></div>
+      </details>
+    </aside>
 
-  <section className="hero-grid overflow-hidden border-b border-blue-100">
-    <div className="container-x py-8 sm:py-12 lg:py-14">
-      <div className="grid items-center gap-7 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
-        <div className="max-w-2xl">
-          <h1 className="text-3xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-5xl lg:text-[3.25rem]">Fahrzeugcodierung &amp; Diagnose in Leipzig</h1>
-          <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">Codierung und Diagnose für Volkswagen, Audi, Škoda, SEAT und CUPRA – mit transparenter Kalkulation und direkter Terminbuchung.</p>
+    <section className="td-hero" aria-labelledby="home-title">
+      <div className="td-hero-picture"><Image src="/td-hero-natural.webp" alt="Graphitgrauer Volkswagen Golf in einer hellen, natürlichen Umgebung" fill priority sizes="100vw" /></div>
+      <div className="td-container td-hero-inner"><div className="td-hero-copy">
+        <p className="td-eyebrow">Leipzig-Süd · deutschlandweit per Remote</p>
+        <h1 id="home-title">Dein Fahrzeug.<br />Mehr Möglichkeiten.</h1>
+        <p className="td-hero-subtitle">Fahrzeugcodierung, Diagnose und Software für Volkswagen, Audi, Škoda, SEAT und CUPRA.</p>
+        <div className="td-hero-actions"><a className="td-button" href="#fahrzeugauswahl">Fahrzeug auswählen<ArrowRight aria-hidden="true" /></a><a className="td-quiet-link" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />Frage per WhatsApp stellen</a></div>
+      </div></div>
+    </section>
 
-          <div className="mt-5 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
-            <a href="#fahrzeugauswahl" className="btn-primary w-full sm:w-auto">Fahrzeug jetzt auswählen <span aria-hidden="true" className="ml-2">→</span></a>
-            <Link href="/fahrzeuge" className="btn-secondary w-full sm:w-auto">Fahrzeuge &amp; Preise</Link>
-          </div>
-          <Link href="/steuergeraete-flash" className="mt-3 inline-flex rounded-md py-1 text-sm font-bold text-blue-700 underline decoration-blue-200 underline-offset-4 hover:text-blue-900">Steuergeräte-Flash &amp; Softwareupdate</Link>
-        </div>
+    <section id="fahrzeugauswahl" className="td-container td-finder-wrap" aria-label="Zum Fahrzeugkonfigurator"><HomeVehicleFinder /></section>
+    <div className="td-container td-brand-row" aria-label="Unterstützte Marken">{["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand}>{brand}</span>)}</div>
 
-        <div className="relative overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-[0_22px_55px_rgba(15,40,75,0.14)] sm:rounded-3xl">
-          <Image src="/td-hero-performance.webp" alt="Roter Performancewagen in einer hellen Studio-Szene mit blauen Lichtakzenten" width={1400} height={934} sizes="(max-width: 1024px) 100vw, 56vw" className="aspect-[1.55/1] w-full object-cover" priority />
-          <a href={googleMapsUrl} target="_blank" rel="noreferrer" aria-label="Standort in Leipzig-Süd in Google Maps öffnen" className="absolute bottom-[52px] left-3 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-800 shadow-sm backdrop-blur transition hover:border-blue-400 hover:text-blue-700 sm:bottom-[60px] sm:left-4 sm:px-4 sm:py-2 sm:text-sm">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white"><MapPin className="h-4 w-4" /></span>
-            <span>Standort Leipzig-Süd</span>
-          </a>
-          <div className="absolute bottom-3 left-3 rounded-lg border border-white/70 bg-white/90 px-3 py-2 text-xs font-bold text-slate-800 shadow-sm backdrop-blur sm:bottom-4 sm:left-4 sm:px-4 sm:py-2.5 sm:text-sm">
-            Vor Ort in Leipzig <span className="px-1 text-blue-600">·</span> Remote deutschlandweit
-          </div>
-        </div>
-      </div>
+    <section id="buchen" className="td-container td-booking-area" aria-labelledby="booking-title">
+      <div className="td-section-heading"><div><p className="td-eyebrow">Dein Fahrzeugkonfigurator</p><h2 id="booking-title" tabIndex={-1}>Deine Codierungen. Dein Preis.</h2><p>Funktionen auswählen, Preis berechnen und Termin vereinbaren.</p></div><a className="td-quiet-link" href="#fahrzeugauswahl">Fahrzeug oder Terminart ändern ↑</a></div>
+      <BookingConfigurator integrated />
+    </section>
 
-    </div>
-  </section>
+    <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
+      <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div><Link className="td-quiet-link" href="/fahrzeuge">Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link></div>
+      <div className="td-service-grid">{services.map(({ Icon, title, copy, href }) => <Link key={title} className="td-service" href={href}><Icon className="td-service-icon" aria-hidden="true" /><div><h3>{title}</h3><p>{copy}</p></div><ArrowRight className="td-service-arrow" aria-hidden="true" /></Link>)}</div>
+      <Link className="td-software-link" href="/steuergeraete-flash">Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link>
+    </section>
 
-  <section id="buchen" className="container-x scroll-mt-20 py-8 sm:py-14 lg:py-16"><div className="max-w-3xl"><h2 className="text-2xl font-black leading-tight sm:text-4xl">Fahrzeug konfigurieren &amp; Termin prüfen</h2><p className="mt-2 leading-6 text-slate-600 sm:mt-3 sm:leading-7">Fahrzeug auswählen, gewünschte Codierungen zusammenstellen und den Termin direkt konfigurieren.</p></div><a href="https://wa.me/4915563047044?text=Hallo%2C%20ich%20m%C3%B6chte%20eine%20Codierung%20pr%C3%BCfen%20lassen.%20Mein%20Fahrzeug%3A%20%5BModell%2C%20Baujahr%5D.%20Gew%C3%BCnschte%20Funktion%3A%20%5BWunsch%5D." target="_blank" rel="noreferrer" className="mt-4 flex flex-col gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-950 transition hover:bg-emerald-100 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-      <span><strong className="block">Unsicher oder Funktion nicht gefunden?</strong><span className="mt-1 block text-sm leading-6">Sende Modell, Baujahr und Wunschfunktion direkt per WhatsApp zur Vorprüfung.</span></span>
-      <span className="inline-flex shrink-0 items-center justify-center rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white">Per WhatsApp anfragen</span>
-    </a><div className="mt-5 sm:mt-7"><BookingConfigurator/></div></section>
+    <section id="ablauf" className="td-process" aria-labelledby="process-title"><div className="td-container"><h2 id="process-title">So einfach geht’s.</h2><ol>{[
+      ["Fahrzeug wählen", "Marke, Modell und Baujahr auswählen."],
+      ["Codierungen zusammenstellen", "Passende Funktionen entdecken und den Preis direkt sehen."],
+      ["Termin vereinbaren", "Vor Ort in Leipzig oder bequem per Remote."],
+    ].map(([title, copy], index) => <li key={title}><span className="td-step-number">0{index + 1}</span><div><h3>{title}</h3><p>{copy}</p></div></li>)}</ol></div></section>
 
-  <section id="kontakt" className="scroll-mt-20 border-y border-blue-100 bg-white">
-    <div className="container-x py-14 sm:py-20">
-      <div className="max-w-3xl">
-        <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm sm:tracking-[.18em]">Kontakt &amp; Vorprüfung</div>
-        <h2 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">Unsicher, ob deine Codierung möglich ist?</h2>
-        <p className="mt-4 leading-7 text-slate-600">Sende Fahrzeug, Baujahr und gewünschte Funktion zur Vorprüfung – direkt per WhatsApp oder über das Kontaktformular.</p>
-      </div>
-      <div className="mt-8 sm:mt-10"><ContactBox /></div>
-    </div>
-  </section>
+    <section className="td-contact-intro"><div className="td-container"><div><h2>Nicht sicher, was möglich ist?</h2><p>Ich helfe dir persönlich weiter und prüfe, was zu deinem Fahrzeug passt.</p></div><a href="#kontakt" className="td-button">Persönlich beraten lassen<ArrowRight aria-hidden="true" /></a><a href="tel:+4915563047044" className="td-contact-phone"><Phone aria-hidden="true" />01556 3047044</a></div></section>
 
-  <section id="faq" className="scroll-mt-20 border-t border-blue-100 bg-white"><div className="container-x py-14 sm:py-20 lg:py-24"><h2 className="text-3xl font-black sm:text-4xl">FAQ</h2><div className="mt-6 space-y-3 sm:mt-8">
-   <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Was brauche ich für Remote?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Ein eigenes kompatibles Diagnoseinterface (z. B. VCDS, VCP oder OBD11), Windows-PC/Laptop, stabile Internetverbindung und eine vor dem Termin vereinbarte Remote-Software.</p></details>
-   <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Sind alle Funktionen garantiert möglich?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Nein. Die Machbarkeit hängt von Hardware, Steuergeräten, Softwarestand und Fahrzeugkonfiguration ab und wird vor Durchführung geprüft.</p></details>
-   <details className="card p-5 sm:p-6"><summary className="cursor-pointer font-bold">Wie bezahle ich?</summary><p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base">Bei Vor-Ort-Terminen im Voraus per PayPal oder direkt beim Termin bar, per PayPal oder per Sofortüberweisung. Remote per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Codierung.</p></details>
-  </div></div></section>
+    <section id="kontakt" className="td-contact td-container" aria-labelledby="contact-title"><div className="td-section-heading"><div><p className="td-eyebrow">Direkt und persönlich</p><h2 id="contact-title">Dein Weg zur passenden Codierung.</h2><p>Modell, Baujahr und Wunschfunktion reichen für die erste Anfrage.</p></div></div><ContactBox /></section>
 
-  <footer className="border-t border-blue-100 bg-white"><div className="container-x flex flex-col gap-5 py-8 text-sm text-slate-500 sm:py-10"><div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-center gap-3"><Image src="/td-logo-icon.png" alt="TD Fahrzeugcodierung Logo" width={128} height={85} className="h-9 w-auto"/><span>© 2026 TD Fahrzeugcodierung</span></div><div className="flex flex-wrap gap-x-5 gap-y-3"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><a href={googleMapsUrl} target="_blank" rel="noreferrer">Google-Profil</a><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></div></div><nav aria-label="Leistungen und Marken" className="flex flex-wrap gap-x-5 gap-y-2 border-t border-blue-50 pt-4 text-xs sm:text-sm"><Link href="/fahrzeugcodierung-leipzig">Fahrzeugcodierung Leipzig</Link><Link href="/vw-codierung-leipzig">VW Codierung Leipzig</Link><Link href="/audi-codierung-leipzig">Audi Codierung Leipzig</Link><Link href="/skoda-codierung-leipzig">Škoda Codierung Leipzig</Link><Link href="/assistenzsysteme-codieren-leipzig">Assistenzsysteme</Link><Link href="/vcds-codierung-leipzig">VCDS Codierung</Link><Link href="/vcp-codierung-leipzig">VCP Codierung</Link><Link href="/schluessel-anlernen-leipzig">Schlüssel anlernen</Link><Link href="/remote-fahrzeugcodierung">Remote</Link></nav></div></footer>
- </main>
+    <section id="faq" className="td-faq td-container" aria-labelledby="faq-title"><div><p className="td-eyebrow">Gut zu wissen</p><h2 id="faq-title">Häufige Fragen.</h2></div><div className="td-faq-list">
+      <details><summary>Was brauche ich für eine Remote-Codierung?<ChevronDown aria-hidden="true" /></summary><p>Ein eigenes kompatibles Diagnoseinterface (zum Beispiel VCDS, VCP oder OBD11), einen Windows-PC/Laptop am Fahrzeug, eine stabile Internetverbindung und die vereinbarte Remote-Software. Interface, Software und eine geeignete Spannungsversorgung stimmen wir vorher ab.</p></details>
+      <details><summary>Sind alle Funktionen bei meinem Fahrzeug möglich?<ChevronDown aria-hidden="true" /></summary><p>Die Möglichkeiten hängen von Hardware, Steuergeräten, Softwarestand und Ausstattung ab. Die Machbarkeit wird vor der Durchführung geprüft. Für Fahrzeuge mit SFD2 / UNECE bieten wir keine Codierungen an.</p></details>
+      <details><summary>Wie funktioniert der Aktionsrabatt?<ChevronDown aria-hidden="true" /></summary><p>Angemeldete Neukunden erhalten auf ihre erste Buchung 10 % ab 50 €, 15 % ab 100 €, 20 % ab 150 € und 25 % ab 200 € Auftragswert. Die Aktion gilt vom 04.10.2026 bis einschließlich 30.11.2026. Die Erstbuchung wird bei der Anfrage geprüft. Eine gegebenenfalls erforderliche SFD1-Freischaltung ist vom Rabatt ausgenommen.</p></details>
+      <details><summary>Wie kann ich bezahlen?<ChevronDown aria-hidden="true" /></summary><p>Vor Ort im Voraus per PayPal oder direkt beim Termin bar, per PayPal oder per Sofortüberweisung. Bei Remote-Aufträgen per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Arbeiten.</p></details>
+    </div></section>
+
+    <footer className="td-footer"><div className="td-container"><div className="td-footer-main"><Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-icon.png" alt="TD" width={225} height={80} /><span>Fahrzeugcodierung</span></Link><a href={maps} target="_blank" rel="noreferrer"><MapPin aria-hidden="true" />Schenkendorfstraße 33 · 04275 Leipzig</a><a href="mailto:info@td-fahrzeugcodierung.de">info@td-fahrzeugcodierung.de</a></div><nav className="td-footer-services" aria-label="Leistungen und Marken"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><Link href="/fahrzeugcodierung-leipzig">Fahrzeugcodierung Leipzig</Link><Link href="/vw-codierung-leipzig">VW</Link><Link href="/audi-codierung-leipzig">Audi</Link><Link href="/skoda-codierung-leipzig">Škoda</Link><Link href="/seat-codierung-leipzig">SEAT</Link><Link href="/cupra-codierung-leipzig">CUPRA</Link><Link href="/vcds-codierung-leipzig">VCDS</Link><Link href="/vcp-codierung-leipzig">VCP</Link><Link href="/schluessel-anlernen-leipzig">Schlüssel anlernen</Link><Link href="/remote-fahrzeugcodierung">Remote</Link><a href={maps} target="_blank" rel="noreferrer">Google-Profil</a></nav><div className="td-footer-bottom"><span>© 2026 TD Fahrzeugcodierung</span><nav aria-label="Rechtliche Informationen"><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></nav></div></div></footer>
+  </main>;
 }
