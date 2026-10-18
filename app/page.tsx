@@ -37,7 +37,7 @@ export default function Home() {
     </aside>
 
     <section className="td-hero" aria-labelledby="home-title">
-      <div className="td-hero-picture"><Image src="/td-hero-natural.webp" alt="Graphitgrauer Volkswagen Golf in einer hellen, natürlichen Umgebung" fill priority sizes="100vw" /></div>
+      <div className="td-hero-picture"><Image src="/td-hero-chrome.webp" alt="Graphitgraues Fahrzeug mit verchromtem TD-Emblem in einer hellen, natürlichen Umgebung" fill priority sizes="100vw" /></div>
       <div className="td-container td-hero-inner"><div className="td-hero-copy">
         <p className="td-eyebrow">Leipzig-Süd · deutschlandweit per Remote</p>
         <h1 id="home-title">Dein Fahrzeug.<br />Mehr Möglichkeiten.</h1>
