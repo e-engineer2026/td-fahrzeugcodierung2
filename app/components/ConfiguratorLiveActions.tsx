@@ -35,8 +35,8 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
       ...snapshot.codings.map((coding) => `• ${coding}`),
       "",
       `Normalpreis: ${snapshot.subtotal} €`,
-      `Aktionsrabatt (Erstbuchung): -${snapshot.discount} €`,
-      "Nur für angemeldete Neukunden, gültig bis 30.11.2026; Erstbuchung wird geprüft.",
+      `Aktionsrabatt (${snapshot.rate} %): -${snapshot.discount} €`,
+      "Für alle Kunden ohne Anmeldung, gültig bis einschließlich 30.11.2026.",
       ...(snapshot.sfdFee ? [`SFD1-Freischaltung: ${snapshot.sfdFee.toFixed(2).replace(".", ",")} €`] : []),
       `Mein Preis: ${snapshot.total} €`,
       "",
@@ -64,10 +64,9 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
             </div>
             {snapshot.sfdFee > 0 && <p className="mt-2 text-sm text-slate-700">Im Gesamtpreis enthalten: {snapshot.sfdFee.toFixed(2).replace(".", ",")} € SFD1-Freischaltung (ohne Rabatt).</p>}
             <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
-              <div><b className="text-slate-800">Aktionsrabatt auf die erste Buchung:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</div>
+              <div><b className="text-slate-800">Aktionsrabatt für alle:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</div>
               <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 10 : snapshot.nextTier === "100" ? 15 : snapshot.nextTier === "150" ? 20 : 25} % Rabatt).` : "25 % Maximalrabatt erreicht."}</div>
-              <p className="mt-2">Gültig nach Anmeldung vom 04.10.2026 bis einschließlich 30.11.2026. Die Erstbuchung wird bei der Anfrage geprüft.</p>
-              <a href="/sign-up" target="_blank" rel="noreferrer" className="mt-1 inline-block font-bold text-blue-700 underline">Jetzt anmelden</a>
+              <p className="mt-2">Automatisch für alle Kunden ohne Anmeldung – auch bei weiteren Buchungen. Gültig vom 04.10.2026 bis einschließlich 30.11.2026.</p>
             </div>
             <div className="mt-3 rounded-xl border border-blue-100 bg-white p-3 text-sm leading-6 text-slate-700">
               <b>Zahlung</b>

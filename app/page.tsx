@@ -29,10 +29,10 @@ export default function Home() {
       </div>
     </header>
 
-    <aside className="td-offer" aria-label="Aktionsrabatt auf die erste Buchung">
+    <aside className="td-offer" aria-label="Aktionsrabatt für alle ohne Anmeldung">
       <details className="td-container">
-        <summary><span className="td-offer-title"><Tag aria-hidden="true" /><strong>Aktionsrabatt: bis zu 25 %<span> auf deine erste Buchung</span></strong></span><span className="td-offer-condition">Nach Anmeldung · bis einschließlich 30.11.2026</span><ChevronDown className="td-offer-chevron" aria-hidden="true" /></summary>
-        <div className="td-offer-details"><div className="td-offer-tiers">{[[10, 50], [15, 100], [20, 150], [25, 200]].map(([rate, amount]) => <span key={rate}><b>{rate} %</b> ab {amount} €</span>)}</div><p>Für angemeldete Neukunden auf die erste Buchung vom 04.10.2026 bis einschließlich 30.11.2026. Die Erstbuchung wird bei der Anfrage geprüft. Die SFD1-Freischaltung ist vom Rabatt ausgenommen.</p><Link href="/sign-up">Für den Aktionsrabatt anmelden <ArrowRight aria-hidden="true" /></Link></div>
+        <summary><span className="td-offer-title"><Tag aria-hidden="true" /><strong>Aktionsrabatt: bis zu 25 %<span> für alle</span></strong></span><span className="td-offer-condition">Ohne Anmeldung · bis einschließlich 30.11.2026</span><ChevronDown className="td-offer-chevron" aria-hidden="true" /></summary>
+        <div className="td-offer-details"><div className="td-offer-tiers">{[[10, 50], [15, 100], [20, 150], [25, 200]].map(([rate, amount]) => <span key={rate}><b>{rate} %</b> ab {amount} €</span>)}</div><p>Für alle Kunden ohne Anmeldung vom 04.10.2026 bis einschließlich 30.11.2026 – auch bei weiteren Buchungen. Der Rabatt wird im Konfigurator automatisch berücksichtigt. Die SFD1-Freischaltung ist vom Rabatt ausgenommen.</p><a href="#fahrzeugauswahl">Jetzt Codierungen auswählen <ArrowRight aria-hidden="true" /></a></div>
       </details>
     </aside>
 
@@ -73,7 +73,7 @@ export default function Home() {
     <section id="faq" className="td-faq td-container" aria-labelledby="faq-title"><div><p className="td-eyebrow">Gut zu wissen</p><h2 id="faq-title">Häufige Fragen.</h2></div><div className="td-faq-list">
       <details><summary>Was brauche ich für eine Remote-Codierung?<ChevronDown aria-hidden="true" /></summary><p>Ein eigenes kompatibles Diagnoseinterface (zum Beispiel VCDS, VCP oder OBD11), einen Windows-PC/Laptop am Fahrzeug, eine stabile Internetverbindung und die vereinbarte Remote-Software. Interface, Software und eine geeignete Spannungsversorgung stimmen wir vorher ab.</p></details>
       <details><summary>Sind alle Funktionen bei meinem Fahrzeug möglich?<ChevronDown aria-hidden="true" /></summary><p>Die Möglichkeiten hängen von Hardware, Steuergeräten, Softwarestand und Ausstattung ab. Die Machbarkeit wird vor der Durchführung geprüft. Für Fahrzeuge mit SFD2 / UNECE bieten wir keine Codierungen an.</p></details>
-      <details><summary>Wie funktioniert der Aktionsrabatt?<ChevronDown aria-hidden="true" /></summary><p>Angemeldete Neukunden erhalten auf ihre erste Buchung 10 % ab 50 €, 15 % ab 100 €, 20 % ab 150 € und 25 % ab 200 € Auftragswert. Die Aktion gilt vom 04.10.2026 bis einschließlich 30.11.2026. Die Erstbuchung wird bei der Anfrage geprüft. Eine gegebenenfalls erforderliche SFD1-Freischaltung ist vom Rabatt ausgenommen.</p></details>
+      <details><summary>Wie funktioniert der Aktionsrabatt?<ChevronDown aria-hidden="true" /></summary><p>Alle Kunden erhalten ohne Anmeldung 10 % ab 50 €, 15 % ab 100 €, 20 % ab 150 € und 25 % ab 200 € Auftragswert – auch bei weiteren Buchungen. Der Rabatt wird im Konfigurator automatisch berücksichtigt. Die Aktion gilt vom 04.10.2026 bis einschließlich 30.11.2026. Eine gegebenenfalls erforderliche SFD1-Freischaltung ist vom Rabatt ausgenommen.</p></details>
       <details><summary>Wie kann ich bezahlen?<ChevronDown aria-hidden="true" /></summary><p>Vor Ort im Voraus per PayPal oder direkt beim Termin bar, per PayPal oder per Sofortüberweisung. Bei Remote-Aufträgen per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Arbeiten.</p></details>
     </div></section>
 
