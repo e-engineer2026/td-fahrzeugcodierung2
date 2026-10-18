@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Show, UserButton } from "@clerk/nextjs";
-import { ArrowRight, ChevronDown, Lightbulb, MapPin, MessageCircle, MonitorPlay, Phone, Radar, Settings2, Tag, UserRound } from "lucide-react";
+import { ArrowRight, ChevronDown, Lightbulb, MapPin, MessageCircle, MonitorPlay, Phone, Radar, Settings2, Tag } from "lucide-react";
+import AccountMenu from "./components/AccountMenu";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
@@ -25,7 +25,7 @@ export default function Home() {
       <div className="td-container td-header-inner">
         <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-icon.png" alt="TD" width={225} height={80} priority /><span>Fahrzeugcodierung</span></Link>
         <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
-        <div className="td-header-actions"><HeaderBookingSummary /><div className="td-account"><Show when="signed-in" fallback={<Link href="/sign-in?redirect_url=%2Fkonto"><UserRound aria-hidden="true" />Anmelden</Link>}><Link href="/konto">Mein Konto</Link><UserButton /></Show></div><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
+        <div className="td-header-actions"><HeaderBookingSummary /><AccountMenu /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
     </header>
 
