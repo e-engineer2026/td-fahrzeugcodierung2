@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, Lightbulb, MapPin, MessageCircle, MonitorPlay, Phone, Radar, Settings2, Tag } from "lucide-react";
+import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Tag, ShieldCheck, ClipboardCheck, BadgeEuro } from "lucide-react";
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
@@ -10,17 +10,16 @@ import HomeMenu from "./components/HomeMenu";
 import HomeVehicleFinder from "./components/HomeVehicleFinder";
 import HeroVehicleCarousel from "./components/HeroVehicleCarousel";
 import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
+import ServiceExplorer from "./components/ServiceExplorer";
+import PracticeAndTrust from "./components/PracticeAndTrust";
+import AppointmentPreparation from "./components/AppointmentPreparation";
 import "./redesign.css";
+import "./experience.css";
 
 const whatsapp = "https://wa.me/4915563047044";
 const maps = "https://www.google.com/maps/search/?api=1&query=51.323915%2C12.375662";
 const googleBusiness = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
-const services = [
-  { Icon: Lightbulb, title: "Komfort & Licht", copy: "Funktionen im Alltag anpassen.", href: "#fahrzeugauswahl" },
-  { Icon: Radar, title: "Assistenzsysteme", copy: "Vorhandene Technik sinnvoll nutzen.", href: "/assistenzsysteme-codieren-leipzig" },
-  { Icon: MonitorPlay, title: "Infotainment", copy: "Smartphone und Fahrzeug verbinden.", href: "#fahrzeugauswahl" },
-  { Icon: Settings2, title: "Diagnose & Software", copy: "Fehler prüfen. Software aktualisieren.", href: "/steuergeraete-diagnose-leipzig" },
-];
+
 
 export default function Home() {
   return <main className="td-home">
@@ -29,7 +28,7 @@ export default function Home() {
     <header className="td-header">
       <div className="td-container td-header-inner">
         <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-icon.png" alt="TD" width={225} height={80} sizes="(max-width: 600px) 68px, 94px" priority /><span>Fahrzeugcodierung</span></Link>
-        <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
+        <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#praxis">Einblicke</a><a href="#ablauf">Ablauf</a><a href="#kontakt">Kontakt</a></nav>
         <div className="td-header-actions"><HeaderBookingSummary /><AccountMenu /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
     </header>
@@ -54,21 +53,27 @@ export default function Home() {
     <section id="fahrzeugauswahl" className="td-container td-finder-wrap" aria-label="Zum Fahrzeugkonfigurator"><HomeVehicleFinder /></section>
     <div className="td-container td-brand-row" aria-label="Unterstützte Marken">{["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand}>{brand}</span>)}</div>
 
+    <div className="td-container td-trust-strip" aria-label="Deine Vorteile"><span><ShieldCheck aria-hidden="true" />Technische Vorprüfung</span><span><BadgeEuro aria-hidden="true" />Preis vor Durchführung</span><span><ClipboardCheck aria-hidden="true" />Persönlich abgestimmt</span></div>
+
     <section id="buchen" className="td-container td-booking-area" aria-label="Fahrzeugcodierungen auswählen" tabIndex={-1}>
       <BookingConfigurator integrated />
     </section>
 
-    <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
-      <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div><Link className="td-quiet-link" href="/fahrzeuge">Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link></div>
-      <div className="td-service-grid">{services.map(({ Icon, title, copy, href }) => <Link key={title} className="td-service" href={href}><Icon className="td-service-icon" aria-hidden="true" /><div><h3>{title}</h3><p>{copy}</p></div><ArrowRight className="td-service-arrow" aria-hidden="true" /></Link>)}</div>
+    <section id="leistungen" className="td-container td-services td-expanded-services" aria-labelledby="services-title">
+      <div className="td-section-heading"><div><p className="td-eyebrow">Funktionen verstehen</p><h2 id="services-title">Kleine Anpassung. Spürbarer Unterschied.</h2><p>Entdecke Möglichkeiten, Voraussetzungen und den passenden nächsten Schritt.</p></div><Link className="td-quiet-link" href="/fahrzeuge">Alle Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link></div>
+      <ServiceExplorer />
       <Link className="td-software-link" href="/steuergeraete-flash">Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link>
     </section>
+
+    <PracticeAndTrust />
 
     <section id="ablauf" className="td-process" aria-labelledby="process-title"><div className="td-container"><h2 id="process-title">So einfach geht’s.</h2><ol>{[
       ["Fahrzeug wählen", "Marke, Modell und Baujahr auswählen."],
       ["Codierungen zusammenstellen", "Passende Funktionen entdecken und den Preis direkt sehen."],
       ["Termin vereinbaren", "Vor Ort in Leipzig oder bequem per Remote."],
     ].map(([title, copy], index) => <li key={title}><span className="td-step-number">0{index + 1}</span><div><h3>{title}</h3><p>{copy}</p></div></li>)}</ol></div></section>
+
+    <section id="vorbereitung" className="td-container td-preparation" aria-labelledby="preparation-title"><div className="td-section-heading"><div><p className="td-eyebrow">Vor dem Termin</p><h2 id="preparation-title">Alles bereit für dein Fahrzeug.</h2><p>Vor Ort oder per Remote: Hier siehst du, was du vorbereiten solltest.</p></div></div><AppointmentPreparation /></section>
 
     <section className="td-contact-intro"><div className="td-container"><div><h2>Nicht sicher, was möglich ist?</h2><p>Ich helfe dir persönlich weiter und prüfe, was zu deinem Fahrzeug passt.</p></div><a href="#kontakt" className="td-button">Persönlich beraten lassen<ArrowRight aria-hidden="true" /></a><a href="tel:+4915563047044" className="td-contact-phone"><Phone aria-hidden="true" />01556 3047044</a></div></section>
 

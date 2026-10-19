@@ -34,6 +34,8 @@ const vehicleFunction = `function vehicleSpecificCodings(
     price: coding.price,
     uiGroup: coding.uiGroup as PlatformCodingGroup,
     hardware: coding.hardware ?? coding.requirements,
+    requirements: coding.requirements,
+    interfaceInfo: coding.interfaceInfo,
     source: "vehicle" as const,
   }));
 `;

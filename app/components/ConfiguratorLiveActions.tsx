@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CalendarDays, MessageCircle } from "lucide-react";
 import ArrivalGuide from "./ArrivalGuide";
+import AppointmentPreparation from "./AppointmentPreparation";
 
 type Snapshot = {
   count: number;
@@ -78,6 +79,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
                 <p><b>Direkt beim Termin:</b> Bar · PayPal · Sofortüberweisung</p>
               </div> : <p>PayPal – 70 % vorab, 30 % nach Durchführung.</p>}
             </div>
+            <details className="td-booking-preparation"><summary>Vorbereitung für deinen Termin ansehen</summary><AppointmentPreparation mode={snapshot.mode} /></details>
             <a href={snapshot.calUrl} onClick={() => { onBook(); if (snapshot.mode === "onsite") setShowArrival(true); }} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
               <CalendarDays className="h-5 w-5" /> Termin online vereinbaren
             </a>
