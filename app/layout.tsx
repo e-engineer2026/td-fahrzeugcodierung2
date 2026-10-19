@@ -4,7 +4,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { ClerkProvider } from "@clerk/nextjs";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 import MobileContactBar from "./components/MobileContactBar";
-import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
 import "./globals.css";
 import "./booking-overrides.css";
 
@@ -112,7 +111,9 @@ export const metadata: Metadata = {
     title: "VAG Codierung Leipzig & Remote | TD Fahrzeugcodierung",
     description:
       "Codierung und Diagnose für VW, Audi, SEAT, CUPRA und Škoda – persönlich in Leipzig-Süd oder per Remote.",
+    images: [{ url: "/td-hero-chrome.webp", alt: "TD Fahrzeugcodierung – Fahrzeugcodierung und Diagnose in Leipzig und per Remote" }],
   },
+  twitter: { card: "summary_large_image", images: ["/td-hero-chrome.webp"] },
   robots: {
     index: true,
     follow: true,
@@ -152,7 +153,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <VehicleSelectionBridge />
         {children}
         <MobileContactBar />
         <GoogleAnalytics />

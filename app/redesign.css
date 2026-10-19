@@ -114,6 +114,7 @@
 .td-contact{padding-block:65px}
 .td-home .td-contact .card{border-radius:12px;border-color:#dce4ed;box-shadow:0 5px 24px #18345105}
 .td-contact input,.td-contact textarea{border-radius:7px;min-height:48px}
+.td-contact input[type="checkbox"]{width:1rem;height:1rem;min-height:1rem;padding:0}
 .td-faq{display:grid;grid-template-columns:.7fr 1.3fr;gap:70px;padding:0 0 70px}
 .td-faq h2{margin-top:12px}
 .td-faq details{border-bottom:1px solid #dce4ed}

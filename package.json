@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "node scripts/check-clerk-production.cjs && node scripts/patch-mqb-lane.cjs && next build",
     "lint": "eslint .",
+    "test": "node --experimental-strip-types --test scripts/*.test.mjs",
     "start": "next start"
   },
   "dependencies": {

@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { brands, vehicles } from "../data/catalog";
-
-const storageKey = "td_vehicle_prefill";
+import { vehicleBookingHref } from "../lib/homeVehicleSelection";
 
 export default function HeroVehicleQuickSelect() {
   const router = useRouter();
@@ -32,10 +31,7 @@ export default function HeroVehicleQuickSelect() {
 
   const openConfigurator = () => {
     if (!brand || !model || !year) return;
-    const prefill = { brand, model, year };
-    window.sessionStorage.setItem(storageKey, JSON.stringify(prefill));
-    const params = new URLSearchParams({ brand, model, year: String(year) });
-    router.push(`/?${params.toString()}#buchen`);
+    router.push(vehicleBookingHref({ brand, model, year }));
   };
 
   return (

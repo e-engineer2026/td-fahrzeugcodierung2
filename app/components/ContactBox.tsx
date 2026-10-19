@@ -62,13 +62,16 @@ export default function ContactBox() {
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (website) return;
+    if (website || status === "sending") return;
 
     setStatus("sending");
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
 
     try {
       const response = await fetch(`https://formsubmit.co/ajax/${formRecipientEmail}`, {
         method: "POST",
+        signal: controller.signal,
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -105,6 +108,8 @@ export default function ContactBox() {
     } catch {
       track("inquiry_error", { channel: "form" });
       setStatus("error");
+    } finally {
+      window.clearTimeout(timeout);
     }
   }
 
@@ -153,20 +158,21 @@ export default function ContactBox() {
         {showArrival && mode === "onsite" && <div className="mt-4" aria-live="polite"><ArrivalGuide compact /></div>}
       </div>
 
-      <form onSubmit={submit} className="card p-4 sm:p-8">
+      <form onSubmit={submit} className="card p-4 sm:p-8" aria-busy={status === "sending"}>
         <h3 className="text-xl font-black sm:text-2xl">Codierung prüfen lassen</h3>
         <p className="mt-3 text-sm leading-6 text-slate-600">
           Formular ausfüllen und direkt absenden. Wir melden uns per E-Mail oder telefonisch zurück.
         </p>
 
-        <div className="mt-5 grid gap-3 sm:mt-6 sm:gap-4">
-          <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" autoComplete="name" required />
-          <input type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} placeholder="E-Mail für Rückmeldung" autoComplete="email" required />
-          <input type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} placeholder="Telefonnummer für Rückfragen" autoComplete="tel" inputMode="tel" required />
-          <input value={vehicle} onChange={e => setVehicle(e.target.value)} placeholder="Fahrzeug, z. B. Audi A4 B9" required />
-          <input value={year} onChange={e => setYear(e.target.value)} placeholder="Baujahr" inputMode="numeric" pattern="[0-9]{4}" required />
-          <input value={coding} onChange={e => setCoding(e.target.value)} placeholder="Codierung" required />
-        </div>
+        <p className="mt-3 text-xs text-slate-500">Alle Felder sind Pflichtfelder.</p>
+        <fieldset disabled={status === "sending"} className="mt-5 grid min-w-0 gap-3 sm:mt-6 sm:gap-4">
+          <label><span className="mb-1.5 block text-sm font-semibold">Name</span><input name="name" value={name} onChange={e => setName(e.target.value)} placeholder="Vor- und Nachname" autoComplete="name" required /></label>
+          <label><span className="mb-1.5 block text-sm font-semibold">E-Mail</span><input name="email" type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} placeholder="E-Mail für Rückmeldung" autoComplete="email" required /></label>
+          <label><span className="mb-1.5 block text-sm font-semibold">Telefonnummer</span><input name="tel" type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} placeholder="Telefonnummer für Rückfragen" autoComplete="tel" inputMode="tel" required /></label>
+          <label><span className="mb-1.5 block text-sm font-semibold">Fahrzeug</span><input name="vehicle" value={vehicle} onChange={e => setVehicle(e.target.value)} placeholder="z. B. Audi A4 B9" required /></label>
+          <label><span className="mb-1.5 block text-sm font-semibold">Baujahr</span><input name="year" value={year} onChange={e => setYear(e.target.value)} placeholder="z. B. 2017" inputMode="numeric" pattern="[0-9]{4}" maxLength={4} required /></label>
+          <label><span className="mb-1.5 block text-sm font-semibold">Gewünschte Codierung oder Fehlerbeschreibung</span><textarea name="coding" value={coding} onChange={e => setCoding(e.target.value)} placeholder="Welche Funktion möchtest du anpassen oder welchen Fehler prüfen lassen?" rows={3} required /></label>
+        </fieldset>
 
         <div className="absolute -left-[9999px]" aria-hidden="true">
           <label>Website<input value={website} onChange={e => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" /></label>
@@ -179,7 +185,7 @@ export default function ContactBox() {
 
         <div className="mt-4" aria-live="polite">
           {status === "success" && <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-semibold text-emerald-800">Anfrage erfolgreich gesendet. Wir melden uns schnellstmöglich per E-Mail oder telefonisch.</p>}
-          {status === "error" && <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">Die Anfrage konnte nicht gesendet werden. Bitte nutze WhatsApp oder schreibe direkt an <a href={`mailto:${email}`} className="font-semibold underline">{email}</a>.</p>}
+          {status === "error" && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">Die Anfrage konnte nicht gesendet werden. Deine Angaben bleiben erhalten. Bitte versuche es erneut, nutze WhatsApp oder schreibe an <a href={`mailto:${email}`} className="font-semibold underline">{email}</a>.</p>}
         </div>
 
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">

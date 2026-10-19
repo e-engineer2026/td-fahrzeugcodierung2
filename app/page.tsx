@@ -8,10 +8,12 @@ import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
 import HomeMenu from "./components/HomeMenu";
 import HomeVehicleFinder from "./components/HomeVehicleFinder";
+import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
 import "./redesign.css";
 
 const whatsapp = "https://wa.me/4915563047044";
 const maps = "https://www.google.com/maps/search/?api=1&query=51.323915%2C12.375662";
+const googleBusiness = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
 const services = [
   { Icon: Lightbulb, title: "Komfort & Licht", copy: "Funktionen im Alltag anpassen.", href: "#fahrzeugauswahl" },
   { Icon: Radar, title: "Assistenzsysteme", copy: "Vorhandene Technik sinnvoll nutzen.", href: "/assistenzsysteme-codieren-leipzig" },
@@ -21,10 +23,11 @@ const services = [
 
 export default function Home() {
   return <main className="td-home">
+    <VehicleSelectionBridge />
     <a href="#fahrzeugauswahl" className="td-skip">Direkt zur Fahrzeugauswahl</a>
     <header className="td-header">
       <div className="td-container td-header-inner">
-        <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-icon.png" alt="TD" width={225} height={80} priority /><span>Fahrzeugcodierung</span></Link>
+        <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-icon.png" alt="TD" width={225} height={80} sizes="(max-width: 600px) 68px, 94px" priority /><span>Fahrzeugcodierung</span></Link>
         <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
         <div className="td-header-actions"><HeaderBookingSummary /><AccountMenu /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
@@ -79,6 +82,6 @@ export default function Home() {
       <details><summary>Wie kann ich bezahlen?<ChevronDown aria-hidden="true" /></summary><p>Vor Ort im Voraus per PayPal oder direkt beim Termin bar, per PayPal oder per Sofortüberweisung. Bei Remote-Aufträgen per PayPal: 70 % vor Beginn und 30 % nach Durchführung der vereinbarten Arbeiten.</p></details>
     </div></section>
 
-    <footer className="td-footer"><div className="td-container"><div className="td-footer-main"><Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-icon.png" alt="TD" width={225} height={80} /><span>Fahrzeugcodierung</span></Link><a href={maps} target="_blank" rel="noreferrer"><MapPin aria-hidden="true" />Kundenparkplatz gegenüber · Schenkendorfstraße 33</a><a href="mailto:info@td-fahrzeugcodierung.de">info@td-fahrzeugcodierung.de</a></div><nav className="td-footer-services" aria-label="Leistungen und Marken"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><Link href="/fahrzeugcodierung-leipzig">Fahrzeugcodierung Leipzig</Link><Link href="/vw-codierung-leipzig">VW</Link><Link href="/audi-codierung-leipzig">Audi</Link><Link href="/skoda-codierung-leipzig">Škoda</Link><Link href="/seat-codierung-leipzig">SEAT</Link><Link href="/cupra-codierung-leipzig">CUPRA</Link><Link href="/vcds-codierung-leipzig">VCDS</Link><Link href="/vcp-codierung-leipzig">VCP</Link><Link href="/schluessel-anlernen-leipzig">Schlüssel anlernen</Link><Link href="/remote-fahrzeugcodierung">Remote</Link><a href={maps} target="_blank" rel="noreferrer">Google-Profil</a></nav><div className="td-footer-bottom"><span>© 2026 TD Fahrzeugcodierung</span><nav aria-label="Rechtliche Informationen"><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></nav></div></div></footer>
+    <footer className="td-footer"><div className="td-container"><div className="td-footer-main"><Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-icon.png" alt="TD" width={225} height={80} sizes="68px" /><span>Fahrzeugcodierung</span></Link><a href={maps} target="_blank" rel="noreferrer"><MapPin aria-hidden="true" />Kundenparkplatz gegenüber · Schenkendorfstraße 33</a><a href="mailto:info@td-fahrzeugcodierung.de">info@td-fahrzeugcodierung.de</a></div><nav className="td-footer-services" aria-label="Leistungen und Marken"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link><Link href="/fahrzeugcodierung-leipzig">Fahrzeugcodierung Leipzig</Link><Link href="/vw-codierung-leipzig">VW</Link><Link href="/audi-codierung-leipzig">Audi</Link><Link href="/skoda-codierung-leipzig">Škoda</Link><Link href="/seat-codierung-leipzig">SEAT</Link><Link href="/cupra-codierung-leipzig">CUPRA</Link><Link href="/vcds-codierung-leipzig">VCDS</Link><Link href="/vcp-codierung-leipzig">VCP</Link><Link href="/schluessel-anlernen-leipzig">Schlüssel anlernen</Link><Link href="/remote-fahrzeugcodierung">Remote</Link><a href={googleBusiness} target="_blank" rel="noreferrer">Google-Profil</a></nav><div className="td-footer-bottom"><span>© 2026 TD Fahrzeugcodierung</span><nav aria-label="Rechtliche Informationen"><Link href="/impressum">Impressum</Link><Link href="/datenschutz">Datenschutz</Link><Link href="/widerruf">Widerruf</Link><Link href="/agb">AGB</Link></nav></div></div></footer>
   </main>;
 }

@@ -1,3 +1,4 @@
+import { vehicleBookingHref } from "../../../lib/homeVehicleSelection";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,6 +65,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
   const seoKey = `${params.brand}/${params.model}`;
   const priority = prioritySeoByPath[seoKey];
   const name = vehicleDisplayName(vehicle);
+  const bookingHref = vehicleBookingHref(vehicle);
   const years = vehicle.endYear >= 2026 ? `ab ${vehicle.startYear}` : `${vehicle.startYear}–${vehicle.endYear}`;
   const url = `${BASE}/fahrzeuge/${params.brand}/${params.model}`;
   const landing = brandLanding(vehicle.brand);
@@ -135,7 +137,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               ? `Fahrzeugdiagnose für den ${name} in Leipzig-Süd. Für die PPE-Plattform sind aktuell noch keine Codierungen im Baukasten freigegeben.`
               : `Codierungen und Fahrzeugdiagnose für den ${name} – persönlich in Leipzig-Süd oder, je nach Funktion, per Remote. Die verfügbaren Leistungen werden fahrzeugbezogen geprüft.`)}</p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link href="/#buchen" className="btn-primary w-full text-center sm:w-auto">{vehicle.diagnosticsOnly ? "Diagnose auswählen & Preis berechnen" : "Codierung auswählen & Preis berechnen"}</Link>
+              <Link href={bookingHref} className="btn-primary w-full text-center sm:w-auto">{vehicle.diagnosticsOnly ? "Diagnose auswählen & Preis berechnen" : "Codierung auswählen & Preis berechnen"}</Link>
               <Link href="/#kontakt" className="btn-secondary w-full text-center sm:w-auto">{vehicle.diagnosticsOnly ? "Diagnose anfragen" : "Machbarkeit anfragen"}</Link>
               {landing ? <Link href={landing.href} className="btn-secondary w-full text-center sm:w-auto">{landing.label}</Link> : null}
             </div>
@@ -210,7 +212,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               <div><dt className="text-slate-500">Plattform</dt><dd className="font-semibold">{vehicle.platform}</dd></div>
             </dl>
             {vehicle.sfd1From && vehicle.endYear >= 2024 ? <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-slate-700"><b>SFD2 / UNECE ab 2024:</b> Für SFD2-Fahrzeuge werden keine Codierungen angeboten. Die aufgeführten Codiermöglichkeiten gelten nur für unterstützte Fahrzeuge/Baujahre vor SFD2. Diagnose und technische Prüfung bleiben möglich.</div> : vehicle.sfd1From ? <div className="mt-5 rounded-xl border border-blue-200 bg-white p-3 text-xs leading-5 text-slate-700">SFD ist bei dieser Baureihe ab Modelljahr {vehicle.sfd1From} relevant. Die konkrete Buchbarkeit wird nach Baujahr und Steuergerät geprüft.</div> : null}
-            <Link href="/#buchen" className="btn-primary mt-5 w-full text-center">{vehicle.diagnosticsOnly ? "Diagnose konfigurieren" : "Jetzt konfigurieren"}</Link>
+            <Link href={bookingHref} className="btn-primary mt-5 w-full text-center">{vehicle.diagnosticsOnly ? "Diagnose konfigurieren" : "Jetzt konfigurieren"}</Link>
           </aside>
         </div>
       </section>
@@ -242,7 +244,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
         <div className="container-x py-12 sm:py-16">
           <h2 className="text-2xl font-black">{vehicle.diagnosticsOnly ? `${name} diagnostizieren lassen` : `${name} codieren lassen`}</h2>
           <p className="mt-3 max-w-3xl leading-7 text-slate-600">Wähle auf der Hauptseite Vor Ort oder Remote, anschließend Marke, Modell und Baujahr. Danach erscheinen die für diese Baureihe hinterlegten Codierungen inklusive Preisberechnung.</p>
-          <Link href="/#buchen" className="btn-primary mt-6 inline-flex">Zur Fahrzeugauswahl</Link>
+          <Link href={bookingHref} className="btn-primary mt-6 inline-flex">Zur Fahrzeugauswahl</Link>
         </div>
       </section>
 
