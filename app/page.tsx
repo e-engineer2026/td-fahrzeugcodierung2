@@ -8,6 +8,7 @@ import ContactBox from "./components/ContactBox";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
 import HomeMenu from "./components/HomeMenu";
 import HomeVehicleFinder from "./components/HomeVehicleFinder";
+import HeroVehicleCarousel from "./components/HeroVehicleCarousel";
 import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
 import "./redesign.css";
 
@@ -41,7 +42,7 @@ export default function Home() {
     </aside>
 
     <section className="td-hero" aria-labelledby="home-title">
-      <div className="td-hero-picture"><Image src="/td-hero-chrome.webp" alt="Graphitgraues Fahrzeug mit verchromtem TD-Emblem in einer hellen, natürlichen Umgebung" fill priority sizes="100vw" /></div>
+      <HeroVehicleCarousel />
       <div className="td-container td-hero-inner"><div className="td-hero-copy">
         <p className="td-eyebrow">Leipzig-Süd · deutschlandweit per Remote</p>
         <h1 id="home-title">Dein Fahrzeug.<br />Mehr Möglichkeiten.</h1>
