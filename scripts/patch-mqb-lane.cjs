@@ -33,7 +33,7 @@ const vehicleFunction = `function vehicleSpecificCodings(
     name: coding.name,
     price: coding.price,
     uiGroup: coding.uiGroup as PlatformCodingGroup,
-    hardware: coding.hardware ?? coding.requirements,
+    hardware: coding.hardware,
     requirements: coding.requirements,
     interfaceInfo: coding.interfaceInfo,
     source: "vehicle" as const,
