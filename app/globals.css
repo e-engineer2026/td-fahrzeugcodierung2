@@ -62,7 +62,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   min-width: 0;
   padding: .75rem .5rem;
   text-align: center;
-  font-size: .75rem;
+  font-size: .875rem;
   overflow-wrap: anywhere;
 }
 
@@ -155,8 +155,8 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 #buchen .fixed > div > :first-child::after {
   content: "Termin online\A vereinbaren";
   white-space: pre-line;
-  font-size: .8125rem;
-  line-height: 1.125rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
   font-weight: 700;
   text-align: center;
 }
@@ -283,8 +283,8 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   }
 
   #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) > div:first-child > b {
-    font-size: .75rem;
-    line-height: 1rem;
+    font-size: .875rem;
+    line-height: 1.25rem;
     font-weight: 700;
     color: white;
   }
@@ -337,4 +337,16 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   #buchen .booking-flow:has(> section:nth-of-type(5)) > section:nth-of-type(4) > .mt-5.grid > div {
     font-size: 1rem !important;
   }
+}
+
+
+/* Kleine Interface-Texte auf der gesamten Website besser lesbar machen. */
+.text-xs {
+  font-size: .875rem;
+  line-height: 1.35rem;
+}
+
+.text-sm {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }

@@ -170,7 +170,7 @@ export default function GoogleAnalytics() {
         <button
           type="button"
           onClick={() => setShowBanner(true)}
-          className="fixed bottom-20 left-3 z-40 rounded-lg border border-slate-200 bg-white/95 px-3 py-2 text-[11px] font-semibold text-slate-600 shadow-sm backdrop-blur md:bottom-3"
+          className="fixed bottom-20 left-3 z-40 rounded-lg border border-slate-200 bg-white/95 px-3 py-2 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur md:bottom-3"
         >
           Analyse-Einstellungen
         </button>
