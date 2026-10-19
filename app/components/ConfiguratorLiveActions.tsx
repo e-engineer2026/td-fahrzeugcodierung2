@@ -69,7 +69,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
             <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
               <div><b className="text-slate-800">Aktionsrabatt für alle:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</div>
               <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 10 : snapshot.nextTier === "100" ? 15 : snapshot.nextTier === "150" ? 20 : 25} % Rabatt).` : "25 % Maximalrabatt erreicht."}</div>
-              <p className="mt-2">Automatisch für alle Kunden ohne Anmeldung – auch bei weiteren Buchungen. Eine erforderliche SFD1-Freischaltung zählt zum Auftragswert und wird mitrabattiert. Gültig vom 04.10.2026 bis einschließlich 30.11.2026.</p>
+              <p className="mt-2">Gültig vom 04.10.2026 bis einschließlich 30.11.2026.</p>
             </div>
             <div className="mt-3 rounded-xl border border-blue-100 bg-white p-3 text-sm leading-6 text-slate-700">
               <b>Zahlung</b>
