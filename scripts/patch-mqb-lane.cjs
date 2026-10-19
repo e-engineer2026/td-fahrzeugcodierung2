@@ -1,3 +1,5 @@
+// This .cjs build script intentionally uses CommonJS imports.
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('node:fs');
 const path = require('node:path');
 

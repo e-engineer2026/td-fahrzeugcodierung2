@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 export default function HomeMenu() {
   const [open, setOpen] = useState(false);
@@ -16,9 +17,9 @@ export default function HomeMenu() {
       <a href="#fahrzeugauswahl">Fahrzeug auswählen</a>
       <a href="#leistungen">Leistungen</a>
       <a href="#ablauf">So funktioniert’s</a>
-      <a href="/fahrzeuge">Fahrzeuge &amp; Preise</a>
+      <Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link>
       <a href="#kontakt">Kontakt</a>
-      <a href="/sign-in?redirect_url=%2Fkonto">Mein Konto / Anmelden</a>
+      <Link href="/sign-in?redirect_url=%2Fkonto">Mein Konto / Anmelden</Link>
     </nav>}
   </div>;
 }

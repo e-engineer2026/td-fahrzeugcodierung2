@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { brands, vehicles } from "../data/catalog";
 
 const storageKey = "td_vehicle_prefill";
 
 export default function HeroVehicleQuickSelect() {
+  const router = useRouter();
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState(0);
@@ -33,7 +35,7 @@ export default function HeroVehicleQuickSelect() {
     const prefill = { brand, model, year };
     window.sessionStorage.setItem(storageKey, JSON.stringify(prefill));
     const params = new URLSearchParams({ brand, model, year: String(year) });
-    window.location.assign(`/?${params.toString()}#buchen`);
+    router.push(`/?${params.toString()}#buchen`);
   };
 
   return (
