@@ -46,13 +46,6 @@
 .td-hero-picture{position:absolute;inset:0;z-index:-1}
 .td-hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
 .td-hero-slide.is-active{opacity:1}
-.td-hero-carousel-controls{position:absolute;right:max(48px,calc((100vw - 1280px)/2));bottom:132px;z-index:2;display:flex;align-items:center;gap:2px;padding:3px 6px;background:rgba(255,255,255,.94);border:1px solid #d7e0eb;border-radius:999px;box-shadow:0 3px 14px #132e4d12}
-.td-hero-carousel-controls button{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:999px;background:transparent;cursor:pointer}
-.td-hero-dot span{width:11px;height:11px;border-radius:50%}
-.td-hero-dot[aria-pressed="true"] span{outline:2px solid var(--td-ink);outline-offset:3px}
-.td-hero-carousel-controls .td-hero-play{border-left:1px solid #d7e0eb;border-radius:0;color:var(--td-ink)}
-.td-hero-play svg{width:16px;height:16px}
-@media(max-width:600px){.td-hero-carousel-controls{right:18px;bottom:44px}}
 .td-hero-picture img{object-fit:cover;object-position:center 54%}
 .td-hero-picture::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.9),rgba(255,255,255,.7) 23%,rgba(255,255,255,.15) 46%,transparent 60%)}
 .td-hero-inner{padding-top:82px;padding-bottom:150px}
