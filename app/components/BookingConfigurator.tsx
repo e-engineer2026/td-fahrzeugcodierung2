@@ -186,7 +186,7 @@ export default function BookingConfigurator({ integrated = false }: { integrated
       document.getElementById("finder-year")?.focus({ preventScroll: true });
       return;
     }
-    document.getElementById("booking-title")?.focus({ preventScroll: true });
+    document.getElementById("buchen")?.focus({ preventScroll: true });
     document.getElementById("buchen")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
   }, [selectionRequest, year]);
 
