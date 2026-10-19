@@ -20,6 +20,27 @@ export const metadata: Metadata = {
 
 const brandOrder = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"];
 
+const highlightedModels = [
+  {
+    href: "/fahrzeuge/audi/q6-e-tron-gf-codierung",
+    label: "Audi Q6 e-tron (GF)",
+    meta: "PPE · ab 2024",
+    note: "Diagnose & technische Vorprüfung",
+  },
+  {
+    href: "/fahrzeuge/skoda/kodiaq-ii-ps-codierung",
+    label: "Škoda Kodiaq II (PS)",
+    meta: "MQB evo · ab 2024",
+    note: "Codierprüfung & Diagnose",
+  },
+  {
+    href: "/fahrzeuge/seat-cupra/cupra-tavascan-kx-codierung",
+    label: "CUPRA Tavascan (KX)",
+    meta: "MEB · ab 2024",
+    note: "Codierprüfung & Diagnose",
+  },
+];
+
 export default function FahrzeugePage() {
   return (
     <main className="min-h-screen bg-white text-slate-950">
@@ -42,6 +63,23 @@ export default function FahrzeugePage() {
           <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600">Fahrzeuge &amp; Preise</div>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight tracking-tight sm:text-5xl">Fahrzeug auswählen</h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">Marke aufklappen, Modell auswählen und die verfügbaren Codierungen, Preise und technischen Hinweise ansehen.</p>
+        </div>
+      </section>
+
+      <section className="container-x pt-8 sm:pt-10" aria-labelledby="aktuelle-modelle">
+        <div className="mx-auto max-w-4xl rounded-2xl border border-blue-100 bg-blue-50/50 p-5 sm:p-6">
+          <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600">Aktuelle Modelle</div>
+          <h2 id="aktuelle-modelle" className="mt-2 text-2xl font-black">Neue VAG-Baureihen direkt prüfen</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">Für neue Fahrzeuggenerationen werden Diagnose, Softwarestand, Schutzmechanismen und die technische Machbarkeit von Anpassungen besonders sorgfältig geprüft.</p>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">
+            {highlightedModels.map((item) => (
+              <Link key={item.href} href={item.href} className="rounded-xl border border-blue-100 bg-white p-4 transition hover:border-blue-300 hover:shadow-sm">
+                <div className="font-black text-slate-950">{item.label}</div>
+                <div className="mt-1 text-sm text-slate-500">{item.meta}</div>
+                <div className="mt-3 text-sm font-semibold text-blue-700">{item.note} →</div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import SeoServicePage from "../components/SeoServicePage";
 
 export const metadata: Metadata = {
-  title: "Audi Codierung Leipzig | A3, A4, A5, A6, Q5 & Q7",
-  description: "Audi Codierung in Leipzig für A1, A3, A4, A5, A6, A7, Q3, Q5, Q7, Q8 und TT. Diagnose, VCDS/VCP/ODIS, Komfort-, Licht- und Assistenzfunktionen.",
+  title: "Audi Codierung Leipzig | A3, A4, A5, A6, Q5, Q6 & Q7",
+  description: "Audi Codierung und Diagnose in Leipzig für A1, A3, A4, A5, A6, A7, Q3, Q5, Q6 e-tron, Q7, Q8 und TT. VCDS/VCP/ODIS sowie fahrzeugbezogene Vorprüfung.",
   alternates: { canonical: "/audi-codierung-leipzig" },
 };
 
@@ -13,7 +13,7 @@ export default function Page() {
     title="Audi Codierung in Leipzig"
     intro="Codierungen, Diagnose und Anpassungen für zahlreiche Audi-Baureihen in Leipzig – vom A3 8V und A4/A5 B9 bis A6 C7/C8, Q5, Q7 und Q8. Je nach Plattform und Steuergerät kommen VCDS, VCP oder ODIS zum Einsatz; die gewünschte Funktion wird vorab fahrzeugbezogen geprüft."
     benefits={["Audi-Baureihen von A1 bis Q8", "Vor Ort in Leipzig-Süd", "VCDS · VCP · ODIS je nach Aufgabe", "Technische Vorprüfung vor Änderungen"]}
-    models={["A1 8X / GB", "A3 8P / 8V / 8Y", "A4 8K / B9", "A5 8T / F5 / FU", "A6 C6 / C7 / C8", "A7 4G / 4K", "Q3", "Q5", "Q7", "Q8", "TT"]}
+    models={["A1 8X / GB", "A3 8P / 8V / 8Y", "A4 8K / B9", "A5 8T / F5 / FU", "A6 C6 / C7 / C8", "A7 4G / 4K", "Q3", "Q5", "Q6 e-tron (GF)", "Q7", "Q8", "TT"]}
     detailsTitle="Typische Audi-Codierungen und Diagnose"
     details={[
       "Bei Audi reichen die möglichen Anpassungen von Komfort- und Lichtfunktionen über Kombiinstrument und Infotainment bis zu Assistenzsystemen. Häufig angefragt werden Spiegelanklappen und Spiegelabsenkung, Coming Home/Leaving Home, Tagfahrlicht- und Heckleuchten-Anpassungen, Zeigertest/Staging sowie die Aktivierung bereits hardwareseitig vorhandener Assistenzfunktionen wie Verkehrszeichenerkennung oder Fernlichtassistent.",
@@ -27,6 +27,7 @@ export default function Page() {
       { href: "/fahrzeuge/audi/a4-s4-b9-codierung", label: "Audi A4 / S4 B9", description: "Verfügbare Anpassungen und technische Hinweise für A4 / S4 der B9-Plattform." },
       { href: "/fahrzeuge/audi/a5-s5-f5-codierung", label: "Audi A5 / S5 F5", description: "Typische Codierungen und Diagnose für A5 / S5 F5 auf MLBevo-Basis." },
       { href: "/fahrzeuge/audi/a6-s6-c7-codierung", label: "Audi A6 / S6 C7", description: "Komfort-, Licht-, Infotainment- und Diagnoseleistungen für A6 / S6 C7." },
+      { href: "/fahrzeuge/audi/q6-e-tron-gf-codierung", label: "Audi Q6 e-tron (GF)", description: "PPE-Diagnose, Softwarestand und technische Vorprüfung für den Audi Q6 e-tron." },
       { href: "/assistenzsysteme-codieren-leipzig", label: "Audi Assistenzsysteme", description: "Möglichkeiten für VZE, Fernlichtassistent, Lane Assist und weitere unterstützte Funktionen prüfen." },
       { href: "/remote-fahrzeugcodierung", label: "Audi Remote-Codierung", description: "Geeignete Audi-Codierungen deutschlandweit per Remote anfragen." }
     ]}

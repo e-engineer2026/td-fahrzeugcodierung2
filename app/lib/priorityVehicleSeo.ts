@@ -175,4 +175,26 @@ export const priorityVehicleSeoByPath: Record<string, PriorityVehicleSeo> = {
     intro: "Beim CUPRA Formentor (KM) spielen SFD, Softwarestand und die tatsächlich verbaute Assistenz- und Komforthardware eine wichtige Rolle. Deshalb erfolgt vor jeder Änderung eine fahrzeugbezogene technische Prüfung.",
     focus: ["SFD1-relevante Anpassungen, soweit unterstützt", "Komfort- und Anzeigeanpassungen", "Licht- und Infotainmentfunktionen", "Assistenzsysteme nur bei vorhandener kompatibler Hardware"],
   },
+  "audi/q6-e-tron-gf-codierung": {
+    label: "Audi Q6 e-tron (GF)",
+    title: "Audi Q6 e-tron (GF) Diagnose Leipzig | PPE & VAG Diagnose | TD",
+    description: "Audi Q6 e-tron Diagnose in Leipzig: PPE-Steuergeräte, Fehlerspeicher, Softwarestand und Fahrzeugkonfiguration prüfen. Codierwünsche werden technisch im Einzelfall bewertet.",
+    intro: "Der Audi Q6 e-tron (GF) basiert auf der PPE-Plattform und nutzt eine neue Steuergeräte- und Softwarearchitektur. Aktuell steht deshalb die strukturierte Fahrzeugdiagnose im Vordergrund; Codierwünsche werden nur nach Prüfung von Softwarestand, Steuergeräten und Schutzmechanismen bewertet.",
+    focus: ["PPE-Steuergeräte und Fehlerspeicher gezielt prüfen", "Softwarestand und Steuergeräte-Konfiguration erfassen", "Diagnose nach Fehlermeldungen, Reparaturen oder Steuergerätearbeiten", "Codierwünsche nur nach technischer Einzelfallprüfung"],
+  },
+  "skoda/kodiaq-ii-ps-codierung": {
+    label: "Škoda Kodiaq II (PS)",
+    title: "Škoda Kodiaq II (PS) Codierung & Diagnose Leipzig | TD",
+    description: "Škoda Kodiaq II PS in Leipzig: Diagnose, Steuergeräte- und Softwareprüfung sowie technische Vorprüfung von Codierwünschen. SFD2-geschützte Codierungen werden nicht angeboten.",
+    intro: "Beim Škoda Kodiaq II (PS) sind die aktuelle MQB-evo-Elektronik, Softwarestände und Schutzmechanismen entscheidend. Diagnose und technische Vorprüfung sind möglich; Codierwünsche werden fahrzeugbezogen geprüft, SFD2-geschützte Änderungen werden nicht angeboten.",
+    focus: ["Fehlerspeicher und Steuergeräte-Konfiguration prüfen", "Softwarestand und Schutzmechanismen vor Änderungen bewerten", "Codierwünsche nur nach fahrzeugbezogener Machbarkeitsprüfung", "Keine SFD2-geschützten Codierungen"],
+  },
+  "seat-cupra/cupra-tavascan-kx-codierung": {
+    label: "CUPRA Tavascan (KX)",
+    title: "CUPRA Tavascan (KX) Codierung & Diagnose Leipzig | TD",
+    description: "CUPRA Tavascan KX in Leipzig: MEB-Diagnose, Steuergeräte- und Softwareprüfung sowie technische Vorprüfung von Codierwünschen. SFD2-geschützte Änderungen ausgeschlossen.",
+    intro: "Der CUPRA Tavascan (KX) nutzt die MEB-Elektronik einer neuen Fahrzeuggeneration. Deshalb stehen Diagnose, Softwarestand und die Prüfung der konkreten Steuergeräte-Konfiguration im Vordergrund. Codierwünsche werden nur nach technischer Vorprüfung bewertet; SFD2-geschützte Änderungen werden nicht angeboten.",
+    focus: ["MEB-Steuergeräte und Fehlerspeicher prüfen", "Softwarestand und Fahrzeugkonfiguration erfassen", "Codierwünsche technisch vorprüfen", "Keine SFD2-geschützten Änderungen"],
+  },
+
 };
