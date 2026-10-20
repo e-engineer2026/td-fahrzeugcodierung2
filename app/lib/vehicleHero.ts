@@ -78,6 +78,16 @@ const pictures: Array<VehicleHeroImage & { brand: string; model: string; until: 
   { brand: "Škoda", model: "Rapid NH bis MJ 2015", until: 2015, src: "/vehicle-images/perlweier-skoda-rapid-am-steinplatz.webp", label: "Rapid NH bis MJ 2015", alt: "Škoda Rapid NH bis MJ 2015 als fotorealistische Modellillustration; Farbe und Ausstattung beispielhaft" },
   { brand: "Škoda", model: "Rapid NH ab MJ 2016", until: 2019, src: "/vehicle-images/blauer-skoda-rapid-am-steinplatz.webp", label: "Rapid NH ab MJ 2016", alt: "Škoda Rapid NH ab MJ 2016 als fotorealistische Modellillustration; Farbe und Ausstattung beispielhaft" },
   { brand: "SEAT / CUPRA", model: "SEAT Leon 1P", until: 2012, src: "/vehicle-images/metallisch-roter-seat-leon-auf-steinplatz.webp", label: "SEAT Leon 1P", alt: "SEAT Leon 1P als fotorealistische Modellillustration; Farbe und Ausstattung beispielhaft" },
+  { brand: "Volkswagen", model: "T-Roc A11", until: 2026, src: "/vehicle-images/vw-t-roc-a11.webp", label: "T-Roc A11", alt: "Volkswagen T-Roc A11 als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "Škoda", model: "Fabia 2 5J", until: 2014, src: "/vehicle-images/skoda-fabia-2-5j.webp", label: "Fabia 2 5J", alt: "Škoda Fabia 2 5J als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "Škoda", model: "Kodiaq II (PS)", until: 2026, src: "/vehicle-images/skoda-kodiaq-ii-ps.webp", label: "Kodiaq II (PS)", alt: "Škoda Kodiaq II (PS) als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "Škoda", model: "Kamiq NW", until: 2026, src: "/vehicle-images/skoda-kamiq-nw.webp", label: "Kamiq NW", alt: "Škoda Kamiq NW als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "Škoda", model: "Citigo AA", until: 2020, src: "/vehicle-images/skoda-citigo-aa.webp", label: "Citigo AA", alt: "Škoda Citigo AA als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "Škoda", model: "Enyaq 5A", until: 2026, src: "/vehicle-images/skoda-enyaq-5a.webp", label: "Enyaq 5A", alt: "Škoda Enyaq 5A als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "SEAT / CUPRA", model: "SEAT Ibiza KJ", until: 2026, src: "/vehicle-images/seat-ibiza-kj.webp", label: "SEAT Ibiza KJ", alt: "SEAT Ibiza KJ als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "SEAT / CUPRA", model: "SEAT Arona KJ7", until: 2026, src: "/vehicle-images/seat-arona-kj7.webp", label: "SEAT Arona KJ7", alt: "SEAT Arona KJ7 als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "Volkswagen", model: "T-Cross C1", until: 2026, src: "/vehicle-images/vw-t-cross-c1.webp", label: "T-Cross C1", alt: "Volkswagen T-Cross C1 als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
+  { brand: "Volkswagen", model: "Taigo CS", until: 2026, src: "/vehicle-images/vw-taigo-cs.webp", label: "Taigo CS", alt: "Volkswagen Taigo CS als fotorealistische Modellillustration, Farbton und Ausstattung beispielhaft" },
 ];
 
 export function vehicleHeroImage(choice: PictureChoice | null): VehicleHeroImage | null {
