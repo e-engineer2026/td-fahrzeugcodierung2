@@ -1,0 +1,661 @@
+{
+  "checkedAt": "2026-10-20",
+  "repository": "e-engineer2026/td-fahrzeugcodierung2",
+  "draftBranch": "codex/kufatec-entwurf-2026-10-19",
+  "production": {
+    "instruction": "Live-Seite unverändert lassen. Nicht nach main mergen und kein Produktionsdeployment auslösen.",
+    "mainCommitAtCheck": "07f0c43ce1327eb1a052151f3dcd0035cf155399"
+  },
+  "target": {
+    "modelSeries": 95,
+    "source": "user handoff",
+    "reportedLocalImages": 83,
+    "reportedMissingImages": 12,
+    "reportedLocalStateVerified": false
+  },
+  "status": "partial_recovery_locators_found_runtime_unavailable",
+  "findings": [
+    "Der Entwurfszweig existiert. Vor diesem Wiederherstellungsprotokoll war er fünf Commits vor und einen Commit hinter main.",
+    "app/lib/vehicleHero.ts enthält fünf Bildzuordnungen: Golf 8 bis 2023, Octavia 3 5E bis 2017, A4 / S4 B9 bis 2019, SEAT Leon 5F bis 2016 und CUPRA Formentor KM bis 2023.",
+    "Vier zusätzliche WebP-Bilder sind im Branch gegenüber der gemeinsamen Basis enthalten; das Golf-8-Motiv ist bereits vorhanden.",
+    "Die gespeicherten Bilddateien unten sind über persistente Datei-IDs auffindbar. Dies bestätigt ihre Metadaten, nicht die Wiederherstellung in das Projekt.",
+    "Die Liste enthält zwei Golf-Farbvarianten und mehrere Formentor-Versionen. Ihre Anzahl ist keine Baureihenabdeckung.",
+    "Eine Abfrage aller seit 2026-10-19 erstellten gespeicherten Dateien lieferte 83 Dateien insgesamt: 78 generierte Bilder und fünf andere Dateien. Diese Zahl 83 ist nicht mit dem gemeldeten lokalen Stand von 83 Fahrzeugbildern gleichzusetzen.",
+    "Der lokale Dateibestand konnte nicht gelesen werden: No usable execution environment is available.",
+    "Es wurden keine Bilddateien heruntergeladen, ersetzt oder neu generiert; keine Anwendungskomponenten geändert."
+  ],
+  "nextSteps": [
+    "Zuerst die bisherige lokale Arbeitsumgebung öffnen und den uncommitteten Bestand prüfen; vorhandene Dateien nicht überschreiben.",
+    "Falls der lokale Stand nicht erreichbar bleibt: gespeicherte Originalbilder anhand der untenstehenden IDs materialisieren.",
+    "Alle 95 aktuellen Katalogeinträge mit dem tatsächlich wiederhergestellten Bildbestand abgleichen. Exakte fehlende Liste neu berechnen; nicht aus der Anzahl gespeicherter Dateien ableiten.",
+    "Baureihen, Generationen und Facelifts anhand der Bilder prüfen; Dateititel allein reichen bei mehrdeutigen Motiven nicht.",
+    "Nur tatsächlich fehlende Bilder ergänzen, WebP-Dateien und Zuordnung im Entwurfszweig sichern, Build und Fahrzeugauswahl prüfen.",
+    "Live-Seite unverändert lassen."
+  ],
+  "savedImageFiles": [
+    {
+      "name": "2018 SEAT Ateca am hellen Steinplatz.png",
+      "library_file_id": "libfile_39da4f12e7488191906909e295ece8b4",
+      "file_id": "file_00000000820081f48402496b7a5a9978",
+      "path": "/2018 SEAT Ateca am hellen Steinplatz.png",
+      "size_bytes": 1948891,
+      "created_at": "2026-10-20T15:38:09.597607Z"
+    },
+    {
+      "name": "Blaue Škoda Scala auf hellem Steinplatz.png",
+      "library_file_id": "libfile_126a6b6dbad481918c9503428c6ee9fa",
+      "file_id": "file_00000000b2648246b53bc1abdbb19056",
+      "path": "/Blaue Škoda Scala auf hellem Steinplatz.png",
+      "size_bytes": 1936693,
+      "created_at": "2026-10-20T14:37:02.136493Z"
+    },
+    {
+      "name": "Silberner Škoda Fabia am Steinplatz.png",
+      "library_file_id": "libfile_ae6e6d324a688191a09ab50db71fe761",
+      "file_id": "file_00000000419482468e4f4b9f0f32952c",
+      "path": "/Silberner Škoda Fabia am Steinplatz.png",
+      "size_bytes": 1926695,
+      "created_at": "2026-10-20T14:37:00.085602Z"
+    },
+    {
+      "name": "Silberner Škoda Karoq auf hellem Steinplatz.png",
+      "library_file_id": "libfile_3639fed330d08191a8fe00e3c724befe",
+      "file_id": "file_00000000717c82118a36dc05b91b6f7e",
+      "path": "/Silberner Škoda Karoq auf hellem Steinplatz.png",
+      "size_bytes": 1919876,
+      "created_at": "2026-10-20T14:36:57.929440Z"
+    },
+    {
+      "name": "Dunkelroter Škoda Yeti auf hellem Steinplatz.png",
+      "library_file_id": "libfile_cc4d8f0a21e08191833a7f394d102971",
+      "file_id": "file_00000000fd3c81f48c27e363e76dc9df",
+      "path": "/Dunkelroter Škoda Yeti auf hellem Steinplatz.png",
+      "size_bytes": 1993026,
+      "created_at": "2026-10-20T14:36:55.299243Z"
+    },
+    {
+      "name": "Graphitgraue Škoda Fabia auf hellem Steinplatz.png",
+      "library_file_id": "libfile_9e73f91cfaa08191881e03acd708714c",
+      "file_id": "file_000000003c3081f4a9be056a9647948d",
+      "path": "/Graphitgraue Škoda Fabia auf hellem Steinplatz.png",
+      "size_bytes": 1917848,
+      "created_at": "2026-10-20T14:36:52.844646Z"
+    },
+    {
+      "name": "Perlweißer Škoda Rapid am Steinplatz.png",
+      "library_file_id": "libfile_6de11fd168cc81919356870c8cf7cb6c",
+      "file_id": "file_00000000c234824690081fe616f5d142",
+      "path": "/Perlweißer Škoda Rapid am Steinplatz.png",
+      "size_bytes": 1902976,
+      "created_at": "2026-10-20T14:36:50.573502Z"
+    },
+    {
+      "name": "Graphitgrauer Škoda Kodiaq auf hellem Steinplatz.png",
+      "library_file_id": "libfile_ba5de9ab20388191a6a1eb610ed8a0c2",
+      "file_id": "file_00000000227c8211a5fee97c04876a66",
+      "path": "/Graphitgrauer Škoda Kodiaq auf hellem Steinplatz.png",
+      "size_bytes": 1909563,
+      "created_at": "2026-10-20T14:36:48.401300Z"
+    },
+    {
+      "name": "Roter Škoda Superb Kombi im Sonnenlicht.png",
+      "library_file_id": "libfile_1db82fca39c88191b3b16b026dac4e6a",
+      "file_id": "file_00000000add48246887156d19d2dc9cd",
+      "path": "/Roter Škoda Superb Kombi im Sonnenlicht.png",
+      "size_bytes": 1953055,
+      "created_at": "2026-10-20T14:36:45.767263Z"
+    },
+    {
+      "name": "Blauer Škoda Rapid am Steinplatz.png",
+      "library_file_id": "libfile_4fb07a3e111c8191a1649481e3f184c0",
+      "file_id": "file_00000000d33c8246aa0c0bbf482b1bec",
+      "path": "/Blauer Škoda Rapid am Steinplatz.png",
+      "size_bytes": 1922785,
+      "created_at": "2026-10-20T14:36:43.693188Z"
+    },
+    {
+      "name": "Blaue Škoda Octavia Combi auf Steinplatz.png",
+      "library_file_id": "libfile_d6cfc897e40c8191b813a0b141730981",
+      "file_id": "file_0000000032648246b73dc541e710455e",
+      "path": "/Blaue Škoda Octavia Combi auf Steinplatz.png",
+      "size_bytes": 1915953,
+      "created_at": "2026-10-20T14:36:41.428013Z"
+    },
+    {
+      "name": "Škoda Superb II Combi auf dem Steinplatz.png",
+      "library_file_id": "libfile_81abd1cb65908191aa5954600efb5914",
+      "file_id": "file_00000000778c8246bc21e595e6277b15",
+      "path": "/Škoda Superb II Combi auf dem Steinplatz.png",
+      "size_bytes": 1923107,
+      "created_at": "2026-10-20T14:36:39.510274Z"
+    },
+    {
+      "name": "Silberner Škoda Octavia Combi auf Steinplatz.png",
+      "library_file_id": "libfile_bf4ca2c5a5a4819185c0f6a0091949bc",
+      "file_id": "file_0000000081f88246bff38a70a79a8679",
+      "path": "/Silberner Škoda Octavia Combi auf Steinplatz.png",
+      "size_bytes": 1928475,
+      "created_at": "2026-10-20T14:36:36.960848Z"
+    },
+    {
+      "name": "Dunkelrote Škoda Octavia II Combi.png",
+      "library_file_id": "libfile_76973ae11d00819195cdbd8746a7dbc3",
+      "file_id": "file_0000000026448211b599d2602c66bc67",
+      "path": "/Dunkelrote Škoda Octavia II Combi.png",
+      "size_bytes": 1954253,
+      "created_at": "2026-10-20T14:36:34.798806Z"
+    },
+    {
+      "name": "Weißer Audi e-tron auf hellem Steinplatz.png",
+      "library_file_id": "libfile_b80f12363d808191bdd9e0f750781fb1",
+      "file_id": "file_0000000044f0824698a1625cbf00b485",
+      "path": "/Weißer Audi e-tron auf hellem Steinplatz.png",
+      "size_bytes": 1938983,
+      "created_at": "2026-10-20T14:36:32.381542Z"
+    },
+    {
+      "name": "Tiefblauer Audi Q5 auf hellem Steinplatz.png",
+      "library_file_id": "libfile_e6a99c0dc93c8191901c1ec55647f15e",
+      "file_id": "file_000000002a308211a6291d86944e5937",
+      "path": "/Tiefblauer Audi Q5 auf hellem Steinplatz.png",
+      "size_bytes": 1945425,
+      "created_at": "2026-10-20T14:36:30.381499Z"
+    },
+    {
+      "name": "Blauer Audi Q8 auf hellem Steinplatz.png",
+      "library_file_id": "libfile_dc6b28c432288191826cfddc7c323086",
+      "file_id": "file_00000000ee08824693068648f4e7a26e",
+      "path": "/Blauer Audi Q8 auf hellem Steinplatz.png",
+      "size_bytes": 1980581,
+      "created_at": "2026-10-20T14:36:27.707573Z"
+    },
+    {
+      "name": "Silberner Audi Q7 vor heller Steinwand.png",
+      "library_file_id": "libfile_d52d5f7f736c819186651f44c8d53454",
+      "file_id": "file_0000000043d881f4ba47962fb642a3c4",
+      "path": "/Silberner Audi Q7 vor heller Steinwand.png",
+      "size_bytes": 1960428,
+      "created_at": "2026-10-20T14:36:25.192444Z"
+    },
+    {
+      "name": "Silberner Audi A8 auf hellem Steinplatz.png",
+      "library_file_id": "libfile_a6616043ffb481918a95931291acddb2",
+      "file_id": "file_00000000e6608211842184fc6ac2977a",
+      "path": "/Silberner Audi A8 auf hellem Steinplatz.png",
+      "size_bytes": 1943962,
+      "created_at": "2026-10-20T14:36:21.656856Z"
+    },
+    {
+      "name": "Graphitgrauer Audi Q7 auf Steinplatz.png",
+      "library_file_id": "libfile_df29ae15e5b88191bee5b0b52932db2c",
+      "file_id": "file_00000000309082469909e23e5461d8fb",
+      "path": "/Graphitgrauer Audi Q7 auf Steinplatz.png",
+      "size_bytes": 1945773,
+      "created_at": "2026-10-20T14:36:19.153699Z"
+    },
+    {
+      "name": "Graphitgrauer Audi A8 D4 vor Steinmauer.png",
+      "library_file_id": "libfile_3958d9352624819189c654cd5059ccac",
+      "file_id": "file_0000000004cc82469bb5bb92f664c842",
+      "path": "/Graphitgrauer Audi A8 D4 vor Steinmauer.png",
+      "size_bytes": 1939849,
+      "created_at": "2026-10-20T14:36:17.172592Z"
+    },
+    {
+      "name": "Dunkelroter Audi Q5 auf hellem Steinplatz.png",
+      "library_file_id": "libfile_4b1e12d53a148191b237c18b94987584",
+      "file_id": "file_000000007ab081f4b9ed1bd64d008445",
+      "path": "/Dunkelroter Audi Q5 auf hellem Steinplatz.png",
+      "size_bytes": 1965982,
+      "created_at": "2026-10-20T14:36:15.349434Z"
+    },
+    {
+      "name": "Dunkelroter Audi A8 auf hellem Steinplatz.png",
+      "library_file_id": "libfile_754467deecb481918077493e6c085174",
+      "file_id": "file_00000000d8ac8211b21c419b8e0fc3e6",
+      "path": "/Dunkelroter Audi A8 auf hellem Steinplatz.png",
+      "size_bytes": 1938781,
+      "created_at": "2026-10-20T14:36:12.949659Z"
+    },
+    {
+      "name": "Weißer Audi Q5 auf dem Steinplatz.png",
+      "library_file_id": "libfile_c7430860653c819184321e5484596db9",
+      "file_id": "file_00000000af4481f4a008bf469fb8134f",
+      "path": "/Weißer Audi Q5 auf dem Steinplatz.png",
+      "size_bytes": 1931817,
+      "created_at": "2026-10-20T14:36:10.383137Z"
+    },
+    {
+      "name": "Perlweißer Audi Q6 e-tron auf hellem Steinplatz.png",
+      "library_file_id": "libfile_bc6d07fe24c88191bee536a132e507ef",
+      "file_id": "file_00000000f91481f4a0bfc92088df4a2a",
+      "path": "/Perlweißer Audi Q6 e-tron auf hellem Steinplatz.png",
+      "size_bytes": 1900164,
+      "created_at": "2026-10-20T14:36:08.363263Z"
+    },
+    {
+      "name": "Perlweißer Audi TT auf hellem Steinplatz.png",
+      "library_file_id": "libfile_be0a5325a6f08191b163a4b17c9fa8d1",
+      "file_id": "file_000000000d908246aae814f2a7013f28",
+      "path": "/Perlweißer Audi TT auf hellem Steinplatz.png",
+      "size_bytes": 1866242,
+      "created_at": "2026-10-20T14:36:06.015531Z"
+    },
+    {
+      "name": "Blauer Audi Q4 e-tron auf Steinplatz.png",
+      "library_file_id": "libfile_bd146a9c72bc8191ad8fb40f5e3c069c",
+      "file_id": "file_000000008f888246bcb160cc26970636",
+      "path": "/Blauer Audi Q4 e-tron auf Steinplatz.png",
+      "size_bytes": 1977522,
+      "created_at": "2026-10-20T14:36:04.092725Z"
+    },
+    {
+      "name": "Silberner Audi Q3 vor heller Steinmauer.png",
+      "library_file_id": "libfile_00fbea191ce481918a40e816dd7d4381",
+      "file_id": "file_00000000b76082118746219eaffbdc67",
+      "path": "/Silberner Audi Q3 vor heller Steinmauer.png",
+      "size_bytes": 1932226,
+      "created_at": "2026-10-20T14:36:01.185593Z"
+    },
+    {
+      "name": "Blauer Audi TT vor heller Steinmauer.png",
+      "library_file_id": "libfile_0cd751eab0248191ae97cc69dc6c6bc0",
+      "file_id": "file_00000000c3e082469e78f7da51baa18c",
+      "path": "/Blauer Audi TT vor heller Steinmauer.png",
+      "size_bytes": 1876604,
+      "created_at": "2026-10-20T14:35:58.918871Z"
+    },
+    {
+      "name": "Silberner Audi A7 Sportback am Steinplatz.png",
+      "library_file_id": "libfile_c8394ae81908819192c01b0d566ca290",
+      "file_id": "file_00000000cf3082118e14b57999092916",
+      "path": "/Silberner Audi A7 Sportback am Steinplatz.png",
+      "size_bytes": 1958312,
+      "created_at": "2026-10-20T14:35:56.537767Z"
+    },
+    {
+      "name": "2018 Audi Q2 in Graphitgrau.png",
+      "library_file_id": "libfile_c93fac28ebe48191a49266088aa5f634",
+      "file_id": "file_000000005c948246b2af5a11d5972a11",
+      "path": "/2018 Audi Q2 in Graphitgrau.png",
+      "size_bytes": 1927623,
+      "created_at": "2026-10-20T14:35:54.094077Z"
+    },
+    {
+      "name": "Metallgrauer Audi A7 vor heller Steinmauer.png",
+      "library_file_id": "libfile_63009ab49d888191b03dc36ced474344",
+      "file_id": "file_000000008ff881f4baca748f950faa26",
+      "path": "/Metallgrauer Audi A7 vor heller Steinmauer.png",
+      "size_bytes": 1992152,
+      "created_at": "2026-10-20T14:35:52.148902Z"
+    },
+    {
+      "name": "Dunkelroter Audi Q3 auf hellem Steinplatz.png",
+      "library_file_id": "libfile_d7b0fabeb9e08191825516a5ed6730eb",
+      "file_id": "file_0000000052fc824698eb799d03f6560a",
+      "path": "/Dunkelroter Audi Q3 auf hellem Steinplatz.png",
+      "size_bytes": 1984960,
+      "created_at": "2026-10-20T14:35:49.949613Z"
+    },
+    {
+      "name": "Dunkelroter Audi A6 Avant auf hellem Steinplatz.png",
+      "library_file_id": "libfile_79abc6894bd48191a02df682b340a777",
+      "file_id": "file_00000000dea88246992332e3ac482ef4",
+      "path": "/Dunkelroter Audi A6 Avant auf hellem Steinplatz.png",
+      "size_bytes": 1966610,
+      "created_at": "2026-10-20T14:35:47.827160Z"
+    },
+    {
+      "name": "Blauer Audi A6 Avant auf Steinplatz.png",
+      "library_file_id": "libfile_3f410f826fec81919b8c6f8c5582a9e0",
+      "file_id": "file_0000000055f88211b8f76bb86bbcc8d3",
+      "path": "/Blauer Audi A6 Avant auf Steinplatz.png",
+      "size_bytes": 1963675,
+      "created_at": "2026-10-20T14:35:45.751676Z"
+    },
+    {
+      "name": "Perlweißer Audi A6 Avant im Tageslicht.png",
+      "library_file_id": "libfile_8201db408eb481919fbf2e19d813d784",
+      "file_id": "file_000000005e288211abd3902c8ea746f1",
+      "path": "/Perlweißer Audi A6 Avant im Tageslicht.png",
+      "size_bytes": 1909735,
+      "created_at": "2026-10-20T14:35:43.330064Z"
+    },
+    {
+      "name": "Tiefblauer Audi A4 Avant am Steinplatz.png",
+      "library_file_id": "libfile_1d13fbd2f41c81919dcf48148a704418",
+      "file_id": "file_00000000eb648211aef00ca49826fe6a",
+      "path": "/Tiefblauer Audi A4 Avant am Steinplatz.png",
+      "size_bytes": 1898596,
+      "created_at": "2026-10-20T14:35:40.886550Z"
+    },
+    {
+      "name": "Silberner Audi A5 Avant am Steinplatz.png",
+      "library_file_id": "libfile_31e74b16d4f481919e285c34c635f24d",
+      "file_id": "file_000000001c4082118b9f1fb3061071c1",
+      "path": "/Silberner Audi A5 Avant am Steinplatz.png",
+      "size_bytes": 1952429,
+      "created_at": "2026-10-20T14:35:38.366706Z"
+    },
+    {
+      "name": "Silberner Audi A3 Sportback am Steinplatz.png",
+      "library_file_id": "libfile_5d46006835f48191b53d326be64f142c",
+      "file_id": "file_00000000a2748246902baef06015901e",
+      "path": "/Silberner Audi A3 Sportback am Steinplatz.png",
+      "size_bytes": 1952198,
+      "created_at": "2026-10-20T14:35:35.794478Z"
+    },
+    {
+      "name": "Graphitgrauer Audi A5 Sportback.png",
+      "library_file_id": "libfile_cf02002d78fc8191bd37f7ec8934fdde",
+      "file_id": "file_0000000097a882119381039718d3f2ec",
+      "path": "/Graphitgrauer Audi A5 Sportback.png",
+      "size_bytes": 1988250,
+      "created_at": "2026-10-20T14:35:33.644762Z"
+    },
+    {
+      "name": "Dunkelrotes Audi A5 Coupé auf Steinplatz.png",
+      "library_file_id": "libfile_bfc2f630a5c881918508270b2c6e4dc7",
+      "file_id": "file_00000000c0848246898c634fd64fb2a3",
+      "path": "/Dunkelrotes Audi A5 Coupé auf Steinplatz.png",
+      "size_bytes": 1940731,
+      "created_at": "2026-10-20T14:35:31.127376Z"
+    },
+    {
+      "name": "Graphitgrauer Audi A3 auf hellem Steinplatz.png",
+      "library_file_id": "libfile_86d0a4579f5081918fd518dd97328f18",
+      "file_id": "file_000000000f3c8246bea862c3e8eb3fdd",
+      "path": "/Graphitgrauer Audi A3 auf hellem Steinplatz.png",
+      "size_bytes": 2006279,
+      "created_at": "2026-10-20T14:35:28.970636Z"
+    },
+    {
+      "name": "Perlweißer Audi A1 auf Steinplatz.png",
+      "library_file_id": "libfile_f4385b05b1348191a0bfc72f9691d970",
+      "file_id": "file_000000004ff4824680d85ab8ea8cd451",
+      "path": "/Perlweißer Audi A1 auf Steinplatz.png",
+      "size_bytes": 1912769,
+      "created_at": "2026-10-20T14:35:26.545719Z"
+    },
+    {
+      "name": "Dunkelroter Audi A3 Sportback.png",
+      "library_file_id": "libfile_ebe085727e60819190f620dc04ccb002",
+      "file_id": "file_0000000064ac81f4acaaf3c81ca20c36",
+      "path": "/Dunkelroter Audi A3 Sportback.png",
+      "size_bytes": 1957576,
+      "created_at": "2026-10-20T14:35:24.533306Z"
+    },
+    {
+      "name": "Blauer Touareg auf hellem Steinplatz.png",
+      "library_file_id": "libfile_2b1c29d6c85c8191bf9fb217b85b5943",
+      "file_id": "file_00000000d22c8246a01d904a09b0da4b",
+      "path": "/Blauer Touareg auf hellem Steinplatz.png",
+      "size_bytes": 1941706,
+      "created_at": "2026-10-20T14:35:22.443045Z"
+    },
+    {
+      "name": "Blauer Audi A1 auf Steinplatz.png",
+      "library_file_id": "libfile_829c3f86e3948191bd6e901e88040692",
+      "file_id": "file_0000000039608211bf496ecfe445dc34",
+      "path": "/Blauer Audi A1 auf Steinplatz.png",
+      "size_bytes": 1946979,
+      "created_at": "2026-10-20T14:35:20.400188Z"
+    },
+    {
+      "name": "Silberner Touran vor heller Steinmauer.png",
+      "library_file_id": "libfile_eadf319e6b408191ad8cb11d0ce403e9",
+      "file_id": "file_0000000011ec8246a5728938400c5138",
+      "path": "/Silberner Touran vor heller Steinmauer.png",
+      "size_bytes": 1910591,
+      "created_at": "2026-10-20T14:35:17.985974Z"
+    },
+    {
+      "name": "Dunkelroter Volkswagen Transporter T5 im Sonnenlicht.png",
+      "library_file_id": "libfile_bdcd976083808191a35ce520ece14bed",
+      "file_id": "file_0000000089508246a5e50ac11fbd58ff",
+      "path": "/Dunkelroter Volkswagen Transporter T5 im Sonnenlicht.png",
+      "size_bytes": 1931806,
+      "created_at": "2026-10-20T14:35:15.595743Z"
+    },
+    {
+      "name": "Graphitgrauer T6 Multivan auf Steinplatz.png",
+      "library_file_id": "libfile_82d6b34784cc819197fa2dc979384374",
+      "file_id": "file_00000000a94c8246a8e1d92bd4b2c722",
+      "path": "/Graphitgrauer T6 Multivan auf Steinplatz.png",
+      "size_bytes": 1920944,
+      "created_at": "2026-10-20T14:35:13.513594Z"
+    },
+    {
+      "name": "Silberner Multivan vor heller Steinwand.png",
+      "library_file_id": "libfile_ffa7c97376148191965bc459f471fc4b",
+      "file_id": "file_00000000972481f4bb00c12e51d6b260",
+      "path": "/Silberner Multivan vor heller Steinwand.png",
+      "size_bytes": 1921452,
+      "created_at": "2026-10-20T14:35:11.521265Z"
+    },
+    {
+      "name": "Perlweißer Touareg auf hellem Steinplatz.png",
+      "library_file_id": "libfile_2e86bc7b96348191982429821e482197",
+      "file_id": "file_0000000067fc8211aedc16e30c0da81a",
+      "path": "/Perlweißer Touareg auf hellem Steinplatz.png",
+      "size_bytes": 1913918,
+      "created_at": "2026-10-20T14:35:09.255536Z"
+    },
+    {
+      "name": "Graphitgrauer Volkswagen Touran auf Steinplatz.png",
+      "library_file_id": "libfile_8c73d8ef45948191b55423ca25ae1e65",
+      "file_id": "file_00000000ff3c81f4bbd250766d7b978f",
+      "path": "/Graphitgrauer Volkswagen Touran auf Steinplatz.png",
+      "size_bytes": 1969805,
+      "created_at": "2026-10-20T14:35:06.898407Z"
+    },
+    {
+      "name": "Dunkelroter Tiguan auf hellem Steinplatz.png",
+      "library_file_id": "libfile_04b068de8d388191b82244ce7cf2ad9a",
+      "file_id": "file_00000000ff50824683c8a3cd170959ca",
+      "path": "/Dunkelroter Tiguan auf hellem Steinplatz.png",
+      "size_bytes": 1966548,
+      "created_at": "2026-10-20T14:35:04.512908Z"
+    },
+    {
+      "name": "Blauer Arteon auf hellem Steinplatz.png",
+      "library_file_id": "libfile_03cbc6fd6c108191a75ae4e01c497623",
+      "file_id": "file_000000001ad08246808c741f58eaf762",
+      "path": "/Blauer Arteon auf hellem Steinplatz.png",
+      "size_bytes": 1906505,
+      "created_at": "2026-10-20T14:35:02.362333Z"
+    },
+    {
+      "name": "Perlweißer VW Tiguan der ersten Generation.png",
+      "library_file_id": "libfile_f26988e0a048819196ad63b365da3a44",
+      "file_id": "file_000000008b9c8246b2905ec354b8d6bc",
+      "path": "/Perlweißer VW Tiguan der ersten Generation.png",
+      "size_bytes": 1900046,
+      "created_at": "2026-10-20T14:35:00.532476Z"
+    },
+    {
+      "name": "Neuer Volkswagen Tayron in tiefem Metallicblau.png",
+      "library_file_id": "libfile_3b3d27a7e0308191893c113a3be3092f",
+      "file_id": "file_000000002d8081f49d3cea1ab72dfa3c",
+      "path": "/Neuer Volkswagen Tayron in tiefem Metallicblau.png",
+      "size_bytes": 1987333,
+      "created_at": "2026-10-20T14:34:58.098590Z"
+    },
+    {
+      "name": "Silberner Volkswagen T‑Roc auf hellem Steinplatz.png",
+      "library_file_id": "libfile_eb2c3f9781b481918944233e319ebf25",
+      "file_id": "file_000000007c748246968cedbbae47c4da",
+      "path": "/Silberner Volkswagen T‑Roc auf hellem Steinplatz.png",
+      "size_bytes": 1906705,
+      "created_at": "2026-10-20T14:34:55.917611Z"
+    },
+    {
+      "name": "Silberner ID.5 am hellen Steinplatz.png",
+      "library_file_id": "libfile_a07fcc197e3c8191a5ed10bc9e7e34fb",
+      "file_id": "file_000000007bc481f4bf515bf1d3581fde",
+      "path": "/Silberner ID.5 am hellen Steinplatz.png",
+      "size_bytes": 1910559,
+      "created_at": "2026-10-20T14:34:53.662089Z"
+    },
+    {
+      "name": "Dunkelroter ID.3 auf dem Steinplatz.png",
+      "library_file_id": "libfile_4213246a1c3c8191ae4ce8ff37897461",
+      "file_id": "file_00000000494882468d74da0b788823e5",
+      "path": "/Dunkelroter ID.3 auf dem Steinplatz.png",
+      "size_bytes": 1918116,
+      "created_at": "2026-10-20T14:34:51.388454Z"
+    },
+    {
+      "name": "Graphitgrauer ID.4 auf hellem Steinplatz.png",
+      "library_file_id": "libfile_90034c89617c8191a0dcccd9f52a9c37",
+      "file_id": "file_0000000061588246a166293ed62b27d9",
+      "path": "/Graphitgrauer ID.4 auf hellem Steinplatz.png",
+      "size_bytes": 1938038,
+      "created_at": "2026-10-20T14:34:48.720027Z"
+    },
+    {
+      "name": "Perlweißer Volkswagen up! auf hellem Steinplatz.png",
+      "library_file_id": "libfile_b193f94173e08191948965f5ee131065",
+      "file_id": "file_00000000f18c8246b6a05a7bc83d2e30",
+      "path": "/Perlweißer Volkswagen up! auf hellem Steinplatz.png",
+      "size_bytes": 1892159,
+      "created_at": "2026-10-20T14:34:46.544452Z"
+    },
+    {
+      "name": "Graphitgrauer Passat B9 auf Steinplatz.png",
+      "library_file_id": "libfile_5c6a132680d48191ac63540203d223dd",
+      "file_id": "file_00000000055481f4912fad54bdd90e3e",
+      "path": "/Graphitgrauer Passat B9 auf Steinplatz.png",
+      "size_bytes": 1939595,
+      "created_at": "2026-10-20T14:34:44.508735Z"
+    },
+    {
+      "name": "Dunkelroter Passat Variant auf dem Steinplatz.png",
+      "library_file_id": "libfile_47eaddd8dd9c81918cfcca01c3bb4efe",
+      "file_id": "file_00000000619482468551cb6e76b93aad",
+      "path": "/Dunkelroter Passat Variant auf dem Steinplatz.png",
+      "size_bytes": 1985299,
+      "created_at": "2026-10-20T14:34:42.290423Z"
+    },
+    {
+      "name": "Perlweißer Passat Variant auf sonnigem Steinplatz.png",
+      "library_file_id": "libfile_ea4ef306004481918bb1409919c5e53e",
+      "file_id": "file_0000000051c88211bc648dcf506d487c",
+      "path": "/Perlweißer Passat Variant auf sonnigem Steinplatz.png",
+      "size_bytes": 1910840,
+      "created_at": "2026-10-20T14:34:40.440557Z"
+    },
+    {
+      "name": "Dunkelroter Golf VI auf Steinplatz.png",
+      "library_file_id": "libfile_8dcdbe38c98081918202353267a6906f",
+      "file_id": "file_00000000967482468e6ba6aa4f8a969e",
+      "path": "/Dunkelroter Golf VI auf Steinplatz.png",
+      "size_bytes": 1939163,
+      "created_at": "2026-10-20T14:34:37.666257Z"
+    },
+    {
+      "name": "Blauer Passat Variant auf dem Steinplatz.png",
+      "library_file_id": "libfile_a59113d0128c8191bca12d5f0a889487",
+      "file_id": "file_00000000be748246a9b773ad3ae2000f",
+      "path": "/Blauer Passat Variant auf dem Steinplatz.png",
+      "size_bytes": 1931889,
+      "created_at": "2026-10-20T14:34:35.709576Z"
+    },
+    {
+      "name": "Graphitgrauer Polo V auf Steinplatz.png",
+      "library_file_id": "libfile_99d6e51603b48191a53f04f19cf36b93",
+      "file_id": "file_0000000062a48246817b7528368108b1",
+      "path": "/Graphitgrauer Polo V auf Steinplatz.png",
+      "size_bytes": 1958098,
+      "created_at": "2026-10-20T14:34:33.905730Z"
+    },
+    {
+      "name": "Graphitgrauer Golf VII auf hellem Steinplatz.png",
+      "library_file_id": "libfile_59e1dff05cd4819186f6a9a942e6f77e",
+      "file_id": "file_0000000012b48246bcc1ea6c8ee7924e",
+      "path": "/Graphitgrauer Golf VII auf hellem Steinplatz.png",
+      "size_bytes": 1965245,
+      "created_at": "2026-10-20T14:34:31.944655Z"
+    },
+    {
+      "name": "Silberner Polo auf hellem Steinplatz.png",
+      "library_file_id": "libfile_3179f21a6fe481919a6449cbec6b0dc8",
+      "file_id": "file_00000000a7088246856c1b91b8dc5ef3",
+      "path": "/Silberner Polo auf hellem Steinplatz.png",
+      "size_bytes": 1925715,
+      "created_at": "2026-10-20T14:34:29.608870Z"
+    },
+    {
+      "name": "Perlweißer Golf V auf Steinplatz.png",
+      "library_file_id": "libfile_9534e638cce08191a4e32fc916ab05d2",
+      "file_id": "file_00000000627081f49b340d716e16fc3d",
+      "path": "/Perlweißer Golf V auf Steinplatz.png",
+      "size_bytes": 1939552,
+      "created_at": "2026-10-20T14:34:27.086410Z"
+    },
+    {
+      "name": "Blauer Golf Plus auf hellem Steinplatz.png",
+      "library_file_id": "libfile_2d0f6b68bc548191a2f0dd24a012aeb8",
+      "file_id": "file_00000000f65881f499ecb6bd1946486a",
+      "path": "/Blauer Golf Plus auf hellem Steinplatz.png",
+      "size_bytes": 1959878,
+      "created_at": "2026-10-20T14:34:24.031673Z"
+    },
+    {
+      "name": "Originaler 2021 CUPRA Formentor in Petrolblau.png",
+      "library_file_id": "libfile_b0edf27382cc8191aae032e1af06079b",
+      "file_id": "file_00000000aa008246b6c498af609d2f92",
+      "path": "/Originaler 2021 CUPRA Formentor in Petrolblau.png",
+      "size_bytes": 1956389,
+      "created_at": "2026-10-20T14:03:58.292712Z"
+    },
+    {
+      "name": "Petrolblauer CUPRA Formentor auf Steinplatz.png",
+      "library_file_id": "libfile_4d863927391c8191b7993f80767f2f4f",
+      "file_id": "file_00000000cf8c82468a84802de7cdfcac",
+      "path": "/Petrolblauer CUPRA Formentor auf Steinplatz.png",
+      "size_bytes": 1966819,
+      "created_at": "2026-10-20T14:03:56.343141Z"
+    },
+    {
+      "name": "Silberner Škoda Octavia Kombi auf Steinplatz.png",
+      "library_file_id": "libfile_240fb6f451bc8191aa338fdb6ecd4c12",
+      "file_id": "file_00000000907482119b163a4f9ef5a63d",
+      "path": "/Silberner Škoda Octavia Kombi auf Steinplatz.png",
+      "size_bytes": 1899579,
+      "created_at": "2026-10-20T14:03:54.593037Z"
+    },
+    {
+      "name": "Metallisch roter SEAT Leon auf Steinplatz.png",
+      "library_file_id": "libfile_feb36150a3cc8191a68e3685f9d4f295",
+      "file_id": "file_000000006d6c82468c417bf7006083e1",
+      "path": "/Metallisch roter SEAT Leon auf Steinplatz.png",
+      "size_bytes": 1898961,
+      "created_at": "2026-10-20T14:03:52.236184Z"
+    },
+    {
+      "name": "Graphitgrauer Audi A4 Avant.png",
+      "library_file_id": "libfile_76bc06ad2f5c819188e66a70f370b5a5",
+      "file_id": "file_0000000010c48246bf62e6c6c344c630",
+      "path": "/Graphitgrauer Audi A4 Avant.png",
+      "size_bytes": 1974682,
+      "created_at": "2026-10-20T14:03:50.056615Z"
+    },
+    {
+      "name": "Lapizblauer Golf R mit TD-Emblem.png",
+      "library_file_id": "libfile_8dc8ddba22e88191be1db791445fd931",
+      "file_id": "file_00000000d8d88211b7f8818a550e9c5c",
+      "path": "/Lapizblauer Golf R mit TD-Emblem.png",
+      "size_bytes": 1896063,
+      "created_at": "2026-10-19T19:24:34.173714Z"
+    },
+    {
+      "name": "Roter GTI mit TD-Chromemblem.png",
+      "library_file_id": "libfile_289423692a508191a1de12784563d798",
+      "file_id": "file_000000004cc08211aa56e02bf71b6583",
+      "path": "/Roter GTI mit TD-Chromemblem.png",
+      "size_bytes": 1869487,
+      "created_at": "2026-10-19T19:24:31.872687Z"
+    }
+  ]
+}
