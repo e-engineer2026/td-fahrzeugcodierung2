@@ -1,6 +1,7 @@
 export const homeVehicleSelectedEvent = "td:home-vehicle-selected";
 export const homeVehicleUpdatedEvent = "td:home-vehicle-updated";
 export const homeVehicleReadyEvent = "td:home-vehicle-ready";
+export const homeVehiclePreviewEvent = "td:home-vehicle-preview";
 export const vehiclePrefillStorageKey = "td_vehicle_prefill";
 
 export type HomeVehicleSelection = {

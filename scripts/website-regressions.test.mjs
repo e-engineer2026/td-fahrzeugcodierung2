@@ -2,9 +2,19 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { resolveHomeVehicleSelection, vehicleBookingHref } from "../app/lib/homeVehicleSelection.ts";
 import { matchesCodingSearch } from "../app/lib/codingSearch.ts";
+import { vehicleHeroImage } from "../app/lib/vehicleHero.ts";
 
 const catalog = [{ brand: "Škoda", model: "Octavia 3 5E", startYear: 2013, endYear: 2020 }];
 const vehicle = { brand: "Škoda", model: "Octavia 3 5E" };
+
+test("hero illustrations never substitute a different model, brand, or facelift", () => {
+  assert.equal(vehicleHeroImage({ ...vehicle, year: 2015 })?.src, "/td-vehicle-octavia-5e.webp");
+  assert.equal(vehicleHeroImage({ ...vehicle, model: "Octavia 3 5E Facelift", year: 2018 }), null);
+  assert.equal(vehicleHeroImage({ ...vehicle, brand: "Audi", year: 2015 }), null);
+  assert.equal(vehicleHeroImage({ brand: "Audi", model: "A4 / S4 B9", year: 2022 }), null);
+  assert.equal(vehicleHeroImage({ brand: "SEAT / CUPRA", model: "CUPRA Formentor KM", year: 2024 }), null);
+  assert.equal(vehicleHeroImage(null), null);
+});
 
 test("model-page links round-trip Unicode and model names without browser storage", () => {
   const url = new URL(vehicleBookingHref(vehicle), "https://td-fahrzeugcodierung.de");
