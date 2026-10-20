@@ -23,7 +23,6 @@ export default function HeroVehicleCarousel() {
   const failedSources = useRef(new Set<string>());
   const requested = vehicleHeroImage(selection);
   const hasSelectedPhoto = Boolean(requested && failedSrc !== requested.src && shownSrc === requested.src);
-  const selectionLabel = selection ? (/^(SEAT|CUPRA) /.test(selection.model) ? selection.model : `${selection.brand} ${selection.model}`) : "";
 
   useEffect(() => {
     const synchronize = (event: Event) => {
@@ -72,9 +71,6 @@ export default function HeroVehicleCarousel() {
         if (wantedSrc.current === photo.src) setShownSrc(photo.src);
       }} onError={() => { failedSources.current.add(photo.src); if (wantedSrc.current === photo.src) { setFailedSrc(photo.src); setShownSrc(null); } }} />
     </div>)}
-    {selection && <div className="td-hero-vehicle-caption" role="status" aria-live="polite">
-      <b>{requested && failedSrc !== requested.src ? requested.label : selectionLabel}{selection.year ? ` · ${selection.year}` : ""}</b>
-      <span>{!requested || failedSrc === requested.src ? "Beispielmotiv · passendes Modellbild folgt" : shownSrc !== requested.src ? "Dein Fahrzeugbild wird geladen …" : "Modellillustration · Farbe und Ausstattung beispielhaft"}</span>
-    </div>}
+
   </div>;
 }
