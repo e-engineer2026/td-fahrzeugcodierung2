@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { CarFront } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { vehicles as catalog } from "../data/catalog";
 import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSelection, type HomeVehicleSelection } from "../lib/homeVehicleSelection";
@@ -23,6 +24,7 @@ export default function HeroVehicleCarousel() {
   const failedSources = useRef(new Set<string>());
   const requested = vehicleHeroImage(selection);
   const hasSelectedPhoto = Boolean(requested && failedSrc !== requested.src && shownSrc === requested.src);
+  const selectionLabel = selection ? (/^(SEAT|CUPRA) /.test(selection.model) ? selection.model : `${selection.brand} ${selection.model}`) : "";
 
   useEffect(() => {
     const synchronize = (event: Event) => {
@@ -61,16 +63,24 @@ export default function HeroVehicleCarousel() {
     };
   }, [active, selection]);
 
-  return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : vehicles[active].src}>
-    {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${!hasSelectedPhoto && active === index ? " is-active" : ""}`} aria-hidden={hasSelectedPhoto || active !== index}>
+  return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : selection ? "" : vehicles[active].src}>
+    {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${!selection && active === index ? " is-active" : ""}`} aria-hidden={Boolean(selection) || active !== index}>
       <Image src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
     </div>)}
+    {selection && !hasSelectedPhoto && <div className="td-hero-slide td-hero-placeholder is-active" role="status">
+      <CarFront aria-hidden="true" />
+      <b>{selection.brand} {selection.model}{selection.year ? ` · ${selection.year}` : ""}</b>
+      <span>{requested && failedSrc !== requested.src ? "Modellbild wird geladen …" : "Für diese Ausführung ist derzeit kein passendes Modellbild verfügbar."}</span>
+    </div>}
     {photos.map((photo) => <div key={`selected-${photo.src}`} className={`td-hero-slide td-hero-model-photo${hasSelectedPhoto && shownSrc === photo.src ? " is-active" : ""}`} aria-hidden={!hasSelectedPhoto || shownSrc !== photo.src}>
       <Image src={photo.src} alt={photo.alt} fill sizes="100vw" loading="eager" onLoad={() => {
         loadedSources.current.add(photo.src);
         if (wantedSrc.current === photo.src) setShownSrc(photo.src);
       }} onError={() => { failedSources.current.add(photo.src); if (wantedSrc.current === photo.src) { setFailedSrc(photo.src); setShownSrc(null); } }} />
     </div>)}
-
+    {selection && <div className="td-hero-vehicle-caption" role="status" aria-live="polite">
+      <b>{requested && failedSrc !== requested.src ? requested.label : selectionLabel}{selection.year ? ` · ${selection.year}` : ""}</b>
+      <span>{!requested || failedSrc === requested.src ? "Kein passendes Modellbild verfügbar" : shownSrc !== requested.src ? "Dein Fahrzeugbild wird geladen …" : "Modellillustration · Farbe und Ausstattung beispielhaft"}</span>
+    </div>}
   </div>;
 }

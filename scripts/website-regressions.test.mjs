@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { resolveHomeVehicleSelection, vehicleBookingHref } from "../app/lib/homeVehicleSelection.ts";
+import { resolveHomeVehicleDraftSelection, resolveHomeVehicleSelection, vehicleBookingHref } from "../app/lib/homeVehicleSelection.ts";
 import { matchesCodingSearch } from "../app/lib/codingSearch.ts";
+import { vehicleHeroImage } from "../app/lib/vehicleHero.ts";
 
 const catalog = [{ brand: "Škoda", model: "Octavia 3 5E", startYear: 2013, endYear: 2020 }];
 const vehicle = { brand: "Škoda", model: "Octavia 3 5E" };
@@ -37,4 +38,22 @@ test("coding search accepts umlauts, transliterations, punctuation, and reordere
   assert.equal(matchesCodingSearch("Komfortschließen – Außenspiegel", "komfortschliessen aussenspiegel"), true);
   assert.equal(matchesCodingSearch("Spiegel anklappen", ""), true);
   assert.equal(matchesCodingSearch("Spiegel anklappen", "spiegel kamera"), false);
+});
+
+test("editing the vehicle clears old model and year instead of retaining a stale booking", () => {
+  assert.deepEqual(resolveHomeVehicleDraftSelection({ brand: "Škoda", model: "", year: 2015 }, catalog), { brand: "Škoda", model: "", year: 0, mode: "onsite" });
+  assert.deepEqual(resolveHomeVehicleDraftSelection({ brand: "", model: vehicle.model, year: 2015 }, catalog), { brand: "", model: "", year: 0, mode: "onsite" });
+  assert.deepEqual(resolveHomeVehicleDraftSelection({ ...vehicle, year: 2030 }, catalog), { ...vehicle, year: 0, mode: "onsite" });
+  assert.equal(resolveHomeVehicleDraftSelection({ brand: "unknown" }, catalog), null);
+});
+
+test("changing appointment mode retains the current vehicle and year", () => {
+  assert.deepEqual(resolveHomeVehicleDraftSelection({ ...vehicle, year: 2015, mode: "remote" }, catalog), { ...vehicle, year: 2015, mode: "remote" });
+});
+
+test("vehicle imagery does not silently use a different generation or facelift", () => {
+  assert(vehicleHeroImage({ brand: "Volkswagen", model: "Golf 7 (5G)", year: 2016 }));
+  assert.equal(vehicleHeroImage({ brand: "Volkswagen", model: "Golf 7 (5G)", year: 2020 }), null);
+  assert.equal(vehicleHeroImage({ brand: "Audi", model: "unknown", year: 2015 }), null);
+  assert.equal(vehicleHeroImage({ brand: "Škoda", model: "Octavia 3 5E Facelift", year: 2019 }), null);
 });
