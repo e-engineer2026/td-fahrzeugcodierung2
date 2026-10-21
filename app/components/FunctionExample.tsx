@@ -13,6 +13,10 @@ const examples: Record<string, { image: string; alt: string; benefit: string; ha
   "vcds-vze": { image: "traffic-signs", alt: "Beispiel einer Geschwindigkeitsbegrenzung auf 50 im Kombiinstrument", benefit: "Erkannte Verkehrszeichen können im Kombiinstrument angezeigt werden. Die Darstellung unterscheidet sich je nach Fahrzeug.", hardware: "Geeignete Frontkamera und kompatibles Kombiinstrument/Infotainment; je nach System Navigationsdaten und Funktionsfreigabe." },
   "vcds-rear-view": { image: "rear-camera", alt: "Rückfahrkamera-Anzeige mit farbigen Orientierungslinien", benefit: "Eine vorhandene oder nachgerüstete Rückfahrkamera im unterstützten Infotainment aktivieren. Hilfslinien sind systemabhängig.", hardware: "Kamera, Verkabelung und kompatibles Infotainment erforderlich. Je nach System zusätzliche Parametrierung oder Kalibrierung." },
   "aas": { image: "air-suspension", alt: "Illustrativer Höhenvergleich einer Limousine: oben Normalhöhe, unten abgesenkt", benefit: "Die Fahrzeughöhe des werksseitigen Luftfahrwerks kann bei unterstützten Fahrzeugen angepasst werden. Oben Normalhöhe, unten beispielhaft abgesenkt; keine verbindliche Absenkung in Millimetern.", hardware: "Funktionsfähiges werksseitiges Luftfahrwerk mit kompatibler Niveauregelung. Machbarkeit und gewünschte Höhe stimmen wir vorab ab." },
+  "vcds-fla": { image: "high-beam", alt: "Ausgeleuchtete Landstraße bei Nacht als Beispiel für die Nutzung des Fernlichts", benefit: "Der Fernlichtassistent kann zwischen Abblend- und Fernlicht wechseln, wenn die Verkehrs- und Lichtverhältnisse es erlauben. Die Abbildung zeigt beispielhaft Fernlicht, keine Matrix-Ausblendung.", hardware: "Geeignete Kamera oder Fernlichtsensorik, kompatible Lichtsteuerung und unterstützte Scheinwerfer. Die Funktion ersetzt keine Aufmerksamkeit des Fahrers." },
+  "lane-assist": { image: "lane-assist", alt: "Fahrer mit beiden Händen am Lenkrad und beispielhafter Spurhalteanzeige", benefit: "Lane Assist kann bei erkannten Fahrbahnmarkierungen das Halten der Spur unterstützen. Welche Aktivierung oder Einstellung verfügbar ist, hängt vom Fahrzeug ab. Hände bleiben am Lenkrad.", hardware: "Kompatible Frontkamera, Lenkung und Assistenzsteuergeräte; je nach Ausgangszustand Funktionsfreigabe, Parametrierung oder Kalibrierung erforderlich." },
+  "adaptive-cruise": { image: "adaptive-cruise", alt: "Beispiel einer ACC-Abstandsanzeige mit vorausfahrendem Fahrzeug", benefit: "ACC kann die Geschwindigkeit an ein vorausfahrendes Fahrzeug anpassen und den eingestellten Abstand regeln. Bestehende Einstellungen lassen sich bei unterstützten Systemen anpassen. Funktionsgrenzen bleiben bestehen.", hardware: "Passender Radarsensor sowie kompatible Brems-, Motor- und Assistenzsteuergeräte. Je nach Fahrzeug Freigaben, Bedienelemente und Kalibrierung erforderlich; Codierung ersetzt keine fehlende Hardware." },
+  "asc-60": { image: "remote-windows", alt: "Geparktes Fahrzeug mit teilweise geöffneten Fenstern und Fernbedienung im Vordergrund", benefit: "Unterstützte Fenster lassen sich durch Gedrückthalten der entsprechenden Taste am Funkschlüssel öffnen oder schließen. Umfang und Bedienung unterscheiden sich je nach Fahrzeug.", hardware: "Kompatible Tür- und Komfortsteuergeräte, elektrische Fensterheber und unterstützter Funkschlüssel. Voraussetzung ist eine funktionsfähige Fensterheber-Grundeinstellung." },
 };
 
 // Platform catalogs and curated assistance entries use different IDs for the same function.
@@ -26,6 +30,10 @@ function exampleForFunction(name: string): string | undefined {
   if (/coming[ -]?home|leaving[ -]?home/.test(value)) return "asc-111";
   if (/verkehrszeichenerkennung/.test(value)) return "vcds-vze";
   if (/ruckfahrkamera|rear[ -]?view/.test(value)) return "vcds-rear-view";
+  if (/(fernlichtassistent|light assist|hba)/.test(value) && !/dynamic|dynamisch|matrix|\bdla\b/.test(value)) return "vcds-fla";
+  if (/lane assist|spurhalteassistent|spurverlassenwarnung/.test(value)) return "lane-assist";
+  if (/(\bacc\b|adaptive cruise|adaptive.*abstandsregel)/.test(value) && !/pacc|pradikt|moduswechsel|limiter|gra/.test(value)) return "adaptive-cruise";
+  if (/fenster.*(fernbedien|funk|schlussel)|komfort.*(offnung|schliessung)/.test(value)) return "asc-60";
   if (/luftfahrwerk/.test(value) && /absenk|tiefer|hohe|niveau.*anpass/.test(value)) return "aas";
   return undefined;
 }
@@ -33,7 +41,8 @@ function exampleForFunction(name: string): string | undefined {
 export default function FunctionExample({ exampleKey, functionName }: { exampleKey?: string; functionName?: string }) {
   const [expanded, setExpanded] = useState(false);
   const key = functionName ? exampleForFunction(functionName) : exampleKey;
-  const example = key ? examples[key] : undefined;
+  const aliases: Record<string, string> = { "vcds-lane-activate": "lane-assist", "vcds-lane-memory": "lane-assist", "vcds-lane-warning": "lane-assist", "vcds-acc": "adaptive-cruise" };
+  const example = key ? examples[aliases[key] ?? key] : undefined;
   if (!example) return null;
 
   return <details className="td-function-example" onToggle={(event) => setExpanded(event.currentTarget.open)}>
