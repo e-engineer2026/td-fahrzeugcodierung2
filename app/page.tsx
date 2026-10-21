@@ -5,6 +5,7 @@ import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
+import FunctionExample from "./components/FunctionExample";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
 import HomeMenu from "./components/HomeMenu";
 import HomeVehicleFinder from "./components/HomeVehicleFinder";
@@ -21,7 +22,7 @@ function serviceRows(ids: string[]) {
   return ids.map((id) => {
     const coding = codingCatalog.find((entry) => entry.id === id);
     if (!coding) throw new Error(`Missing service coding: ${id}`);
-    return { name: coding.name, price: `ab ${coding.price} €` };
+    return { name: coding.name, price: `ab ${coding.price} €`, exampleKey: id };
   });
 }
 
@@ -36,7 +37,7 @@ const services = [
   },
   {
     Icon: Settings2, title: "Werkseitiges Luftfahrwerk (AAS)", copy: "Fahrzeughöhe nach Wunsch und Möglichkeit anpassen.",
-    rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "60–80 €" }],
+    rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "60–80 €", exampleKey: "aas" }],
     models: ["Audi A6 / S6 / Allroad C6 (4F) und C7 (4G)", "Audi A7 / S7 C7 (4G)", "Audi A8 / S8 D4 (4H) und D5 (4N)", "Audi Q7 (4L)", "Volkswagen Touareg I (7L)", "Volkswagen Phaeton (3D)"],
     note: "Nur mit werksseitigem Luftfahrwerk. Preis nach Fahrzeug und Aufwand, verbindlich vor Beginn vereinbart. Weitere Baureihen auf Anfrage. Keine Reparaturen, Nachrüstteile oder Vermessungsarbeiten enthalten.",
     href: `${whatsapp}?text=${encodeURIComponent("Hallo, ich möchte das werksseitige Luftfahrwerk (AAS) anpassen lassen. Fahrzeug / Baujahr: ")}`, action: "Luftfahrwerk anfragen",
@@ -91,7 +92,7 @@ export default function Home() {
       <div className="td-service-catalog">{services.map(({ Icon, title, copy, rows, models, note, source, sourceLabel, href, action }) => <details key={title} className="td-service-panel">
         <summary><Icon className="td-service-icon" aria-hidden="true" /><span><h3>{title}</h3><span className="td-service-intro">{copy}</span><span className="td-service-expand">Funktionen &amp; Preise ansehen</span></span><ChevronDown className="td-service-chevron" aria-hidden="true" /></summary>
         <div className="td-service-body">
-          <ul className="td-service-prices" aria-label={`${title}: Leistungen und Preise`}>{rows.map(({ name, price }) => <li key={name}><span>{name}</span><strong>{price}</strong></li>)}</ul>
+          <ul className="td-service-prices" aria-label={`${title}: Leistungen und Preise`}>{rows.map(({ name, price, exampleKey }) => <li key={name}><div className="td-service-price-row"><span>{name}</span><strong>{price}</strong></div><FunctionExample exampleKey={exampleKey} /></li>)}</ul>
           {models && <><h4>Baureihen nach Vorprüfung</h4><ul className="td-service-models">{models.map((model) => <li key={model}>{model}</li>)}</ul></>}
           <p className="td-service-note">{note}</p>
           {source && <a className="td-service-source" href={source} target="_blank" rel="noreferrer">{sourceLabel} ↗</a>}
