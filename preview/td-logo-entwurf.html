@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>TD Fahrzeugcodierung – TD-Emblem-Entwurf</title>
+<style>
+:root{--blue:#075bff;--ink:#08172c;--slate:#52627a;--line:#dce5f1}*{box-sizing:border-box}
+html{scroll-behavior:smooth}body{margin:0;color:var(--ink);font-family:Arial,Helvetica,sans-serif;background:white}
+a{color:inherit}button,select{font:inherit}button{cursor:pointer}
+.wrap{max-width:1250px;margin:auto;padding:0 25px}.meta{background:#07172c;color:white;padding:10px 24px;font-size:13px;text-align:center;letter-spacing:.02em}
+header{height:81px;background:#fff;display:flex;align-items:center;box-shadow:0 2px 16px #061b3a0b}
+header .wrap{display:flex;align-items:center;justify-content:space-between;width:100%;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}.brand img{width:58px;height:58px;object-fit:contain}
+.brand b{font-size:18px;letter-spacing:-.03em}.brand small{display:block;color:var(--slate);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.nav{display:flex;gap:22px;color:#374863;font-size:14px;font-weight:700}.nav a{text-decoration:none}.nav a:hover{color:var(--blue)}
+.actions{border:1px solid #bfd0e8;border-radius:6px;padding:10px 15px;font-size:13px;text-decoration:none;font-weight:700}
+.offer{background:#ecf4ff;border-block:1px solid #d9e8fd;text-align:center;padding:12px 20px;font-weight:700;color:#10386a}
+.offer span{font-weight:400;color:#516884;margin-left:14px}
+.hero{position:relative;min-height:610px;background:#eaf1f8;overflow:hidden}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 54%;transition:opacity .35s ease}
+.hero:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,.96),rgba(255,255,255,.78) 29%,rgba(255,255,255,.06) 66%,transparent 85%)}
+.hero-inner{position:relative;z-index:1;min-height:610px;display:flex;align-items:center;pointer-events:none}
+.hero-copy{max-width:550px;margin-top:-35px;pointer-events:auto}.eyebrow{color:var(--blue);font-weight:800;text-transform:uppercase;letter-spacing:.17em;font-size:12px}
+h1{font-size:clamp(41px,5vw,68px);line-height:1.06;letter-spacing:-.055em;margin:17px 0;font-weight:800}
+.hero p.desc{font-size:19px;line-height:1.6;max-width:435px;color:#43556e}
+.cta{background:var(--blue);padding:16px 24px;color:#fff;font-weight:700;border:0;border-radius:7px;display:inline-block;margin-top:16px;text-decoration:none}
+.switches{display:flex;gap:10px;flex-wrap:wrap;margin-top:34px}
+.switches button{background:#ffffffdf;color:#153451;border:1px solid #c4d5e7;border-radius:999px;padding:9px 16px;font-size:12px;font-weight:800}
+.switches button[aria-pressed="true"]{background:#08356e;color:white;border-color:#08356e}
+.section{padding:42px 0 22px}.panel{background:#fff;border:1px solid var(--line);box-shadow:0 12px 32px #1a3b6710;border-radius:16px;padding:28px}
+h2{margin:0;font-size:28px;letter-spacing:-.04em}
+p.sub{color:#586980;line-height:1.6;margin:7px 0 22px}
+.controls{display:flex;gap:13px;align-items:end;flex-wrap:wrap}.field{flex:1;min-width:250px}.field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.07em;font-weight:800;color:#52627c;margin-bottom:9px}
+select{width:100%;border:1px solid #cbd8e9;padding:14px;border-radius:8px;background:#fff;color:#142945}
+button.reset{border:1px solid #cbd8e9;background:#f5f8fc;padding:14px 17px;border-radius:8px;color:#173759;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:24px}
+.thumb{border:1px solid var(--line);border-radius:11px;overflow:hidden;background:#f5f8fb}
+.thumb img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}.thumb b{display:block;padding:12px;font-size:14px}
+.note{color:#62758a;font-size:13px;margin:22px 0 35px;line-height:1.6}
+footer{background:#0c203b;color:#d6e3f3;padding:34px 0;font-size:14px}
+footer b{display:block;font-size:20px;margin-bottom:7px;color:white}
+footer a{color:#b7d5ff}
+@media(max-width:760px){
+.wrap{padding:0 16px}.nav{display:none}header{height:68px}.brand img{width:46px;height:46px}.brand b{font-size:15px}
+.actions{font-size:11px}.offer{font-size:12px}.offer span{display:block;margin:3px 0 0}
+.hero{min-height:650px}.hero:after{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,255,255,.9) 42%,rgba(255,255,255,.05) 78%)}
+.hero-img{object-position:67% bottom}.hero-inner{align-items:flex-start;min-height:650px;padding-top:30px}
+.hero-copy{margin-top:0}.hero p.desc{font-size:16px;max-width:330px}.switches{margin-top:18px}.grid{grid-template-columns:1fr 1fr}.panel{padding:20px}h2{font-size:25px}
+}
+@media(max-width:460px){.grid{grid-template-columns:1fr}.actions{display:none}.hero{min-height:590px}.hero-inner{min-height:590px}.hero-img{object-position:66% bottom}.switches button{padding:7px 11px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-img{transition:none}}
+</style>
+</head>
+<body>
+<div class="meta">DESIGNVORSCHAU · 21.10.2026 · Nicht die Live-Website · Ohne Buchungsfunktionen</div>
+<header><div class="wrap">
+<a class="brand" href="#start"><img alt="TD" id="brandLogo"><span><b>TD Fahrzeugcodierung</b><small>Leipzig &amp; Remote</small></span></a>
+<nav class="nav"><a href="#fahrzeuge">Fahrzeuge</a><a href="#auswahl">Fahrzeugauswahl</a><a href="#informationen">Informationen</a></nav>
+<a class="actions" href="https://td-fahrzeugcodierung.de" target="_blank" rel="noopener">Zur Live-Website ↗</a>
+</div></header>
+<div class="offer">Aktionsrabatt: bis zu 25 % für alle <span>Ohne Anmeldung · bis einschließlich 30.11.2026</span></div>
+<section class="hero" id="start">
+<img class="hero-img" id="heroImage" alt="Fahrzeugmodell mit deutlich erkennbarem TD-Logo">
+<div class="hero-inner wrap"><div class="hero-copy">
+<p class="eyebrow">Leipzig-Süd · deutschlandweit per Remote</p>
+<h1>Dein Fahrzeug.<br>Mehr Möglichkeiten.</h1>
+<p class="desc">Fahrzeugcodierung, Diagnose und Software für Volkswagen, Audi, Škoda, SEAT und CUPRA.</p>
+<a class="cta" href="#auswahl">Fahrzeugbilder ansehen →</a>
+<div class="switches" aria-label="Startbild wechseln">
+<button aria-pressed="true" data-slide="0">Grau</button><button aria-pressed="false" data-slide="1">GTI Rot</button><button aria-pressed="false" data-slide="2">R Blau</button>
+</div>
+</div></div>
+</section>
+<section class="section wrap" id="auswahl">
+<div class="panel"><p class="eyebrow">TD-Logo statt TP</p><h2>Fahrzeugbilder – überarbeiteter Entwurf</h2>
+<p class="sub">Alle 83 im Entwurf vorhandenen Fahrzeugmotive sind mit eindeutigen TD-Emblemen gespeichert. Wähle ein Motiv; die große Fahrzeugansicht oben passt sich an. Dies ist eine reine Designvorschau.</p>
+<div class="controls"><div class="field"><label for="vehicleSelect">Fahrzeug / Motiv wählen</label><select id="vehicleSelect"><option value="">Startseitenwechsel automatisch (5 Sekunden)</option></select></div>
+<button type="button" class="reset" id="clear">Zurücksetzen</button></div></div>
+</section>
+<section class="section wrap" id="fahrzeuge"><h2>Beispielbilder</h2><p class="sub">Ausgewählte korrigierte Fahrzeugmotive.</p><div class="grid" id="thumbnails"></div>
+<p class="note" id="informationen">Diese Vorschau zeigt die Fahrzeugdarstellung und TD-Embleme aus dem GitHub-Entwurf. Fahrzeugauswahl, Preise und Terminbuchung sind hier nicht ausführbar. An der Live-Website wurden keine Änderungen vorgenommen.</p></section>
+<footer><div class="wrap"><b>TD Fahrzeugcodierung</b>Leipzig-Süd · deutschlandweit per Remote<br><a href="https://td-fahrzeugcodierung.de" target="_blank" rel="noopener">td-fahrzeugcodierung.de</a></div></footer>
+<script>
+const root="https://raw.githubusercontent.com/e-engineer2026/td-fahrzeugcodierung2/codex/td-embleme-lesbar-2026-10-21/";
+const slides=["public/td-hero-chrome.webp","public/td-hero-gti-red.webp","public/td-hero-r-blue.webp"];
+const extra=[{"path":"public/td-hero-natural.webp","label":"Golf 8 · Natürlich"},{"path":"public/td-hero-performance.webp","label":"Golf GTI · Performance"},{"path":"public/td-vehicle-audi-a4-b9.webp","label":"Audi A4 B9"},{"path":"public/td-vehicle-cupra-formentor.webp","label":"CUPRA Formentor"},{"path":"public/td-vehicle-octavia-5e.webp","label":"Škoda Octavia 3"},{"path":"public/td-vehicle-seat-leon-5f.webp","label":"SEAT Leon 5F"},{"path":"public/vehicle-images/2018-audi-q2-in-graphitgrau.webp","label":"2018 audi q2 in graphitgrau"},{"path":"public/vehicle-images/2018-seat-ateca-am-hellen-steinplatz.webp","label":"2018 seat ateca am hellen steinplatz"},{"path":"public/vehicle-images/blaue-skoda-octavia-combi-auf-steinplatz.webp","label":"blaue skoda octavia combi auf steinplatz"},{"path":"public/vehicle-images/blaue-skoda-scala-auf-hellem-steinplatz.webp","label":"blaue skoda scala auf hellem steinplatz"},{"path":"public/vehicle-images/blauer-arteon-auf-hellem-steinplatz.webp","label":"blauer arteon auf hellem steinplatz"},{"path":"public/vehicle-images/blauer-audi-a1-auf-steinplatz.webp","label":"blauer audi a1 auf steinplatz"},{"path":"public/vehicle-images/blauer-audi-a6-avant-auf-steinplatz.webp","label":"blauer audi a6 avant auf steinplatz"},{"path":"public/vehicle-images/blauer-audi-q4-e-tron-auf-steinplatz.webp","label":"blauer audi q4 e tron auf steinplatz"},{"path":"public/vehicle-images/blauer-audi-q8-auf-hellem-steinplatz.webp","label":"blauer audi q8 auf hellem steinplatz"},{"path":"public/vehicle-images/blauer-audi-tt-vor-heller-steinmauer.webp","label":"blauer audi tt vor heller steinmauer"},{"path":"public/vehicle-images/blauer-golf-plus-auf-hellem-steinplatz.webp","label":"blauer golf plus auf hellem steinplatz"},{"path":"public/vehicle-images/blauer-passat-variant-auf-dem-steinplatz.webp","label":"blauer passat variant auf dem steinplatz"},{"path":"public/vehicle-images/blauer-skoda-rapid-am-steinplatz.webp","label":"blauer skoda rapid am steinplatz"},{"path":"public/vehicle-images/blauer-touareg-auf-hellem-steinplatz.webp","label":"blauer touareg auf hellem steinplatz"},{"path":"public/vehicle-images/dunkelrote-skoda-octavia-ii-combi.webp","label":"dunkelrote skoda octavia ii combi"},{"path":"public/vehicle-images/dunkelroter-audi-a3-sportback.webp","label":"dunkelroter audi a3 sportback"},{"path":"public/vehicle-images/dunkelroter-audi-a6-avant-auf-hellem-steinplatz.webp","label":"dunkelroter audi a6 avant auf hellem steinplatz"},{"path":"public/vehicle-images/dunkelroter-audi-a8-auf-hellem-steinplatz.webp","label":"dunkelroter audi a8 auf hellem steinplatz"},{"path":"public/vehicle-images/dunkelroter-audi-q3-auf-hellem-steinplatz.webp","label":"dunkelroter audi q3 auf hellem steinplatz"},{"path":"public/vehicle-images/dunkelroter-audi-q5-auf-hellem-steinplatz.webp","label":"dunkelroter audi q5 auf hellem steinplatz"},{"path":"public/vehicle-images/dunkelroter-golf-vi-auf-steinplatz.webp","label":"dunkelroter golf vi auf steinplatz"},{"path":"public/vehicle-images/dunkelroter-id-3-auf-dem-steinplatz.webp","label":"dunkelroter id 3 auf dem steinplatz"},{"path":"public/vehicle-images/dunkelroter-passat-variant-auf-dem-steinplatz.webp","label":"dunkelroter passat variant auf dem steinplatz"},{"path":"public/vehicle-images/dunkelroter-skoda-yeti-auf-hellem-steinplatz.webp","label":"dunkelroter skoda yeti auf hellem steinplatz"},{"path":"public/vehicle-images/dunkelroter-tiguan-auf-hellem-steinplatz.webp","label":"dunkelroter tiguan auf hellem steinplatz"},{"path":"public/vehicle-images/dunkelroter-volkswagen-transporter-t5-im-sonnenlicht.webp","label":"dunkelroter volkswagen transporter t5 im sonnenlicht"},{"path":"public/vehicle-images/dunkelrotes-audi-a5-coupe-auf-steinplatz.webp","label":"dunkelrotes audi a5 coupe auf steinplatz"},{"path":"public/vehicle-images/graphitgraue-skoda-fabia-auf-hellem-steinplatz.webp","label":"graphitgraue skoda fabia auf hellem steinplatz"},{"path":"public/vehicle-images/graphitgrauer-audi-a3-auf-hellem-steinplatz.webp","label":"graphitgrauer audi a3 auf hellem steinplatz"},{"path":"public/vehicle-images/graphitgrauer-audi-a4-avant.webp","label":"graphitgrauer audi a4 avant"},{"path":"public/vehicle-images/graphitgrauer-audi-a5-sportback.webp","label":"graphitgrauer audi a5 sportback"},{"path":"public/vehicle-images/graphitgrauer-audi-a8-d4-vor-steinmauer.webp","label":"graphitgrauer audi a8 d4 vor steinmauer"},{"path":"public/vehicle-images/graphitgrauer-audi-q7-auf-steinplatz.webp","label":"graphitgrauer audi q7 auf steinplatz"},{"path":"public/vehicle-images/graphitgrauer-golf-vii-auf-hellem-steinplatz.webp","label":"graphitgrauer golf vii auf hellem steinplatz"},{"path":"public/vehicle-images/graphitgrauer-id-4-auf-hellem-steinplatz.webp","label":"graphitgrauer id 4 auf hellem steinplatz"},{"path":"public/vehicle-images/graphitgrauer-passat-b9-auf-steinplatz.webp","label":"graphitgrauer passat b9 auf steinplatz"},{"path":"public/vehicle-images/graphitgrauer-polo-v-auf-steinplatz.webp","label":"graphitgrauer polo v auf steinplatz"},{"path":"public/vehicle-images/graphitgrauer-skoda-kodiaq-auf-hellem-steinplatz.webp","label":"graphitgrauer skoda kodiaq auf hellem steinplatz"},{"path":"public/vehicle-images/graphitgrauer-t6-multivan-auf-steinplatz.webp","label":"graphitgrauer t6 multivan auf steinplatz"},{"path":"public/vehicle-images/graphitgrauer-volkswagen-touran-auf-steinplatz.webp","label":"graphitgrauer volkswagen touran auf steinplatz"},{"path":"public/vehicle-images/metallgrauer-audi-a7-vor-heller-steinmauer.webp","label":"metallgrauer audi a7 vor heller steinmauer"},{"path":"public/vehicle-images/metallisch-roter-seat-leon-auf-steinplatz.webp","label":"metallisch roter seat leon auf steinplatz"},{"path":"public/vehicle-images/neuer-volkswagen-tayron-in-tiefem-metallicblau.webp","label":"neuer volkswagen tayron in tiefem metallicblau"},{"path":"public/vehicle-images/originaler-2021-cupra-formentor-in-petrolblau.webp","label":"originaler 2021 cupra formentor in petrolblau"},{"path":"public/vehicle-images/perlweier-audi-a1-auf-steinplatz.webp","label":"perlweier audi a1 auf steinplatz"},{"path":"public/vehicle-images/perlweier-audi-a6-avant-im-tageslicht.webp","label":"perlweier audi a6 avant im tageslicht"},{"path":"public/vehicle-images/perlweier-audi-q6-e-tron-auf-hellem-steinplatz.webp","label":"perlweier audi q6 e tron auf hellem steinplatz"},{"path":"public/vehicle-images/perlweier-audi-tt-auf-hellem-steinplatz.webp","label":"perlweier audi tt auf hellem steinplatz"},{"path":"public/vehicle-images/perlweier-golf-v-auf-steinplatz.webp","label":"perlweier golf v auf steinplatz"},{"path":"public/vehicle-images/perlweier-passat-variant-auf-sonnigem-steinplatz.webp","label":"perlweier passat variant auf sonnigem steinplatz"},{"path":"public/vehicle-images/perlweier-skoda-rapid-am-steinplatz.webp","label":"perlweier skoda rapid am steinplatz"},{"path":"public/vehicle-images/perlweier-touareg-auf-hellem-steinplatz.webp","label":"perlweier touareg auf hellem steinplatz"},{"path":"public/vehicle-images/perlweier-volkswagen-up-auf-hellem-steinplatz.webp","label":"perlweier volkswagen up auf hellem steinplatz"},{"path":"public/vehicle-images/perlweier-vw-tiguan-der-ersten-generation.webp","label":"perlweier vw tiguan der ersten generation"},{"path":"public/vehicle-images/petrolblauer-cupra-formentor-auf-steinplatz.webp","label":"petrolblauer cupra formentor auf steinplatz"},{"path":"public/vehicle-images/roter-skoda-superb-kombi-im-sonnenlicht.webp","label":"roter skoda superb kombi im sonnenlicht"},{"path":"public/vehicle-images/silberner-audi-a3-sportback-am-steinplatz.webp","label":"silberner audi a3 sportback am steinplatz"},{"path":"public/vehicle-images/silberner-audi-a5-avant-am-steinplatz.webp","label":"silberner audi a5 avant am steinplatz"},{"path":"public/vehicle-images/silberner-audi-a7-sportback-am-steinplatz.webp","label":"silberner audi a7 sportback am steinplatz"},{"path":"public/vehicle-images/silberner-audi-a8-auf-hellem-steinplatz.webp","label":"silberner audi a8 auf hellem steinplatz"},{"path":"public/vehicle-images/silberner-audi-q3-vor-heller-steinmauer.webp","label":"silberner audi q3 vor heller steinmauer"},{"path":"public/vehicle-images/silberner-audi-q7-vor-heller-steinwand.webp","label":"silberner audi q7 vor heller steinwand"},{"path":"public/vehicle-images/silberner-id-5-am-hellen-steinplatz.webp","label":"silberner id 5 am hellen steinplatz"},{"path":"public/vehicle-images/silberner-multivan-vor-heller-steinwand.webp","label":"silberner multivan vor heller steinwand"},{"path":"public/vehicle-images/silberner-polo-auf-hellem-steinplatz.webp","label":"silberner polo auf hellem steinplatz"},{"path":"public/vehicle-images/silberner-skoda-karoq-auf-hellem-steinplatz.webp","label":"silberner skoda karoq auf hellem steinplatz"},{"path":"public/vehicle-images/silberner-skoda-octavia-combi-auf-steinplatz.webp","label":"silberner skoda octavia combi auf steinplatz"},{"path":"public/vehicle-images/silberner-skoda-octavia-kombi-auf-steinplatz.webp","label":"silberner skoda octavia kombi auf steinplatz"},{"path":"public/vehicle-images/silberner-touran-vor-heller-steinmauer.webp","label":"silberner touran vor heller steinmauer"},{"path":"public/vehicle-images/skoda-superb-ii-combi-auf-dem-steinplatz.webp","label":"skoda superb ii combi auf dem steinplatz"},{"path":"public/vehicle-images/tiefblauer-audi-a4-avant-am-steinplatz.webp","label":"tiefblauer audi a4 avant am steinplatz"},{"path":"public/vehicle-images/tiefblauer-audi-q5-auf-hellem-steinplatz.webp","label":"tiefblauer audi q5 auf hellem steinplatz"},{"path":"public/vehicle-images/weier-audi-e-tron-auf-hellem-steinplatz.webp","label":"weier audi e tron auf hellem steinplatz"},{"path":"public/vehicle-images/weier-audi-q5-auf-dem-steinplatz.webp","label":"weier audi q5 auf dem steinplatz"}];
+const labels={"public/td-hero-chrome.webp":"Golf 8 · Graphitgrau","public/td-hero-gti-red.webp":"Golf 8 GTI · Rot","public/td-hero-r-blue.webp":"Golf 8 R · Blau","public/td-hero-natural.webp":"Golf 8 · Natürlich","public/td-hero-performance.webp":"Golf GTI · Performance","public/td-vehicle-audi-a4-b9.webp":"Audi A4 B9","public/td-vehicle-octavia-5e.webp":"Škoda Octavia 3","public/td-vehicle-cupra-formentor.webp":"CUPRA Formentor","public/td-vehicle-seat-leon-5f.webp":"SEAT Leon 5F"};
+const all=slides.map(path=>({path,label:labels[path]})).concat(extra);
+const select=document.getElementById("vehicleSelect"), img=document.getElementById("heroImage");
+const btns=[...document.querySelectorAll("[data-slide]")];
+const url=(path)=>root+path;
+document.getElementById("brandLogo").src=url("public/td-logo-icon.png");
+for(const item of all){const option=document.createElement("option");option.value=item.path;option.textContent=item.label;select.append(option);}
+let index=0,chosen=false;
+function show(path,automatic=false){
+  img.src=url(path);
+  img.alt=(all.find(x=>x.path===path)?.label||"Fahrzeug")+" mit TD-Emblem";
+  const x=slides.indexOf(path);
+  btns.forEach((b,i)=>b.setAttribute("aria-pressed",String(!chosen&&i===x)));
+}
+btns.forEach((b,i)=>b.addEventListener("click",()=>{chosen=false;select.value="";index=i;show(slides[index]);}));
+select.addEventListener("change",()=>{chosen=!!select.value;if(chosen){show(select.value);document.querySelector(".hero").scrollIntoView({behavior:"smooth"});}else{index=0;show(slides[0]);}});
+document.getElementById("clear").addEventListener("click",()=>{select.value="";chosen=false;index=0;show(slides[0]);window.scrollTo({top:0,behavior:"smooth"});});
+const sample=[all[0],all[1],all[2],...extra.filter(x=>/td-vehicle-/.test(x.path)),...extra.filter(x=>/passat|golf-vii/.test(x.path)).slice(0,3)].slice(0,12);
+const grid=document.getElementById("thumbnails");
+for(const item of sample){const el=document.createElement("div");el.className="thumb";const photo=document.createElement("img");photo.loading="lazy";photo.src=url(item.path);photo.alt=item.label+" mit TD-Logo";const title=document.createElement("b");title.textContent=item.label;el.append(photo,title);grid.append(el);}
+show(slides[0]);
+setInterval(()=>{if(chosen||document.hidden||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;index=(index+1)%slides.length;show(slides[index],true);},5000);
+</script>
+</body></html>
