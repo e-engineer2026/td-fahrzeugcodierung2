@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Radar, Sparkles, Tag } from "lucide-react";
+import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Radar, Settings2, Sparkles, Tag } from "lucide-react";
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
@@ -33,6 +33,15 @@ const services = [
     source: "https://obdeleven.com/es/blog/most-popular-one-click-apps-in-2025",
     sourceLabel: "OBDeleven: häufig genutzte Funktionen 2025",
     href: "#fahrzeugauswahl", action: "Passende Funktionen auswählen",
+  },
+  {
+    Icon: Settings2, title: "Werkseitiges Luftfahrwerk (AAS)", copy: "Fahrzeughöhe nach Wunsch und Möglichkeit anpassen.",
+    rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "60–80 €" }],
+    models: ["Audi A6 / S6 / Allroad C6 (4F) und C7 (4G)", "Audi A7 / S7 C7 (4G)", "Audi A8 / S8 D4 (4H) und D5 (4N)", "Audi Q7 (4L)", "Volkswagen Touareg I (7L)", "Volkswagen Phaeton (3D)"],
+    note: "Nur mit werksseitigem Luftfahrwerk. Preis nach Fahrzeug und Aufwand, verbindlich vor Beginn vereinbart. Weitere Baureihen auf Anfrage. Keine Reparaturen, Nachrüstteile oder Vermessungsarbeiten enthalten.",
+    source: "https://wiki.ross-tech.com/wiki/index.php/Suspension_Level_Control_Calibration_(non-UDS)",
+    sourceLabel: "Ross-Tech: Niveauregelung",
+    href: `${whatsapp}?text=${encodeURIComponent("Hallo, ich möchte das werksseitige Luftfahrwerk (AAS) anpassen lassen. Fahrzeug / Baujahr: ")}`, action: "Luftfahrwerk anfragen",
   },
   {
     Icon: Radar, title: "Assistenzsysteme", copy: "Vorhandene Kamera- und Sensortechnik nutzen.",
@@ -81,10 +90,11 @@ export default function Home() {
     <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
       <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div></div>
       <nav className="td-service-main-links" aria-label="Fahrzeuge, Preise und Software"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link><Link href="/steuergeraete-flash">Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link></nav>
-      <div className="td-service-catalog">{services.map(({ Icon, title, copy, rows, note, source, sourceLabel, href, action }) => <details key={title} className="td-service-panel">
+      <div className="td-service-catalog">{services.map(({ Icon, title, copy, rows, models, note, source, sourceLabel, href, action }) => <details key={title} className="td-service-panel">
         <summary><Icon className="td-service-icon" aria-hidden="true" /><span><h3>{title}</h3><span className="td-service-intro">{copy}</span><span className="td-service-expand">Funktionen &amp; Preise ansehen</span></span><ChevronDown className="td-service-chevron" aria-hidden="true" /></summary>
         <div className="td-service-body">
           <ul className="td-service-prices" aria-label={`${title}: Leistungen und Preise`}>{rows.map(({ name, price }) => <li key={name}><span>{name}</span><strong>{price}</strong></li>)}</ul>
+          {models && <><h4>Baureihen nach Vorprüfung</h4><ul className="td-service-models">{models.map((model) => <li key={model}>{model}</li>)}</ul></>}
           <p className="td-service-note">{note}</p>
           {source && <a className="td-service-source" href={source} target="_blank" rel="noreferrer">{sourceLabel} ↗</a>}
           <a className="td-service-action" href={href}>{action}<ArrowRight aria-hidden="true" /></a>
