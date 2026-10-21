@@ -1,0 +1,41 @@
+name: Correct TD emblems in reviewed car images
+
+on:
+  push:
+    branches:
+      - codex/td-embleme-lesbar-2026-10-21
+    paths:
+      - scripts/fix_td_emblems.py
+      - .github/workflows/correct-td-emblems.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image library
+        run: python -m pip install --disable-pip-version-check Pillow==11.3.0
+      - name: Correct reviewed car images
+        run: python scripts/fix_td_emblems.py
+      - name: Commit updated images only to draft branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/td-hero-chrome.webp public/td-hero-gti-red.webp public/td-hero-r-blue.webp
+          git add public/td-vehicle-audi-a4-b9.webp public/td-vehicle-octavia-5e.webp
+          git add public/td-vehicle-cupra-formentor.webp public/td-vehicle-seat-leon-5f.webp
+          git add public/vehicle-images/blauer-passat-variant-auf-dem-steinplatz.webp
+          if git diff --cached --quiet; then
+            echo "No image changes."
+          else
+            git commit -m "fix: replace TP-looking car emblems with readable TD badges"
+            git push origin HEAD:codex/td-embleme-lesbar-2026-10-21
+          fi
