@@ -23,17 +23,6 @@ export function resolveHomeVehicleSelection(value: unknown, catalog: readonly Ve
   return { brand: vehicle.brand, model: vehicle.model, year, mode: input.mode === "remote" ? "remote" : "onsite" };
 }
 
-// While a customer edits the only vehicle form, invalidate the old booking
-// immediately, including when the new model or year has not been chosen yet.
-export function resolveHomeVehicleDraftSelection(value: unknown, catalog: readonly VehicleChoice[]): HomeVehicleSelection | null {
-  if (!value || typeof value !== "object") return null;
-  const input = value as Record<string, unknown>;
-  const mode = input.mode === "remote" ? "remote" : "onsite";
-  if (input.brand === "") return { brand: "", model: "", year: 0, mode };
-  if (!catalog.some((item) => item.brand === input.brand)) return null;
-  return resolveHomeVehicleSelection(input, catalog) ?? { brand: input.brand as string, model: "", year: 0, mode };
-}
-
 export function vehicleBookingHref(vehicle: { brand: string; model: string; year?: number }) {
   const params = new URLSearchParams({ brand: vehicle.brand, model: vehicle.model });
   if (vehicle.year) params.set("year", String(vehicle.year));
