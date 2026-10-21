@@ -1,0 +1,13 @@
+export const serviceFocusEvent = "td:service-focus";
+
+export type IllustrationKind = "mirror" | "light" | "instrument" | "infotainment" | "assist" | "diagnose" | "tailgate" | "key";
+
+export function serviceDetails(name: string, group = "") {
+  if (/spiegel/i.test(name)) return { kind: "mirror" as IllustrationKind, benefit: "Spiegelfunktionen passend zu deinem Alltag einstellen.", requirement: "Je nach Funktion sind elektrisch anklappbare Spiegel, passende Türsteuergeräte oder eine unterstützte Memory-Funktion erforderlich." };
+  if (/coming|leaving|tagfahr|rückleucht|licht|leucht/i.test(name + group)) return { kind: "light" as IllustrationKind, benefit: "Vorhandene Lichtfunktionen gezielt anpassen.", requirement: "Passende Leuchten, ein unterstütztes Bordnetzsteuergerät und gegebenenfalls Licht- oder Regensensor sind erforderlich. Die konkrete Ausstattung wird vorher geprüft." };
+  if (/zeigertest|staging|kombiinstrument|tacho/i.test(name)) return { kind: "instrument" as IllustrationKind, benefit: "Unterstützte Anzeigen und Funktionen im Kombiinstrument nutzen.", requirement: "Das verbaute Kombiinstrument und dessen Software müssen die gewünschte Funktion unterstützen." };
+  if (/infotainment|carplay|android|radio|navigation|mmi|bluetooth/i.test(name + group)) return { kind: "infotainment" as IllustrationKind, benefit: "Vorhandene Infotainmentfunktionen passend zu deinem System konfigurieren.", requirement: "Gerätetyp, Softwarestand, Schnittstellen und erforderliche Funktionsfreigaben werden geprüft. Eine Codierung ersetzt keine fehlende Hardware oder Lizenz." };
+  if (/assist|kamera|verkehrszeichen|spur|lane|park/i.test(name + group)) return { kind: "assist" as IllustrationKind, benefit: "Unterstützte Assistenzfunktionen der vorhandenen Fahrzeugtechnik anpassen.", requirement: "Geeignete Sensoren beziehungsweise Kameras und kompatible Steuergeräte müssen vorhanden sein. Schutzmechanismen und der Softwarestand begrenzen die Möglichkeiten." };
+  if (/diagnos|grundeinstellung|batterie|software|paramet|kalibrier/i.test(name + group)) return { kind: "diagnose" as IllustrationKind, benefit: "Fehler und Einstellungen systematisch prüfen und passende nächste Schritte festlegen.", requirement: "Fahrzeugdaten, Fehlerbeschreibung und gegebenenfalls ein vorhandener Diagnosescan helfen bei der Vorbereitung. Die Prüfung legt den weiteren Arbeitsumfang fest." };
+  return { kind: "mirror" as IllustrationKind, benefit: "Eine unterstützte Komfortfunktion individuell einstellen.", requirement: "Fahrzeugausstattung, Steuergeräte und Softwarestand müssen die gewünschte Anpassung unterstützen." };
+}

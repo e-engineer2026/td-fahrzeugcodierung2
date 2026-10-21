@@ -4,8 +4,11 @@ import { Analytics } from "@vercel/analytics/next";
 import { ClerkProvider } from "@clerk/nextjs";
 import GoogleAnalytics from "./components/GoogleAnalytics";
 import MobileContactBar from "./components/MobileContactBar";
+import DesignPreview from "./components/DesignPreview";
 import "./globals.css";
 import "./booking-overrides.css";
+
+const isDesignPreview = process.env.VERCEL_ENV === "preview" || process.env.TD_DESIGN_PREVIEW === "1";
 
 const siteUrl = "https://td-fahrzeugcodierung.de";
 const gaId = "G-T8R5MJJW2P";
@@ -115,9 +118,9 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", images: ["/td-hero-chrome.webp"] },
   robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true },
+    index: !isDesignPreview,
+    follow: !isDesignPreview,
+    googleBot: { index: !isDesignPreview, follow: !isDesignPreview },
   },
   icons: { icon: "/td-logo-icon.png" },
 };
@@ -125,12 +128,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
-    <html lang="de" data-scroll-behavior="smooth">
+    <html lang="de" data-scroll-behavior="smooth" data-design-preview={isDesignPreview ? "true" : undefined}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        {!isDesignPreview && <>
         <Script id="google-consent-default" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -151,12 +155,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
           strategy="afterInteractive"
         />
+        </>}
       </head>
       <body>
+        {isDesignPreview && <DesignPreview />}
         {children}
         <MobileContactBar />
-        <GoogleAnalytics />
-        <Analytics />
+        {!isDesignPreview && <GoogleAnalytics />}
+        {!isDesignPreview && <Analytics />}
       </body>
     </html>
     </ClerkProvider>

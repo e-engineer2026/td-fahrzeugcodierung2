@@ -16,7 +16,9 @@ export default function HomeMenu() {
     {open && <nav id="home-mobile-menu" aria-label="Mobile Navigation" onClick={() => setOpen(false)}>
       <a href="#fahrzeugauswahl">Fahrzeug auswählen</a>
       <a href="#leistungen">Leistungen</a>
+      <a href="#praxis">Einblicke &amp; Arbeitsweise</a>
       <a href="#ablauf">So funktioniert’s</a>
+      <a href="#vorbereitung">Termin vorbereiten</a>
       <Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link>
       <a href="#kontakt">Kontakt</a>
       <Link href="/sign-in?redirect_url=%2Fkonto">Mein Konto / Anmelden</Link>

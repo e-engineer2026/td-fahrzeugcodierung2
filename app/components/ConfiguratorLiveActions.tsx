@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CalendarDays, MessageCircle } from "lucide-react";
 import ArrivalGuide from "./ArrivalGuide";
+import AppointmentPreparation from "./AppointmentPreparation";
 
 type Snapshot = {
   count: number;
@@ -69,7 +70,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
             <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
               <div><b className="text-slate-800">Aktionsrabatt für alle:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</div>
               <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 10 : snapshot.nextTier === "100" ? 15 : snapshot.nextTier === "150" ? 20 : 25} % Rabatt).` : "25 % Maximalrabatt erreicht."}</div>
-              <p className="mt-2">Gültig vom 04.10.2026 bis einschließlich 30.11.2026.</p>
+              <p className="mt-2">Automatisch für alle Kunden ohne Anmeldung – auch bei weiteren Buchungen. Eine erforderliche SFD1-Freischaltung zählt zum Auftragswert und wird mitrabattiert. Gültig vom 04.10.2026 bis einschließlich 30.11.2026.</p>
             </div>
             <div className="mt-3 rounded-xl border border-blue-100 bg-white p-3 text-sm leading-6 text-slate-700">
               <b>Zahlung</b>
@@ -78,6 +79,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
                 <p><b>Direkt beim Termin:</b> Bar · PayPal · Sofortüberweisung</p>
               </div> : <p>PayPal – 70 % vorab, 30 % nach Durchführung.</p>}
             </div>
+            <details className="td-booking-preparation"><summary>Vorbereitung für deinen Termin ansehen</summary><AppointmentPreparation mode={snapshot.mode} /></details>
             <a href={snapshot.calUrl} onClick={() => { onBook(); if (snapshot.mode === "onsite") setShowArrival(true); }} target="_blank" rel="noreferrer" className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white transition hover:bg-blue-700">
               <CalendarDays className="h-5 w-5" /> Termin online vereinbaren
             </a>
