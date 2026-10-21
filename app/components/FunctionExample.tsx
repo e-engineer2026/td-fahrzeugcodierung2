@@ -17,12 +17,18 @@ const examples: Record<string, { image: string; alt: string; benefit: string; ha
   "lane-assist": { image: "lane-assist", alt: "Fahrer mit beiden Händen am Lenkrad und beispielhafter Spurhalteanzeige", benefit: "Lane Assist kann bei erkannten Fahrbahnmarkierungen das Halten der Spur unterstützen. Welche Aktivierung oder Einstellung verfügbar ist, hängt vom Fahrzeug ab. Hände bleiben am Lenkrad.", hardware: "Kompatible Frontkamera, Lenkung und Assistenzsteuergeräte; je nach Ausgangszustand Funktionsfreigabe, Parametrierung oder Kalibrierung erforderlich." },
   "adaptive-cruise": { image: "adaptive-cruise", alt: "Beispiel einer ACC-Abstandsanzeige mit vorausfahrendem Fahrzeug", benefit: "ACC kann die Geschwindigkeit an ein vorausfahrendes Fahrzeug anpassen und den eingestellten Abstand regeln. Bestehende Einstellungen lassen sich bei unterstützten Systemen anpassen. Funktionsgrenzen bleiben bestehen.", hardware: "Passender Radarsensor sowie kompatible Brems-, Motor- und Assistenzsteuergeräte. Je nach Fahrzeug Freigaben, Bedienelemente und Kalibrierung erforderlich; Codierung ersetzt keine fehlende Hardware." },
   "asc-60": { image: "remote-windows", alt: "Geparktes Fahrzeug mit teilweise geöffneten Fenstern und Fernbedienung im Vordergrund", benefit: "Unterstützte Fenster lassen sich durch Gedrückthalten der entsprechenden Taste am Funkschlüssel öffnen oder schließen. Umfang und Bedienung unterscheiden sich je nach Fahrzeug.", hardware: "Kompatible Tür- und Komfortsteuergeräte, elektrische Fensterheber und unterstützter Funkschlüssel. Voraussetzung ist eine funktionsfähige Fensterheber-Grundeinstellung." },
+  "ops": { image: "ops", alt: "Beispiel einer optischen Einparkhilfe mit farbigen Abstandsfeldern hinter dem Fahrzeug", benefit: "Die optische Einparkhilfe ergänzt die vorhandenen Parksensoren um eine Abstandsgrafik im Infotainment. Anzeigeumfang und Sensorbereiche hängen vom Fahrzeug ab; das Beispiel zeigt keine Rückfahrkamera.", hardware: "OPS-fähiges Einparkhilfe-Steuergerät, vorhandene Sensoren und kompatibles Infotainment. Eine rein akustische Anlage ist nicht bei jedem Fahrzeug durch Codierung erweiterbar." },
+  "oil-temperature": { image: "oil-temperature", alt: "Beispiel einer Motoröltemperaturanzeige mit 95 Grad Celsius im Kombiinstrument", benefit: "Die Motoröltemperatur lässt sich bei unterstützten Fahrzeugen in der Multifunktionsanzeige einblenden. Der Wert von 95 °C ist nur ein Darstellungsbeispiel und keine allgemeine Vorgabe für die Betriebstemperatur.", hardware: "Ein vom Fahrzeug bereitgestellter Öltemperaturwert sowie ein kompatibles Kombiinstrument und unterstützte Anzeigesoftware erforderlich." },
+  "staging": { image: "staging", alt: "Illustrativer Zeigertest: oben Zeiger in Ruhestellung, unten kurzer Zeigerausschlag beim Einschalten", benefit: "Beim Einschalten der Zündung schlagen die unterstützten Instrumentenzeiger kurz aus und kehren zurück. Der Vergleich zeigt den Startvorgang bei stehendem Fahrzeug, keine tatsächliche Geschwindigkeit oder Motordrehzahl.", hardware: "Ein Kombiinstrument mit unterstützter Zeigertest-Funktion. Nicht jedes analoge oder digitale Kombiinstrument kann diese Animation darstellen." },
 };
 
 // Platform catalogs and curated assistance entries use different IDs for the same function.
 function exampleForFunction(name: string): string | undefined {
   const value = name.toLocaleLowerCase("de").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ß/g, "ss");
   if (/deaktivier|abschalt|ausschalt|reset/.test(value)) return undefined;
+  if (/zeigertest|staging|needle sweep|gauge test/.test(value)) return "staging";
+  if (/oltemperatur|oil.*temperature/.test(value)) return "oil-temperature";
+  if (/optische.*einparkhilfe|optisches.*parksystem|optical parking|\bops\b|einparkhilfe.*(anzeige|darstellung)|optische.*anzeige.*einparkhilfe/.test(value)) return "ops";
   if (/spiegelabsenk|bordsteinautomatik/.test(value)) return "asc-29";
   if (/spiegel.*anklapp|anklapp.*spiegel/.test(value)) return "asc-30";
   if (/ambientebeleuchtung/.test(value)) return "asc-32";
@@ -41,7 +47,7 @@ function exampleForFunction(name: string): string | undefined {
 export default function FunctionExample({ exampleKey, functionName }: { exampleKey?: string; functionName?: string }) {
   const [expanded, setExpanded] = useState(false);
   const key = functionName ? exampleForFunction(functionName) : exampleKey;
-  const aliases: Record<string, string> = { "vcds-lane-activate": "lane-assist", "vcds-lane-memory": "lane-assist", "vcds-lane-warning": "lane-assist", "vcds-acc": "adaptive-cruise" };
+  const aliases: Record<string, string> = { "asc-1": "staging", "vcds-lane-activate": "lane-assist", "vcds-lane-memory": "lane-assist", "vcds-lane-warning": "lane-assist", "vcds-acc": "adaptive-cruise" };
   const example = key ? examples[aliases[key] ?? key] : undefined;
   if (!example) return null;
 
