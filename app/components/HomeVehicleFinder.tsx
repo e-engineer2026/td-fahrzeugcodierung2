@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { ArrowRight, MapPin, MessageCircle, Wifi } from "lucide-react";
+import { ArrowRight, MapPin, Wifi } from "lucide-react";
 import { brands, vehicles } from "../data/catalog";
 import { homeVehiclePreviewEvent, homeVehicleSelectedEvent, homeVehicleUpdatedEvent, type HomeVehicleSelection } from "../lib/homeVehicleSelection";
 
@@ -58,8 +58,6 @@ export default function HomeVehicleFinder() {
       <button className="td-button td-finder-submit" type="submit" disabled={!ready}>Codierungen anzeigen<ArrowRight aria-hidden="true" /></button>
     </div>
     {ready && <p className="td-finder-current"><b>Deine Auswahl:</b> {brand} {model} · {year} <span>{mode === "remote" ? "Remote" : "Vor Ort in Leipzig"}</span></p>}
-    <p className="td-finder-picture-note">Das Bild oben passt sich deiner Auswahl an, sofern eine passende Modellillustration verfügbar ist.</p>
     {mode === "remote" && <p className="td-remote-note">Mit eigenem Diagnoseinterface, Windows-PC/Laptop, stabiler Internetverbindung und vereinbarter Remote-Software. Interface und Spannungsversorgung stimmen wir vorher ab.</p>}
-    <p className="td-finder-help"><MessageCircle aria-hidden="true" /><span>Du findest dein Fahrzeug nicht? <a href="https://wa.me/4915563047044" target="_blank" rel="noreferrer">Schreib mir per WhatsApp.</a></span></p>
   </form>;
 }
