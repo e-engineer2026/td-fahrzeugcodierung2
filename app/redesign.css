@@ -190,8 +190,8 @@
 /* Function examples are mounted only after their own details are opened. */
 .td-service-prices li{display:block}
 .td-service-price-row{display:flex;justify-content:space-between;gap:16px}
-.td-service-body .td-function-example{margin-top:9px}
-.td-service-body .td-function-example>summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;color:#1d5dbd;font-size:15px;font-weight:600;min-height:44px;cursor:pointer}
+.td-function-example{margin-top:9px}
+.td-function-example>summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;color:#1d5dbd;font-size:15px;font-weight:600;min-height:44px;cursor:pointer}
 .td-function-example>summary svg{width:17px;height:17px;flex-shrink:0}
 .td-function-example[open]>summary svg{transform:rotate(180deg)}
 .td-home .td-function-example-body p{font-size:15px;line-height:1.65;color:#40516a;margin:10px 0 14px}

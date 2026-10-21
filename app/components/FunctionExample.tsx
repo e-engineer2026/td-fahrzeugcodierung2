@@ -15,9 +15,25 @@ const examples: Record<string, { image: string; alt: string; benefit: string; ha
   "aas": { image: "air-suspension", alt: "Illustrativer Höhenvergleich einer Limousine: oben Normalhöhe, unten abgesenkt", benefit: "Die Fahrzeughöhe des werksseitigen Luftfahrwerks kann bei unterstützten Fahrzeugen angepasst werden. Oben Normalhöhe, unten beispielhaft abgesenkt; keine verbindliche Absenkung in Millimetern.", hardware: "Funktionsfähiges werksseitiges Luftfahrwerk mit kompatibler Niveauregelung. Machbarkeit und gewünschte Höhe stimmen wir vorab ab." },
 };
 
-export default function FunctionExample({ exampleKey }: { exampleKey: string }) {
+// Platform catalogs and curated assistance entries use different IDs for the same function.
+function exampleForFunction(name: string): string | undefined {
+  const value = name.toLocaleLowerCase("de").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ß/g, "ss");
+  if (/deaktivier|abschalt|ausschalt|reset/.test(value)) return undefined;
+  if (/spiegelabsenk|bordsteinautomatik/.test(value)) return "asc-29";
+  if (/spiegel.*anklapp|anklapp.*spiegel/.test(value)) return "asc-30";
+  if (/ambientebeleuchtung/.test(value)) return "asc-32";
+  if (/(heckleuchten|ruckleuchten).*(tagfahr|tfl)|(tagfahr|tfl).*(heckleuchten|ruckleuchten)/.test(value)) return "asc-4";
+  if (/coming[ -]?home|leaving[ -]?home/.test(value)) return "asc-111";
+  if (/verkehrszeichenerkennung/.test(value)) return "vcds-vze";
+  if (/ruckfahrkamera|rear[ -]?view/.test(value)) return "vcds-rear-view";
+  if (/luftfahrwerk/.test(value) && /absenk|tiefer|hohe|niveau.*anpass/.test(value)) return "aas";
+  return undefined;
+}
+
+export default function FunctionExample({ exampleKey, functionName }: { exampleKey?: string; functionName?: string }) {
   const [expanded, setExpanded] = useState(false);
-  const example = examples[exampleKey];
+  const key = functionName ? exampleForFunction(functionName) : exampleKey;
+  const example = key ? examples[key] : undefined;
   if (!example) return null;
 
   return <details className="td-function-example" onToggle={(event) => setExpanded(event.currentTarget.open)}>
