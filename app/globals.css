@@ -111,7 +111,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 }
 
 /* Die separate Auswahl-Zusammenfassung oberhalb von „Häufig gewählt“ ausblenden. */
-#buchen .booking-flow > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
+#buchen .booking-flow > .td-codings-section > .border-blue-200.bg-blue-50:has(> button) {
   display: none;
 }
 
@@ -171,25 +171,25 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
 }
 
 /* „Häufig gewählt“ als ersten Punkt der Codier-Tabelle darstellen. */
-#buchen .booking-flow > section:nth-of-type(3) {
+#buchen .booking-flow > .td-codings-section {
   display: flex;
   flex-direction: column;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .flex.flex-col.gap-4 {
+#buchen .booking-flow > .td-codings-section > .flex.flex-col.gap-4 {
   order: 0;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .border-blue-200.bg-blue-50:has(> button) {
+#buchen .booking-flow > .td-codings-section > .border-blue-200.bg-blue-50:has(> button) {
   order: 1;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .-mx-1.mt-4.flex {
+#buchen .booking-flow > .td-codings-section > .-mx-1.mt-4.flex {
   order: 2;
   margin-top: .75rem;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) {
+#buchen .booking-flow > .td-codings-section > .rounded-xl:has(.lucide-sparkles) {
   order: 3;
   margin-top: .75rem;
   overflow: hidden;
@@ -198,7 +198,7 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   background: white;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) > div:first-child {
+#buchen .booking-flow > .td-codings-section > .rounded-xl:has(.lucide-sparkles) > div:first-child {
   min-height: 3rem;
   padding: .625rem .75rem;
   color: rgb(29 78 216);
@@ -207,27 +207,27 @@ header a[aria-label^="TD Fahrzeugcodierung"] > span {
   font-weight: 900;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) .lucide-sparkles {
+#buchen .booking-flow > .td-codings-section > .rounded-xl:has(.lucide-sparkles) .lucide-sparkles {
   display: none;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .rounded-xl:has(.lucide-sparkles) > .mt-3 {
+#buchen .booking-flow > .td-codings-section > .rounded-xl:has(.lucide-sparkles) > .mt-3 {
   margin-top: 0;
   padding: .5rem;
   border-top: 1px solid rgb(226 232 240);
   background: rgb(248 250 252 / .6);
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .mt-5.space-y-2,
-#buchen .booking-flow > section:nth-of-type(3) > .mt-6 {
+#buchen .booking-flow > .td-codings-section > .mt-5.space-y-2,
+#buchen .booking-flow > .td-codings-section > .mt-6 {
   order: 4;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .mt-5.space-y-2 {
+#buchen .booking-flow > .td-codings-section > .mt-5.space-y-2 {
   margin-top: .5rem;
 }
 
-#buchen .booking-flow > section:nth-of-type(3) > .mt-5.rounded-xl.bg-slate-50.p-4 {
+#buchen .booking-flow > .td-codings-section > .mt-5.rounded-xl.bg-slate-50.p-4 {
   order: 5;
   margin-top: .75rem;
   padding: .75rem;
