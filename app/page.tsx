@@ -37,7 +37,7 @@ const services = [
   {
     Icon: Settings2, title: "Werksluftfahrwerk (AAS)", copy: "Fahrzeughöhe nach Wunsch und Möglichkeit anpassen.",
     rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "60–80 €" }],
-    models: ["Audi A6 / S6 / Allroad C6 (4F) und C7 (4G)", "Audi A7 / S7 C7 (4G)", "Audi A8 / S8 D3 (4E) und D4 (4H)", "Audi Q7 (4L)", "Volkswagen Touareg I (7L)", "Volkswagen Phaeton (3D)"],
+    models: ["Audi A6 / S6 / Allroad C6 (4F) und C7 (4G)", "Audi A7 / S7 C7 (4G)", "Audi A8 / S8 D4 (4H) und D5 (4N)", "Audi Q7 (4L)", "Volkswagen Touareg I (7L)", "Volkswagen Phaeton (3D)"],
     note: "Nur mit werksseitigem Luftfahrwerk. Preis nach Fahrzeug und Aufwand, verbindlich vor Beginn vereinbart. Weitere Baureihen auf Anfrage. Keine Reparaturen, Nachrüstteile oder Vermessungsarbeiten enthalten.",
     source: "https://wiki.ross-tech.com/wiki/index.php/Suspension_Level_Control_Calibration_(non-UDS)",
     sourceLabel: "Ross-Tech: Niveauregelung",
