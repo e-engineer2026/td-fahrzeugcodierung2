@@ -33,7 +33,7 @@ function exampleForFunction(name: string): string | undefined {
   if (/(fernlichtassistent|light assist|hba)/.test(value) && !/dynamic|dynamisch|matrix|\bdla\b/.test(value)) return "vcds-fla";
   if (/lane assist|spurhalteassistent|spurverlassenwarnung/.test(value)) return "lane-assist";
   if (/(\bacc\b|adaptive cruise|adaptive.*abstandsregel)/.test(value) && !/pacc|pradikt|moduswechsel|limiter|gra/.test(value)) return "adaptive-cruise";
-  if (/fenster.*(fernbedien|funk|schlussel)|komfort.*(offnung|schliessung)/.test(value)) return "asc-60";
+  if (/fenster.*(fernbedien|funk|schlussel|komfort)|komfort[- ]?fensterbedienung|komfortbedienung.*fenster|komfort.*(offnung|schliessung)/.test(value)) return "asc-60";
   if (/luftfahrwerk/.test(value) && /absenk|tiefer|hohe|niveau.*anpass/.test(value)) return "aas";
   return undefined;
 }
