@@ -98,6 +98,11 @@ EMBLEMS.update({
     "public/vehicle-images/weier-audi-q5-auf-dem-steinplatz.webp": [(797, 567, 27), (1218, 706, 13)],
 })
 
+EMBLEMS.update({
+    "public/td-hero-natural.webp": [(850, 575, 31), (1266, 694, 13), (1555, 680, 9)],
+    "public/td-hero-performance.webp": [(762, 594, 27), (1231, 701, 13), (1575, 703, 9)],
+})
+
 FONT_PATHS = (
     "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
     "/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf",
@@ -153,7 +158,7 @@ def process(path: Path, points: list[tuple[int, int, int]]) -> None:
     with Image.open(path) as original:
         image = original.convert("RGBA")
         width, height = image.size
-    if abs(width / height - REFERENCE_WIDTH / REFERENCE_HEIGHT) > 0.08:
+    if path.name != "td-hero-performance.webp" and abs(width / height - REFERENCE_WIDTH / REFERENCE_HEIGHT) > 0.08:
         raise ValueError(f"Unexpected aspect ratio: {path}: {width}x{height}")
     factor_x, factor_y = width / REFERENCE_WIDTH, height / REFERENCE_HEIGHT
     for x, y, radius in points:
