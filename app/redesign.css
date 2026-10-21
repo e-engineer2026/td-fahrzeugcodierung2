@@ -70,7 +70,7 @@
 .td-mode button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:42px;border:0;border-radius:6px;background:transparent;color:var(--td-ink);padding:9px 17px;font-weight:700;font-size:14px;white-space:nowrap}
 .td-mode button[aria-pressed="true"]{background:var(--td-blue);color:#fff;box-shadow:0 3px 9px #075bff20}
 .td-mode svg{width:20px;height:20px;flex-shrink:0}
-.td-finder-fields{display:grid;grid-template-columns:1fr 1.2fr .8fr auto;gap:18px;align-items:end;margin-top:25px}
+.td-finder-fields{display:grid;grid-template-columns:1fr 1.2fr .8fr;gap:18px;align-items:end;margin-top:25px}
 .td-finder-fields label{min-width:0}
 .td-finder-fields label>span{display:block;font-size:15px;font-weight:700;margin-bottom:7px}
 .td-finder-fields select{width:100%;height:52px;min-height:52px;border:1px solid #d7e0eb;border-radius:7px;background-color:#fff;color:#40516a;padding:10px 32px 10px 14px;font-size:15px;text-overflow:ellipsis}
@@ -155,3 +155,27 @@
 .td-home .td-finder-current{display:flex;align-items:center;flex-wrap:wrap;gap:5px 9px;padding:10px 12px;margin-top:15px;font-size:14px;background:#f1f6ff;border-radius:7px;color:#3a5a81}
 .td-finder-current>span{margin-left:auto;padding:3px 7px;border-radius:999px;background:#e2ecfe;color:#075bff;font-size:14px}
 @media(max-width:600px){.td-home .td-hero-picture:has(.td-hero-vehicle-caption){height:245px}.td-home .td-finder-picture-note{font-size:13px;margin-top:12px}}
+
+/* Expandable service catalog: full-width rows keep prices legible on phones. */
+.td-service-catalog{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start;margin-top:30px}
+.td-service-panel{border:1px solid #dde4ee;border-radius:12px;background:#fff;overflow:hidden}
+.td-service-panel summary{display:flex;align-items:flex-start;gap:16px;padding:24px;cursor:pointer;list-style:none}
+.td-service-panel summary::-webkit-details-marker{display:none}
+.td-service-panel summary:focus-visible{outline:3px solid #2563eb;outline-offset:-4px}
+.td-service-panel .td-service-icon{flex-shrink:0;width:32px;height:32px;color:#2563eb}
+.td-home .td-service-panel h3{font-size:20px;line-height:1.35;margin:0 0 8px}
+.td-service-intro{display:block;color:#586574;font-size:16px;line-height:1.5}
+.td-service-expand{display:block;margin-top:12px;font-size:14px;font-weight:600;color:#1d5dbd}
+.td-service-chevron{width:20px;height:20px;flex-shrink:0;margin-left:auto;color:#2563eb;transition:transform .2s}
+.td-service-panel[open] .td-service-chevron{transform:rotate(180deg)}
+.td-service-body{padding:0 24px 24px}
+.td-service-prices,.td-service-models{list-style:none;margin:0;padding:0}
+.td-service-prices li{display:flex;justify-content:space-between;gap:18px;border-top:1px solid #e5eaf0;padding:13px 0;font-size:16px;line-height:1.5}
+.td-service-prices strong{white-space:nowrap;color:#1d5dbd;flex-shrink:0}
+.td-home .td-service-body h4{font-size:16px;margin:22px 0 10px}
+.td-service-models li{padding:5px 0;font-size:16px;line-height:1.5}
+.td-home .td-service-note,.td-home .td-service-price-note{font-size:15px;line-height:1.65;color:#586574;margin-top:20px}
+.td-service-source{display:block;font-size:14px;color:#1d5dbd;text-decoration:underline;margin-top:12px}
+.td-service-action{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;color:#1d5dbd;margin-top:22px}
+.td-service-action svg{width:20px;height:20px;flex-shrink:0}
+@media(max-width:600px){.td-service-catalog{grid-template-columns:1fr;gap:12px;margin-top:22px}.td-service-panel summary{padding:20px 18px;gap:12px}.td-service-body{padding:0 18px 20px}.td-home .td-service-panel h3{font-size:19px}.td-service-prices li{gap:12px}}
