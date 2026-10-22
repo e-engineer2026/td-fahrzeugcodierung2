@@ -69,8 +69,7 @@ export default function FahrzeugePage() {
       <section className="container-x pt-8 sm:pt-10" aria-labelledby="aktuelle-modelle">
         <div className="mx-auto max-w-4xl rounded-2xl border border-blue-100 bg-blue-50/50 p-5 sm:p-6">
           <div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600">Aktuelle Modelle</div>
-          <h2 id="aktuelle-modelle" className="mt-2 text-2xl font-black">Neue VAG-Baureihen direkt prüfen</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">Für neue Fahrzeuggenerationen werden Diagnose, Softwarestand, Schutzmechanismen und die technische Machbarkeit von Anpassungen besonders sorgfältig geprüft.</p>
+          <h2 id="aktuelle-modelle" className="mt-2 text-2xl font-black">Neue VAG-Baureihen</h2>
           <div className="mt-5 grid gap-3 md:grid-cols-3">
             {highlightedModels.map((item) => (
               <Link key={item.href} href={item.href} className="rounded-xl border border-blue-100 bg-white p-4 transition hover:border-blue-300 hover:shadow-sm">
