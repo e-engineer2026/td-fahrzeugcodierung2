@@ -97,12 +97,20 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Startseite", item: BASE },
+          { "@type": "ListItem", position: 2, name: "Fahrzeuge", item: `${BASE}/fahrzeuge` },
+          { "@type": "ListItem", position: 3, name, item: url },
+        ],
+      },
+      {
         "@type": "Service",
         name: vehicle.diagnosticsOnly ? `${name} Fahrzeugdiagnose` : `${name} Codierung und Diagnose`,
         serviceType: vehicle.diagnosticsOnly ? ["Fahrzeugdiagnose"] : ["Fahrzeugcodierung", "Fahrzeugdiagnose"],
         url,
         areaServed: { "@type": "City", name: "Leipzig" },
-        provider: { "@type": "LocalBusiness", name: "TD Fahrzeugcodierung", url: BASE },
+        provider: { "@id": `${BASE}/#business` },
       },
       ...(faq.length
         ? [{ "@type": "FAQPage", mainEntity: faq.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) }]

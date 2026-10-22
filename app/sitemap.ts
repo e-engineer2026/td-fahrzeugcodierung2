@@ -30,6 +30,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/schluessel-anlernen-leipzig`, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/steuergeraete-flash`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/fahrzeuge`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/remote-check`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/anfahrt`, changeFrequency: "monthly", priority: 0.5 },
     ...vehiclePages,
     { url: `${base}/impressum`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${base}/datenschutz`, changeFrequency: "yearly", priority: 0.2 },
