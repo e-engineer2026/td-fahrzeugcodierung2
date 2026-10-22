@@ -57,7 +57,7 @@ export default function FunctionExample({ exampleKey, functionName }: { exampleK
       <p>{example.benefit}</p>
       <figure>
         <Image src={`/function-examples/${example.image}.webp`} alt={example.alt} width={1200} height={800} sizes="(max-width: 600px) 90vw, (max-width: 900px) 45vw, 580px" loading="lazy" unoptimized />
-        <figcaption>Beispielabbildung · Darstellung und Funktionsumfang können je nach Fahrzeug abweichen.</figcaption>
+        
       </figure>
       <p><strong>Voraussetzungen:</strong> {example.hardware}</p>
     </div>}
