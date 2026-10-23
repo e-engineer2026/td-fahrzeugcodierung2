@@ -1,0 +1,40 @@
+.viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+  --position-x: 50%;
+  --position-y: 54%;
+}
+
+.frame {
+  position: absolute;
+  width: max(100cqw, var(--width-from-height));
+  height: max(100cqh, var(--height-from-width));
+  left: var(--position-x);
+  top: var(--position-y);
+  transform: translate(calc(-1 * var(--position-x)), calc(-1 * var(--position-y)));
+}
+
+.emblem {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.emblem .badge {
+  object-fit: fill;
+  object-position: center;
+}
+
+@media (min-width: 1700px) {
+  .viewport { --position-y: 57%; }
+}
+
+@media (max-width: 900px) {
+  .viewport { --position-x: 63%; --position-y: 50%; }
+}
+
+@media (max-width: 600px) {
+  .viewport { --position-x: 100%; --position-y: 82%; }
+}

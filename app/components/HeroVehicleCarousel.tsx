@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import BrandedVehicleImage from "./BrandedVehicleImage";
 import { useEffect, useRef, useState } from "react";
 import { vehicles as catalog } from "../data/catalog";
 import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSelection, type HomeVehicleSelection } from "../lib/homeVehicleSelection";
@@ -63,10 +63,10 @@ export default function HeroVehicleCarousel() {
 
   return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : vehicles[active].src}>
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${!hasSelectedPhoto && active === index ? " is-active" : ""}`} aria-hidden={hasSelectedPhoto || active !== index}>
-      <Image src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
+      <BrandedVehicleImage src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
     </div>)}
     {photos.map((photo) => <div key={`selected-${photo.src}`} className={`td-hero-slide td-hero-model-photo${hasSelectedPhoto && shownSrc === photo.src ? " is-active" : ""}`} aria-hidden={!hasSelectedPhoto || shownSrc !== photo.src}>
-      <Image src={photo.src} alt={photo.alt} fill sizes="100vw" loading="eager" onLoad={() => {
+      <BrandedVehicleImage src={photo.src} alt={photo.alt} fill sizes="100vw" loading="eager" onLoad={() => {
         loadedSources.current.add(photo.src);
         if (wantedSrc.current === photo.src) setShownSrc(photo.src);
       }} onError={() => { failedSources.current.add(photo.src); if (wantedSrc.current === photo.src) { setFailedSrc(photo.src); setShownSrc(null); } }} />
