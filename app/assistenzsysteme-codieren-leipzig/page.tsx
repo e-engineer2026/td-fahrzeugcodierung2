@@ -20,6 +20,11 @@ export default function Page() {
       "Eine reine Codierung reicht nicht immer aus. Je nach Fahrzeug können passende Hardware, Parametrierung, Kalibrierung oder eine SFD-Freischaltung erforderlich sein.",
       "Vor dem Termin werden Fahrzeug, Baujahr und gewünschte Funktion geprüft, damit keine Funktion zugesagt wird, die mit der vorhandenen Ausstattung technisch nicht umsetzbar ist."
     ]}
+    relatedLinks={[
+      { href: "/verkehrszeichenerkennung-codieren-leipzig", label: "Verkehrszeichenerkennung codieren" },
+      { href: "/lane-assist-codieren-leipzig", label: "Lane Assist codieren und anpassen" },
+      { href: "/fernlichtassistent-codieren-leipzig", label: "Fernlichtassistent codieren" },
+    ]}
     faq={[
       { question: "Kann Lane Assist nur per Codierung aktiviert werden?", answer: "Das hängt vom Fahrzeug ab. Eine kompatible Frontkamera und passende Steuergeräte müssen vorhanden sein; je nach Plattform können zusätzliche Anpassungen oder Kalibrierungen erforderlich sein." },
       { question: "Ist Verkehrszeichenerkennung nachrüstbar?", answer: "Bei geeigneter Hardware kann eine Aktivierung möglich sein. Entscheidend sind unter anderem Kamera, Infotainment, Kombiinstrument, Softwarestand und Fahrzeugkonfiguration." },
