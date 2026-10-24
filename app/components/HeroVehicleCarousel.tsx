@@ -7,7 +7,7 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/td-hero-chrome.webp", alt: "Graphitgraues Fahrzeug mit verchromtem TD-Emblem in einer hellen, natürlichen Umgebung" },
+  { src: "/td-hero-chrome-v2.webp", alt: "Graphitgraues Fahrzeug mit verchromtem TD-Emblem in einer hellen, natürlichen Umgebung" },
   { src: "/td-hero-gti-red.webp", alt: "Rote GTI-Variante mit verchromtem TD-Emblem in derselben hellen Umgebung" },
   { src: "/td-hero-r-blue.webp", alt: "Blaue R-Variante mit verchromtem TD-Emblem in derselben hellen Umgebung" },
 ];

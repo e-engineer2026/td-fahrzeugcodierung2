@@ -111,9 +111,9 @@ export const metadata: Metadata = {
     title: "VAG Codierung Leipzig & Remote | TD Fahrzeugcodierung",
     description:
       "Codierung und Diagnose für VW, Audi, SEAT, CUPRA und Škoda – persönlich in Leipzig-Süd oder per Remote.",
-    images: [{ url: "/td-hero-chrome.webp", alt: "TD Fahrzeugcodierung – Fahrzeugcodierung und Diagnose in Leipzig und per Remote" }],
+    images: [{ url: "/td-hero-chrome-v2.webp", alt: "TD Fahrzeugcodierung – Fahrzeugcodierung und Diagnose in Leipzig und per Remote" }],
   },
-  twitter: { card: "summary_large_image", images: ["/td-hero-chrome.webp"] },
+  twitter: { card: "summary_large_image", images: ["/td-hero-chrome-v2.webp"] },
   robots: {
     index: true,
     follow: true,
