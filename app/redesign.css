@@ -198,3 +198,12 @@
 .td-function-example figure{margin:12px 0 16px}
 .td-function-example img{display:block;width:100%;height:auto;border-radius:8px}
 .td-function-example figcaption{font-size:13px;line-height:1.5;color:#586574;margin-top:9px}
+
+/* A shared Leipzig panorama sits above the vehicle backgrounds, fading before the cars. */
+.td-leipzig-skyline{position:absolute;inset:0 0 auto;height:300px;z-index:0;pointer-events:none;opacity:.64;mask-image:linear-gradient(180deg,#000 0%,#000 62%,transparent 100%);-webkit-mask-image:linear-gradient(180deg,#000 0%,#000 62%,transparent 100%)}
+.td-leipzig-skyline img{object-fit:cover;object-position:center 58%}
+.td-leipzig-skyline::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#fff 0%,#ffffffeb 25%,#ffffff66 53%,transparent 75%)}
+.td-hero-inner{position:relative;z-index:1}
+@media(min-width:1700px){.td-leipzig-skyline{height:340px}}
+@media(max-width:900px){.td-leipzig-skyline{height:270px}}
+@media(max-width:600px){.td-leipzig-skyline{height:320px;opacity:.32}.td-leipzig-skyline img{object-position:60% center}.td-leipzig-skyline::after{background:linear-gradient(90deg,#ffffffe6,#ffffff99 55%,#ffffff33)}}

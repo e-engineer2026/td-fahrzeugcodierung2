@@ -71,6 +71,7 @@ export default function Home() {
 
     <section className="td-hero" aria-labelledby="home-title">
       <HeroVehicleCarousel />
+      <div className="td-leipzig-skyline" aria-hidden="true"><Image src="/leipzig-skyline.webp" alt="" fill sizes="100vw" preload /></div>
       <div className="td-container td-hero-inner"><div className="td-hero-copy">
         <p className="td-eyebrow">Leipzig-Süd · deutschlandweit per Remote</p>
         <h1 id="home-title">Dein Fahrzeug.<br />Mehr Möglichkeiten.</h1>
