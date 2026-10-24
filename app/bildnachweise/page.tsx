@@ -117,7 +117,7 @@ export default function Bildnachweise() {
       {credits.map(c => <section key={c.model} className="rounded-xl border border-slate-200 bg-white p-5">
         <h2 className="font-bold text-lg">{c.model}</h2>
         <p className="mt-2 text-slate-700">Foto: {c.author}. Originaltitel: {c.title}.</p>
-        <p className="mt-2 text-slate-700">Darstellung: verkleinert und je nach Bildschirmformat teilweise zugeschnitten; keine inhaltliche Manipulation des Fahrzeugs.</p>
+        <p className="mt-2 text-slate-700">Darstellung: verkleinert und je nach Bildschirmformat teilweise zugeschnitten. {c.model.startsWith("SEAT ") || c.model.startsWith("Caddy ") ? "Fahrzeugzeichen und sichtbare Radnabenlogos wurden digital entfernt." : "Keine inhaltliche Manipulation des Fahrzeugs."}</p>
         <p className="mt-2"><a className="text-blue-700 underline" href={c.source} target="_blank" rel="noopener noreferrer">Bildquelle (Wikimedia Commons)</a> · <a className="text-blue-700 underline" href={c.licenseUrl} target="_blank" rel="noopener noreferrer">Lizenz: {c.license}</a></p>
       </section>)}
       </div>
