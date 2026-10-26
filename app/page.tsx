@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Radar, Settings2, Sparkles, Tag } from "lucide-react";
+import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Tag } from "lucide-react";
+import TechnicalIcon from "./components/TechnicalIcon";
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
@@ -28,7 +29,7 @@ function serviceRows(ids: string[]) {
 
 const services = [
   {
-    Icon: Sparkles, title: "Häufigste Funktionen", copy: "Beliebte Codierungen auf einen Blick.",
+    icon: "Alle", title: "Häufigste Funktionen", copy: "Beliebte Codierungen auf einen Blick.",
     rows: serviceRows(["asc-1", "asc-4", "asc-15", "asc-32", "asc-112", "asc-30", "asc-29", "asc-60", "asc-8", "asc-111"]),
     note: "Auswahl beliebter Anpassungen aus veröffentlichten Nutzungsdaten und VAG-Funktionsübersichten; keine eigene Kundenrangliste.",
     source: "https://obdeleven.com/es/blog/most-popular-one-click-apps-in-2025",
@@ -36,14 +37,14 @@ const services = [
     href: "#fahrzeugauswahl", action: "Passende Funktionen auswählen",
   },
   {
-    Icon: Settings2, title: "Werkseitiges Luftfahrwerk (AAS)", copy: "Fahrzeughöhe nach Wunsch und Möglichkeit anpassen.",
+    icon: "Luftfahrwerk", title: "Werkseitiges Luftfahrwerk (AAS)", copy: "Fahrzeughöhe nach Wunsch und Möglichkeit anpassen.",
     rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "60–80 €", exampleKey: "aas" }],
     models: ["Audi A6 / S6 / Allroad C6 (4F) und C7 (4G)", "Audi A7 / S7 C7 (4G)", "Audi A8 / S8 D4 (4H) und D5 (4N)", "Audi Q7 (4L)", "Volkswagen Touareg I (7L)", "Volkswagen Phaeton (3D)"],
     note: "Nur mit werksseitigem Luftfahrwerk. Preis nach Fahrzeug und Aufwand, verbindlich vor Beginn vereinbart. Weitere Baureihen auf Anfrage. Keine Reparaturen, Nachrüstteile oder Vermessungsarbeiten enthalten.",
     href: `${whatsapp}?text=${encodeURIComponent("Hallo, ich möchte das werksseitige Luftfahrwerk (AAS) anpassen lassen. Fahrzeug / Baujahr: ")}`, action: "Luftfahrwerk anfragen",
   },
   {
-    Icon: Radar, title: "Assistenzsysteme", copy: "Vorhandene Kamera- und Sensortechnik nutzen.",
+    icon: "Assistenz", title: "Assistenzsysteme", copy: "Vorhandene Kamera- und Sensortechnik nutzen.",
     rows: serviceRows(["vcds-vze", "vcds-fla", "vcds-dla", "vcds-lane-activate", "vcds-lane-memory", "vcds-lane-warning", "vcds-acc", "vcds-acc-mode", "vcds-pacc", "vcds-front-assist", "vcds-park-assist", "vcds-rear-view"]),
     note: "Kompatible Hardware und gegebenenfalls vorhandene Funktionslizenzen erforderlich. Nachrüstung, zusätzliche Parametrierung und Kalibrierung werden bei Bedarf separat angeboten. SFD1-Fahrzeuge: unterstützte Anpassungen vorhandener Systeme; keine SFD2-Codierungen.",
     href: "#fahrzeugauswahl", action: "Assistenzfunktionen für mein Fahrzeug prüfen",
@@ -89,9 +90,9 @@ export default function Home() {
 
     <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
       <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div></div>
-      <nav className="td-service-main-links" aria-label="Fahrzeuge, Preise und Software"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link><Link href="/remote-check">Remote-Check<ArrowRight aria-hidden="true" /></Link><Link href="/steuergeraete-flash">Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link></nav>
-      <div className="td-service-catalog">{services.map(({ Icon, title, copy, rows, models, note, source, sourceLabel, href, action }) => <details key={title} className="td-service-panel">
-        <summary><Icon className="td-service-icon" aria-hidden="true" /><span><h3>{title}</h3><span className="td-service-intro">{copy}</span><span className="td-service-expand">Funktionen &amp; Preise ansehen</span></span><ChevronDown className="td-service-chevron" aria-hidden="true" /></summary>
+      <nav className="td-service-main-links" aria-label="Fahrzeuge, Preise und Software"><Link href="/fahrzeuge"><TechnicalIcon name="Fahrzeug" />Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link><Link href="/remote-check"><TechnicalIcon name="Remote" />Remote-Check<ArrowRight aria-hidden="true" /></Link><Link href="/steuergeraete-flash"><TechnicalIcon name="Diagnose" />Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link></nav>
+      <div className="td-service-catalog">{services.map(({ icon, title, copy, rows, models, note, source, sourceLabel, href, action }) => <details key={title} className="td-service-panel">
+        <summary><TechnicalIcon name={icon} badge className="td-service-symbol" /><span><h3>{title}</h3><span className="td-service-intro">{copy}</span><span className="td-service-expand">Funktionen &amp; Preise ansehen</span></span><ChevronDown className="td-service-chevron" aria-hidden="true" /></summary>
         <div className="td-service-body">
           <ul className="td-service-prices" aria-label={`${title}: Leistungen und Preise`}>{rows.map(({ name, price, exampleKey }) => <li key={name}><div className="td-service-price-row"><span>{name}</span><strong>{price}</strong></div><FunctionExample exampleKey={exampleKey} /></li>)}</ul>
           {models && <><h4>Baureihen nach Vorprüfung</h4><ul className="td-service-models">{models.map((model) => <li key={model}>{model}</li>)}</ul></>}
