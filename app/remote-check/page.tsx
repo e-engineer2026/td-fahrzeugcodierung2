@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 const interfaces = ["VCDS", "VCP", "OBD11", "Noch kein Interface", "Anderes Interface"];
 
@@ -27,7 +28,7 @@ export default function RemoteCheck() {
     "Spannungsversorgung geklärt: " + (power ? "Ja" : "Nein / unklar")
   ].join("\n");
   return <main className="mx-auto max-w-3xl px-5 py-12 text-slate-900">
-    <a href="/" className="text-sm font-semibold text-blue-700">← Zur Startseite</a>
+    <Link href="/" className="text-sm font-semibold text-blue-700">← Zur Startseite</Link>
     <h1 className="mt-8 text-3xl font-bold">Remote-Codierung vorprüfen</h1>
     <p className="mt-4 text-slate-600">Prüfe die Voraussetzungen für eine Codierung per Fernzugriff. Die tatsächliche Machbarkeit hängt von Fahrzeug, Softwarestand, Ausstattung, Schutzmechanismen und Diagnoseinterface ab.</p>
     <div className="mt-8 grid gap-5 rounded-2xl border border-slate-200 p-6">

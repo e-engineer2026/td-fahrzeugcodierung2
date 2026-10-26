@@ -5,7 +5,8 @@ import { ArrowLeft, MapPin } from "lucide-react";
 const customerParkingMaps = "https://www.google.com/maps/search/?api=1&query=51.323915%2C12.375662";
 
 export const metadata = {
-  title: "Anfahrt & Kundenparkplatz | TD Fahrzeugcodierung Leipzig",
+  title: "Anfahrt & Kundenparkplatz in Leipzig",
+  alternates: { canonical: "/anfahrt" },
   description: "Anfahrt zum Kundenparkplatz von TD Fahrzeugcodierung in Leipzig-Süd. Bitte gegenüber der Schenkendorfstraße 33 parken.",
 };
 

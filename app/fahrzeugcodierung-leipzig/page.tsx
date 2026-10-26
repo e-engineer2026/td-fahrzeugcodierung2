@@ -23,6 +23,7 @@ export default function Page() {
       "Neben Vor-Ort-Terminen in Leipzig-Süd ist für geeignete Fahrzeuge und Aufgaben auch Remote-Codierung möglich. Voraussetzung sind ein kompatibles Diagnoseinterface, eine stabile Verbindung und eine Funktion, die sich technisch sicher aus der Ferne durchführen lässt."
     ]}
     relatedLinks={[
+      { href: "/carplay-freischalten-leipzig", label: "Infotainment und Smartphone-Integration" },
       { href: "/vw-codierung-leipzig", label: "VW Codierung Leipzig", description: "Codierungen und Diagnose für Golf 5 bis 8, Passat, Tiguan, Polo, T-Roc und weitere VW-Modelle." },
       { href: "/audi-codierung-leipzig", label: "Audi Codierung Leipzig", description: "Audi-spezifische Codierungen, Anpassungen und Diagnose für A1, A3, A4, A5, A6, A7 und Q-Modelle." },
       { href: "/skoda-codierung-leipzig", label: "Škoda Codierung Leipzig", description: "Codierungen für Octavia 3 und 4, Superb, Fabia, Kodiaq, Karoq, Enyaq und weitere Baureihen." },
