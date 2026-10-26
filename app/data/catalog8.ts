@@ -1,3 +1,4 @@
+import { cockpitDesignCodings, cockpitDesignForVehicle, isCockpitDesignName } from "./cockpitDesigns";
 import {
   codingCatalog as baseCodingCatalog,
   codingGroups,
@@ -72,12 +73,15 @@ export const codingCatalog: Coding[] = [
 
     return coding;
   }),
+  ...cockpitDesignCodings,
   ...mqbevoLaneCodings,
   mqbevoFlaMemoryCoding,
 ];
 
 export function codingsForVehicle(vehicle: Vehicle): string[] {
-  const baseIds = baseCodingsForVehicle(vehicle);
+  const design = cockpitDesignForVehicle(vehicle);
+  const baseIds = baseCodingsForVehicle(vehicle).filter((id) => !design || !isCockpitDesignName(baseCodingCatalog.find((c) => c.id === id)?.name ?? ""));
+  if (design) baseIds.push(design.id);
   if (vehicle.platform === "MQBevo") {
     return Array.from(new Set([...baseIds, ...mqbevoLaneCodings.map((coding) => coding.id), mqbevoFlaMemoryCoding.id]));
   }

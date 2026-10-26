@@ -8,6 +8,7 @@ import { ChevronDown, Laptop, MapPin, Search, Sparkles } from "lucide-react";
 import ConfiguratorLiveActions from "./ConfiguratorLiveActions";
 import SaveVehicleCard from "./SaveVehicleCard";
 import FunctionExample from "./FunctionExample";
+import { cockpitDesignForVehicle, isCockpitDesignName } from "../data/cockpitDesigns";
 import { brands, codingCatalog, codingsForVehicle, vehicles, type Vehicle } from "../data/catalog";
 import { platformCodingSources } from "../data/platformCodingLists";
 import type { PlatformCodingEntry, PlatformCodingSource } from "../data/platformCodingLists";
@@ -104,6 +105,7 @@ function vehicleSpecificCodings(
   const ids = new Set(codingsForVehicle(vehicle));
   const vehicleCatalog = codingCatalog
     .filter((coding) => ids.has(coding.id))
+    .filter((coding) => !coding.id.startsWith("cockpit-design-") || coding.id === cockpitDesignForVehicle(vehicle, year)?.id)
     .filter((coding) => {
       if (!isSfd1 || coding.category !== "Assistenzsysteme") return true;
       if (coding.id === "mqbevo-lane-onstate" || coding.id === "mqbevo-adaptive-lane") return true;
@@ -122,6 +124,7 @@ function vehicleSpecificCodings(
   if (!source) return curateCodingEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year)));
   const allowedCapabilities = new Set(vehicleCatalog.map((coding) => capabilityForName(coding.name)).filter((value): value is string => Boolean(value)));
   const platformEntries: UnifiedCodingEntry[] = source.entries
+    .filter((entry) => !cockpitDesignForVehicle(vehicle) || !isCockpitDesignName(entry.name))
     .filter((entry) => yearAllowed(entry.name, year))
     .filter((entry) => modelHintAllowed(entry.name, vehicle))
     .filter((entry) => { const capability = capabilityForName(entry.name); if (capability && allowedCapabilities.has(capability)) return true; return vehicleCatalog.some((coding) => tokenRelated(entry.name, coding.name)); })

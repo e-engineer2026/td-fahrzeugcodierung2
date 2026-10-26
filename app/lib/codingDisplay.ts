@@ -260,7 +260,8 @@ function curateLightAndInfotainmentEntries(entries: UnifiedCodingEntry[]): Unifi
 
 // Shared by the configurator and every vehicle price page.
 export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
-  const normalized = entries.map((entry) => {
+  const cockpitDesigns = entries.filter((entry) => /^(vehicle-)?cockpit-design-/.test(entry.id));
+  const normalized = entries.filter((entry) => !/^(vehicle-)?cockpit-design-/.test(entry.id)).map((entry) => {
     if (!/(coming[ -]home|leaving[ -]home)/i.test(entry.name)) return entry;
     return {
       ...entry,
@@ -268,5 +269,5 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
       uiGroup: "Licht" as const,
     };
   });
-  return curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized)));
+  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...cockpitDesigns];
 }
