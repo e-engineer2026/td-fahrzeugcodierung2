@@ -22,6 +22,7 @@ const vehicleFunction = `function vehicleSpecificCodings(
   const ids = new Set(codingsForVehicle(vehicle));
   const vehicleCatalog = codingCatalog
     .filter((coding) => ids.has(coding.id))
+    .filter((coding) => !coding.id.startsWith("cockpit-design-") || coding.id === cockpitDesignForVehicle(vehicle, year)?.id)
     .filter((coding) => {
       if (!isSfd1 || coding.category !== "Assistenzsysteme") return true;
       if (coding.id === "mqbevo-lane-onstate" || coding.id === "mqbevo-adaptive-lane") return true;
