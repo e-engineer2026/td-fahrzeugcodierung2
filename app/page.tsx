@@ -30,9 +30,6 @@ const services = [
   {
     Icon: Sparkles, title: "Häufigste Funktionen", copy: "Beliebte Codierungen auf einen Blick.",
     rows: serviceRows(["asc-1", "asc-4", "asc-15", "asc-32", "asc-112", "asc-30", "asc-29", "asc-60", "asc-8", "asc-111"]),
-    note: "Auswahl beliebter Anpassungen aus veröffentlichten Nutzungsdaten und VAG-Funktionsübersichten; keine eigene Kundenrangliste.",
-    source: "https://obdeleven.com/es/blog/most-popular-one-click-apps-in-2025",
-    sourceLabel: "OBDeleven: häufig genutzte Funktionen 2025",
     href: "#fahrzeugauswahl", action: "Passende Funktionen auswählen",
   },
   {
@@ -95,7 +92,7 @@ export default function Home() {
         <div className="td-service-body">
           <ul className="td-service-prices" aria-label={`${title}: Leistungen und Preise`}>{rows.map(({ name, price, exampleKey }) => <li key={name}><div className="td-service-price-row"><span>{name}</span><strong>{price}</strong></div><FunctionExample exampleKey={exampleKey} /></li>)}</ul>
           {models && <><h4>Baureihen nach Vorprüfung</h4><ul className="td-service-models">{models.map((model) => <li key={model}>{model}</li>)}</ul></>}
-          <p className="td-service-note">{note}</p>
+          {note && <p className="td-service-note">{note}</p>}
           {source && <a className="td-service-source" href={source} target="_blank" rel="noreferrer">{sourceLabel} ↗</a>}
           <a className="td-service-action" href={href}>{action}<ArrowRight aria-hidden="true" /></a>
         </div>
