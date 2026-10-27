@@ -41,7 +41,9 @@ export function hardwareForName(name:string):string|undefined {
   if(n.includes("led-rückleuchten")) return "Entsprechende LED-Rückleuchten und kompatibles Bordnetzsteuergerät erforderlich.";
   if(n.includes("fussraumleuchten auf led")) return "Vorhandene Fußraumleuchten; LED-Leuchtmittel bzw. LED-Umrüstung erforderlich.";
   if(n.includes("fussraumbeleuchtung")) return "Vorhandene Fußraumbeleuchtung und kompatibles Bordnetz-/Komfortsteuergerät erforderlich.";
-  if(n.includes("ambientebeleuchtung")) return "Vorhandene Ambientebeleuchtungs-Hardware/LED-Module; Umfang abhängig von Ausstattung und Steuergeräten.";
+  if(n.includes("ambient") && n.includes("farb")) return "Mehrfarbige RGB-Ambientebeleuchtung und kompatible Steuergeräte und Infotainment erforderlich; bis zu 10 Farben je nach Fahrzeug.";
+  if(n.includes("ambientebeleuchtung")) return "Geeignete vorhandene oder nachgerüstete Beleuchtung und kompatible Ansteuerung erforderlich; Machbarkeit wird vorab geprüft.";
+  if(n.includes("zeigertest") || n.includes("staging")) return "Kompatibles Kombiinstrument und unterstützter Softwarestand erforderlich; bei digitalen Cockpits ist die Funktion nicht immer verfügbar."
   if(n.includes("scheinwerferreinigungsanlage")) return "Werksseitige Scheinwerferreinigungsanlage erforderlich.";
   if(n.includes("coming home") || n.includes("leaving home")) return "Kompatibles Bordnetz-/Lichtsteuergerät; für automatische Varianten meist Regen-/Lichtsensor erforderlich.";
 
