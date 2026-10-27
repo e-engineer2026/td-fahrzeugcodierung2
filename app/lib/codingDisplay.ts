@@ -185,7 +185,9 @@ const curatedLightRules: CuratedDisplayRule[] = [
   { name: "Standlicht / Parklicht anpassen", price: 15, match: /(?=.*(standlicht|parklicht))(?!.*us[- ])/i },
   { name: "Kennzeichenbeleuchtung auf LED anpassen", price: 15, match: /kennzeichenbeleuchtung/i },
   { name: "Ambientebeleuchtung freischalten", price: 35, match: /(?=.*ambient)(?=.*(aktivier|freischalt|nachrüstung|nachruestung))/i },
-  { name: "Ambientebeleuchtung Farben / Verhalten anpassen", price: 20, match: /(?=.*ambient)(?!.*(aktivier|freischalt|nachrüstung|nachruestung))/i },
+  { name: "Ambientebeleuchtung – Farben erweitern bis zu 10", price: 20, match: /(?=.*ambient)(?=.*(farben erweitern|bis zu 10 farben))/i, hardware: "Mehrfarbige RGB-Leuchten, kompatible Steuergeräte und geeignetes Infotainment erforderlich; bis zu 10 Farben je nach Fahrzeug." },
+  { name: "Ambientebeleuchtung – Farben anpassen", price: 20, match: /(?=.*ambient)(?=.*farb)(?!.*(erweitern|bis zu 10|fahrprofil))/i, hardware: "Mehrfarbige RGB-Leuchten und geeignete Steuergeräte erforderlich." },
+  { name: "Ambientebeleuchtung – Verhalten anpassen", price: 20, match: /(?=.*ambient)(?!.*(aktivier|freischalt|nachrüstung|nachruestung|farben erweitern|bis zu 10|farben anpassen))/i },
   { name: "Fußraumbeleuchtung freischalten / anpassen", price: 20, match: /(fußraumbeleuchtung|fussraumbeleuchtung)/i },
   { name: "Umfeldbeleuchtung freischalten / anpassen", price: 25, match: /umfeldbeleuchtung/i },
   { name: "Innenbeleuchtung Einstellungen anpassen", price: 15, match: /(innenlicht|innenraum[- ]?licht|innenbeleuchtung)/i },
@@ -245,7 +247,7 @@ function curateDisplayGroup(
       name: rule.name,
       price: rule.price,
       uiGroup: group,
-      hardware: rule.hardware === null ? undefined : rule.hardware ?? source.hardware,
+      hardware: rule.hardware === null ? undefined : rule.hardware ?? hardwareForName(rule.name) ?? source.hardware,
       sfd,
     }];
   });
