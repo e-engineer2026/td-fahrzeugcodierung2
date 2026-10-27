@@ -87,13 +87,12 @@ export default function Home() {
     <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
       <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div></div>
       <nav className="td-service-main-links" aria-label="Fahrzeuge, Preise und Software"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link><Link href="/remote-check">Remote-Check<ArrowRight aria-hidden="true" /></Link><Link href="/steuergeraete-flash">Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link></nav>
-      <div className="td-service-catalog">{services.map(({ Icon, title, copy, rows, models, note, source, sourceLabel, href, action }) => <details key={title} className="td-service-panel">
+      <div className="td-service-catalog">{services.map(({ Icon, title, copy, rows, models, note, href, action }) => <details key={title} className="td-service-panel">
         <summary><Icon className="td-service-icon" aria-hidden="true" /><span><h3>{title}</h3><span className="td-service-intro">{copy}</span><span className="td-service-expand">Funktionen &amp; Preise ansehen</span></span><ChevronDown className="td-service-chevron" aria-hidden="true" /></summary>
         <div className="td-service-body">
           <ul className="td-service-prices" aria-label={`${title}: Leistungen und Preise`}>{rows.map(({ name, price, exampleKey }) => <li key={name}><div className="td-service-price-row"><span>{name}</span><strong>{price}</strong></div><FunctionExample exampleKey={exampleKey} /></li>)}</ul>
           {models && <><h4>Baureihen nach Vorprüfung</h4><ul className="td-service-models">{models.map((model) => <li key={model}>{model}</li>)}</ul></>}
           {note && <p className="td-service-note">{note}</p>}
-          {source && <a className="td-service-source" href={source} target="_blank" rel="noreferrer">{sourceLabel} ↗</a>}
           <a className="td-service-action" href={href}>{action}<ArrowRight aria-hidden="true" /></a>
         </div>
       </details>)}</div>
