@@ -20,12 +20,10 @@ test("smartphone navigation is confined to compatible model generations and year
   assert.equal(smartphoneAidForVehicle({ brand: "Volkswagen", model: "A3 / S3 8V" }, 2018), undefined);
 });
 
-test("Audi smartphone navigation requires its own firmware and iPhone support", () => {
+test("Audi smartphone navigation retains the matching hardware and iPhone requirements", () => {
   const audi = smartphoneAidForVehicle({ brand: "Audi", model: "A3 / S3 8V" }, 2018);
   assert.match(audi.hardware, /iPhone per USB/);
-  assert.match(audi.requirements, /MHI2_ER_AU37x_P5089/);
-  assert.match(audi.requirements, /Android Auto ist.*nicht enthalten/);
-  assert.match(audi.requirements, /Keine vollständige App-Connect-Spiegelung/);
+  assert.match(audi.hardware, /MMI Navigation plus MIB2 High/);
 });
 
 test("model-page links round-trip Unicode and model names without browser storage", () => {

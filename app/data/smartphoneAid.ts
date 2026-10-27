@@ -61,7 +61,6 @@ export const smartphoneAidCodings: Coding[] = rules.map((rule, index) => {
     category: "Standard-Codierungen",
     uiGroup: "Infotainment",
     hardware: profile.hardware,
-    requirements: `Software: ${profile.software} Für diese Baureihe ${rule.from}–${rule.until} nur mit der genannten Geräteausstattung. Softwaremodifikation nach technischer Vorprüfung, keine reine VCDS-Codierung. Je nach System Navigationskarte und/oder Abbiegepfeile mit Entfernungsangaben; nicht jede App liefert beide Ansichten. Keine vollständige App-Connect-Spiegelung. MIB3, SFD2 und Firmware-Updates sind nicht enthalten.`,
     interfaceInfo: "Softwareinstallation am Infotainment nach Geräteprüfung und Sicherung des Originalzustands",
     sourceUrl: profile.sourceUrl,
   };
