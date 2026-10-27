@@ -1,5 +1,6 @@
 import type { PlatformCodingGroup } from "../data/platformCodingPricing";
 import { hardwareForName } from "../data/hardware";
+import { isSmartphoneAidId } from "../data/smartphoneAid";
 
 export type UnifiedCodingEntry = {
   id: string;
@@ -262,6 +263,10 @@ function curateLightAndInfotainmentEntries(entries: UnifiedCodingEntry[]): Unifi
 
 // Shared by the configurator and every vehicle price page.
 export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  // Preserve the dedicated 59 € offer and its exact device requirements instead
+  // of merging it into generic cockpit design or navigation display settings.
+  const smartphoneAid = entries.filter((entry) => isSmartphoneAidId(entry.id));
+  entries = entries.filter((entry) => !isSmartphoneAidId(entry.id));
   const cockpitDesigns = entries.filter((entry) => /^(vehicle-)?cockpit-design-/.test(entry.id));
   const normalized = entries.filter((entry) => !/^(vehicle-)?cockpit-design-/.test(entry.id)).map((entry) => {
     if (!/(coming[ -]home|leaving[ -]home)/i.test(entry.name)) return entry;
@@ -271,5 +276,5 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
       uiGroup: "Licht" as const,
     };
   });
-  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...cockpitDesigns];
+  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...cockpitDesigns, ...smartphoneAid];
 }

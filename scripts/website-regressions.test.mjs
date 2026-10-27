@@ -2,9 +2,31 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { resolveHomeVehicleSelection, vehicleBookingHref } from "../app/lib/homeVehicleSelection.ts";
 import { matchesCodingSearch } from "../app/lib/codingSearch.ts";
+import { smartphoneAidForVehicle } from "../app/data/smartphoneAid.ts";
 
 const catalog = [{ brand: "Škoda", model: "Octavia 3 5E", startYear: 2013, endYear: 2020 }];
 const vehicle = { brand: "Škoda", model: "Octavia 3 5E" };
+
+test("smartphone navigation is confined to compatible model generations and years", () => {
+  const golf = { brand: "Volkswagen", model: "Golf 7 (5G)" };
+  assert.equal(smartphoneAidForVehicle(golf, 2018)?.price, 59);
+  for (const year of [2016, 2021, 2024, NaN, 2018.5]) {
+    assert.equal(smartphoneAidForVehicle(golf, year), undefined);
+  }
+  for (const model of ["Golf 8 (CD)", "Polo AW", "Golf 6 (1K)"]) {
+    assert.equal(smartphoneAidForVehicle({ brand: "Volkswagen", model }, 2018), undefined);
+  }
+  assert.equal(smartphoneAidForVehicle({ brand: "Audi", model: "A3 / S3 8Y" }, 2021), undefined);
+  assert.equal(smartphoneAidForVehicle({ brand: "Volkswagen", model: "A3 / S3 8V" }, 2018), undefined);
+});
+
+test("Audi smartphone navigation requires its own firmware and iPhone support", () => {
+  const audi = smartphoneAidForVehicle({ brand: "Audi", model: "A3 / S3 8V" }, 2018);
+  assert.match(audi.hardware, /iPhone per USB/);
+  assert.match(audi.requirements, /MHI2_ER_AU37x_P5089/);
+  assert.match(audi.requirements, /Android Auto ist.*nicht enthalten/);
+  assert.match(audi.requirements, /Keine vollständige App-Connect-Spiegelung/);
+});
 
 test("model-page links round-trip Unicode and model names without browser storage", () => {
   const url = new URL(vehicleBookingHref(vehicle), "https://td-fahrzeugcodierung.de");

@@ -22,6 +22,7 @@ const vehicleFunction = `function vehicleSpecificCodings(
   const ids = new Set(codingsForVehicle(vehicle));
   const vehicleCatalog = codingCatalog
     .filter((coding) => ids.has(coding.id))
+    .filter((coding) => !isSmartphoneAidId(coding.id) || coding.id === smartphoneAidForVehicle(vehicle, year)?.id)
     .filter((coding) => !coding.id.startsWith("cockpit-design-") || coding.id === cockpitDesignForVehicle(vehicle, year)?.id)
     .filter((coding) => {
       if (!isSfd1 || coding.category !== "Assistenzsysteme") return true;
@@ -35,6 +36,7 @@ const vehicleFunction = `function vehicleSpecificCodings(
     price: coding.price,
     uiGroup: coding.uiGroup as PlatformCodingGroup,
     hardware: coding.hardware ?? coding.requirements,
+    requirements: isSmartphoneAidId(coding.id) ? coding.requirements : undefined,
     source: "vehicle" as const,
   }));
 `;

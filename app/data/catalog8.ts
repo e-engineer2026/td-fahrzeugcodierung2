@@ -1,4 +1,5 @@
 import { cockpitDesignCodings, cockpitDesignForVehicle, isCockpitDesignName } from "./cockpitDesigns";
+import { smartphoneAidCodings, smartphoneAidForVehicle } from "./smartphoneAid";
 import {
   codingCatalog as baseCodingCatalog,
   codingGroups,
@@ -74,6 +75,7 @@ export const codingCatalog: Coding[] = [
     return coding;
   }),
   ...cockpitDesignCodings,
+  ...smartphoneAidCodings,
   ...mqbevoLaneCodings,
   mqbevoFlaMemoryCoding,
 ];
@@ -82,6 +84,8 @@ export function codingsForVehicle(vehicle: Vehicle): string[] {
   const design = cockpitDesignForVehicle(vehicle);
   const baseIds = baseCodingsForVehicle(vehicle).filter((id) => !design || !isCockpitDesignName(baseCodingCatalog.find((c) => c.id === id)?.name ?? ""));
   if (design) baseIds.push(design.id);
+  const smartphoneAid = smartphoneAidForVehicle(vehicle);
+  if (smartphoneAid) baseIds.push(smartphoneAid.id);
   if (vehicle.platform === "MQBevo") {
     return Array.from(new Set([...baseIds, ...mqbevoLaneCodings.map((coding) => coding.id), mqbevoFlaMemoryCoding.id]));
   }

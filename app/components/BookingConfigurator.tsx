@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { homeVehicleReadyEvent, homeVehicleSelectedEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSelection, type HomeVehicleSelection } from "../lib/homeVehicleSelection";
 import { curateCodingEntries, type UnifiedCodingEntry } from "../lib/codingDisplay";
 import { matchesCodingSearch } from "../lib/codingSearch";
+import { isSmartphoneAidId, smartphoneAidForVehicle } from "../data/smartphoneAid";
 import { ChevronDown, Laptop, MapPin, Search, Sparkles } from "lucide-react";
 import ConfiguratorLiveActions from "./ConfiguratorLiveActions";
 import SaveVehicleCard from "./SaveVehicleCard";
@@ -105,6 +106,7 @@ function vehicleSpecificCodings(
   const ids = new Set(codingsForVehicle(vehicle));
   const vehicleCatalog = codingCatalog
     .filter((coding) => ids.has(coding.id))
+    .filter((coding) => !isSmartphoneAidId(coding.id) || coding.id === smartphoneAidForVehicle(vehicle, year)?.id)
     .filter((coding) => !coding.id.startsWith("cockpit-design-") || coding.id === cockpitDesignForVehicle(vehicle, year)?.id)
     .filter((coding) => {
       if (!isSfd1 || coding.category !== "Assistenzsysteme") return true;
@@ -118,6 +120,7 @@ function vehicleSpecificCodings(
     price: coding.price,
     uiGroup: coding.uiGroup as PlatformCodingGroup,
     hardware: coding.hardware ?? coding.requirements,
+    requirements: isSmartphoneAidId(coding.id) ? coding.requirements : undefined,
     source: "vehicle" as const,
   }));
   const source = codingSources.find((item) => item.platform === vehicle.platform);
