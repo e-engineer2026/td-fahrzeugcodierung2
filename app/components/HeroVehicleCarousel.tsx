@@ -7,9 +7,9 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/td-hero-chrome-v2.webp", alt: "Graphitgraues Fahrzeug mit verchromtem TD-Emblem in einer hellen, natürlichen Umgebung" },
-  { src: "/td-hero-gti-red-logo-free.webp", alt: "Rote GTI-Variante ohne Kühlergrillemblem in derselben hellen Umgebung" },
-  { src: "/td-hero-r-blue-logo-free.webp", alt: "Blaue R-Variante ohne Kühlergrillemblem in derselben hellen Umgebung" },
+  { src: "/td-hero-side-grey.webp", alt: "Graphitgrauer Golf mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
+  { src: "/td-hero-side-gti.webp", alt: "Roter Golf GTI mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
+  { src: "/td-hero-side-r.webp", alt: "Blauer Golf R mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
 ];
 
 export default function HeroVehicleCarousel() {
