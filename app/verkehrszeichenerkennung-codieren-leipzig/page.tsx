@@ -16,7 +16,7 @@ export default function Page() {
     models={["VW Golf 7 / 8", "VW Passat B8", "VW Tiguan II", "Audi A3 8V / 8Y", "Škoda Octavia 3 / 4", "SEAT Leon 5F", "CUPRA Formentor"]}
     detailsTitle="Voraussetzungen für VZE"
     details={[
-      "Entscheidend sind unter anderem Frontkamera, Infotainment-/Navigationssystem, Kombiinstrument und die im Fahrzeug vorhandenen Steuergeräte.",
+      "Für unser Angebot sind ein werksseitiges Navigationssystem mit verfügbaren Navigationsdaten, eine geeignete Frontkamera sowie kompatible Steuergeräte und ein passendes Kombiinstrument erforderlich. Ohne Navi ist eine individuelle Prüfung möglich.",
       "Je nach Plattform kann eine reine Codierung ausreichen; bei anderen Fahrzeugen sind zusätzliche Parametrierungen oder Freischaltungen erforderlich.",
       "Vor der Durchführung wird geprüft, welche Variante für das konkrete Fahrzeug technisch sinnvoll und zulässig ist."
     ]}

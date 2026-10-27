@@ -11,7 +11,7 @@ ACC - Rechts Überholen unterbinden/erlauben (Variante 2)
 Allrad - Versperrmaßnahmen erhöhen für mehr Traktion
 Ambientebeleuchtung (mehrfarbig) - Aktivierung/Freischaltung
 Ambientebeleuchtung (mehrfarbig) - Farben anpassen
-Ambientebeleuchtung (mehrfarbig) - Farben erweitern auf 30 Möglichkeiten
+Ambientebeleuchtung (mehrfarbig) - Farben erweitern – bis zu 10 Farben
 Ambientebeleuchtung (mehrfarbig) - Farbzuordnung zu Fahrprofil ändern
 Ambientebeleuchtung - Abdimmen der Türbeleuchtung deaktivieren
 Ambientebeleuchtung - Farben anpassen (Leon III 5F)
