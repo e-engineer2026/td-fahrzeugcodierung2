@@ -13,12 +13,12 @@ const vehicles = [
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
-  { model: "A3 / S3 8V", from: 2017, until: 2020, src: "/vehicle-images/sport/audi-s3-8v.webp", label: "Blauer Audi S3 8V" },
-  { model: "A4 / S4 B9", from: 2016, until: 2019, src: "/vehicle-images/sport/audi-s4-b9.webp", label: "Grauer Audi S4 B9 Avant" },
-  { model: "A5 / S5 F5", from: 2020, until: 2023, src: "/vehicle-images/sport/audi-rs5-f5.webp", label: "Grüner Audi RS5 F5 Sportback" },
-  { model: "A6 / S6 C8", from: 2020, until: 2026, src: "/vehicle-images/sport/audi-rs6-c8.webp", label: "Grauer Audi RS6 C8 Avant" },
-  { model: "A7 / S7 4K", from: 2020, until: 2026, src: "/vehicle-images/sport/audi-rs7-4k.webp", label: "Roter Audi RS7 4K Sportback" },
-  { model: "A8 D4 (4H)", from: 2014, until: 2017, src: "/vehicle-images/sport/audi-s8-d4.webp", label: "Schwarzer Audi S8 D4" },
+  { model: "A3 / S3 8V", from: 2017, until: 2020, src: "/vehicle-images/sport/audi-s3-8v-scene.webp", label: "Blauer Audi S3 8V" },
+  { model: "A4 / S4 B9", from: 2016, until: 2019, src: "/vehicle-images/sport/audi-s4-b9-scene.webp", label: "Grauer Audi S4 B9 Avant" },
+  { model: "A5 / S5 F5", from: 2020, until: 2023, src: "/vehicle-images/sport/audi-rs5-f5-scene.webp", label: "Grüner Audi RS5 F5 Sportback" },
+  { model: "A6 / S6 C8", from: 2020, until: 2026, src: "/vehicle-images/sport/audi-rs6-c8-scene.webp", label: "Grauer Audi RS6 C8 Avant" },
+  { model: "A7 / S7 4K", from: 2020, until: 2026, src: "/vehicle-images/sport/audi-rs7-4k-scene.webp", label: "Roter Audi RS7 4K Sportback" },
+  { model: "A8 D4 (4H)", from: 2014, until: 2017, src: "/vehicle-images/sport/audi-s8-d4-scene.webp", label: "Schwarzer Audi S8 D4" },
 ];
 function sportImage(choice: HomeVehicleSelection | null): VehicleHeroImage | null {
   if (!choice || choice.brand !== "Audi" || !choice.year) return null;
