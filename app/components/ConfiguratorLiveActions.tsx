@@ -63,7 +63,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
             <div className="mt-4 grid gap-2 text-center min-[380px]:grid-cols-3">
               <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Normalpreis</div><div className="mt-1 font-black">{snapshot.subtotal} €</div></div>
               <div className="rounded-xl bg-white p-3"><div className="text-xs text-slate-500">Aktionsrabatt ({snapshot.rate} %)</div><div className="mt-1 font-black text-blue-700">−{snapshot.discount} €</div></div>
-              <div className="rounded-xl bg-blue-600 p-3 text-white"><div className="text-xs text-blue-100">Dein Preis</div><div className="mt-1 font-black">{snapshot.total} €</div></div>
+              <div className="rounded-xl bg-blue-600 p-3 text-white"><div className="text-xs text-blue-100">Dein Preis</div><div key={snapshot.total} className="td-price-change mt-1 font-black">{snapshot.total} €</div></div>
             </div>
             {snapshot.sfdFee > 0 && <p className="mt-2 text-sm text-slate-700">Der Normalpreis enthält {snapshot.sfdFee.toFixed(2).replace(".", ",")} € für die einmalige SFD1-Freischaltung. Der Aktionsrabatt gilt auch dafür.</p>}
             <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
