@@ -61,7 +61,7 @@ export default function Home() {
 
     <aside className="td-offer" aria-label="Aktionsrabatt für alle ohne Anmeldung">
       <details className="td-container">
-        <summary><span className="td-offer-title"><Tag aria-hidden="true" /><strong>Aktionsrabatt: bis zu 25 %<span> für alle</span></strong></span><span className="td-offer-condition">Ohne Anmeldung · bis einschließlich 30.11.2026</span><ChevronDown className="td-offer-chevron" aria-hidden="true" /></summary>
+        <summary><span className="td-offer-title"><Tag aria-hidden="true" /><strong>Aktionsrabatt für alle: 10–25 %</strong></span><span className="td-offer-condition">Ohne Anmeldung · bis 30.11.2026</span><ChevronDown className="td-offer-chevron" aria-hidden="true" /></summary>
         <div className="td-offer-details"><div className="td-offer-tiers">{[[10, 50], [15, 100], [20, 150], [25, 200]].map(([rate, amount]) => <span key={rate}><b>{rate} %</b> ab {amount} €</span>)}</div><p>Für alle Kunden ohne Anmeldung vom 04.10.2026 bis einschließlich 30.11.2026 – auch bei weiteren Buchungen. Der Rabatt wird im Konfigurator automatisch berücksichtigt. Eine erforderliche SFD1-Freischaltung zählt zum Auftragswert und wird mitrabattiert.</p><a href="#fahrzeugauswahl">Jetzt Codierungen auswählen <ArrowRight aria-hidden="true" /></a></div>
       </details>
     </aside>
