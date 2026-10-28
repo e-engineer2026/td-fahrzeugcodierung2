@@ -11,6 +11,8 @@ function track(channel: string) {
 
 export default function MobileContactBar() {
   const [hasSelection, setHasSelection] = useState(false);
+  const [summaryVehicle, setSummaryVehicle] = useState("");
+  const [summaryPrice, setSummaryPrice] = useState("");
   const [calendarUrl, setCalendarUrl] = useState("/#kontakt");
   const [whatsappUrl, setWhatsappUrl] = useState("https://wa.me/4915563047044");
 
@@ -23,6 +25,8 @@ export default function MobileContactBar() {
       const selected = count > 0;
 
       setHasSelection(selected);
+      setSummaryVehicle(selected ? `${configurator?.dataset.vehicle || "Fahrzeug"} · ${count} ${count === 1 ? "Codierung" : "Codierungen"}` : "");
+      setSummaryPrice(selected ? `Rabatt: −${configurator?.dataset.discount || "0,00"} € · Gesamt: ${configurator?.dataset.total || "0,00"} €` : "");
       setCalendarUrl(selected && calUrl ? "#termin-zahlung" : "/#kontakt");
 
       if (selected && configurator) {
@@ -82,6 +86,7 @@ export default function MobileContactBar() {
   return (
     <>
       <div className="fixed inset-x-0 bottom-0 z-[70] border-t border-slate-200 bg-white/95 px-2 pt-2 pb-[max(.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_rgba(15,23,42,0.12)] backdrop-blur md:hidden">
+        {hasSelection && <div className="mx-auto mb-1 max-w-lg px-1 text-xs leading-4 text-slate-700" aria-live="polite"><div className="truncate font-semibold">{summaryVehicle}</div><div className="font-bold text-blue-700">{summaryPrice}</div></div>}
         <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
           <a
             href={whatsappUrl}
@@ -108,7 +113,7 @@ export default function MobileContactBar() {
           </a>
         </div>
       </div>
-      <div className="h-20 md:hidden" aria-hidden="true" />
+      <div className={hasSelection ? "h-28 md:hidden" : "h-20 md:hidden"} aria-hidden="true" />
     </>
   );
 }

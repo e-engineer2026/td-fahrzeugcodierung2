@@ -52,6 +52,7 @@ export default function HomeVehicleFinder() {
   }
 
   return <div className="td-finder" role="group" aria-labelledby="finder-title">
+    <ol className="td-config-steps" aria-label="Schritte zur Terminbuchung"><li aria-current="step"><span>1</span> Fahrzeug</li><li><span>2</span> Codierungen</li><li><span>3</span> Preis &amp; Termin</li></ol>
     <div className="td-finder-top">
       <div><h2 id="finder-title">Was fährst du?</h2><p>Fahrzeug auswählen und passende Codierungen entdecken.</p></div>
       <div className="td-mode" role="group" aria-label="Terminart">

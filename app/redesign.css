@@ -228,3 +228,11 @@
 @media (prefers-reduced-motion: reduce) {
   .td-home .td-hero-slide, .td-home .td-price-change, .td-home .td-service-panel, .td-home .booking-flow section, .td-home .booking-flow [aria-expanded="true"] + div { animation: none !important; transition: none !important; }
 }
+
+/* Clear, compact configurator progress. */
+.td-home .td-config-steps{display:flex;align-items:center;justify-content:space-between;gap:8px;list-style:none;padding:0;margin:0 0 20px;color:#64748b;font-size:14px;font-weight:600}
+.td-home .td-config-steps li{display:flex;align-items:center;gap:7px;min-width:0}
+.td-home .td-config-steps li span{display:grid;place-items:center;flex-shrink:0;width:26px;height:26px;border:1px solid #cbd5e1;border-radius:50%;font-size:13px}
+.td-home .td-config-steps li[aria-current="step"]{color:#174fb8}
+.td-home .td-config-steps li[aria-current="step"] span{background:#245bd4;border-color:#245bd4;color:white}
+@media(max-width:600px){.td-home .td-config-steps{gap:5px;margin-bottom:16px;font-size:12px}.td-home .td-config-steps li{gap:4px}.td-home .td-config-steps li span{width:23px;height:23px;font-size:12px}}
