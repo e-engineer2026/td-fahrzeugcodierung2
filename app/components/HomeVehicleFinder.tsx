@@ -10,7 +10,7 @@ export default function HomeVehicleFinder() {
   const [model, setModel] = useState("");
   const [year, setYear] = useState(0);
   const [mode, setMode] = useState<"onsite" | "remote">("onsite");
-  const models = vehicles.filter((item) => item.brand === brand);
+  const models = vehicles.filter((item) => item.brand === brand).sort((a, b) => a.model.localeCompare(b.model, "de", { numeric: true, sensitivity: "base" }));
   const vehicle = models.find((item) => item.model === model);
   const years = vehicle ? Array.from({ length: vehicle.endYear - vehicle.startYear + 1 }, (_, i) => vehicle.endYear - i) : [];
   const ready = Boolean(vehicle && years.includes(year));
