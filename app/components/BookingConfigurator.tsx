@@ -197,7 +197,7 @@ export default function BookingConfigurator({ integrated = false }: { integrated
     document.getElementById("buchen")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
   }, [selectionRequest, year]);
 
-  const models = brand ? vehicles.filter((vehicle) => vehicle.brand === brand) : [];
+  const models = brand ? vehicles.filter((vehicle) => vehicle.brand === brand).sort((a, b) => a.model.localeCompare(b.model, "de", { numeric: true, sensitivity: "base" })) : [];
   const selectedVehicle = vehicles.find((vehicle) => vehicle.brand === brand && vehicle.model === vehicleModel);
   const years = selectedVehicle ? Array.from({ length: selectedVehicle.endYear - selectedVehicle.startYear + 1 }, (_, index) => selectedVehicle.endYear - index) : [];
   const hasVehicle = Boolean(selectedVehicle);
