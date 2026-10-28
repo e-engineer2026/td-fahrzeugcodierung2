@@ -209,3 +209,22 @@
 @media(min-width:1700px){.td-leipzig-skyline{height:250px}}
 @media(max-width:900px){.td-leipzig-skyline{height:205px}}
 @media(max-width:600px){.td-leipzig-skyline{height:320px;opacity:.32}.td-leipzig-skyline img{object-position:60% center}.td-leipzig-skyline::after{background:linear-gradient(90deg,#ffffffe6,#ffffff99 55%,#ffffff33)}}
+
+
+/* Subtle interaction and reveal effects. */
+@keyframes td-soft-enter { from { opacity: .6; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes td-price-highlight { 0% { transform: scale(1); opacity: .7 } 55% { transform: scale(1.06); opacity: 1 } 100% { transform: scale(1); opacity: 1 } }
+@media (prefers-reduced-motion: no-preference) {
+  .td-home :is(button, .td-button, .td-whatsapp-outline, .btn-primary, .btn-secondary) { transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease; }
+  .td-home :is(button, .td-button, .td-whatsapp-outline, .btn-primary, .btn-secondary):not(:disabled):active { transform: scale(.98); }
+  .td-home .booking-flow select { transition: border-color .2s ease, background-color .2s ease, color .2s ease; }
+  .td-home .booking-flow section:nth-of-type(3) { animation: td-soft-enter .35s ease-out both; }
+  .td-home .booking-flow [aria-expanded="true"] + div { animation: td-soft-enter .25s ease-out both; }
+  .td-home .td-price-change { animation: td-price-highlight .4s ease-out; }
+  @supports (animation-timeline: view()) {
+    .td-home .td-service-panel { animation: td-soft-enter linear both; animation-timeline: view(); animation-range: entry 0% entry 30%; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .td-home .td-hero-slide, .td-home .td-price-change, .td-home .td-service-panel, .td-home .booking-flow section, .td-home .booking-flow [aria-expanded="true"] + div { animation: none !important; transition: none !important; }
+}
