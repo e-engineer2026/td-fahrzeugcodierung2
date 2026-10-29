@@ -8,8 +8,8 @@ import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
   { src: "/td-hero-golf-blue-refined.webp", alt: "Blauer Golf mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
-  { src: "/td-hero-gti-refined.webp", alt: "Roter Golf GTI mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
-  { src: "/td-hero-r-refined.webp", alt: "Blauer Golf R mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
+  { src: "/td-hero-gti-headlights.webp", alt: "Roter Golf GTI mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
+  { src: "/td-hero-r-headlights.webp", alt: "Blauer Golf R mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
