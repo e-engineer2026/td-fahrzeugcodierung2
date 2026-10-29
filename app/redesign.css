@@ -236,3 +236,8 @@
 .td-home .td-config-steps li[aria-current="step"]{color:#174fb8}
 .td-home .td-config-steps li[aria-current="step"] span{background:#245bd4;border-color:#245bd4;color:white}
 @media(max-width:600px){.td-home .td-config-steps{gap:5px;margin-bottom:16px;font-size:12px}.td-home .td-config-steps li{gap:4px}.td-home .td-config-steps li span{width:23px;height:23px;font-size:12px}}
+
+/* The first Golf switches its lights on once after the page opens. */
+.td-hero-picture img.td-headlights{opacity:0;transition:opacity .45s ease;pointer-events:none}
+.td-hero-picture img.td-headlights.is-on{opacity:1}
+@media(prefers-reduced-motion:reduce){.td-hero-picture img.td-headlights{transition:none}}
