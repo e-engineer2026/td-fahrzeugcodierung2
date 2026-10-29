@@ -105,7 +105,7 @@ type CuratedComfortRule = {
 };
 
 const curatedComfortRules: CuratedComfortRule[] = [
-  { name: "Auto-Lock / Auto-Unlock anpassen", price: 15, match: /(auto[- ]?lock|auto[- ]?unlock)/i },
+  { name: "Auto-Lock / Auto-Unlock freischalten", price: 25, match: /^(?:auto[- ]?lock(?:\s*\/\s*auto[- ]?unlock)?|auto[- ]?unlock)\s+(?:aktivieren|anpassen|freischalten)$/i },
   { name: "KESSY / Keyless – Funktionen anpassen", price: 25, match: /(kessy|keyless)/i },
   { name: "Automatisches Verriegeln / Entriegeln anpassen", price: 20, match: /(automatisch.*(verriegel|entriegel)|(verriegel|entriegel).*automatisch)/i },
   { name: "Einzeltüröffnung / Safe-Lock anpassen", price: 20, match: /(einzeltüröffnung|einzeltueroeffnung|safe[- ]?lock)/i },
@@ -144,6 +144,8 @@ function curateComfortEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry
   const curated = curatedComfortRules.flatMap((rule, index) => {
     const matches = candidates.filter((entry) => rule.match.test(entry.name));
     if (!matches.length) return [];
+    // The combined offer requires evidence for both functions, not just a menu or a tank-lock setting.
+    if (index === 0 && !(matches.some((entry) => /auto[- ]?lock/i.test(entry.name)) && matches.some((entry) => /auto[- ]?unlock/i.test(entry.name)))) return [];
 
     const source = matches[0];
     const sfd = matches.some((entry) => entry.sfd === "Ja")
@@ -158,7 +160,7 @@ function curateComfortEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry
       ...source,
       id: `comfort-curated-${index}`,
       name: rule.name,
-      hardware: hardwareForName(rule.name) ?? source.hardware,
+      hardware: index === 0 ? "Kompatible Zentralverriegelung und unterstütztes Komfort-/Bordnetzsteuergerät erforderlich; Funktionsumfang wird am Fahrzeug geprüft." : hardwareForName(rule.name) ?? source.hardware,
       price: rule.price,
       uiGroup: "Komfort" as const,
       sfd,

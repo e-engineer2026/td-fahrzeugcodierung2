@@ -55,6 +55,10 @@ const mqbevoLaneCodings: Coding[] = [
 
 export const codingCatalog: Coding[] = [
   ...baseCodingCatalog.map((coding) => {
+    if (/^(?:auto[- ]?lock(?:\s*\/\s*auto[- ]?unlock)?|auto[- ]?unlock)\s+(?:aktivieren|anpassen|freischalten)$/i.test(coding.name)) {
+      return { ...coding, price: 25 };
+    }
+
     if (smartphoneIntegrationPattern.test(coding.name)) {
       return {
         ...coding,
