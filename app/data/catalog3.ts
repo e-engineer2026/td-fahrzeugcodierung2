@@ -208,6 +208,7 @@ export const vehicles:Vehicle[] = [
   {brand:"SEAT / CUPRA",model:"SEAT Tarraco KN2",startYear:2018,endYear:2024,platform:"MQB",sourceUrl:`${A}/seat-tarraco-kn2/`},
   {brand:"SEAT / CUPRA",model:"SEAT Mii AA",startYear:2011,endYear:2021,platform:"PQ25",sourceUrl:`${A}/seat-mii-aa/`},
   {brand:"SEAT / CUPRA",model:"CUPRA Ateca KH7",startYear:2018,endYear:2024,platform:"MQB",sourceUrl:`${A}/cupra-ateca-kh7/`},
+  {brand:"SEAT / CUPRA",model:"SEAT Leon KL",startYear:2020,endYear:2026,platform:"MQBevo",sfd1From:2020},
   {brand:"SEAT / CUPRA",model:"CUPRA Leon KL",startYear:2020,endYear:2026,platform:"MQBevo",sfd1From:2020,sourceUrl:`${A}/cupra-leon-kl/`},
   {brand:"SEAT / CUPRA",model:"CUPRA Formentor KM",startYear:2020,endYear:2026,platform:"MQBevo",sfd1From:2020,sourceUrl:`${A}/cupra-formentor-km/`},
   {brand:"SEAT / CUPRA",model:"CUPRA Born K11",startYear:2021,endYear:2026,platform:"MEB",sfd1From:2021,sourceUrl:`${A}/cupra-born-k11/`},
