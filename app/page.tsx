@@ -95,7 +95,6 @@ export default function Home() {
           <a className="td-service-action" href={href}>{action}<ArrowRight aria-hidden="true" /></a>
         </div>
       </details>)}</div>
-      <p className="td-service-price-note">Orientierungspreise je Funktion vor Aktionsrabatt. Der fahrzeugspezifische Preis steht im Konfigurator. Falls erforderlich: SFD1-Freischaltung einmalig +10 € pro Auftrag. Ausstattung und Softwarestand werden vorab geprüft.</p>
     </section>
 
     <section id="ablauf" className="td-process" aria-labelledby="process-title"><div className="td-container"><h2 id="process-title">So einfach geht’s.</h2><ol>{[
