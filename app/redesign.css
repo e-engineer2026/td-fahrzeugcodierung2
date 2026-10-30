@@ -241,3 +241,9 @@
 .td-hero-picture img.td-headlights{opacity:0;transition:opacity .45s ease;pointer-events:none}
 .td-hero-picture img.td-headlights.is-on{opacity:1}
 @media(prefers-reduced-motion:reduce){.td-hero-picture img.td-headlights{transition:none}}
+
+/* Supported brands sit at the top of the vehicle image. */
+.td-home .td-hero-brands{position:absolute;z-index:4;top:18px;right:24px;display:flex;align-items:center;justify-content:center;gap:0;max-width:calc(100% - 32px);padding:8px 10px;border:1px solid #dce5ef;border-radius:8px;background:rgba(255,255,255,.9);color:#354a65;box-shadow:0 3px 12px #1834510d;font-size:12px;font-weight:700;letter-spacing:.045em}
+.td-home .td-hero-brands span{padding:0 10px;white-space:nowrap;line-height:1.3}
+.td-home .td-hero-brands span+span{border-left:1px solid #ccd6e2}
+@media(max-width:600px){.td-home .td-hero-brands{top:10px;right:12px;left:12px;max-width:none;padding:7px 3px;font-size:clamp(10px,2.8vw,12px);letter-spacing:0}.td-home .td-hero-brands span{flex:1;text-align:center;padding:0 3px}}

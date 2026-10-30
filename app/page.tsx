@@ -78,7 +78,6 @@ export default function Home() {
     </section>
 
     <section id="fahrzeugauswahl" className="td-container td-finder-wrap" aria-label="Zum Fahrzeugkonfigurator"><HomeVehicleFinder /></section>
-    <div className="td-container td-brand-row" aria-label="Unterstützte Marken">{["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand}>{brand}</span>)}</div>
 
     <section id="buchen" className="td-container td-booking-area" aria-label="Fahrzeugcodierungen auswählen" tabIndex={-1}>
       <BookingConfigurator integrated />
