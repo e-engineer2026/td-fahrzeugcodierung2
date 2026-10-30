@@ -34,7 +34,7 @@ const services = [
   },
   {
     Icon: Settings2, title: "Werkseitiges Luftfahrwerk (AAS)", copy: "Fahrzeughöhe nach Wunsch und Möglichkeit anpassen.",
-    rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "60–80 €", exampleKey: "aas" }],
+    rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "59–79 €", exampleKey: "aas" }],
     models: ["Audi A6 / S6 / Allroad C6 (4F) und C7 (4G)", "Audi A7 / S7 C7 (4G)", "Audi A8 / S8 D4 (4H) und D5 (4N)", "Audi Q7 (4L)", "Volkswagen Touareg I (7L)", "Volkswagen Phaeton (3D)"],
     note: "Nur mit werksseitigem Luftfahrwerk. Preis nach Fahrzeug und Aufwand, verbindlich vor Beginn vereinbart. Weitere Baureihen auf Anfrage. Keine Reparaturen, Nachrüstteile oder Vermessungsarbeiten enthalten.",
     href: `${whatsapp}?text=${encodeURIComponent("Hallo, ich möchte das werksseitige Luftfahrwerk (AAS) anpassen lassen. Fahrzeug / Baujahr: ")}`, action: "Luftfahrwerk anfragen",

@@ -1,3 +1,4 @@
+import { servicePrice } from "./servicePrice";
 import type { PlatformCodingGroup } from "../data/platformCodingPricing";
 import { hardwareForName } from "../data/hardware";
 import { isSmartphoneAidId } from "../data/smartphoneAid";
@@ -278,5 +279,5 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
       uiGroup: "Licht" as const,
     };
   });
-  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...cockpitDesigns, ...smartphoneAid];
+  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...cockpitDesigns, ...smartphoneAid].map((entry) => ({ ...entry, price: servicePrice(entry.price) }));
 }

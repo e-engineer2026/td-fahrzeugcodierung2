@@ -1,3 +1,4 @@
+import { servicePrice } from "../lib/servicePrice";
 import { cockpitDesignCodings, cockpitDesignForVehicle, isCockpitDesignName } from "./cockpitDesigns";
 import { smartphoneAidCodings, smartphoneAidForVehicle } from "./smartphoneAid";
 import {
@@ -82,7 +83,7 @@ export const codingCatalog: Coding[] = [
   ...smartphoneAidCodings,
   ...mqbevoLaneCodings,
   mqbevoFlaMemoryCoding,
-];
+].map((coding) => ({ ...coding, price: servicePrice(coding.price) }));
 
 export function codingsForVehicle(vehicle: Vehicle): string[] {
   const design = cockpitDesignForVehicle(vehicle);

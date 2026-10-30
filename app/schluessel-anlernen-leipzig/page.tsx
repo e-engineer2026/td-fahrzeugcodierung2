@@ -25,7 +25,7 @@ export default function Page() {
       detailsTitle="PIN auslesen und Schlüssel anlernen"
       details={[
         "Bei geeigneten älteren VAG-Fahrzeugen kann zunächst der PIN/Login der Wegfahrsperre ausgelesen und anschließend ein kompatibler Transponderschlüssel angelernt werden. Die Möglichkeiten hängen von Modell, Baujahr und Wegfahrsperren-Generation ab; bei späteren oder geschützten Systemen ist das Auslesen nicht immer möglich.",
-        "Als Preisbeispiel für einen VW Polo 9N: PIN/Login auslesen 20 €, Schlüssel anlernen 30 €. Wenn beides erforderlich ist, beträgt der Gesamtpreis 50 €. Für andere Fahrzeuge klären wir den Aufwand vorab anhand der Fahrzeugdaten.",
+        "Als Preisbeispiel für einen VW Polo 9N: PIN/Login auslesen 19 €, Schlüssel anlernen 29 €. Wenn beides erforderlich ist, beträgt der Gesamtpreis 48 €. Für andere Fahrzeuge klären wir den Aufwand vorab anhand der Fahrzeugdaten.",
         "Bitte bring alle vorhandenen Fahrzeugschlüssel und den anzulernenden, zum Fahrzeug passenden Schlüssel mit. Je nach Wegfahrsperren-System müssen vorhandene Schlüssel beim Anlernvorgang erneut berücksichtigt werden. Die Funkfernbedienung für die Zentralverriegelung ist eine separate Funktion und nicht automatisch im Wegfahrsperren-Anlernen enthalten.",
         "Für eine Vorprüfung benötigen wir Marke, Modell, Baujahr und – wenn bekannt – die Wegfahrsperren-Generation. Eine FIN kannst du zur genaueren Zuordnung ebenfalls mitsenden. Der Termin findet nach Vereinbarung in Leipzig-Süd statt."
       ]}
@@ -41,7 +41,7 @@ export default function Page() {
         },
         {
           question: "Was kostet das Anlernen eines Schlüssels?",
-          answer: "Beim VW Polo 9N kostet das PIN/Login-Auslesen 20 € und das Anlernen des Schlüssels 30 €. Für andere Fahrzeuge stimmen wir den Preis nach Prüfung der Fahrzeugdaten ab.",
+          answer: "Beim VW Polo 9N kostet das PIN/Login-Auslesen 19 € und das Anlernen des Schlüssels 29 €. Für andere Fahrzeuge stimmen wir den Preis nach Prüfung der Fahrzeugdaten ab.",
         },
         {
           question: "Muss ich alle Schlüssel mitbringen?",
