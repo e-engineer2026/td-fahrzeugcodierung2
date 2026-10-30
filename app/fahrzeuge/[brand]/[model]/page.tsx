@@ -117,7 +117,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-            <Image src="/td-logo-icon.png" alt="TD Fahrzeugcodierung Logo" width={128} height={85} className="h-10 w-auto" priority />
+            <Image src="/td-logo-status.webp" alt="TD Fahrzeugcodierung Logo" width={128} height={85} className="h-10 w-auto" priority />
             <span className="ml-2 whitespace-nowrap text-xs font-black sm:text-sm">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
           </Link>
           <Link href="/fahrzeuge" className="text-sm font-semibold text-slate-600 hover:text-blue-700">Alle Fahrzeuge</Link>

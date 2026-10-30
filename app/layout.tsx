@@ -28,7 +28,7 @@ const structuredData = {
       "@id": `${siteUrl}/#business`,
       name: "TD Fahrzeugcodierung",
       url: siteUrl,
-      logo: `${siteUrl}/td-logo-icon.png`,
+      logo: `${siteUrl}/td-logo-status.webp`,
       description:
         "VAG Fahrzeugcodierung und Fahrzeugdiagnose für Volkswagen, Audi, SEAT, CUPRA und Škoda – persönlich in Leipzig-Süd oder per Remote.",
       telephone: "+4915563047044",
@@ -119,7 +119,7 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
-  icons: { icon: "/td-logo-icon.png" },
+  icons: { icon: "/td-logo-status.webp" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

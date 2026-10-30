@@ -58,7 +58,7 @@ export default function SeoServicePage({
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-            <Image src="/td-logo-icon.png" alt="TD Fahrzeugcodierung Leipzig" width={128} height={85} className="h-10 w-auto" />
+            <Image src="/td-logo-status.webp" alt="TD Fahrzeugcodierung Leipzig" width={128} height={85} className="h-10 w-auto" />
             <span className="ml-2 text-sm font-black sm:text-base">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
           </Link>
           <Link href="/fahrzeuge" className="text-sm font-bold text-blue-700 hover:underline">Fahrzeuge &amp; Preise</Link>

@@ -47,7 +47,7 @@ export default function FahrzeugePage() {
       <header className="border-b border-blue-100 bg-white">
         <div className="container-x flex h-16 items-center justify-between gap-4">
           <Link href="/" className="flex items-center" aria-label="TD Fahrzeugcodierung – Startseite">
-            <Image src="/td-logo-icon.png" alt="" width={128} height={85} className="h-10 w-auto" priority />
+            <Image src="/td-logo-status.webp" alt="" width={128} height={85} className="h-10 w-auto" priority />
             <span className="ml-2 whitespace-nowrap text-xs font-black sm:text-sm">TD <span className="text-blue-600">Fahrzeugcodierung</span></span>
           </Link>
           <nav className="hidden gap-6 text-sm text-slate-600 md:flex">
