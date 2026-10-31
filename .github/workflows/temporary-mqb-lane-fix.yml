@@ -2,10 +2,10 @@ name: Temporary MQB evo lane fix
 
 on:
   push:
-    branches: [main]
+    branches: [test/temporary-mqb-workflow-safe]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   patch:
@@ -64,15 +64,15 @@ jobs:
               source: "vehicle",
             }));
 
-'''
+          '''
           s = s[:start] + block + s[end+1:]
 
           old_state = '''  const isSfd1 = Boolean(selectedVehicle?.sfd1From && year >= selectedVehicle.sfd1From && year < 2024);
-  const isSfd2 = Boolean(selectedVehicle?.sfd1From && year >= 2024);'''
+            const isSfd2 = Boolean(selectedVehicle?.sfd1From && year >= 2024);'''
           new_state = '''  const isSfd1 = Boolean(selectedVehicle?.sfd1From && year >= selectedVehicle.sfd1From && year < 2024);
-  const isSfd2 = Boolean(selectedVehicle?.sfd1From && year >= 2024);
-  const isMqbevoSfd2 = isSfd2 && selectedVehicle?.platform === "MQBevo";
-  const showCodings = !isSfd2 || isMqbevoSfd2;'''
+            const isSfd2 = Boolean(selectedVehicle?.sfd1From && year >= 2024);
+            const isMqbevoSfd2 = isSfd2 && selectedVehicle?.platform === "MQBevo";
+            const showCodings = !isSfd2 || isMqbevoSfd2;'''
           if 'const showCodings = !isSfd2 || isMqbevoSfd2;' not in s:
               if old_state not in s:
                   raise SystemExit('SFD state block not found')
@@ -86,10 +86,5 @@ jobs:
 
           p.write_text(s)
           PY
-      - name: Commit patch
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add app/components/BookingConfigurator.tsx
-          git diff --cached --quiet || git commit -m 'Fix MQB evo lane options for SFD2 [mqb-lane-fix]'
-          git push
+      - name: Show proposed changes
+        run: git diff -- app/components/BookingConfigurator.tsx
