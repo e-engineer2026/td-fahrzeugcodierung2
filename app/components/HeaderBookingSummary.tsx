@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ShoppingCart } from "lucide-react";
 
 export default function HeaderBookingSummary() {
   const [count, setCount] = useState(0);
@@ -17,15 +18,14 @@ export default function HeaderBookingSummary() {
     return () => observer.disconnect();
   }, []);
 
-  if (!count) return null;
-
   return (
     <a
-      href="#konfigurator"
-      className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
+      href={count ? "#termin-zahlung" : "#konfigurator"}
+      className="td-header-icon td-cart-icon"
       aria-label={`${count} Codierungen gewählt, Auswahl öffnen`}
     >
-      {count} {count === 1 ? "Codierung" : "Codierungen"}
+      <ShoppingCart aria-hidden="true" />
+      <span className="td-cart-count" aria-hidden="true">{count}</span>
     </a>
   );
 }
