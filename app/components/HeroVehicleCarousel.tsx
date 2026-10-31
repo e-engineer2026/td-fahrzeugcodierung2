@@ -10,6 +10,9 @@ const vehicles = [
   { src: "/td-hero-golf-blue-refined.webp", alt: "Blauer Golf mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
   { src: "/td-hero-gti-headlights.webp", alt: "Roter Golf GTI mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
   { src: "/td-hero-r-headlights.webp", alt: "Blauer Golf R mit TD Fahrzeugcodierung Schriftzug auf der Seite" },
+  { src: "/td-hero-a6-c8-headlights.webp", alt: "Audi A6 C8 Avant mit eingeschalteten Scheinwerfern" },
+  { src: "/td-hero-s6-c8-headlights.webp", alt: "Audi S6 C8 Avant mit eingeschalteten Scheinwerfern" },
+  { src: "/td-hero-rs6-c8-headlights.webp", alt: "Audi RS6 C8 Avant mit eingeschalteten Scheinwerfern" },
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
