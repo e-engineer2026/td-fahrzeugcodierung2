@@ -55,7 +55,7 @@ export default function Home() {
       <div className="td-container td-header-inner">
         <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-status.webp" alt="TD" width={225} height={80} sizes="(max-width: 600px) 68px, 94px" priority /><span>Fahrzeugcodierung</span></Link>
         <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
-        <div className="td-header-actions"><HeaderBookingSummary /><AccountMenu /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
+        <div className="td-header-actions"><AccountMenu /><HeaderBookingSummary /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
     </header>
 
