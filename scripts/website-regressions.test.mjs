@@ -9,7 +9,7 @@ const vehicle = { brand: "Škoda", model: "Octavia 3 5E" };
 
 test("smartphone navigation is confined to compatible model generations and years", () => {
   const golf = { brand: "Volkswagen", model: "Golf 7 (5G)" };
-  assert.equal(smartphoneAidForVehicle(golf, 2018)?.price, 59);
+  assert.equal(smartphoneAidForVehicle(golf, 2018)?.price, 49);
   for (const year of [2016, 2021, 2024, NaN, 2018.5]) {
     assert.equal(smartphoneAidForVehicle(golf, year), undefined);
   }
@@ -22,6 +22,7 @@ test("smartphone navigation is confined to compatible model generations and year
 
 test("Audi smartphone navigation retains the matching hardware and iPhone requirements", () => {
   const audi = smartphoneAidForVehicle({ brand: "Audi", model: "A3 / S3 8V" }, 2018);
+  assert.equal(audi.price, 49);
   assert.match(audi.hardware, /iPhone per USB/);
   assert.match(audi.hardware, /MMI Navigation plus MIB2 High/);
 });

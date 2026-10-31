@@ -266,7 +266,7 @@ function curateLightAndInfotainmentEntries(entries: UnifiedCodingEntry[]): Unifi
 
 // Shared by the configurator and every vehicle price page.
 export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
-  // Preserve the dedicated 59 € offer and its exact device requirements instead
+  // Preserve the dedicated smartphone navigation offer and its exact device requirements instead
   // of merging it into generic cockpit design or navigation display settings.
   const smartphoneAid = entries.filter((entry) => isSmartphoneAidId(entry.id));
   entries = entries.filter((entry) => !isSmartphoneAidId(entry.id));
