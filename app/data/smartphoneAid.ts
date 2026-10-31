@@ -57,7 +57,7 @@ export const smartphoneAidCodings: Coding[] = rules.map((rule, index) => {
   return {
     id: `smartphone-aid-${index + 1}`,
     name: "Smartphone-Navigation im Active Info Display",
-    price: 59,
+    price: 49,
     category: "Standard-Codierungen",
     uiGroup: "Infotainment",
     hardware: profile.hardware,
