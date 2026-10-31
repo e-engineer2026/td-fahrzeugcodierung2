@@ -10,6 +10,9 @@ const vehicle = { brand: "Škoda", model: "Octavia 3 5E" };
 test("smartphone navigation is confined to compatible model generations and years", () => {
   const golf = { brand: "Volkswagen", model: "Golf 7 (5G)" };
   assert.equal(smartphoneAidForVehicle(golf, 2018)?.price, 59);
+  assert.match(smartphoneAidForVehicle(golf, 2018)?.name, /2017–2020/);
+  assert.equal(smartphoneAidForVehicle(golf, 2017)?.price, 59);
+  assert.equal(smartphoneAidForVehicle(golf, 2020)?.price, 59);
   for (const year of [2016, 2021, 2024, NaN, 2018.5]) {
     assert.equal(smartphoneAidForVehicle(golf, year), undefined);
   }
