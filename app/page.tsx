@@ -83,8 +83,6 @@ export default function Home() {
       <BookingConfigurator integrated />
     </section>
 
-    <section className="td-container td-remote-flow" aria-label="Ablauf der Remote-Codierung"><h2>Remote-Codierung einfach erklärt</h2><p>Mit eigenem kompatiblem Interface und Laptop am Fahrzeug.</p><div className="td-remote-steps"><span>Fahrzeug</span><i aria-hidden="true"/><span>Diagnoseinterface</span><i aria-hidden="true"/><span>Laptop</span><i aria-hidden="true"/><span>TD Fahrzeugcodierung</span></div><p>Voraussetzungen und Machbarkeit prüfen wir vorab.</p></section>
-
     <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
       <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div></div>
       <nav className="td-service-main-links" aria-label="Fahrzeuge, Preise und Software"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link><Link href="/remote-check">Remote-Check<ArrowRight aria-hidden="true" /></Link><Link href="/steuergeraete-flash">Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link></nav>
