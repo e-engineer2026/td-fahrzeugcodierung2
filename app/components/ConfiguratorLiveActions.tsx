@@ -60,6 +60,9 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
               </div>
               <a href="#konfigurator" className="text-sm font-bold text-blue-700 hover:underline">Auswahl ändern</a>
             </div>
+            <ul aria-label="Gewählte Codierungen" className="mt-3 list-disc space-y-1 rounded-xl border border-blue-100 bg-white py-3 pl-8 pr-3 text-sm leading-6 text-slate-700">
+              {snapshot.codings.map((coding, index) => <li key={`${coding}-${index}`}>{coding}</li>)}
+            </ul>
             <div className="mt-4 grid gap-2 text-center min-[380px]:grid-cols-3">
               <div className="rounded-xl bg-white p-3"><div className="flex min-h-[3rem] items-center justify-center text-xs leading-tight text-slate-500">Normalpreis</div><div className="mt-1 font-black">{snapshot.subtotal} €</div></div>
               <div className="rounded-xl bg-white p-3"><div className="flex min-h-[3rem] items-center justify-center text-xs leading-tight text-slate-500">Aktionsrabatt</div><div className="mt-1 font-black text-blue-700">−{snapshot.discount} €</div><div className="mt-1 text-xs text-slate-500">({snapshot.rate} %)</div></div>
