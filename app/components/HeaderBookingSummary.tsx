@@ -25,7 +25,7 @@ export default function HeaderBookingSummary() {
       aria-label={`${count} Codierungen gewählt, Auswahl öffnen`}
     >
       <ShoppingCart aria-hidden="true" />
-      <span className="td-cart-count" aria-hidden="true">{count}</span>
+      <span key={count} className="td-cart-count td-cart-animate" aria-hidden="true">{count}</span>
     </a>
   );
 }

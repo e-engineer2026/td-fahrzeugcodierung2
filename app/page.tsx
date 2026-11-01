@@ -53,7 +53,7 @@ export default function Home() {
     <a href="#fahrzeugauswahl" className="td-skip">Direkt zur Fahrzeugauswahl</a>
     <header className="td-header">
       <div className="td-container td-header-inner">
-        <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><Image src="/td-logo-status.webp" alt="TD" width={225} height={80} sizes="(max-width: 600px) 68px, 94px" priority /><span>Fahrzeugcodierung</span></Link>
+        <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><span className="td-logo-shine"><Image src="/td-logo-status.webp" alt="TD" width={225} height={80} sizes="(max-width: 600px) 68px, 94px" priority /></span><span>Fahrzeugcodierung</span></Link>
         <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
         <div className="td-header-actions"><AccountMenu /><HeaderBookingSummary /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
@@ -82,6 +82,8 @@ export default function Home() {
     <section id="buchen" className="td-container td-booking-area" aria-label="Fahrzeugcodierungen auswählen" tabIndex={-1}>
       <BookingConfigurator integrated />
     </section>
+
+    <section className="td-container td-remote-flow" aria-label="Ablauf der Remote-Codierung"><h2>Remote-Codierung einfach erklärt</h2><p>Mit eigenem kompatiblem Interface und Laptop am Fahrzeug.</p><div className="td-remote-steps"><span>Fahrzeug</span><i aria-hidden="true"/><span>Diagnoseinterface</span><i aria-hidden="true"/><span>Laptop</span><i aria-hidden="true"/><span>TD Fahrzeugcodierung</span></div><p>Voraussetzungen und Machbarkeit prüfen wir vorab.</p></section>
 
     <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
       <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div></div>
