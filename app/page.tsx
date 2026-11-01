@@ -5,6 +5,7 @@ import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
+import NightOpening from "./components/NightOpening";
 import FunctionExample from "./components/FunctionExample";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
 import HomeMenu from "./components/HomeMenu";
@@ -48,7 +49,8 @@ const services = [
 ];
 
 export default function Home() {
-  return <main className="td-home">
+  return <main className="td-home td-intro-night">
+    <NightOpening />
     <VehicleSelectionBridge />
     <a href="#fahrzeugauswahl" className="td-skip">Direkt zur Fahrzeugauswahl</a>
     <header className="td-header">

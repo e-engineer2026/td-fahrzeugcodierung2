@@ -271,3 +271,12 @@
 .td-discount-track{height:8px;overflow:hidden;border-radius:10px;background:#dbeafe;margin-top:10px}
 .td-discount-track>div{height:100%;border-radius:inherit;background:#2563eb;transition:width .45s ease}
 @media(prefers-reduced-motion:reduce){.td-home .td-logo-shine::after,.td-cart-animate{animation:none}.td-discount-track>div{transition:none}}
+
+/* The opening effect ends after two seconds; dynamically loaded vehicle images stay unchanged. */
+@keyframes td-opening-failsafe { to { filter: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .td-home { transition: filter 1s ease; }
+  .td-home img { transition: filter 1s ease; }
+  .td-home.td-intro-night { filter: invert(.9) hue-rotate(180deg); animation: td-opening-failsafe 0s 5s forwards; }
+  .td-home.td-intro-night img { filter: brightness(.48) invert(1) hue-rotate(180deg); animation: td-opening-failsafe 0s 5s forwards; }
+}
