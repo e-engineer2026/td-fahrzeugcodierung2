@@ -272,11 +272,17 @@
 .td-discount-track>div{height:100%;border-radius:inherit;background:#2563eb;transition:width .45s ease}
 @media(prefers-reduced-motion:reduce){.td-home .td-logo-shine::after,.td-cart-animate{animation:none}.td-discount-track>div{transition:none}}
 
-/* The opening effect ends after two seconds; dynamically loaded vehicle images stay unchanged. */
-@keyframes td-opening-failsafe { to { filter: none; } }
+/* Natural night lighting, without changing image colours. */
 @media (prefers-reduced-motion: no-preference) {
-  .td-home { transition: filter 1s ease; }
-  .td-home img { transition: filter 1s ease; }
-  .td-home.td-intro-night { filter: invert(.9) hue-rotate(180deg); animation: td-opening-failsafe 0s 5s forwards; }
-  .td-home.td-intro-night img { filter: brightness(.48) invert(1) hue-rotate(180deg); animation: td-opening-failsafe 0s 5s forwards; }
+  .td-home, .td-home .td-header, .td-home .td-offer, .td-home .td-finder, .td-home .card, .td-home .td-service-panel { transition: background-color 1s ease, color 1s ease, border-color 1s ease; }
+  .td-home .td-hero-picture img, .td-home .td-leipzig-skyline img { transition: filter 1s ease; }
+  .td-home .td-hero-picture::after, .td-home .td-leipzig-skyline::after { transition: opacity 1s ease; }
+  .td-home.td-intro-night { background: #09182b; color: #e9f2ff; }
+  .td-home.td-intro-night :is(.td-header,.td-offer,.td-finder,.card,.td-service-panel,.td-mobile-navigation nav) { background-color: #102037; border-color: #33435d; }
+  .td-home.td-intro-night :is(h1,h2,h3,h4,p,label,summary,a,span) { color: #e6effc; }
+  .td-home.td-intro-night :is(select,input,textarea) { background-color: #172a42; color: #e6effc; border-color: #52657c; }
+  .td-home.td-intro-night .td-hero { background-color: #08182c; }
+  .td-home.td-intro-night .td-hero-picture img, .td-home.td-intro-night .td-leipzig-skyline img { filter: brightness(.48) saturate(.8); }
+  .td-home.td-intro-night .td-hero-picture::after { background: linear-gradient(90deg,rgba(5,17,34,.94),rgba(6,20,39,.72) 28%,rgba(6,20,39,.14) 60%,transparent 78%); }
+  .td-home.td-intro-night .td-leipzig-skyline::after { background: linear-gradient(90deg,#08182c 0%,#08182cd9 25%,#08182c44 53%,transparent 75%); }
 }
