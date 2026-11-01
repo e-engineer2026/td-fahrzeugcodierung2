@@ -5,6 +5,7 @@ import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
+import CodingsExperience from "./components/CodingsExperience";
 import FunctionExample from "./components/FunctionExample";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
 import HomeMenu from "./components/HomeMenu";
@@ -82,6 +83,8 @@ export default function Home() {
     <section id="buchen" className="td-container td-booking-area" aria-label="Fahrzeugcodierungen auswählen" tabIndex={-1}>
       <BookingConfigurator integrated />
     </section>
+
+    <CodingsExperience />
 
     <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
       <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div></div>
