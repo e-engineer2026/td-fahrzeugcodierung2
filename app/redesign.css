@@ -261,3 +261,16 @@
 @media (max-width: 600px) { .td-header-actions { gap: 0; } .td-header-actions .td-header-icon { width: 40px; flex-basis: 40px; } .td-home .td-brand img { width: 54px; } .td-home .td-brand>span { font-size: clamp(13px, 4vw, 17px); } }
 
 @media (max-width: 360px) { .td-home .td-brand img { width: 44px; } .td-home .td-brand>span { font-size: 13px; } }
+
+/* Subtle feedback for the configurator and remote process. */
+.td-home .td-logo-shine{display:inline-block;position:relative;overflow:hidden;line-height:0;flex-shrink:0}
+.td-home .td-logo-shine::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,#ffffffaa 48%,transparent 65%);transform:translateX(-120%);animation:td-shine 1.5s ease 0.5s 1}
+@keyframes td-shine{to{transform:translateX(120%)}}
+.td-cart-animate{animation:td-cart-pop .35s ease}
+@keyframes td-cart-pop{50%{transform:scale(1.28)}}
+.td-discount-track{height:8px;overflow:hidden;border-radius:10px;background:#dbeafe;margin-top:10px}
+.td-discount-track>div{height:100%;border-radius:inherit;background:#2563eb;transition:width .45s ease}
+.td-remote-flow{padding:24px;border:1px solid #dbeafe;border-radius:16px;background:#f8fbff;margin-bottom:28px}
+.td-remote-flow h2{font-size:1.3rem;font-weight:800}.td-remote-flow p{color:#475569;font-size:.9rem;margin-top:8px}
+.td-remote-steps{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap}.td-remote-steps span{padding:8px 12px;border-radius:9px;background:white;border:1px solid #dbeafe;font-weight:700;font-size:.83rem}.td-remote-steps i{width:20px;height:3px;background:linear-gradient(90deg,#93c5fd,#2563eb,#93c5fd);background-size:200% 100%;animation:td-data 2s linear infinite}@keyframes td-data{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.td-home .td-logo-shine::after,.td-cart-animate,.td-remote-steps i{animation:none}.td-discount-track>div{transition:none}}
