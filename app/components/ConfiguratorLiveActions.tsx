@@ -66,7 +66,6 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
               <div className="rounded-xl bg-blue-600 p-3 text-white"><div className="flex min-h-[3rem] items-center justify-center text-xs leading-tight text-blue-100">Dein Preis</div><div key={snapshot.total} className="td-price-change mt-1 font-black">{snapshot.total} €</div></div>
             </div>
             <div className="mt-3 rounded-xl border border-blue-100 bg-white px-3 py-3 text-sm leading-6 text-slate-600">
-              <div><b className="text-slate-800">Aktionsrabatt für alle:</b> 10 % ab 50 € · 15 % ab 100 € · 20 % ab 150 € · 25 % ab 200 €</div>
               <div className="mt-1 font-semibold text-blue-700">{snapshot.nextTier ? `Noch ${snapshot.nextDifference} € bis ${snapshot.nextTier} € (${snapshot.nextTier === "50" ? 10 : snapshot.nextTier === "100" ? 15 : snapshot.nextTier === "150" ? 20 : 25} % Rabatt).` : "25 % Maximalrabatt erreicht."}</div>
               <div className="td-discount-track" role="progressbar" aria-label="Fortschritt zur nächsten Rabattstufe" aria-valuemin={0} aria-valuemax={Number(snapshot.nextTier || 200)} aria-valuenow={Math.min(Number(snapshot.subtotal.replace(/\./g, "").replace(",", ".")), Number(snapshot.nextTier || 200))}><div style={{ width: `${Math.min(100, Number(snapshot.subtotal.replace(/\./g, "").replace(",", ".")) / Number(snapshot.nextTier || 200) * 100)}%` }} /></div><p className="mt-2">Gültig vom 04.10.2026 bis einschließlich 30.11.2026.</p>
             </div>
