@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CalendarDays, MessageCircle } from "lucide-react";
 import ArrivalGuide from "./ArrivalGuide";
 
@@ -27,6 +27,17 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
   onPayment: () => void;
 }) {
   const [showArrival, setShowArrival] = useState(false);
+  const [reachedRate, setReachedRate] = useState(0);
+  const previousRate = useRef(0);
+  const rate = snapshot?.rate ?? 0;
+  useEffect(() => {
+    const increased = rate > previousRate.current;
+    previousRate.current = rate;
+    if (!increased) return;
+    setReachedRate(rate);
+    const timer = window.setTimeout(() => setReachedRate(0), 4000);
+    return () => window.clearTimeout(timer);
+  }, [rate]);
   const whatsappUrl = (() => {
     if (!snapshot) return "https://wa.me/4915563047044";
     const lines = [
@@ -60,6 +71,7 @@ export default function ConfiguratorLiveActions({ snapshot, onBook, onPayment }:
               </div>
               <a href="#konfigurator" className="text-sm font-bold text-blue-700 hover:underline">Auswahl ändern</a>
             </div>
+            <div aria-live="polite" aria-atomic="true">{reachedRate > 0 && reachedRate === snapshot.rate && <div key={reachedRate} className="td-discount-celebration">{reachedRate} % Rabatt erreicht</div>}</div>
             <div className="mt-4 grid gap-2 text-center min-[380px]:grid-cols-3">
               <div className="rounded-xl bg-white p-3"><div className="flex min-h-[3rem] items-center justify-center text-xs leading-tight text-slate-500">Normalpreis</div><div className="mt-1 font-black">{snapshot.subtotal} €</div></div>
               <div className="rounded-xl bg-white p-3"><div className="flex min-h-[3rem] items-center justify-center text-xs leading-tight text-slate-500">Aktionsrabatt</div><div className="mt-1 font-black text-blue-700">−{snapshot.discount} €</div><div className="mt-1 text-xs text-slate-500">({snapshot.rate} %)</div></div>
