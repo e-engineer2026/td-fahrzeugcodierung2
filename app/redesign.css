@@ -304,3 +304,17 @@
 
 .td-hero-picture img.td-airplane-banner-logo{position:static;display:block;flex:none;width:28px;height:auto;object-fit:contain}
 @media(max-width:600px){.td-hero-picture img.td-airplane-banner-logo{width:23px}}
+
+/* A short confirmation when a new discount tier is reached. */
+.td-discount-celebration{margin-top:10px;padding:7px 12px;border-radius:9px;background:#dbeafe;color:#174ca8;font-size:13px;font-weight:800;animation:td-discount-celebrate 4s ease-out forwards}
+@keyframes td-discount-celebrate{0%{opacity:0;transform:translateY(4px)}15%,65%{opacity:1;transform:translateY(0);box-shadow:0 0 0 4px #60a5fa44}100%{opacity:0;transform:translateY(0);box-shadow:none}}
+/* Show the supported marques in a calm sequence. */
+@media(prefers-reduced-motion:no-preference){.td-home .td-hero-brands span{animation:td-brand-enter .5s ease-out both}.td-home .td-hero-brands span:nth-child(2){animation-delay:.12s}.td-home .td-hero-brands span:nth-child(3){animation-delay:.24s}.td-home .td-hero-brands span:nth-child(4){animation-delay:.36s}.td-home .td-hero-brands span:nth-child(5){animation-delay:.48s}}
+@keyframes td-brand-enter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+/* The propeller sits over the aircraft nose and spins independently. */
+.td-airplane-body{position:relative;display:block;flex:none;width:92px;line-height:0}
+.td-airplane-propeller{position:absolute;right:2%;top:49%;width:4px;height:23px;margin-top:-11px;border-radius:50%;background:linear-gradient(90deg,#26394955,#d8e7efdd,#26394955);transform-origin:center;animation:td-propeller .14s linear infinite}
+@keyframes td-propeller{to{transform:rotate(360deg)}}
+@keyframes td-banner-wave{0%{transform:perspective(300px) rotateY(-8deg) skewY(-2deg);background-position:0 0}35%{transform:perspective(300px) rotateY(5deg) skewY(1deg);background-position:26px 0}68%{transform:perspective(300px) rotateY(-3deg) skewY(-1deg);background-position:14px 0}100%{transform:perspective(300px) rotateY(7deg) skewY(2deg);background-position:35px 0}}
+@media(max-width:600px){.td-airplane-body{width:67px}.td-airplane-propeller{height:17px;margin-top:-8px;width:3px}}
+@media(prefers-reduced-motion:reduce){.td-discount-celebration,.td-airplane-propeller{animation:none}.td-discount-celebration{box-shadow:none}}
