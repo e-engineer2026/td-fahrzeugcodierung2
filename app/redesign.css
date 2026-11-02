@@ -272,8 +272,22 @@
 .td-discount-track>div{height:100%;border-radius:inherit;background:#2563eb;transition:width .45s ease}
 @media(prefers-reduced-motion:reduce){.td-home .td-logo-shine::after,.td-cart-animate{animation:none}.td-discount-track>div{transition:none}}
 
-/* Only the vehicle photo darkens briefly on the homepage. */
-@media (prefers-reduced-motion: no-preference) {
-  .td-home .td-hero-picture img { transition: filter 1s ease, opacity .45s ease; }
-  .td-home.td-intro-night .td-hero-picture img { filter: brightness(.48) saturate(.8); }
-}
+
+
+/* The first light comes on before the full headlight image. */
+.td-hero-picture img.td-headlights-first{mask-image:url("/headlight-first-mask.svg");mask-size:cover;mask-position:center 54%;mask-repeat:no-repeat}
+.td-hero-picture img.td-headlights-complete.is-on{transition-delay:.5s}
+@media(max-width:900px){.td-hero-picture img.td-headlights-first{mask-position:63% center}}
+@media(max-width:600px){.td-hero-picture img.td-headlights-first{mask-position:right 82%}}
+@media(prefers-reduced-motion:reduce){.td-hero-picture img.td-headlights-complete.is-on{transition-delay:0s}}
+
+/* The process remains readable even if JavaScript or animation is unavailable. */
+.td-process ol{position:relative}
+.td-process ol::before{content:"";position:absolute;top:22px;left:1%;right:1%;height:2px;background:#cbd8e9;opacity:.55;z-index:0}
+.td-process li{position:relative;z-index:1;background:#f1f4f7}
+.td-process.is-visible .td-step-number{animation:td-step-highlight 1s ease both}
+.td-process.is-visible li:nth-child(2) .td-step-number{animation-delay:.3s}
+.td-process.is-visible li:nth-child(3) .td-step-number{animation-delay:.6s}
+@keyframes td-step-highlight{0%{color:#bdc7d4;transform:translateY(4px)}50%{color:#145bd5;transform:translateY(0)}100%{color:#2864c8;transform:translateY(0)}}
+@media(max-width:600px){.td-process ol::before{top:8px;bottom:8px;left:24px;right:auto;width:2px;height:auto}.td-process li{background:transparent}.td-step-number{background:#f1f4f7}}
+@media(prefers-reduced-motion:reduce){.td-process.is-visible .td-step-number{animation:none}}
