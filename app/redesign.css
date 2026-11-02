@@ -292,11 +292,12 @@
 @media(max-width:600px){.td-process ol::before{top:8px;bottom:8px;left:24px;right:auto;width:2px;height:auto}.td-process li{background:transparent}.td-step-number{background:#f1f4f7}}
 @media(prefers-reduced-motion:reduce){.td-process.is-visible .td-step-number{animation:none}}
 
-/* Decorative aircraft stays within the sky and does not intercept input. */
-.td-airplane-flight{position:absolute;z-index:3;top:62px;left:0;display:flex;align-items:center;width:max-content;pointer-events:none;animation:td-airplane-cross 32s linear 2s infinite;transform:translateX(100vw);will-change:transform}
-.td-airplane{display:block;width:70px;height:auto;flex:none;filter:drop-shadow(0 1px 1px #ffffffb0)}
-.td-airplane-rope{width:19px;height:1px;background:#7d91a0}
-.td-airplane-banner{display:block;padding:5px 10px;background:#ffffffef;border:1px solid #c7d8e5;box-shadow:0 2px 5px #243e521c;color:#0755aa;font-size:11px;font-weight:800;line-height:1;letter-spacing:.01em;white-space:nowrap}
-@keyframes td-airplane-cross{from{transform:translateX(100vw)}to{transform:translateX(-110%)}}
-@media(max-width:600px){.td-airplane-flight{top:47px;animation-duration:22s}.td-airplane{width:53px}.td-airplane-rope{width:12px}.td-airplane-banner{font-size:9px;padding:4px 7px}}
+/* The plane pulls a rippling fabric banner across the sky. */
+.td-airplane-flight{position:absolute;z-index:3;top:62px;left:0;display:flex;align-items:center;width:max-content;pointer-events:none;animation:td-airplane-cross 32s linear 1s infinite;transform:translateX(-110%);will-change:transform}
+.td-hero-picture img.td-airplane{display:block;position:static;width:92px;height:auto;flex:none;object-fit:contain;filter:drop-shadow(0 2px 2px #20374b44)}
+.td-airplane-rope{width:26px;height:1px;background:#657989;flex:none;transform:rotate(-3deg)}
+.td-airplane-banner{position:relative;display:block;padding:6px 11px;background:repeating-linear-gradient(90deg,#fff 0%,#e2e9ed 12%,#fff 25%);background-size:70px 100%;border:1px solid #c1ced5;box-shadow:0 2px 5px #243e5233;color:#164c82;font-size:11px;font-weight:800;line-height:1;letter-spacing:.01em;white-space:nowrap;transform-origin:right center;clip-path:polygon(0 7%,15% 0,32% 5%,50% 0,68% 4%,84% 1%,100% 0,100% 100%,84% 96%,67% 100%,49% 96%,31% 100%,15% 95%,0 100%);animation:td-banner-wave 1.8s ease-in-out infinite alternate}
+@keyframes td-airplane-cross{from{transform:translateX(-110%)}to{transform:translateX(100vw)}}
+@keyframes td-banner-wave{from{transform:perspective(300px) rotateY(-8deg) skewY(-2deg);background-position:0 0}to{transform:perspective(300px) rotateY(7deg) skewY(2deg);background-position:35px 0}}
+@media(max-width:600px){.td-airplane-flight{top:47px;animation-duration:22s}.td-hero-picture img.td-airplane{width:67px}.td-airplane-rope{width:16px}.td-airplane-banner{font-size:9px;padding:5px 8px}}
 @media(prefers-reduced-motion:reduce){.td-airplane-flight{display:none}}
