@@ -112,16 +112,16 @@ export default function HeroVehicleCarousel() {
   }, [requested?.src, sport?.src]);
 
   return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
-    <div className="td-airplane-flight" aria-hidden="true">
+    <div className="td-airplane-sky" aria-hidden="true"><div className="td-airplane-flight">
       <span className="td-airplane-banner">TD Fahrzeugcodierung</span><span className="td-airplane-rope"></span>
       <Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} />
-    </div>
+    </div></div>
     <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand}>{brand}</span>)}</div>
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${showDefault && active === index ? " is-active" : ""}`} aria-hidden={!showDefault || active !== index}>
       <Image src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
       {index === 0 && <>
-        <Image src="/td-hero-golf-blue-headlights.webp" alt="" aria-hidden="true" fill sizes="100vw" loading="eager" onLoad={() => setHeadlightsLoaded(true)} className={`td-headlights td-headlights-first${headlightsOn && headlightsLoaded ? " is-on" : ""}`} />
-        <Image src="/td-hero-golf-blue-headlights.webp" alt="" aria-hidden="true" fill sizes="100vw" loading="eager" className={`td-headlights td-headlights-complete${headlightsOn && headlightsLoaded ? " is-on" : ""}`} />
+        <Image src="/td-hero-golf-blue-headlights.webp" alt="" aria-hidden="true" fill sizes="100vw" loading="eager" onLoad={() => setHeadlightsLoaded(true)} className={`td-headlights${headlightsOn && headlightsLoaded ? " is-on" : ""}`} />
+        <Image src="/td-hero-golf-blue-headlights.webp" alt="" aria-hidden="true" fill sizes="100vw" loading="eager" className={`td-headlights td-headlights-bright${headlightsOn && headlightsLoaded ? " is-on" : ""}`} />
       </>}
     </div>)}
     {photos.map((photo) => <div key={`selected-${photo.src}`} className={`td-hero-slide td-hero-model-photo${hasSelectedPhoto && shownSrc === photo.src ? " is-active" : ""}`} aria-hidden={!hasSelectedPhoto || shownSrc !== photo.src}>
