@@ -113,7 +113,7 @@ export default function HeroVehicleCarousel() {
 
   return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
     <div className="td-airplane-sky" aria-hidden="true"><div className="td-airplane-flight">
-      <span className="td-airplane-banner">TD Fahrzeugcodierung</span><span className="td-airplane-rope"></span>
+      <span className="td-airplane-banner"><Image className="td-airplane-banner-logo" src="/td-logo-status.webp" alt="" width={225} height={80} /><span>Fahrzeugcodierung</span></span><span className="td-airplane-rope"></span>
       <Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} />
     </div></div>
     <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand}>{brand}</span>)}</div>
