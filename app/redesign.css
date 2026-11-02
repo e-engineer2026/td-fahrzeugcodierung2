@@ -291,3 +291,12 @@
 @keyframes td-step-highlight{0%{color:#bdc7d4;transform:translateY(4px)}50%{color:#145bd5;transform:translateY(0)}100%{color:#2864c8;transform:translateY(0)}}
 @media(max-width:600px){.td-process ol::before{top:8px;bottom:8px;left:24px;right:auto;width:2px;height:auto}.td-process li{background:transparent}.td-step-number{background:#f1f4f7}}
 @media(prefers-reduced-motion:reduce){.td-process.is-visible .td-step-number{animation:none}}
+
+/* Decorative aircraft stays within the sky and does not intercept input. */
+.td-airplane-flight{position:absolute;z-index:3;top:62px;left:0;display:flex;align-items:center;width:max-content;pointer-events:none;animation:td-airplane-cross 32s linear 2s infinite;transform:translateX(100vw);will-change:transform}
+.td-airplane{display:block;width:70px;height:auto;flex:none;filter:drop-shadow(0 1px 1px #ffffffb0)}
+.td-airplane-rope{width:19px;height:1px;background:#7d91a0}
+.td-airplane-banner{display:block;padding:5px 10px;background:#ffffffef;border:1px solid #c7d8e5;box-shadow:0 2px 5px #243e521c;color:#0755aa;font-size:11px;font-weight:800;line-height:1;letter-spacing:.01em;white-space:nowrap}
+@keyframes td-airplane-cross{from{transform:translateX(100vw)}to{transform:translateX(-110%)}}
+@media(max-width:600px){.td-airplane-flight{top:47px;animation-duration:22s}.td-airplane{width:53px}.td-airplane-rope{width:12px}.td-airplane-banner{font-size:9px;padding:4px 7px}}
+@media(prefers-reduced-motion:reduce){.td-airplane-flight{display:none}}

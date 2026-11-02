@@ -112,6 +112,13 @@ export default function HeroVehicleCarousel() {
   }, [requested?.src, sport?.src]);
 
   return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
+    <div className="td-airplane-flight" aria-hidden="true">
+      <svg className="td-airplane" viewBox="0 0 110 42" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 24c0-3 4-5 10-5l28-1L60 4l8 1-9 13 22 1 9-9 5 1-4 11c4 1 8 2 9 5-2 3-8 4-15 4H58l7 8-7 1-13-9H18C10 31 5 28 5 24Z" fill="#29415a" />
+        <path d="M17 21h18l2 4H15Z" fill="#c9e4f3"/><path d="M8 18v13M5 18v13" stroke="#819ab0" strokeWidth="1.5"/><path d="M2 24H0" stroke="#748ba0" strokeWidth="1.5"/>
+      </svg>
+      <span className="td-airplane-rope"></span><span className="td-airplane-banner">TD Fahrzeugcodierung</span>
+    </div>
     <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand}>{brand}</span>)}</div>
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${showDefault && active === index ? " is-active" : ""}`} aria-hidden={!showDefault || active !== index}>
       <Image src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
