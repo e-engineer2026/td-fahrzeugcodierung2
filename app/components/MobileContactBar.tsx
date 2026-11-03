@@ -13,7 +13,7 @@ export default function MobileContactBar() {
   const [hasSelection, setHasSelection] = useState(false);
   const [summaryVehicle, setSummaryVehicle] = useState("");
   const [summaryPrice, setSummaryPrice] = useState("");
-  const [progress, setProgress] = useState({ value: 0, target: 50, label: "" });
+  const [progress, setProgress] = useState({ value: 0, target: 50, rate: 0, label: "" });
   const [calendarUrl, setCalendarUrl] = useState("/#kontakt");
   const [whatsappUrl, setWhatsappUrl] = useState("https://wa.me/4915563047044");
 
@@ -32,7 +32,7 @@ export default function MobileContactBar() {
       const nextTier = Number(configurator?.dataset.nextTier || 200);
       const nextDifference = configurator?.dataset.nextDifference || "0,00";
       const nextRate = nextTier === 50 ? 10 : nextTier === 100 ? 15 : nextTier === 150 ? 20 : 25;
-      setProgress({ value: Math.min(subtotalValue, nextTier), target: nextTier, label: configurator?.dataset.nextTier ? `Noch ${nextDifference} € bis ${nextRate} % Rabatt` : "25 % Maximalrabatt erreicht" });
+      setProgress({ value: Math.min(subtotalValue, nextTier), target: nextTier, rate: Number(configurator?.dataset.discountRate || 0), label: configurator?.dataset.nextTier ? `Noch ${nextDifference} € bis ${nextRate} % Rabatt` : "25 % Maximalrabatt erreicht" });
       setCalendarUrl(selected && calUrl ? "#termin-zahlung" : "/#kontakt");
 
       if (selected && configurator) {
@@ -79,6 +79,7 @@ export default function MobileContactBar() {
         "data-total",
         "data-booking-mode",
         "data-sfd-fee",
+        "data-discount-rate",
         "data-next-tier",
         "data-next-difference",
       ],
@@ -97,7 +98,7 @@ export default function MobileContactBar() {
         {hasSelection && <div className="mx-auto mb-1 max-w-lg px-1 text-xs leading-4 text-slate-700" aria-live="polite"><div className="truncate font-semibold">{summaryVehicle}</div><div className="font-bold text-blue-700">{summaryPrice}</div></div>}
         {hasSelection && <div className="mx-auto mb-2 max-w-lg px-1">
           <div className="text-xs font-semibold leading-4 text-blue-700">{progress.label}</div>
-          <div className="td-discount-track !mt-1" role="progressbar" aria-label="Fortschritt zur nächsten Rabattstufe" aria-valuemin={0} aria-valuemax={progress.target} aria-valuenow={progress.value} aria-valuetext={progress.label}><div style={{ width: `${progress.value / progress.target * 100}%` }} /></div>
+          <div className="td-discount-track !mt-1" data-rate={progress.rate} role="progressbar" aria-label="Fortschritt zur nächsten Rabattstufe" aria-valuemin={0} aria-valuemax={progress.target} aria-valuenow={progress.value} aria-valuetext={progress.label}><div style={{ width: `${progress.value / progress.target * 100}%` }} /></div>
         </div>}
         <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
           <a
