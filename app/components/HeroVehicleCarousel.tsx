@@ -34,6 +34,8 @@ export default function HeroVehicleCarousel() {
   const [headlightsOn, setHeadlightsOn] = useState(false);
   const [headlightsLoaded, setHeadlightsLoaded] = useState(false);
   const [selection, setSelection] = useState<HomeVehicleSelection | null>(null);
+  const [flightNumber, setFlightNumber] = useState(0);
+  const lastFlightSelection = useRef("");
   const [photos, setPhotos] = useState<VehicleHeroImage[]>([]);
   const [shownSrc, setShownSrc] = useState<string | null>(null);
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
@@ -54,6 +56,9 @@ export default function HeroVehicleCarousel() {
   useEffect(() => {
     const synchronize = (event: Event) => {
       const choice = resolveHomeVehicleSelection((event as CustomEvent<unknown>).detail, catalog);
+      const key = choice ? `${choice.brand}|${choice.model}|${choice.year}` : "";
+      if (key && key !== lastFlightSelection.current) setFlightNumber((value) => value + 1);
+      lastFlightSelection.current = key;
       const image = vehicleHeroImage(choice);
       const variant = image ? sportImage(choice) : null;
       wantedSrc.current = image?.src ?? null;
@@ -111,9 +116,12 @@ export default function HeroVehicleCarousel() {
     return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", schedule); preference.removeEventListener("change", schedule); };
   }, [requested?.src, sport?.src]);
 
-  const displayLabel = hasSelectedPhoto ? photos.find((photo) => photo.src === shownSrc)?.label : ["Golf 8", "Golf GTI", "Golf R", "Audi A6 C8", "Audi S6 C8", "Audi RS6 C8"][active];
+  const currentPhotoMatches = shownSrc === requested?.src || shownSrc === sport?.src;
+  const displayLabel = selection
+    ? (currentPhotoMatches ? photos.find((photo) => photo.src === shownSrc)?.label : requested?.label) || `${selection.brand} ${selection.model}`
+    : ["Golf 8", "Golf GTI", "Golf R", "Audi A6 C8", "Audi S6 C8", "Audi RS6 C8"][active];
   return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
-    <div className="td-airplane-sky" aria-hidden="true"><div className="td-airplane-flight">
+    <div className="td-airplane-sky" aria-hidden="true"><div key={flightNumber} className={`td-airplane-flight${flightNumber ? " td-airplane-flight-selected" : ""}`}>
       <span className="td-airplane-banner"><Image className="td-airplane-banner-logo" src="/td-logo-status.webp" alt="" width={225} height={80} /><span className="td-airplane-banner-text"><span>Fahrzeugcodierung</span><strong>{displayLabel || "Fahrzeugcodierung"}</strong></span></span><span className="td-airplane-rope"></span>
       <span className="td-airplane-body"><Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} /><span className="td-airplane-propeller" /></span>
     </div></div>
