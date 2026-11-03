@@ -323,3 +323,8 @@
 @keyframes td-banner-wave{0%{transform:perspective(300px) rotateY(-8deg) skewY(-2deg);background-position:0 0}35%{transform:perspective(300px) rotateY(5deg) skewY(1deg);background-position:26px 0}68%{transform:perspective(300px) rotateY(-3deg) skewY(-1deg);background-position:14px 0}100%{transform:perspective(300px) rotateY(7deg) skewY(2deg);background-position:35px 0}}
 @media(max-width:600px){.td-airplane-body{width:67px}.td-airplane-propeller{height:17px;margin-top:-8px;width:3px}}
 @media(prefers-reduced-motion:reduce){.td-discount-celebration,.td-airplane-propeller{animation:none}.td-discount-celebration{box-shadow:none}}
+
+.td-cart-flight{position:fixed;z-index:9999;width:14px;height:14px;border-radius:50%;background:#38bdf8;box-shadow:0 0 12px 5px #38bdf8;pointer-events:none}
+.td-hero-vehicle-label{position:absolute;z-index:6;left:50%;bottom:1rem;transform:translateX(-50%);padding:.35rem .8rem;border-radius:999px;color:white;background:rgba(3,20,45,.74);font-weight:700;font-size:.8rem;white-space:nowrap;pointer-events:none;animation:td-label-in .8s ease both}
+@keyframes td-label-in{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+@media (prefers-reduced-motion:reduce){.td-hero-vehicle-label{animation:none}}
