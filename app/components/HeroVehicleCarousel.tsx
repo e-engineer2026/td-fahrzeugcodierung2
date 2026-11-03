@@ -111,6 +111,7 @@ export default function HeroVehicleCarousel() {
     return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", schedule); preference.removeEventListener("change", schedule); };
   }, [requested?.src, sport?.src]);
 
+  const displayLabel = hasSelectedPhoto ? photos.find((photo) => photo.src === shownSrc)?.label : ["Golf 8", "Golf GTI", "Golf R", "Audi A6 C8", "Audi S6 C8", "Audi RS6 C8"][active];
   return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
     <div className="td-airplane-sky" aria-hidden="true"><div className="td-airplane-flight">
       <span className="td-airplane-banner"><Image className="td-airplane-banner-logo" src="/td-logo-status.webp" alt="" width={225} height={80} /><span>Fahrzeugcodierung</span></span><span className="td-airplane-rope"></span>
@@ -124,6 +125,7 @@ export default function HeroVehicleCarousel() {
         <Image src="/td-hero-golf-blue-headlights.webp" alt="" aria-hidden="true" fill sizes="100vw" loading="eager" className={`td-headlights td-headlights-bright${headlightsOn && headlightsLoaded ? " is-on" : ""}`} />
       </>}
     </div>)}
+    {displayLabel && <div key={shownSrc || active} className="td-hero-vehicle-label">{displayLabel}</div>}
     {photos.map((photo) => <div key={`selected-${photo.src}`} className={`td-hero-slide td-hero-model-photo${hasSelectedPhoto && shownSrc === photo.src ? " is-active" : ""}`} aria-hidden={!hasSelectedPhoto || shownSrc !== photo.src}>
       <Image src={photo.src} alt={photo.alt} fill sizes="100vw" loading="eager" onLoad={() => {
         loadedSources.current.add(photo.src);

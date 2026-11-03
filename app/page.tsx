@@ -4,6 +4,7 @@ import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Radar, Settings2
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
+import FaultCodeCheck from "./components/FaultCodeCheck";
 import ContactBox from "./components/ContactBox";
 import ProcessAnimation from "./components/ProcessAnimation";
 import FunctionExample from "./components/FunctionExample";
@@ -99,6 +100,7 @@ export default function Home() {
       </details>)}</div>
     </section>
 
+    <FaultCodeCheck />
     <section id="ablauf" className="td-process" aria-labelledby="process-title"><div className="td-container"><h2 id="process-title">So einfach geht’s.</h2><ol>{[
       ["Fahrzeug wählen", "Marke, Modell und Baujahr auswählen."],
       ["Codierungen zusammenstellen", "Passende Funktionen entdecken und den Preis direkt sehen."],
