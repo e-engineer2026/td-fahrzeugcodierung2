@@ -264,6 +264,39 @@ function curateLightAndInfotainmentEntries(entries: UnifiedCodingEntry[]): Unifi
   return curateDisplayGroup(light, "Infotainment", curatedInfotainmentRules, "infotainment");
 }
 
+
+// Preserve explicit offers when a matching entry exists for the selected vehicle.
+const specificOffers: Array<{
+  id: string; name: string; price: number; uiGroup: PlatformCodingGroup;
+  match: RegExp; hardware: string;
+}> = [
+  { id: "aircare-memory", name: "Air Care – Einstellung speichern", price: 19, uiGroup: "Komfort", match: /air\s?care.*(?:speicher|zustand)/i, hardware: "Vorhandenes Air Care und kompatibles Klimasteuergerät erforderlich." },
+  { id: "recirculation-memory", name: "Umluft – Einstellung speichern", price: 15, uiGroup: "Komfort", match: /umluft(?:einstellung|speicherung)?.*(?:speichern|speicherfunktion)/i, hardware: "Kompatibles Klimasteuergerät erforderlich." },
+  { id: "seatheat-stepdown", name: "Sitzheizung automatisch zurückstufen", price: 19, uiGroup: "Komfort", match: /sitzheizung.*(?:automatisch zurückstufen|niedere stufe)/i, hardware: "Sitzheizung und kompatibles Klimasteuergerät erforderlich." },
+  { id: "fan-profiles", name: "Lüftungsprofile freischalten", price: 19, uiGroup: "Komfort", match: /lüfterstufen.*sanft.*mittel.*intensiv/i, hardware: "Kompatible Klimaanlage und Infotainment erforderlich." },
+  { id: "ambient-profile", name: "Ambientebeleuchtung – Farbe nach Fahrprofil", price: 19, uiGroup: "Licht", match: /ambient.*fahrprofil|fahrprofil.*ambient/i, hardware: "Mehrfarbige Ambientebeleuchtung und kompatible Steuergeräte erforderlich." },
+  { id: "interior-tailgate", name: "Innenlicht beim Öffnen der Heckklappe", price: 15, uiGroup: "Licht", match: /innenbeleuchtung.*(?:öffnen|öffnung).*heckklappe/i, hardware: "Kompatible Innenbeleuchtung und Bordnetzsteuergerät erforderlich." },
+  { id: "unlock-dsg", name: "Automatisch entriegeln bei DSG in P", price: 19, uiGroup: "Komfort", match: /automatisches\s+entsperren.*dsg.*parkposition|automatisches entriegeln bei dsg.wählhebel in p/i, hardware: "DSG und kompatibles Komfortsteuergerät erforderlich." },
+  { id: "cockpit-values", name: "Digital Cockpit – zusätzliche Fahrdaten anzeigen", price: 19, uiGroup: "Infotainment", match: /(?:ladedruckanzeige|drehmomentanzeige|motorleistung|getriebetemperaturanzeige).*aid/i, hardware: "Kompatibles Digital Cockpit und verfügbare Fahrzeugdaten erforderlich; Anzeigen je nach Ausstattung." },
+  { id: "laptimer", name: "Laptimer / Rundenzähler aktivieren", price: 19, uiGroup: "Infotainment", match: /laptimer|rundenzähler|rundenzaehler/i, hardware: "Kompatibles Kombiinstrument erforderlich." },
+  { id: "maneuver-light", name: "Umfeldbeleuchtung als Manövrierlicht", price: 25, uiGroup: "Licht", match: /umfeldbeleuchtung.*manövrierleuchte/i, hardware: "Umfeldleuchten und geeignetes Area-View- oder Rückfahrkamera-High-Steuergerät erforderlich; Softwarestand prüfen." },
+];
+
+function separateSpecificOffers(entries: UnifiedCodingEntry[]) {
+  const matched = new Set<UnifiedCodingEntry>();
+  const offers = specificOffers.flatMap((rule) => {
+    const candidates = entries.filter((entry) => rule.match.test(entry.name));
+    if (!candidates.length) return [];
+    candidates.forEach((entry) => matched.add(entry));
+    const sfd = candidates.some((entry) => entry.sfd === "Ja") ? "Ja" as const
+      : candidates.some((entry) => entry.sfd === "Unklar") ? "Unklar" as const
+      : candidates.some((entry) => entry.sfd === "Nein") ? "Nein" as const : undefined;
+    return [{ ...candidates[0], id: "specific-" + rule.id, name: rule.name,
+      price: rule.price, uiGroup: rule.uiGroup, hardware: rule.hardware, sfd }];
+  });
+  return { offers, remaining: entries.filter((entry) => !matched.has(entry)) };
+}
+
 // Shared by the configurator and every vehicle price page.
 export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
   // Preserve the dedicated smartphone navigation offer and its exact device requirements instead
@@ -271,7 +304,8 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
   const smartphoneAid = entries.filter((entry) => isSmartphoneAidId(entry.id));
   entries = entries.filter((entry) => !isSmartphoneAidId(entry.id));
   const cockpitDesigns = entries.filter((entry) => /^(vehicle-)?cockpit-design-/.test(entry.id));
-  const normalized = entries.filter((entry) => !/^(vehicle-)?cockpit-design-/.test(entry.id)).map((entry) => {
+  const specific = separateSpecificOffers(entries.filter((entry) => !/^(vehicle-)?cockpit-design-/.test(entry.id)));
+  const normalized = specific.remaining.map((entry) => {
     if (!/(coming[ -]home|leaving[ -]home)/i.test(entry.name)) return entry;
     return {
       ...entry,
@@ -279,5 +313,5 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
       uiGroup: "Licht" as const,
     };
   });
-  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...cockpitDesigns, ...smartphoneAid].map((entry) => ({ ...entry, price: servicePrice(entry.price) }));
+  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid].map((entry) => ({ ...entry, price: servicePrice(entry.price) }));
 }
