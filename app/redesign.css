@@ -329,3 +329,15 @@
 .td-cart-flight{position:fixed;z-index:9999;width:14px;height:14px;border-radius:50%;background:#38bdf8;box-shadow:0 0 12px 5px #38bdf8;pointer-events:none}
 .td-airplane-banner-text{display:flex;flex-direction:column;gap:2px;align-items:flex-start;line-height:1.05}
 .td-airplane-banner-text strong{font-size:1.15em;color:#0b3262;font-weight:900}
+
+/* Simultaneous headlight switch-on for the initial A6 image. */
+.td-hero-picture img.td-a6-headlight-layer{pointer-events:none;mask-image:url("/headlights-both-mask.svg");mask-size:cover;mask-position:center 54%;mask-repeat:no-repeat}
+.td-hero-picture img.td-a6-headlight-dim{filter:brightness(.38);opacity:1}
+.td-hero-picture img.td-a6-headlight-bright{filter:brightness(1.5);opacity:0}
+.td-hero-slide.is-active .td-a6-headlight-dim{animation:td-a6-light-off .7s ease .8s forwards}
+.td-hero-slide.is-active .td-a6-headlight-bright{animation:td-a6-light-on .7s ease .8s forwards}
+@keyframes td-a6-light-off{to{opacity:0}}
+@keyframes td-a6-light-on{to{opacity:1}}
+@media(max-width:900px){.td-hero-picture img.td-a6-headlight-layer{mask-position:63% center}}
+@media(max-width:600px){.td-hero-picture img.td-a6-headlight-layer{mask-position:right 82%}}
+@media(prefers-reduced-motion:reduce){.td-hero-slide.is-active .td-a6-headlight-dim{animation:none;opacity:0}.td-hero-slide.is-active .td-a6-headlight-bright{animation:none;opacity:1}}
