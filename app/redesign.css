@@ -334,10 +334,20 @@
 .td-hero-picture img.td-a6-headlight-layer{pointer-events:none;mask-image:url("/headlights-both-mask.svg");mask-size:cover;mask-position:center 54%;mask-repeat:no-repeat}
 .td-hero-picture img.td-a6-headlight-dim{filter:brightness(.38);opacity:1}
 .td-hero-picture img.td-a6-headlight-bright{filter:brightness(1.5);opacity:0}
-.td-hero-slide.is-active .td-a6-headlight-dim{animation:td-a6-light-off .7s ease .8s forwards}
-.td-hero-slide.is-active .td-a6-headlight-bright{animation:td-a6-light-on .7s ease .8s forwards}
+/* Reveal the two LED signatures from the grille outwards. */
+.td-hero-picture img.td-a6-headlight-bright{
+  opacity:1;
+  mask-image:url("/headlights-both-mask.svg"),linear-gradient(#fff,#fff);
+  mask-size:cover,0% 100%;
+  mask-position:center 54%,center;
+  mask-repeat:no-repeat,no-repeat;
+  mask-composite:intersect;
+  -webkit-mask-composite:source-in;
+}
+.td-hero-slide.is-active .td-a6-headlight-dim{animation:td-a6-light-off 1.2s ease .6s forwards}
+.td-hero-slide.is-active .td-a6-headlight-bright{animation:td-a6-led-sweep 1.2s ease-out .6s forwards}
 @keyframes td-a6-light-off{to{opacity:0}}
-@keyframes td-a6-light-on{to{opacity:1}}
-@media(max-width:900px){.td-hero-picture img.td-a6-headlight-layer{mask-position:63% center}}
-@media(max-width:600px){.td-hero-picture img.td-a6-headlight-layer{mask-position:right 82%}}
-@media(prefers-reduced-motion:reduce){.td-hero-slide.is-active .td-a6-headlight-dim{animation:none;opacity:0}.td-hero-slide.is-active .td-a6-headlight-bright{animation:none;opacity:1}}
+@keyframes td-a6-led-sweep{to{mask-size:cover,100% 100%}}
+@media(max-width:900px){.td-hero-picture img.td-a6-headlight-layer{mask-position:63% center}.td-hero-picture img.td-a6-headlight-bright{mask-position:63% center,center}}
+@media(max-width:600px){.td-hero-picture img.td-a6-headlight-layer{mask-position:right 82%}.td-hero-picture img.td-a6-headlight-bright{mask-position:right 82%,center}}
+@media(prefers-reduced-motion:reduce){.td-hero-slide.is-active .td-a6-headlight-dim{animation:none;opacity:0}.td-hero-slide.is-active .td-a6-headlight-bright{animation:none;opacity:1;mask-size:cover,100% 100%}}
