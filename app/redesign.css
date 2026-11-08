@@ -178,7 +178,7 @@
 .td-service-source{display:block;font-size:14px;color:#1d5dbd;text-decoration:underline;margin-top:12px}
 .td-service-action{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600;color:#1d5dbd;margin-top:22px}
 .td-service-action svg{width:20px;height:20px;flex-shrink:0}
-@media(max-width:600px){.td-service-catalog{grid-template-columns:1fr;gap:12px;margin-top:22px}.td-service-panel summary{padding:20px 18px;gap:12px}.td-service-body{padding:0 18px 20px}.td-home .td-service-panel h3{font-size:19px}.td-service-prices li{gap:12px}}
+@media(max-width:600px){.td-service-catalog{grid-template-columns:1fr;gap:8px;margin-top:16px}.td-service-panel summary{padding:14px;gap:10px}.td-service-panel .td-service-icon{width:26px;height:26px;margin:0}.td-service-body{padding:0 14px 16px}.td-home .td-service-panel h3{font-size:17px;margin-bottom:3px}.td-service-intro{font-size:14px;line-height:1.4}.td-service-expand{margin-top:6px;font-size:13px}.td-service-prices li{gap:12px}}
 
 /* Prominent service links in reading order, including on mobile. */
 .td-service-main-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0 30px}

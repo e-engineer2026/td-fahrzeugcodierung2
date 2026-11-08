@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Radar, Settings2, Sparkles, Tag } from "lucide-react";
+import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Radar, Settings2, Tag } from "lucide-react";
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
@@ -30,11 +30,6 @@ function serviceRows(ids: string[]) {
 }
 
 const services = [
-  {
-    Icon: Sparkles, title: "Häufigste Funktionen", copy: "Beliebte Codierungen auf einen Blick.",
-    rows: serviceRows(["asc-1", "asc-4", "asc-15", "asc-32", "asc-112", "asc-30", "asc-29", "asc-60", "asc-8", "asc-111"]),
-    href: "#fahrzeugauswahl", action: "Passende Funktionen auswählen",
-  },
   {
     Icon: Settings2, title: "Werkseitiges Luftfahrwerk (AAS)", copy: "Fahrzeughöhe nach Wunsch und Möglichkeit anpassen.",
     rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "59–79 €", exampleKey: "aas" }],
