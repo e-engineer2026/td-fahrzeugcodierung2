@@ -81,7 +81,7 @@ function nextTier(value: number) { return value < 50 ? 50 : value < 100 ? 100 : 
 function track(event: string, params: Record<string, string | number | boolean> = {}) { if (typeof window === "undefined") return; const gtag = (window as typeof window & { gtag?: (...args: unknown[]) => void }).gtag; gtag?.("event", event, params); }
 function yearAllowed(name: string, year: number) { if (year > 2014 && /(video in motion|\bvim\b)/i.test(name)) return false; if (year < 2021 && /(wireless carplay|apple.*carplay|carplay.*android auto)/i.test(name)) return false; const until = name.match(/\bbis (?:mj\s*)?(\d{4})\b/i); if (until && year > Number(until[1])) return false; const from = name.match(/\bab (?:mj\s*)?(\d{4})\b/i); if (from && year < Number(from[1])) return false; return true; }
 function modelHintAllowed(name: string, vehicle: Vehicle) { const combined = `${vehicle.brand} ${vehicle.model}`; for (const rule of modelHintRules) { if (rule.hint.test(name) && !rule.vehicle.test(combined)) return false; } return true; }
-function SfdBadge({ value }: { value?: "Ja" | "Nein" | "Unklar" }) { if (!value) return null; if (value === "Ja") return <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">SFD</span>; if (value === "Nein") return <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">kein SFD</span>; return <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">SFD unklar</span>; }
+function SfdBadge({ value }: { value?: "Ja" | "Nein" | "Unklar" }) { if (!value) return null; if (value === "Ja") return <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">SFD1 erforderlich</span>; if (value === "Nein") return <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">SFD1 laut Referenz nicht erforderlich</span>; return <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">SFD1-Bedarf wird geprüft</span>; }
 
 const exactMqbSource = platformCodingSources.find((source) => source.id === "mqb");
 const mlbEvoSource = platformCodingSources.find((source) => source.platform === "MLBevo");
@@ -124,17 +124,31 @@ function vehicleSpecificCodings(
     source: "vehicle" as const,
   }));
   const source = codingSources.find((item) => item.platform === vehicle.platform);
-  if (!source) return curateCodingEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year)));
+  if (!source) return curateCodingEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year))).map((entry) => isSfd1 && !entry.sfd ? { ...entry, sfd: "Unklar" as const } : entry);
   const allowedCapabilities = new Set(vehicleCatalog.map((coding) => capabilityForName(coding.name)).filter((value): value is string => Boolean(value)));
+  // The Golf 8 source is not evidence that these newly added features work on
+  // every MQB-evo vehicle. Only use that source for its reference model.
+  const golf8Only = /aircare einstellung speichern|sitzheizung nach bestimmter zeit auf niedere stufe|umlufteinstellung speichern|lüfterstufen.*sanft|(?:ladedruckanzeige|drehmomentanzeige|motorleistung|getriebetemperaturanzeige).*aid/i;
   const platformEntries: UnifiedCodingEntry[] = source.entries
+    .filter((entry) => vehicle.platform !== "MQBevo" || !golf8Only.test(entry.name) || (vehicle.brand === "Volkswagen" && vehicle.model === "Golf 8 (CD)"))
     .filter((entry) => !cockpitDesignForVehicle(vehicle) || !isCockpitDesignName(entry.name))
     .filter((entry) => yearAllowed(entry.name, year))
     .filter((entry) => modelHintAllowed(entry.name, vehicle))
     .filter((entry) => { const capability = capabilityForName(entry.name); if (capability && allowedCapabilities.has(capability)) return true; return vehicleCatalog.some((coding) => tokenRelated(entry.name, coding.name)); })
     .map((entry) => ({ id: entry.id, name: entry.name, price: entry.price, uiGroup: entry.uiGroup, hardware: entry.hardware, interfaceInfo: entry.interfaceInfo, sfd: entry.sfd, source: "platform" as const }));
   const byName = new Map<string, UnifiedCodingEntry>();
-  for (const entry of [...vehicleEntries, ...platformEntries]) { const key = normalize(entry.name); if (!byName.has(key) || entry.source === "vehicle") byName.set(key, entry); }
-  return curateCodingEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year)));
+  for (const entry of [...vehicleEntries, ...platformEntries]) {
+    const key = normalize(entry.name);
+    const previous = byName.get(key);
+    if (!previous) { byName.set(key, entry); continue; }
+    const preferred = entry.source === "vehicle" ? entry : previous;
+    const sfd = previous.sfd === "Ja" || entry.sfd === "Ja" ? "Ja" :
+      previous.sfd === "Unklar" || entry.sfd === "Unklar" ? "Unklar" :
+      previous.sfd === "Nein" || entry.sfd === "Nein" ? "Nein" : undefined;
+    byName.set(key, { ...preferred, sfd });
+  }
+  return curateCodingEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year)))
+    .map((entry) => isSfd1 && !entry.sfd ? { ...entry, sfd: "Unklar" as const } : entry);
 }
 
 export default function BookingConfigurator({ integrated = false }: { integrated?: boolean }) {
@@ -282,6 +296,7 @@ export default function BookingConfigurator({ integrated = false }: { integrated
     </section>
     {integrated && selectedVehicle && year > 0 && <SaveVehicleCard brand={brand} model={vehicleModel} year={year} codings={selectedEntries.map((entry) => entry.name)} />}
     {selectedEntries.length > 0 && <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4"><button type="button" onClick={shareSelection} className="rounded-lg bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800">Auswahl teilen</button><p role="status" className="mt-2 text-sm text-slate-700">{shareMessage}</p>{shareLink && <input aria-label="Link zur Codierungsauswahl" className="mt-2 w-full" readOnly value={shareLink} onFocus={(event) => event.currentTarget.select()} />}</div>}
+    {isSfd1 && selectedEntries.some((entry) => entry.sfd === "Unklar") && <p className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-slate-700">Bei mindestens einer Auswahl ist der SFD1-Bedarf noch offen. Eine gegebenenfalls erforderliche Freischaltung wird vorab abgestimmt; sofern sie noch nicht berücksichtigt ist, kann ein Zuschlag hinzukommen.</p>}
     <ConfiguratorLiveActions snapshot={bookingDisabled ? null : { count: selectedEntries.length, subtotal: euro(subtotal), discount: euro(discount), total: euro(total), sfdFee, rate: Math.round(rate * 100), nextTier: upcomingTier ? String(upcomingTier) : "", nextDifference: upcomingTier ? euro(upcomingTier - subtotal) : "", mode, calUrl, vehicle: `${brand} ${selectedVehicle?.model} · ${year}`, codings: selectedEntries.map((entry) => entry.name), prepay, finalpay }} onBook={() => openBooking(mode === "remote")} onPayment={savePendingBooking} />
   </div>;
 }
