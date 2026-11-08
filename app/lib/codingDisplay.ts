@@ -2,6 +2,7 @@ import { servicePrice } from "./servicePrice";
 import type { PlatformCodingGroup } from "../data/platformCodingPricing";
 import { hardwareForName } from "../data/hardware";
 import { isSmartphoneAidId } from "../data/smartphoneAid";
+import { isSelectedGolf7OfferId, selectedGolf7OfferKey } from "../data/selectedGolf7Offers";
 
 export type UnifiedCodingEntry = {
   id: string;
@@ -299,6 +300,9 @@ function separateSpecificOffers(entries: UnifiedCodingEntry[]) {
 
 // Shared by the configurator and every vehicle price page.
 export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  const selectedGolf7Offers = entries.filter((entry) => isSelectedGolf7OfferId(entry.id));
+  const selectedKeys = new Set(selectedGolf7Offers.map((entry) => selectedGolf7OfferKey(entry.name)));
+  entries = entries.filter((entry) => !isSelectedGolf7OfferId(entry.id) && !selectedKeys.has(selectedGolf7OfferKey(entry.name)));
   // Preserve the dedicated smartphone navigation offer and its exact device requirements instead
   // of merging it into generic cockpit design or navigation display settings.
   const smartphoneAid = entries.filter((entry) => isSmartphoneAidId(entry.id));
@@ -313,5 +317,5 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
       uiGroup: "Licht" as const,
     };
   });
-  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid].map((entry) => ({ ...entry, price: servicePrice(entry.price) }));
+  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => ({ ...entry, price: servicePrice(entry.price) }));
 }

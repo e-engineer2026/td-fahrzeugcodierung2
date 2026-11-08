@@ -1,6 +1,7 @@
 import { servicePrice } from "../lib/servicePrice";
 import { cockpitDesignCodings, cockpitDesignForVehicle, isCockpitDesignName } from "./cockpitDesigns";
 import { smartphoneAidCodings, smartphoneAidForVehicle } from "./smartphoneAid";
+import { selectedGolf7Offers, selectedGolf7OffersForVehicle } from "./selectedGolf7Offers";
 import {
   codingCatalog as baseCodingCatalog,
   codingGroups,
@@ -81,6 +82,7 @@ export const codingCatalog: Coding[] = [
   }),
   ...cockpitDesignCodings,
   ...smartphoneAidCodings,
+  ...selectedGolf7Offers,
   ...mqbevoLaneCodings,
   mqbevoFlaMemoryCoding,
 ].map((coding) => ({ ...coding, price: servicePrice(coding.price) }));
@@ -91,6 +93,7 @@ export function codingsForVehicle(vehicle: Vehicle): string[] {
   if (design) baseIds.push(design.id);
   const smartphoneAid = smartphoneAidForVehicle(vehicle);
   if (smartphoneAid) baseIds.push(smartphoneAid.id);
+  baseIds.push(...selectedGolf7OffersForVehicle(vehicle).map((coding) => coding.id));
   if (vehicle.platform === "MQBevo") {
     return Array.from(new Set([...baseIds, ...mqbevoLaneCodings.map((coding) => coding.id), mqbevoFlaMemoryCoding.id]));
   }
