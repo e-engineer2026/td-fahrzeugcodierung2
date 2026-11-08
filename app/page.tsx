@@ -19,6 +19,7 @@ import "./redesign.css";
 const whatsapp = "https://wa.me/4915563047044";
 const maps = "https://www.google.com/maps/search/?api=1&query=51.323915%2C12.375662";
 const googleBusiness = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
+const googleReview = "https://search.google.com/local/writereview?placeid=ChIJbx46otT5pkcRX9IqdbeMmdU";
 // Use the configurator catalog as the single source for the displayed guide prices.
 function serviceRows(ids: string[]) {
   return ids.map((id) => {
@@ -109,6 +110,7 @@ export default function Home() {
 
     <section className="td-contact-intro"><div className="td-container"><div><h2>Nicht sicher, was möglich ist?</h2><p>Ich helfe dir persönlich weiter und prüfe, was zu deinem Fahrzeug passt.</p></div><a href="#kontakt" className="td-button">Persönlich beraten lassen<ArrowRight aria-hidden="true" /></a><a href="tel:+4915563047044" className="td-contact-phone"><Phone aria-hidden="true" />01556 3047044</a></div></section>
 
+    <section className="td-contact-intro"><div className="td-container"><div><h2>Deine Erfahrung zählt.</h2><p>Teile deine Erfahrung mit TD Fahrzeugcodierung auf Google.</p></div><a href={googleReview} className="td-button" target="_blank" rel="noopener noreferrer">Auf Google bewerten <ArrowRight aria-hidden="true" /></a></div></section>
     <section id="kontakt" className="td-contact td-container" aria-labelledby="contact-title"><div className="td-section-heading"><div><p className="td-eyebrow">Direkt und persönlich</p><h2 id="contact-title">Dein Weg zur passenden Codierung.</h2><p>Modell, Baujahr und Wunschfunktion reichen für die erste Anfrage.</p></div></div><ContactBox /></section>
 
     <section id="faq" className="td-faq td-container" aria-labelledby="faq-title"><div><p className="td-eyebrow">Gut zu wissen</p><h2 id="faq-title">Häufige Fragen.</h2></div><div className="td-faq-list">
