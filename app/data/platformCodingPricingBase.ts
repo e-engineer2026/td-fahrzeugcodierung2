@@ -326,7 +326,7 @@ export function pricePlatformSource(source: PlatformCodingSource): PricedPlatfor
     .map((entry, index) => ({
       ...entry,
       status: undefined,
-      sfd: entry.sfd === "Nein" ? undefined : entry.sfd,
+      sfd: entry.sfd,
       id: `${source.id}-${index}`,
       price: priceForPlatformCoding(entry.name),
       uiGroup: groupForPlatformCoding(entry.name),
