@@ -15,7 +15,7 @@ export default function FaultCodeCheck() {
   const normalized = input.toUpperCase().replace(/[\s-]/g, "");
   const valid = /^[PBCU][0-9A-F]{4}([0-9A-F]{2})?$/.test(normalized);
   const message = `Hallo, ich möchte folgenden Fehlercode prüfen lassen: ${code}. Mein Fahrzeug: `;
-  return <section className="td-container py-10" aria-labelledby="fault-title">
+  return <section className="td-container td-fault-check py-10" aria-labelledby="fault-title">
     <div className="rounded-3xl border border-blue-100 bg-slate-50 p-5 sm:p-8">
       <p className="text-xs font-bold uppercase tracking-widest text-blue-700">Diagnose</p>
       <h2 id="fault-title" className="mt-2 text-2xl font-black">Fehlercode-Check</h2>
