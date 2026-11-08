@@ -295,7 +295,11 @@
 @media(prefers-reduced-motion:reduce){.td-process.is-visible .td-step-number{animation:none}}
 
 /* Clip the flight at the right-hand wall while preserving the background. */
-.td-airplane-sky{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;mask-image:linear-gradient(to right,#000 0%,#000 85%,transparent 88%);-webkit-mask-image:linear-gradient(to right,#000 0%,#000 85%,transparent 88%)}
+/* Align the clipping edge with the wall in the 1186×668 hero scene, including cover cropping. */
+.td-hero-picture{container-type:size}
+.td-airplane-sky{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;clip-path:inset(0 max(0px,calc(50% - max(35.8cqw,63.56cqh))) 0 0)}
+@media(max-width:900px){.td-airplane-sky{clip-path:inset(0 max(0px,calc(37% - max(22.8cqw,40.49cqh))) 0 0)}}
+@media(max-width:600px){.td-airplane-sky{clip-path:inset(0 max(14.2cqw,25.21cqh) 0 0)}}
 /* The plane pulls a rippling fabric banner across the sky. */
 .td-airplane-flight{position:absolute;top:62px;left:0;display:flex;align-items:center;width:max-content;pointer-events:none;animation:td-airplane-cross 180s linear 1s infinite;transform:translateX(-110%);will-change:transform}
 .td-airplane-flight-selected{animation-delay:0s}
