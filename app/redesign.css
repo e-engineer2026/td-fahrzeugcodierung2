@@ -334,3 +334,6 @@
 .td-airplane-banner-text{display:flex;flex-direction:column;gap:2px;align-items:flex-start;line-height:1.05}
 .td-airplane-banner-text strong{font-size:1.15em;color:#0b3262;font-weight:900}
 
+
+/* Compact spacing between services, diagnostics and process on mobile. */
+@media(max-width:600px){.td-home .td-services{padding-bottom:8px}.td-home .td-fault-check{padding-top:8px;padding-bottom:16px}}
