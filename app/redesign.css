@@ -305,10 +305,16 @@
 .td-airplane-flight-selected{animation-delay:0s}
 .td-hero-picture img.td-airplane{display:block;position:static;width:92px;height:auto;flex:none;object-fit:contain;filter:drop-shadow(0 2px 2px #20374b44)}
 .td-airplane-rope{width:26px;height:1px;background:#657989;flex:none;transform:rotate(-3deg)}
-.td-airplane-banner{position:relative;display:flex;align-items:center;gap:4px;padding:7px 10px;background:repeating-linear-gradient(90deg,#fff 0%,#e1e9ef 12%,#fff 26%,#eef3f6 38%,#fff 50%);background-size:100px 100%;border:1px solid #c1ced5;box-shadow:0 2px 5px #243e5233;color:#164c82;font-size:11px;font-weight:800;line-height:1;letter-spacing:.01em;white-space:nowrap;transform-origin:right center;animation:td-banner-wave 3.2s ease-in-out infinite}
+.td-airplane-banner{position:relative;display:flex;align-items:center;gap:4px;padding:7px 10px;background:repeating-linear-gradient(90deg,#fff 0%,#e1e9ef 12%,#fff 26%,#eef3f6 38%,#fff 50%);background-size:100px 100%;border:1px solid #c1ced5;box-shadow:0 2px 5px #243e5233;color:#164c82;font-size:11px;font-weight:800;line-height:1;letter-spacing:.01em;white-space:nowrap;transform-origin:right center;animation:td-banner-wave 3.2s linear infinite}
 @keyframes td-airplane-cross{0%{transform:translateX(-110%)}18%,100%{transform:translateX(100vw)}}
 @keyframes td-airplane-cross-mobile{0%{transform:translateX(-110%)}12.25%,100%{transform:translateX(100vw)}}
-@keyframes td-banner-wave{0%,100%{clip-path:polygon(0 10%,16% 3%,33% 7%,50% 2%,67% 5%,84% 1%,100% 0,100% 100%,84% 99%,67% 95%,50% 98%,33% 93%,16% 97%,0 90%);transform:perspective(300px) rotateY(-2deg) skewY(-.5deg);background-position:0 0}50%{clip-path:polygon(0 2%,16% 8%,33% 3%,50% 7%,67% 2%,84% 4%,100% 0,100% 100%,84% 96%,67% 98%,50% 93%,33% 97%,16% 92%,0 98%);transform:perspective(300px) rotateY(2deg) skewY(.5deg);background-position:35px 0}}
+@keyframes td-banner-wave{
+  0%{clip-path:polygon(0 6%,16% 3%,33% 7%,50% 3%,67% 6%,84% 2%,100% 0,100% 100%,84% 98%,67% 94%,50% 97%,33% 93%,16% 97%,0 94%);background-position:0 0}
+ 25%{clip-path:polygon(0 4%,16% 7%,33% 3%,50% 6%,67% 2%,84% 5%,100% 0,100% 100%,84% 95%,67% 98%,50% 94%,33% 97%,16% 93%,0 96%);background-position:-25px 0}
+ 50%{clip-path:polygon(0 7%,16% 3%,33% 6%,50% 2%,67% 5%,84% 3%,100% 0,100% 100%,84% 97%,67% 95%,50% 98%,33% 94%,16% 97%,0 93%);background-position:-50px 0}
+ 75%{clip-path:polygon(0 3%,16% 6%,33% 2%,50% 5%,67% 3%,84% 6%,100% 0,100% 100%,84% 94%,67% 97%,50% 95%,33% 98%,16% 94%,0 97%);background-position:-75px 0}
+ 100%{clip-path:polygon(0 6%,16% 3%,33% 7%,50% 3%,67% 6%,84% 2%,100% 0,100% 100%,84% 98%,67% 94%,50% 97%,33% 93%,16% 97%,0 94%);background-position:-100px 0}
+}
 @media(max-width:600px){.td-airplane-flight{top:47px;animation-name:td-airplane-cross-mobile}.td-airplane-flight-selected{animation-delay:0s}
 .td-hero-picture img.td-airplane{width:67px}.td-airplane-rope{width:16px}.td-airplane-banner{font-size:9px;padding:5px 8px}}
 @media(prefers-reduced-motion:reduce){.td-airplane-flight{display:none}}
