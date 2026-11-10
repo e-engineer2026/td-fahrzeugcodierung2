@@ -21,14 +21,20 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "Golf 5 (1K)": "/vehicle-images/side/vw-golf-5.webp",
+    "Golf 6 (1K)": "/vehicle-images/side/vw-golf-6.webp",
+    "Golf 7 (5G)": "/vehicle-images/side/vw-golf-7.webp",
+    "Golf 8 (CD)": "/vehicle-images/side/vw-golf-8.webp",
+    "Polo AW": "/vehicle-images/side/vw-polo-aw.webp",
+    "A4 / S4 B9": "/vehicle-images/side/audi-a4-b9.webp",
     "A3 / S3 8P": "/vehicle-images/side/audi-a3-8p.webp",
     "A3 / S3 8V": "/vehicle-images/side/audi-a3-8v.webp",
     "A3 / S3 8Y": "/vehicle-images/side/audi-a3-8y.webp",
     "A6 / S6 C8": "/vehicle-images/side/audi-a6-c8.webp",
   };
   const originalImage = vehicleHeroImage(selection);
-  const side = selection.brand === "Audi" ? sideProfiles[selection.model] : undefined;
-  const image = side ? { src: side, label: selection.model, alt: `Audi ${selection.model} als Modellillustration im Seitenprofil` } : originalImage;
+  const side = ["Audi", "Volkswagen"].includes(selection.brand) ? sideProfiles[selection.model] : undefined;
+  const image = side ? { src: side, label: selection.model, alt: `${selection.brand} ${selection.model} als Modellillustration im Seitenprofil` } : originalImage;
   const brand = selection.brand === "SEAT / CUPRA" ? "" : selection.brand + " ";
   return <a href="#fahrzeugauswahl" className="td-selected-vehicle" aria-label={`Gewähltes Fahrzeug: ${brand}${selection.model}${selection.year ? ` Baujahr ${selection.year}` : ""}. Fahrzeug ändern.`}>
     {image && <Image src={image.src} alt="" width={86} height={48} className="td-selected-vehicle-image" />}
