@@ -21,6 +21,12 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "A6 / S6 C6": "/vehicle-images/side/audi-a6-c6.webp",
+    "A6 / S6 C7": "/vehicle-images/side/audi-a6-c7.webp",
+    "Octavia 4 NX": "/vehicle-images/side/skoda-octavia-4.webp",
+    "Transporter T5": "/vehicle-images/side/vw-transporter-t5.webp",
+    "SEAT Leon 1P": "/vehicle-images/side/seat-leon-1p.webp",
+    "T-Roc A11": "/vehicle-images/side/vw-troc.webp",
     "Passat B8 (3G)": "/vehicle-images/side/vw-passat-b8.webp",
     "Tiguan II (AD/BW)": "/vehicle-images/side/vw-tiguan-ii.webp",
     "Caddy III / IV (2K / SA)": "/vehicle-images/side/vw-caddy-2k.webp",
