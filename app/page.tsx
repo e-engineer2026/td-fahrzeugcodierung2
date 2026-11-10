@@ -8,6 +8,7 @@ import ContactBox from "./components/ContactBox";
 import ProcessAnimation from "./components/ProcessAnimation";
 import FunctionExample from "./components/FunctionExample";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
+import SelectedVehicleHeader from "./components/SelectedVehicleHeader";
 import HomeMenu from "./components/HomeMenu";
 import HomeVehicleFinder from "./components/HomeVehicleFinder";
 import HeroVehicleCarousel from "./components/HeroVehicleCarousel";
@@ -55,6 +56,7 @@ export default function Home() {
         <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
         <div className="td-header-actions"><AccountMenu /><HeaderBookingSummary /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
+      <SelectedVehicleHeader />
     </header>
 
     <aside className="td-offer" aria-label="Aktionsrabatt für alle ohne Anmeldung">
