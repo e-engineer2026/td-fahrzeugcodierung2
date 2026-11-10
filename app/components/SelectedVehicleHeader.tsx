@@ -20,7 +20,15 @@ export default function SelectedVehicleHeader() {
     };
   }, []);
   if (!selection) return null;
-  const image = vehicleHeroImage(selection);
+  const sideProfiles: Record<string, string> = {
+    "A3 / S3 8P": "/vehicle-images/side/audi-a3-8p.webp",
+    "A3 / S3 8V": "/vehicle-images/side/audi-a3-8v.webp",
+    "A3 / S3 8Y": "/vehicle-images/side/audi-a3-8y.webp",
+    "A6 / S6 C8": "/vehicle-images/side/audi-a6-c8.webp",
+  };
+  const originalImage = vehicleHeroImage(selection);
+  const side = selection.brand === "Audi" ? sideProfiles[selection.model] : undefined;
+  const image = side ? { src: side, label: selection.model, alt: `Audi ${selection.model} als Modellillustration im Seitenprofil` } : originalImage;
   const brand = selection.brand === "SEAT / CUPRA" ? "" : selection.brand + " ";
   return <a href="#fahrzeugauswahl" className="td-selected-vehicle" aria-label={`Gewähltes Fahrzeug: ${brand}${selection.model}${selection.year ? ` Baujahr ${selection.year}` : ""}. Fahrzeug ändern.`}>
     {image && <Image src={image.src} alt="" width={86} height={48} className="td-selected-vehicle-image" />}
