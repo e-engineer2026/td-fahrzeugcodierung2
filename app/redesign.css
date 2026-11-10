@@ -343,3 +343,12 @@
 
 /* Compact spacing between services, diagnostics and process on mobile. */
 @media(max-width:600px){.td-home .td-services{padding-bottom:8px}.td-home .td-fault-check{padding-top:8px;padding-bottom:16px}}
+
+/* Selected vehicle stays visible with the sticky header. */
+.td-selected-vehicle{display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:4px 16px;background:#f3f7ff;border-top:1px solid #e4ebf5;color:#17345a;text-decoration:none}
+.td-selected-vehicle:hover{background:#eaf2ff}
+.td-selected-vehicle-image{display:block;width:76px;height:40px;object-fit:cover;object-position:center;border-radius:5px}
+.td-selected-vehicle span{display:flex;min-width:0;flex-direction:column;line-height:1.2}
+.td-selected-vehicle small{font-size:10px;font-weight:600;color:#586b82}
+.td-selected-vehicle strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:600px){.td-selected-vehicle{min-height:40px;padding:3px 12px}.td-selected-vehicle-image{width:62px;height:34px}.td-selected-vehicle strong{font-size:12px}}
