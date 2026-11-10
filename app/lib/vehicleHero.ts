@@ -103,5 +103,11 @@ const pictures: Array<VehicleHeroImage & { brand: string; model: string; until: 
 
 export function vehicleHeroImage(choice: PictureChoice | null): VehicleHeroImage | null {
   if (!choice) return null;
-  return pictures.find((item) => item.brand === choice.brand && item.model === choice.model && (!choice.year || choice.year <= item.until)) ?? null;
+  const sameModel = pictures.filter((item) => item.brand === choice.brand && item.model === choice.model);
+  const exact = sameModel.find((item) => !choice.year || choice.year <= item.until);
+  if (exact) return exact;
+  // Show only the same generation, marked as an illustrative different version.
+  // Never substitute another model when a year-specific picture is missing.
+  const fallback = sameModel.reduce<(typeof sameModel)[number] | null>((latest, item) => !latest || item.until > latest.until ? item : latest, null);
+  return fallback ? { ...fallback, label: `${choice.model} · Modellabbildung`, alt: `${choice.brand} ${choice.model}: Modellabbildung einer anderen Ausführung; Farbe und Ausstattung können abweichen` } : null;
 }
