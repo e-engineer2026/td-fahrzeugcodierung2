@@ -21,6 +21,10 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "Q5 FY": "/vehicle-images/side/audi-q5-fy.webp",
+    "Transporter T6": "/vehicle-images/side/vw-transporter-t6.webp",
+    "Superb 2 3T": "/vehicle-images/side/skoda-superb-2.webp",
+    "SEAT Ibiza KJ": "/vehicle-images/side/seat-ibiza-kj.webp",
     "Polo 6R": "/vehicle-images/side/vw-polo-6r.webp",
     "Q5 8R": "/vehicle-images/side/audi-q5-8r.webp",
     "Touran 5T": "/vehicle-images/side/vw-touran-5t.webp",
