@@ -21,6 +21,9 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "Polo 6R": "/vehicle-images/side/vw-polo-6r.webp",
+    "Q5 8R": "/vehicle-images/side/audi-q5-8r.webp",
+    "Touran 5T": "/vehicle-images/side/vw-touran-5t.webp",
     "A6 / S6 C6": "/vehicle-images/side/audi-a6-c6.webp",
     "A6 / S6 C7": "/vehicle-images/side/audi-a6-c7.webp",
     "Octavia 4 NX": "/vehicle-images/side/skoda-octavia-4.webp",
