@@ -21,6 +21,10 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "Q3 8U": "/vehicle-images/side/audi-q3-8u.webp",
+    "Passat B7 (3C)": "/vehicle-images/side/vw-passat-b7.webp",
+    "Superb 3V": "/vehicle-images/side/skoda-superb-3v.webp",
+    "Transporter / Multivan T6.1": "/vehicle-images/side/vw-transporter-t61.webp",
     "Q5 FY": "/vehicle-images/side/audi-q5-fy.webp",
     "Transporter T6": "/vehicle-images/side/vw-transporter-t6.webp",
     "Superb 2 3T": "/vehicle-images/side/skoda-superb-2.webp",
