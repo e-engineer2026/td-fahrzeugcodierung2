@@ -21,6 +21,18 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "Octavia 2 1Z": "/vehicle-images/side/skoda-octavia-2.webp",
+    "Fabia 2 5J": "/vehicle-images/side/skoda-fabia-2.webp",
+    "Rapid NH bis MJ 2015": "/vehicle-images/side/skoda-rapid-early.webp",
+    "Rapid NH ab MJ 2016": "/vehicle-images/side/skoda-rapid-late.webp",
+    "Yeti 5L": "/vehicle-images/side/skoda-yeti.webp",
+    "Kodiaq NS": "/vehicle-images/side/skoda-kodiaq-ns.webp",
+    "Karoq NU": "/vehicle-images/side/skoda-karoq.webp",
+    "Scala NW": "/vehicle-images/side/skoda-scala.webp",
+    "Kodiaq II (PS)": "/vehicle-images/side/skoda-kodiaq-ps.webp",
+    "Kamiq NW": "/vehicle-images/side/skoda-kamiq.webp",
+    "Citigo AA": "/vehicle-images/side/skoda-citigo.webp",
+    "Enyaq 5A": "/vehicle-images/side/skoda-enyaq.webp",
     "Passat B6 (3C)": "/vehicle-images/side/vw-passat-b6.webp",
     "Passat B9": "/vehicle-images/side/vw-passat-b9.webp",
     "Arteon 3H": "/vehicle-images/side/vw-arteon-3h.webp",
@@ -60,7 +72,7 @@ export default function SelectedVehicleHeader() {
     "Tiguan II (AD/BW)": "/vehicle-images/side/vw-tiguan-ii.webp",
     "Caddy III / IV (2K / SA)": "/vehicle-images/side/vw-caddy-2k.webp",
     "Octavia 3 5E": "/vehicle-images/side/skoda-octavia-3.webp",
-    "Octavia 3 5E Facelift": "/vehicle-images/side/skoda-octavia-3.webp",
+    "Octavia 3 5E Facelift": "/vehicle-images/side/skoda-octavia-3-fl.webp",
     "SEAT Leon 5F": "/vehicle-images/side/seat-leon-5f.webp",
     "CUPRA Formentor KM": "/vehicle-images/side/cupra-formentor.webp",
     "Golf 5 (1K)": "/vehicle-images/side/vw-golf-5.webp",
