@@ -21,6 +21,17 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "SEAT Ateca KH7": "/vehicle-images/side/seat-ateca.webp",
+    "SEAT Altea / Altea XL 5P": "/vehicle-images/side/seat-altea.webp",
+    "SEAT Toledo 4 NH": "/vehicle-images/side/seat-toledo.webp",
+    "SEAT Arona KJ7": "/vehicle-images/side/seat-arona.webp",
+    "SEAT Tarraco KN2": "/vehicle-images/side/seat-tarraco.webp",
+    "SEAT Mii AA": "/vehicle-images/side/seat-mii.webp",
+    "CUPRA Ateca KH7": "/vehicle-images/side/cupra-ateca.webp",
+    "SEAT Leon KL": "/vehicle-images/side/seat-leon-kl.webp",
+    "CUPRA Leon KL": "/vehicle-images/side/cupra-leon-kl.webp",
+    "CUPRA Born K11": "/vehicle-images/side/cupra-born.webp",
+    "CUPRA Tavascan (KX)": "/vehicle-images/side/cupra-tavascan.webp",
     "Octavia 2 1Z": "/vehicle-images/side/skoda-octavia-2.webp",
     "Fabia 2 5J": "/vehicle-images/side/skoda-fabia-2.webp",
     "Rapid NH bis MJ 2015": "/vehicle-images/side/skoda-rapid-early.webp",
