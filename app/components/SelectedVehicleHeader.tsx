@@ -21,6 +21,20 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "Passat B6 (3C)": "/vehicle-images/side/vw-passat-b6.webp",
+    "Passat B9": "/vehicle-images/side/vw-passat-b9.webp",
+    "Arteon 3H": "/vehicle-images/side/vw-arteon-3h.webp",
+    "up! (1S)": "/vehicle-images/side/vw-up-1s.webp",
+    "ID.3 (E11)": "/vehicle-images/side/vw-id3.webp",
+    "ID.4 (E21)": "/vehicle-images/side/vw-id4.webp",
+    "ID.5 (E39)": "/vehicle-images/side/vw-id5.webp",
+    "Tayron II (R4)": "/vehicle-images/side/vw-tayron.webp",
+    "Touran 1T": "/vehicle-images/side/vw-touran-1t.webp",
+    "Touareg 7L": "/vehicle-images/side/vw-touareg-7l.webp",
+    "Touareg 7P": "/vehicle-images/side/vw-touareg-7p.webp",
+    "Caddy V (SB)": "/vehicle-images/side/vw-caddy-sb.webp",
+    "T-Cross C1": "/vehicle-images/side/vw-tcross.webp",
+    "Taigo CS": "/vehicle-images/side/vw-taigo.webp",
     "A4 / S4 8K": "/vehicle-images/side/audi-a4-8k.webp",
     "Tiguan 5N": "/vehicle-images/side/vw-tiguan-5n.webp",
     "Fabia 3 NJ": "/vehicle-images/side/skoda-fabia-3.webp",
