@@ -21,6 +21,10 @@ export default function SelectedVehicleHeader() {
   }, []);
   if (!selection) return null;
   const sideProfiles: Record<string, string> = {
+    "A4 / S4 8K": "/vehicle-images/side/audi-a4-8k.webp",
+    "Tiguan 5N": "/vehicle-images/side/vw-tiguan-5n.webp",
+    "Fabia 3 NJ": "/vehicle-images/side/skoda-fabia-3.webp",
+    "Golf Plus 5M": "/vehicle-images/side/vw-golf-plus.webp",
     "Q3 8U": "/vehicle-images/side/audi-q3-8u.webp",
     "Passat B7 (3C)": "/vehicle-images/side/vw-passat-b7.webp",
     "Superb 3V": "/vehicle-images/side/skoda-superb-3v.webp",
