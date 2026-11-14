@@ -1,1 +1,1 @@
-export function downloadQuotePdf(data: { vehicle: string; entries: Array<{id: string; name: string; price: number}>; selected: string[]; sfdFee: number; subtotal: number; rate: number; discount: number; total: number }): Promise<void>;
+export function downloadQuotePdf(data: { vehicle: string; vehicleImage?: string; entries: Array<{id: string; name: string; price: number}>; selected: string[]; sfdFee: number; subtotal: number; rate: number; discount: number; total: number }): Promise<void>;
