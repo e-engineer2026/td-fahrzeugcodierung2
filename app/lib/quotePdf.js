@@ -1,4 +1,6 @@
-export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selected, sfdFee, subtotal, rate, discount, total }) {
+import QRCode from './qr/index.js';
+
+export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selected, sfdFee, subtotal, rate, discount, total, selectionUrl }) {
   const encoder = new TextEncoder();
   const bytes = (s) => encoder.encode(s);
   const concat = (...parts) => { const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0)); let i = 0; for (const p of parts) { out.set(p, i); i += p.length; } return out; };
@@ -19,6 +21,7 @@ export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selecte
   let car = null;
   if (vehicleImage) { try { car = await loadImage(vehicleImage, 720, 360); } catch { /* Text label remains available if the image fails to load. */ } }
   const today = new Date(); const until = new Date(today); until.setDate(until.getDate() + 14);
+  const quoteNumber = 'TD-' + today.toISOString().slice(0, 10).replace(/-/g, '') + '-' + Array.from(crypto.getRandomValues(new Uint8Array(4)), v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
   const date = d => d.toLocaleDateString('de-DE');
   const money = n => n.toFixed(2).replace('.', ',') + ' €';
   const pages = []; let ops = []; let y = 0;
@@ -35,21 +38,44 @@ export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selecte
   const ensure = (space) => { if (y - space < 48) start(); };
   const wrap = (s, max = 77) => { const lines = []; let line = ''; for (const word of s.split(/\s+/)) { if (line && (line + ' ' + word).length > max) { lines.push(line); line = word; } else line += (line ? ' ' : '') + word; } if (line) lines.push(line); return lines.length ? lines : ['']; };
   start(); line(selected.length ? 'Kostenvoranschlag' : 'Codierliste und Preise', 42, y, 18, true); y -= 22;
+  if (selected.length) { line('Angebotsnummer: ' + quoteNumber, 42, y, 9, true); y -= 15; }
   line('Fahrzeug: ' + vehicle, 42, y, 11, true); y -= 16;
   line(selected.length ? `Erstellt: ${date(today)}    Gültig bis: ${date(until)}` : `Stand: ${date(today)}`, 42, y, 10); y -= 14;
   if (car) { ops.push(`q 210 0 0 105 340 ${y - 105} cm /Car Do Q`); y -= 112; } else { y -= 12; }
-  line('Codierungen und Preise', 42, y, 12, true); y -= 18;
-  for (const entry of entries) {
+  if (selected.length) {
+    ensure(70); line('Deine ausgewählten Codierungen', 42, y, 12, true); y -= 18;
+    for (const entry of entries.filter(e => selected.includes(e.id))) {
+      const lines = wrap(entry.name); ensure(lines.length * 13 + 4);
+      line(lines[0], 42, y, 9); line(money(entry.price), 500, y, 9, true); y -= 13;
+      for (const part of lines.slice(1)) { line(part, 42, y, 9); y -= 13; }
+    }
+    ensure(85);
+    if (sfdFee) { line('SFD1-Freischaltung (einmalig)', 42, y); line(money(sfdFee), 500, y); y -= 16; }
+    line('Zwischensumme', 42, y); line(money(subtotal), 500, y); y -= 16;
+    line(`Aktionsrabatt (${Math.round(rate * 100)} %)`, 42, y); line('-' + money(discount), 500, y); y -= 18;
+    line('Gesamtpreis', 42, y, 12, true); line(money(total), 500, y, 12, true); y -= 24;
+  }
+  if (selectionUrl) {
+    try {
+      const qr = new QRCode(0, 1); qr.addData(selectionUrl); qr.make();
+      ensure(118); const n = qr.getModuleCount(), size = 92, cell = size / (n + 8), bottom = y - 98;
+      ops.push('0 0 0 rg');
+      for (let row = 0; row < n; row++) for (let col = 0; col < n; col++) if (qr.isDark(row, col)) ops.push(`${(42 + (col + 4) * cell).toFixed(3)} ${(bottom + (n + 3 - row) * cell).toFixed(3)} ${cell.toFixed(3)} ${cell.toFixed(3)} re f`);
+      line('Fahrzeugauswahl erneut öffnen', 145, y - 20, 10, true); line('QR-Code mit dem Smartphone scannen', 145, y - 36, 9); y -= 112;
+    } catch { ensure(22); line('Auswahl-Link konnte nicht als QR-Code dargestellt werden.', 42, y, 9); y -= 18; }
+  }
+  ensure(40); line('Alle Codierungen und Preise', 42, y, 12, true); y -= 18;
+  let group = '';
+  for (const entry of [...entries].sort((a, b) => (a.uiGroup || 'Weitere').localeCompare(b.uiGroup || 'Weitere', 'de') || a.name.localeCompare(b.name, 'de'))) {
+    const nextGroup = entry.uiGroup || 'Weitere';
+    if (nextGroup !== group) { ensure(38); group = nextGroup; y -= 4; line(group, 42, y, 10, true); y -= 16; }
     const lines = wrap(entry.name); ensure(lines.length * 13 + 7);
     ops.push(`0.6 w 43 ${y - 1} 9 9 re S`); if (selected.includes(entry.id)) { ops.push(`43 ${y - 1} m 52 ${y + 8} l S 43 ${y + 8} m 52 ${y - 1} l S`); }
     line(lines[0], 60, y, 9); line(money(entry.price), 500, y, 9, true); y -= 13;
     for (const part of lines.slice(1)) { line(part, 60, y, 9); y -= 13; } y -= 5;
+    const notes = [entry.hardware ? 'Voraussetzung: ' + entry.hardware : '', entry.requirements ? 'Hinweis: ' + entry.requirements : '', entry.sfd === 'Ja' ? 'SFD1-Freischaltung erforderlich.' : entry.sfd === 'Unklar' ? 'SFD1-Bedarf wird geprüft.' : ''].filter(Boolean);
+    for (const note of notes) for (const part of wrap(note, 90)) { ensure(13); line(part, 60, y, 8); y -= 11; }
   }
-  if (selected.length) { ensure(130); y -= 10; line('Berechnung der ausgewählten Codierungen', 42, y, 12, true); y -= 19;
-  if (sfdFee) { line('SFD1-Freischaltung (einmalig)', 42, y); line(money(sfdFee), 500, y); y -= 16; }
-  line('Zwischensumme', 42, y); line(money(subtotal), 500, y); y -= 16;
-  line(`Aktionsrabatt (${Math.round(rate * 100)} %)`, 42, y); line('-' + money(discount), 500, y); y -= 18;
-  line('Gesamtpreis', 42, y, 12, true); line(money(total), 500, y, 12, true); y -= 23; }
   for (const t of wrap('Preis und Durchführbarkeit vorbehaltlich Prüfung von Fahrzeug, Ausstattung und Softwarestand. Kleinunternehmer gemäß § 19 UStG; Umsatzsteuer wird nicht gesondert ausgewiesen.', 98)) { ensure(15); line(t, 42, y, 8); y -= 12; }
   const objects = [null]; const add = data => { objects.push(data); return objects.length - 1; };
   const catalog = add(null), pageTree = add(null), font = add(bytes('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>')), bold = add(bytes('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'));
@@ -61,5 +87,9 @@ export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selecte
   const chunks = [bytes('%PDF-1.4\n')]; const offsets = [0]; let size = chunks[0].length;
   for (let i = 1; i < objects.length; i++) { offsets[i] = size; const item = concat(bytes(`${i} 0 obj\n`), objects[i], bytes('\nendobj\n')); chunks.push(item); size += item.length; }
   const xref = size; chunks.push(bytes(`xref\n0 ${objects.length}\n0000000000 65535 f \n${offsets.slice(1).map(n => String(n).padStart(10, '0') + ' 00000 n ').join('\n')}\ntrailer\n<< /Size ${objects.length} /Root ${catalog} 0 R >>\nstartxref\n${xref}\n%%EOF`));
-  const url = URL.createObjectURL(new Blob(chunks, { type: 'application/pdf' })); const a = document.createElement('a'); a.href = url; a.download = selected.length ? 'TD-Kostenvoranschlag.pdf' : 'TD-Codierliste.pdf'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+  const name = selected.length ? `${quoteNumber}-Kostenvoranschlag.pdf` : 'TD-Codierliste.pdf';
+  const file = new File(chunks, name, { type: 'application/pdf' });
+  const url = URL.createObjectURL(file); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+  return file;
 }
+
