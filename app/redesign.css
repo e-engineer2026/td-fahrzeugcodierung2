@@ -362,12 +362,3 @@
 
 /* Keep the complete vehicle centered in the mobile hero. */
 @media(max-width:600px){.td-home .td-hero-slide:not(.td-hero-model-photo) img{object-position:center 82%}}
-
-/* A shared backdrop stays fixed while the cars fade between slides. */
-.td-hero-default-background{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
-.td-hero-default-background.is-active{opacity:1}
-.td-home .td-hero-car-position{position:absolute;right:3%;bottom:10%;width:65%;height:59%;filter:drop-shadow(0 9px 7px #17243450)}
-.td-home .td-hero-picture .td-hero-car-position img{object-fit:contain;object-position:center bottom}
-@media(max-width:600px){.td-home .td-hero-car-position{right:3%;bottom:10%;width:80%;height:55%}}
-.td-airplane-sky{clip-path:inset(0 max(0px,calc(50cqw - max(35.8cqw,63.65cqh))) 0 0)}
-@media(min-width:601px) and (max-width:900px){.td-airplane-sky{clip-path:inset(0 max(0px,calc(37cqw - max(22.8cqw,40.54cqh))) 0 0)}}
