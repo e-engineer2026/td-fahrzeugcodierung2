@@ -66,7 +66,6 @@ export default function HomeVehicleFinder() {
       <label data-current-step={Boolean(model && !year)}><span>Baujahr</span><select id="finder-year" required disabled={!vehicle} value={year || ""} onChange={(e) => selectYear(Number(e.target.value))}><option value="">Baujahr wählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
     </div>
     {!ready && <p className="td-finder-next" aria-live="polite">{!brand ? "1. Wähle deine Fahrzeugmarke." : !model ? "2. Wähle Modell und Generation." : "3. Wähle das Baujahr."}</p>}
-    {ready && <p className="td-finder-current"><b>Deine Auswahl:</b> {brand} {model} · {year} <span>{mode === "remote" ? "Remote" : "Vor Ort in Leipzig"}</span></p>}
     {mode === "remote" && <p className="td-remote-note">Mit eigenem Diagnoseinterface, Windows-PC/Laptop, stabiler Internetverbindung und vereinbarter Remote-Software. Interface und Spannungsversorgung stimmen wir vorher ab.</p>}
   </div>;
 }
