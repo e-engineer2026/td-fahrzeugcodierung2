@@ -1,50 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Radar, Settings2, Tag } from "lucide-react";
+import { ArrowRight, ChevronDown, MapPin, MessageCircle, Phone, Tag } from "lucide-react";
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
 import ContactBox from "./components/ContactBox";
 import ProcessAnimation from "./components/ProcessAnimation";
-import FunctionExample from "./components/FunctionExample";
 import HeaderBookingSummary from "./components/HeaderBookingSummary";
 import SelectedVehicleHeader from "./components/SelectedVehicleHeader";
 import HomeMenu from "./components/HomeMenu";
 import HomeVehicleFinder from "./components/HomeVehicleFinder";
 import HeroVehicleCarousel from "./components/HeroVehicleCarousel";
 import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
-import { codingCatalog } from "./data/catalog";
 import "./redesign.css";
 
 const whatsapp = "https://wa.me/4915563047044";
 const maps = "https://www.google.com/maps/search/?api=1&query=51.323915%2C12.375662";
 const googleBusiness = "https://www.google.com/maps/search/?api=1&query=TD-Fahrzeugcodierung&query_place_id=ChIJbx46otT5pkcRX9IqdbeMmdU";
 const googleReview = "https://search.google.com/local/writereview?placeid=ChIJbx46otT5pkcRX9IqdbeMmdU";
-// Use the configurator catalog as the single source for the displayed guide prices.
-function serviceRows(ids: string[]) {
-  return ids.map((id) => {
-    const coding = codingCatalog.find((entry) => entry.id === id);
-    if (!coding) throw new Error(`Missing service coding: ${id}`);
-    return { name: coding.name, price: `ab ${coding.price} €`, exampleKey: id };
-  });
-}
-
-const services = [
-  {
-    Icon: Settings2, title: "Werkseitiges Luftfahrwerk (AAS)", copy: "Fahrzeughöhe nach Wunsch und Möglichkeit anpassen.",
-    rows: [{ name: "Höhenanpassung des werksseitigen Luftfahrwerks", price: "59–79 €", exampleKey: "aas" }],
-    models: ["Audi A6 / S6 / Allroad C6 (4F) und C7 (4G)", "Audi A7 / S7 C7 (4G)", "Audi A8 / S8 D4 (4H) und D5 (4N)", "Audi Q7 (4L)", "Volkswagen Touareg I (7L)", "Volkswagen Phaeton (3D)"],
-    note: "Nur mit werksseitigem Luftfahrwerk. Preis nach Fahrzeug und Aufwand, verbindlich vor Beginn vereinbart. Weitere Baureihen auf Anfrage. Keine Reparaturen, Nachrüstteile oder Vermessungsarbeiten enthalten.",
-    href: `${whatsapp}?text=${encodeURIComponent("Hallo, ich möchte das werksseitige Luftfahrwerk (AAS) anpassen lassen. Fahrzeug / Baujahr: ")}`, action: "Luftfahrwerk anfragen",
-  },
-  {
-    Icon: Radar, title: "Assistenzsysteme", copy: "Vorhandene Kamera- und Sensortechnik nutzen.",
-    rows: serviceRows(["vcds-vze", "vcds-fla", "vcds-dla", "vcds-lane-activate", "vcds-lane-memory", "vcds-lane-warning", "vcds-acc", "vcds-acc-mode", "vcds-pacc", "vcds-front-assist", "vcds-park-assist", "vcds-rear-view"]),
-    note: "Kompatible Hardware und gegebenenfalls vorhandene Funktionslizenzen erforderlich. Nachrüstung, zusätzliche Parametrierung und Kalibrierung werden bei Bedarf separat angeboten. SFD1-Fahrzeuge: unterstützte Anpassungen vorhandener Systeme; keine SFD2-Codierungen.",
-    href: "#fahrzeugauswahl", action: "Assistenzfunktionen für mein Fahrzeug prüfen",
-  },
-];
-
 export default function Home() {
   return <main className="td-home">
     <ProcessAnimation />
@@ -53,7 +26,7 @@ export default function Home() {
     <header className="td-header">
       <div className="td-container td-header-inner">
         <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><span className="td-logo-shine"><Image src="/td-logo-status.webp" alt="TD" width={225} height={80} sizes="(max-width: 600px) 68px, 94px" priority /></span><span>Fahrzeugcodierung</span></Link>
-        <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#leistungen">Leistungen</a><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
+        <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
         <div className="td-header-actions"><AccountMenu /><HeaderBookingSummary /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
       <SelectedVehicleHeader />
@@ -81,26 +54,6 @@ export default function Home() {
 
     <section id="buchen" className="td-container td-booking-area" aria-label="Fahrzeugcodierungen auswählen" tabIndex={-1}>
       <BookingConfigurator integrated />
-    </section>
-
-    <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
-      <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div></div>
-      <nav className="td-service-main-links" aria-label="Fahrzeuge, Preise und Software"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link><Link href="/remote-check">Remote-Check<ArrowRight aria-hidden="true" /></Link><Link href="/steuergeraete-flash">Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link></nav>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Häufige Serviceanfragen">
-        <Link href="/steuergeraete-diagnose-leipzig" className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-blue-400"><strong className="block text-lg">Fahrzeugdiagnose</strong><span className="mt-1 block text-sm text-slate-600">Fehlerspeicher und Steuergeräte prüfen lassen.</span><span className="mt-3 block font-semibold text-blue-700">Diagnose ansehen →</span></Link>
-        <a href={`${whatsapp}?text=${encodeURIComponent("Hallo, ich habe ein Problem mit meinem Infotainment-System und möchte eine Vorprüfung anfragen. Fahrzeug / Baujahr / Fehler: ")}`} target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-blue-400"><strong className="block text-lg">Infotainment-Probleme</strong><span className="mt-1 block text-sm text-slate-600">MMI, Radio oder Bildschirm funktionieren nicht wie erwartet?</span><span className="mt-3 block font-semibold text-blue-700">Problem anfragen →</span></a>
-        <Link href="/schluessel-anlernen-leipzig" className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-blue-400"><strong className="block text-lg">Schlüssel anlernen</strong><span className="mt-1 block text-sm text-slate-600">Fahrzeug und Schlüssel vorab prüfen lassen.</span><span className="mt-3 block font-semibold text-blue-700">Mehr erfahren →</span></Link>
-        <Link href="/steuergeraete-flash" className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-blue-400"><strong className="block text-lg">Steuergeräte-Service</strong><span className="mt-1 block text-sm text-slate-600">Softwarestand und Flash-Möglichkeiten prüfen lassen.</span><span className="mt-3 block font-semibold text-blue-700">Service ansehen →</span></Link>
-      </div>
-      <div className="td-service-catalog">{services.map(({ Icon, title, copy, rows, models, note, href, action }) => <details key={title} className="td-service-panel">
-        <summary><Icon className="td-service-icon" aria-hidden="true" /><span><h3>{title}</h3><span className="td-service-intro">{copy}</span><span className="td-service-expand">Funktionen &amp; Preise ansehen</span></span><ChevronDown className="td-service-chevron" aria-hidden="true" /></summary>
-        <div className="td-service-body">
-          <ul className="td-service-prices" aria-label={`${title}: Leistungen und Preise`}>{rows.map(({ name, price, exampleKey }) => <li key={name}><div className="td-service-price-row"><span>{name}</span><strong>{price}</strong></div><FunctionExample exampleKey={exampleKey} /></li>)}</ul>
-          {models && <><h4>Baureihen nach Vorprüfung</h4><ul className="td-service-models">{models.map((model) => <li key={model}>{model}</li>)}</ul></>}
-          {note && <p className="td-service-note">{note}</p>}
-          <a className="td-service-action" href={href}>{action}<ArrowRight aria-hidden="true" /></a>
-        </div>
-      </details>)}</div>
     </section>
 
     <section id="ablauf" className="td-process" aria-labelledby="process-title"><div className="td-container"><h2 id="process-title">So einfach geht’s.</h2><ol>{[
