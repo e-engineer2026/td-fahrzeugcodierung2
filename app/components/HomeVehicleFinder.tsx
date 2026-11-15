@@ -61,10 +61,11 @@ export default function HomeVehicleFinder() {
       </div>
     </div>
     <div className="td-finder-fields">
-      <label className="td-brand-field"><span>Marke</span><select required value={brand} onChange={(e) => { setBrand(e.target.value); setModel(""); setYear(0); preview(e.target.value, ""); }}><option value="">Marke wählen</option>{brands.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-      <label><span>Modell / Generation</span><select required disabled={!brand} value={model} onChange={(e) => { setModel(e.target.value); setYear(0); preview(brand, e.target.value); }}><option value="">Modell wählen</option>{models.map((item) => <option key={item.model} value={item.model}>{item.model}</option>)}</select></label>
-      <label><span>Baujahr</span><select id="finder-year" required disabled={!vehicle} value={year || ""} onChange={(e) => selectYear(Number(e.target.value))}><option value="">Baujahr wählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+      <label className="td-brand-field" data-current-step={!brand}><span>Marke</span><select required value={brand} onChange={(e) => { setBrand(e.target.value); setModel(""); setYear(0); preview(e.target.value, ""); }}><option value="">Marke wählen</option>{brands.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+      <label data-current-step={Boolean(brand && !model)}><span>Modell / Generation</span><select required disabled={!brand} value={model} onChange={(e) => { setModel(e.target.value); setYear(0); preview(brand, e.target.value); }}><option value="">Modell wählen</option>{models.map((item) => <option key={item.model} value={item.model}>{item.model}</option>)}</select></label>
+      <label data-current-step={Boolean(model && !year)}><span>Baujahr</span><select id="finder-year" required disabled={!vehicle} value={year || ""} onChange={(e) => selectYear(Number(e.target.value))}><option value="">Baujahr wählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
     </div>
+    {!ready && <p className="td-finder-next" aria-live="polite">{!brand ? "1. Wähle deine Fahrzeugmarke." : !model ? "2. Wähle Modell und Generation." : "3. Wähle das Baujahr."}</p>}
     {ready && <p className="td-finder-current"><b>Deine Auswahl:</b> {brand} {model} · {year} <span>{mode === "remote" ? "Remote" : "Vor Ort in Leipzig"}</span></p>}
     {mode === "remote" && <p className="td-remote-note">Mit eigenem Diagnoseinterface, Windows-PC/Laptop, stabiler Internetverbindung und vereinbarter Remote-Software. Interface und Spannungsversorgung stimmen wir vorher ab.</p>}
   </div>;
