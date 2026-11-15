@@ -7,8 +7,8 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/hero-brand-vw-v2.webp", brand: "Volkswagen", label: "Volkswagen Golf 8 R", alt: "Blauer Volkswagen Golf 8 R mit TD-Schriftzug" },
   { src: "/hero-brand-audi-v2.webp", brand: "Audi", label: "Audi RS 6", alt: "Roter Audi RS 6 Avant mit TD-Schriftzug" },
+  { src: "/hero-brand-passat-b9.webp", brand: "Volkswagen", label: "Volkswagen Passat B9 R-Line", alt: "Blauer Volkswagen Passat B9 Variant im R-Line-Stil mit TD-Schriftzug" },
   { src: "/hero-brand-skoda-v2.webp", brand: "Škoda", label: "Škoda Octavia RS", alt: "Roter Škoda Octavia RS mit TD-Schriftzug" },
   { src: "/hero-brand-seat-v2.webp", brand: "SEAT", label: "SEAT Leon Cupra R", alt: "Roter SEAT Leon Cupra R mit TD-Schriftzug" },
   { src: "/hero-brand-cupra-v2.webp", brand: "CUPRA", label: "CUPRA Formentor VZ", alt: "Petrolblauer CUPRA Formentor VZ mit TD-Schriftzug" },
