@@ -299,13 +299,13 @@
 .td-airplane-sky{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;clip-path:inset(0 max(0px,calc(50cqw - max(30cqw,53.34cqh))) 0 0)}
 @media(min-width:601px) and (max-width:900px){.td-airplane-sky{clip-path:inset(0 max(0px,calc(37cqw - max(17cqw,30.23cqh))) 0 0)}}
 /* The plane pulls a rippling fabric banner across the sky. */
-.td-airplane-flight{position:absolute;top:62px;left:0;display:flex;align-items:center;width:max-content;pointer-events:none;animation:td-airplane-cross 180s linear 1s infinite;transform:translateX(-110%);will-change:transform}
-.td-airplane-flight-selected{animation-delay:0s}
+.td-airplane-flight{position:absolute;top:62px;right:100%;display:flex;align-items:center;width:max-content;pointer-events:none;--tow-clearance:24rem;animation:td-airplane-cross 32s linear infinite;will-change:transform}
+
 .td-hero-picture img.td-airplane{display:block;position:static;width:92px;height:auto;flex:none;object-fit:contain;filter:drop-shadow(0 2px 2px #20374b44)}
 .td-airplane-rope{width:26px;height:1px;background:#657989;flex:none;transform:rotate(-3deg)}
 .td-airplane-banner{position:relative;display:flex;align-items:center;gap:4px;padding:7px 10px;background:repeating-linear-gradient(90deg,#fff 0%,#e1e9ef 12%,#fff 26%,#eef3f6 38%,#fff 50%);background-size:100px 100%;border:1px solid #c1ced5;box-shadow:0 2px 5px #243e5233;color:#164c82;font-size:11px;font-weight:800;line-height:1;letter-spacing:.01em;white-space:nowrap;transform-origin:right center;animation:td-banner-wave 3.2s linear infinite}
-@keyframes td-airplane-cross{0%{transform:translateX(-110%)}18%,100%{transform:translateX(100vw)}}
-@keyframes td-airplane-cross-mobile{0%{transform:translateX(-110%)}12.25%,100%{transform:translateX(100vw)}}
+/* Anchor the aircraft nose independently of the banner text width. */
+@keyframes td-airplane-cross{from{transform:translateX(0)}to{transform:translateX(calc(100cqw + var(--tow-clearance)))}}
 @keyframes td-banner-wave{
   0%{clip-path:polygon(0 6%,16% 3%,33% 7%,50% 3%,67% 6%,84% 2%,100% 0,100% 100%,84% 98%,67% 94%,50% 97%,33% 93%,16% 97%,0 94%);background-position:0 0}
  25%{clip-path:polygon(0 4%,16% 7%,33% 3%,50% 6%,67% 2%,84% 5%,100% 0,100% 100%,84% 95%,67% 98%,50% 94%,33% 97%,16% 93%,0 96%);background-position:-25px 0}
@@ -313,7 +313,7 @@
  75%{clip-path:polygon(0 3%,16% 6%,33% 2%,50% 5%,67% 3%,84% 6%,100% 0,100% 100%,84% 94%,67% 97%,50% 95%,33% 98%,16% 94%,0 97%);background-position:-75px 0}
  100%{clip-path:polygon(0 6%,16% 3%,33% 7%,50% 3%,67% 6%,84% 2%,100% 0,100% 100%,84% 98%,67% 94%,50% 97%,33% 93%,16% 97%,0 94%);background-position:-100px 0}
 }
-@media(max-width:600px){.td-airplane-flight{top:47px;animation-name:td-airplane-cross-mobile}.td-airplane-flight-selected{animation-delay:0s}
+@media(max-width:600px){.td-airplane-flight{top:47px;--tow-clearance:17rem;animation-duration:22s}
 .td-hero-picture img.td-airplane{width:67px}.td-airplane-rope{width:16px}.td-airplane-banner{font-size:9px;padding:5px 8px}}
 @media(prefers-reduced-motion:reduce){.td-airplane-flight{display:none}}
 
@@ -376,4 +376,4 @@
 /* Clear guidance for the next vehicle field. */
 .td-finder-fields label[data-current-step="true"] select{border-color:#2563eb;box-shadow:0 0 0 2px #dbeafe}
 .td-finder-next{margin-top:12px;font-size:14px;color:#1d4ed8;font-weight:600}
-@media(prefers-reduced-motion:no-preference){.td-home .td-hero-slide{transition-duration:1.4s}.td-home .td-airplane-flight{animation-duration:220s}.td-home .td-airplane-banner{animation-duration:4.5s}}
+@media(prefers-reduced-motion:no-preference){.td-home .td-hero-slide{transition-duration:1.4s}.td-home .td-airplane-banner{animation-duration:4.5s}}

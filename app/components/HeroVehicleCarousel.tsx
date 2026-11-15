@@ -7,11 +7,11 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/hero-brand-audi-v2.webp", brand: "Audi", label: "Audi RS 6", alt: "Roter Audi RS 6 Avant mit TD-Schriftzug" },
-  { src: "/hero-brand-passat-b9.webp", brand: "Volkswagen", label: "Volkswagen Passat B9 R-Line", alt: "Blauer Volkswagen Passat B9 Variant im R-Line-Stil mit TD-Schriftzug" },
-  { src: "/hero-brand-skoda-v2.webp", brand: "Škoda", label: "Škoda Octavia RS", alt: "Roter Škoda Octavia RS mit TD-Schriftzug" },
-  { src: "/hero-brand-seat-v2.webp", brand: "SEAT", label: "SEAT Leon Cupra R", alt: "Roter SEAT Leon Cupra R mit TD-Schriftzug" },
-  { src: "/hero-brand-cupra-v2.webp", brand: "CUPRA", label: "CUPRA Formentor VZ", alt: "Petrolblauer CUPRA Formentor VZ mit TD-Schriftzug" },
+  { src: "/hero-audi-photo.webp", brand: "Audi", label: "Audi RS 6", alt: "Roter Audi RS 6 Avant mit TD-Schriftzug" },
+  { src: "/hero-vw-photo.webp", brand: "Volkswagen", label: "Volkswagen Passat B9 R-Line", alt: "Blauer Volkswagen Passat B9 Variant im R-Line-Stil mit TD-Schriftzug" },
+  { src: "/hero-skoda-photo.webp", brand: "Škoda", label: "Škoda Octavia RS", alt: "Roter Škoda Octavia RS mit TD-Schriftzug" },
+  { src: "/hero-seat-photo.webp", brand: "SEAT", label: "SEAT Leon Cupra R", alt: "Roter SEAT Leon Cupra R mit TD-Schriftzug" },
+  { src: "/hero-cupra-photo.webp", brand: "CUPRA", label: "CUPRA Formentor VZ", alt: "Petrolblauer CUPRA Formentor VZ mit TD-Schriftzug" },
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
@@ -31,8 +31,6 @@ function sportImage(choice: HomeVehicleSelection | null): VehicleHeroImage | nul
 export default function HeroVehicleCarousel() {
   const [active, setActive] = useState(0);
   const [selection, setSelection] = useState<HomeVehicleSelection | null>(null);
-  const [flightNumber, setFlightNumber] = useState(0);
-  const lastFlightSelection = useRef("");
   const [photos, setPhotos] = useState<VehicleHeroImage[]>([]);
   const [shownSrc, setShownSrc] = useState<string | null>(null);
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
@@ -48,9 +46,6 @@ export default function HeroVehicleCarousel() {
   useEffect(() => {
     const synchronize = (event: Event) => {
       const choice = resolveHomeVehicleSelection((event as CustomEvent<unknown>).detail, catalog);
-      const key = choice ? `${choice.brand}|${choice.model}|${choice.year}` : "";
-      if (key && key !== lastFlightSelection.current) setFlightNumber((value) => value + 1);
-      lastFlightSelection.current = key;
       const image = vehicleHeroImage(choice);
       const variant = image ? sportImage(choice) : null;
       wantedSrc.current = image?.src ?? null;
@@ -113,7 +108,7 @@ export default function HeroVehicleCarousel() {
     ? (currentPhotoMatches ? photos.find((photo) => photo.src === shownSrc)?.label : requested?.label) || `${selection.brand} ${selection.model}`
     : vehicles[active].label;
   return <div className="td-hero-picture" data-wall-scene={hasSelectedPhoto ? "selected" : String(active)} data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
-    <div className="td-airplane-sky" aria-hidden="true"><div key={flightNumber} className={`td-airplane-flight${flightNumber ? " td-airplane-flight-selected" : ""}`}>
+    <div className="td-airplane-sky" aria-hidden="true"><div className="td-airplane-flight">
       <span className="td-airplane-banner"><Image className="td-airplane-banner-logo" src="/td-logo-status.webp" alt="" width={225} height={80} /><span className="td-airplane-banner-text"><span>Fahrzeugcodierung</span><strong>{displayLabel || "Fahrzeugcodierung"}</strong></span></span><span className="td-airplane-rope"></span>
       <span className="td-airplane-body"><Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} /><span className="td-airplane-propeller" /></span>
     </div></div>
