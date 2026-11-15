@@ -351,3 +351,9 @@
 .td-selected-vehicle small{font-size:10px;font-weight:600;color:#586b82}
 .td-selected-vehicle strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:600px){.td-selected-vehicle{min-height:40px;padding:3px 12px}.td-selected-vehicle-image{width:62px;height:34px}.td-selected-vehicle strong{font-size:12px}}
+
+/* Vehicle overview alongside the configurator action. */
+.td-home .td-vehicles-button{background:#fff;color:#1455b5;border:1px solid #1455b5}
+.td-home .td-vehicles-button:hover{background:#eff6ff}
+@media(max-width:900px){.td-home .td-hero-actions{flex-direction:row;align-items:stretch}}
+@media(max-width:600px){.td-home .td-hero-actions{gap:8px;flex-wrap:nowrap}.td-home .td-hero-actions .td-button{flex:1 1 0;min-width:0;justify-content:center;text-align:center;font-size:13px;line-height:1.25;padding:10px 7px}.td-home .td-hero-actions .td-button svg{flex-shrink:0;width:16px}}

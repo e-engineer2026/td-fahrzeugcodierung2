@@ -46,7 +46,7 @@ export default function Home() {
         <p className="td-eyebrow">Leipzig-Süd · deutschlandweit per Remote</p>
         <h1 id="home-title">Dein Fahrzeug.<br />Mehr Möglichkeiten.</h1>
         <p className="td-hero-subtitle">Fahrzeugcodierung, Diagnose und Software für Volkswagen, Audi, Škoda, SEAT und CUPRA.</p>
-        <div className="td-hero-actions"><a className="td-button" href="#fahrzeugauswahl">Fahrzeug auswählen<ArrowRight aria-hidden="true" /></a><a className="td-quiet-link" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />Frage per WhatsApp stellen</a></div>
+        <div className="td-hero-actions"><a className="td-button" href="#fahrzeugauswahl">Fahrzeug auswählen<ArrowRight aria-hidden="true" /></a><Link className="td-button td-button-secondary td-vehicles-button" href="/fahrzeuge">Alle Fahrzeuge &amp; Preise</Link><a className="td-quiet-link" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />Frage per WhatsApp stellen</a></div>
       </div></div>
     </section>
 
