@@ -357,3 +357,6 @@
 .td-home .td-vehicles-button:hover{background:#eff6ff}
 @media(max-width:900px){.td-home .td-hero-actions{flex-direction:row;align-items:stretch}}
 @media(max-width:600px){.td-home .td-hero-actions{gap:8px;flex-wrap:nowrap}.td-home .td-hero-actions .td-button{flex:1 1 0;min-width:0;justify-content:center;text-align:center;font-size:13px;line-height:1.25;padding:10px 7px}.td-home .td-hero-actions .td-button svg{flex-shrink:0;width:16px}}
+
+/* Highlight the brand corresponding to the currently displayed vehicle. */
+.td-home .td-hero-brands span.is-active{color:#0b55c9;font-weight:900;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
