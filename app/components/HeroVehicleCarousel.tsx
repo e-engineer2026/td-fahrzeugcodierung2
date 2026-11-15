@@ -7,11 +7,11 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/hero-brand-audi-v2.webp", brand: "Audi", label: "Audi RS 6", alt: "Roter Audi RS 6 Avant mit TD-Schriftzug" },
-  { src: "/hero-brand-passat-b9.webp", brand: "Volkswagen", label: "Volkswagen Passat B9 R-Line", alt: "Blauer Volkswagen Passat B9 Variant im R-Line-Stil mit TD-Schriftzug" },
-  { src: "/hero-brand-skoda-v2.webp", brand: "Škoda", label: "Škoda Octavia RS", alt: "Roter Škoda Octavia RS mit TD-Schriftzug" },
-  { src: "/hero-brand-seat-v2.webp", brand: "SEAT", label: "SEAT Leon Cupra R", alt: "Roter SEAT Leon Cupra R mit TD-Schriftzug" },
-  { src: "/hero-brand-cupra-v2.webp", brand: "CUPRA", label: "CUPRA Formentor VZ", alt: "Petrolblauer CUPRA Formentor VZ mit TD-Schriftzug" },
+  { src: "/hero-cutout-audi.webp", brand: "Audi", label: "Audi RS 6", alt: "Roter Audi RS 6 Avant mit TD-Schriftzug" },
+  { src: "/hero-cutout-vw.webp", brand: "Volkswagen", label: "Volkswagen Passat B9 R-Line", alt: "Blauer Volkswagen Passat B9 Variant im R-Line-Stil mit TD-Schriftzug" },
+  { src: "/hero-cutout-skoda.webp", brand: "Škoda", label: "Škoda Octavia RS", alt: "Roter Škoda Octavia RS mit TD-Schriftzug" },
+  { src: "/hero-cutout-seat.webp", brand: "SEAT", label: "SEAT Leon Cupra R", alt: "Roter SEAT Leon Cupra R mit TD-Schriftzug" },
+  { src: "/hero-cutout-cupra.webp", brand: "CUPRA", label: "CUPRA Formentor VZ", alt: "Petrolblauer CUPRA Formentor VZ mit TD-Schriftzug" },
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
@@ -118,8 +118,9 @@ export default function HeroVehicleCarousel() {
       <span className="td-airplane-body"><Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} /><span className="td-airplane-propeller" /></span>
     </div></div>
     <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Audi", "Volkswagen", "Škoda", "SEAT", "CUPRA"].map((brand) => { const visibleBrand = selection ? (selection.brand === "SEAT / CUPRA" ? (/cupra|formentor|born|tavascan|terramar/i.test(selection.model) ? "CUPRA" : "SEAT") : selection.brand) : vehicles[active].brand; return <span key={brand} className={brand === visibleBrand ? "is-active" : undefined}>{brand}</span>; })}</div>
+    <div className={`td-hero-default-background${showDefault ? " is-active" : ""}`} aria-hidden="true"><Image src="/hero-common-background.webp" alt="" fill sizes="100vw" priority /></div>
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${showDefault && active === index ? " is-active" : ""}`} aria-hidden={!showDefault || active !== index}>
-      <Image src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
+      <div className="td-hero-car-position"><Image src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="(max-width: 600px) 85vw, 65vw" /></div>
     </div>)}
     {photos.map((photo) => <div key={`selected-${photo.src}`} className={`td-hero-slide td-hero-model-photo${hasSelectedPhoto && shownSrc === photo.src ? " is-active" : ""}`} aria-hidden={!hasSelectedPhoto || shownSrc !== photo.src}>
       <Image src={photo.src} alt={photo.alt} fill sizes="100vw" loading="eager" onLoad={() => {
