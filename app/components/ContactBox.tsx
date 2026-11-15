@@ -22,6 +22,8 @@ export default function ContactBox() {
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [showArrival, setShowArrival] = useState(false);
+  const [hasConfiguratorDetails, setHasConfiguratorDetails] = useState(false);
+  const [editVehicleDetails, setEditVehicleDetails] = useState(false);
 
   const previousPrefill = useRef({ vehicle: "", year: "", coding: "" });
 
@@ -35,6 +37,7 @@ export default function ContactBox() {
         year: root.dataset.contactYear ?? "",
         coding: (JSON.parse(root.dataset.codings || "[]") as string[]).join(", "),
       };
+      setHasConfiguratorDetails(Boolean(next.vehicle && next.year && next.coding));
       const previous = previousPrefill.current;
       // Keep customer edits; refresh only empty or previously automatic values.
       setVehicle((current) => !current || current === previous.vehicle ? next.vehicle : current);
@@ -63,6 +66,7 @@ export default function ContactBox() {
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (website || status === "sending") return;
+    if (!customerEmail.trim() && !customerPhone.trim()) return;
 
     setStatus("sending");
     const controller = new AbortController();
@@ -164,14 +168,16 @@ export default function ContactBox() {
           Formular ausfüllen und direkt absenden. Wir melden uns per E-Mail oder telefonisch zurück.
         </p>
 
-        <p className="mt-3 text-xs text-slate-500">Alle Felder sind Pflichtfelder.</p>
+        <p className="mt-3 text-xs text-slate-500">Name, Fahrzeug und Wunschfunktion sind erforderlich. Für die Rückmeldung genügt E-Mail oder Telefon.</p>
         <fieldset disabled={status === "sending"} className="mt-5 grid min-w-0 gap-3 sm:mt-6 sm:gap-4">
           <label><span className="mb-1.5 block text-sm font-semibold">Name</span><input name="name" value={name} onChange={e => setName(e.target.value)} placeholder="Vor- und Nachname" autoComplete="name" required /></label>
-          <label><span className="mb-1.5 block text-sm font-semibold">E-Mail</span><input name="email" type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} placeholder="E-Mail für Rückmeldung" autoComplete="email" required /></label>
-          <label><span className="mb-1.5 block text-sm font-semibold">Telefonnummer</span><input name="tel" type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} placeholder="Telefonnummer für Rückfragen" autoComplete="tel" inputMode="tel" required /></label>
+          <label><span className="mb-1.5 block text-sm font-semibold">E-Mail</span><input name="email" type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} placeholder="E-Mail für Rückmeldung" autoComplete="email" required={!customerPhone.trim()} /></label>
+          <label><span className="mb-1.5 block text-sm font-semibold">Telefonnummer</span><input name="tel" type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} placeholder="Telefonnummer für Rückfragen" autoComplete="tel" inputMode="tel" required={!customerEmail.trim()} /></label>
+          {hasConfiguratorDetails && !editVehicleDetails ? <div className="rounded-xl border border-blue-100 bg-blue-50 p-3 text-sm text-slate-700"><b>Aus deiner Auswahl übernommen</b><p className="mt-1">{vehicle} · {year}</p><p className="mt-1">{coding}</p><button type="button" onClick={() => setEditVehicleDetails(true)} className="mt-2 font-semibold text-blue-700 underline">Angaben bearbeiten</button></div> : <>
           <label><span className="mb-1.5 block text-sm font-semibold">Fahrzeug</span><input name="vehicle" value={vehicle} onChange={e => setVehicle(e.target.value)} placeholder="z. B. Audi A4 B9" required /></label>
           <label><span className="mb-1.5 block text-sm font-semibold">Baujahr</span><input name="year" value={year} onChange={e => setYear(e.target.value)} placeholder="z. B. 2017" inputMode="numeric" pattern="[0-9]{4}" maxLength={4} required /></label>
           <label><span className="mb-1.5 block text-sm font-semibold">Gewünschte Codierung oder Fehlerbeschreibung</span><textarea name="coding" value={coding} onChange={e => setCoding(e.target.value)} placeholder="Welche Funktion möchtest du anpassen oder welchen Fehler prüfen lassen?" rows={3} required /></label>
+          </>}
         </fieldset>
 
         <div className="absolute -left-[9999px]" aria-hidden="true">

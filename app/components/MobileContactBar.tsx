@@ -11,9 +11,8 @@ function track(channel: string) {
 
 export default function MobileContactBar() {
   const [hasSelection, setHasSelection] = useState(false);
-  const [summaryVehicle, setSummaryVehicle] = useState("");
+  const [selectionCount, setSelectionCount] = useState(0);
   const [summaryPrice, setSummaryPrice] = useState("");
-  const [progress, setProgress] = useState({ value: 0, target: 50, rate: 0, label: "" });
   const [calendarUrl, setCalendarUrl] = useState("/#kontakt");
   const [whatsappUrl, setWhatsappUrl] = useState("https://wa.me/4915563047044");
 
@@ -26,13 +25,9 @@ export default function MobileContactBar() {
       const selected = count > 0;
 
       setHasSelection(selected);
-      setSummaryVehicle(selected ? `${configurator?.dataset.vehicle || "Fahrzeug"} · ${count} ${count === 1 ? "Codierung" : "Codierungen"}` : "");
+      setSelectionCount(count);
+
       setSummaryPrice(selected ? `Rabatt: −${configurator?.dataset.discount || "0,00"} € · Gesamt: ${configurator?.dataset.total || "0,00"} €` : "");
-      const subtotalValue = Number((configurator?.dataset.subtotal || "0").replace(/\./g, "").replace(",", ".")) || 0;
-      const nextTier = Number(configurator?.dataset.nextTier || 200);
-      const nextDifference = configurator?.dataset.nextDifference || "0,00";
-      const nextRate = nextTier === 50 ? 10 : nextTier === 100 ? 15 : nextTier === 150 ? 20 : 25;
-      setProgress({ value: Math.min(subtotalValue, nextTier), target: nextTier, rate: Number(configurator?.dataset.discountRate || 0), label: configurator?.dataset.nextTier ? `Noch ${nextDifference} € bis ${nextRate} % Rabatt` : "25 % Maximalrabatt erreicht" });
       setCalendarUrl(selected && calUrl ? "#termin-zahlung" : "/#kontakt");
 
       if (selected && configurator) {
@@ -95,11 +90,7 @@ export default function MobileContactBar() {
   return (
     <>
       <div className="fixed inset-x-0 bottom-0 z-[70] border-t border-slate-200 bg-white/95 px-2 pt-2 pb-[max(.5rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_rgba(15,23,42,0.12)] backdrop-blur md:hidden">
-        {hasSelection && <div className="mx-auto mb-1 max-w-lg px-1 text-xs leading-4 text-slate-700" aria-live="polite"><div className="truncate font-semibold">{summaryVehicle}</div><div className="font-bold text-blue-700">{summaryPrice}</div></div>}
-        {hasSelection && <div className="mx-auto mb-2 max-w-lg px-1">
-          <div className="text-xs font-semibold leading-4 text-blue-700">{progress.label}</div>
-          <div className="td-discount-track !mt-1" data-rate={progress.rate} role="progressbar" aria-label="Fortschritt zur nächsten Rabattstufe" aria-valuemin={0} aria-valuemax={progress.target} aria-valuenow={progress.value} aria-valuetext={progress.label}><div style={{ width: `${progress.value / progress.target * 100}%` }} /></div>
-        </div>}
+        {hasSelection && <a href="#termin-zahlung" className="mx-auto mb-2 flex max-w-lg items-center justify-between gap-3 rounded-lg bg-blue-50 px-3 py-2 text-sm text-slate-800" aria-live="polite"><span className="min-w-0 truncate"><b>{selectionCount} {selectionCount === 1 ? "Codierung" : "Codierungen"}</b> · {summaryPrice.replace(/^.*Gesamt: /, "")}</span><span className="shrink-0 font-bold text-blue-700">Auswahl ansehen →</span></a>}
         <div className="mx-auto grid max-w-lg grid-cols-3 gap-2">
           <a
             href={whatsappUrl}
@@ -126,7 +117,7 @@ export default function MobileContactBar() {
           </a>
         </div>
       </div>
-      <div className={hasSelection ? "h-36 md:hidden" : "h-20 md:hidden"} aria-hidden="true" />
+      <div className={hasSelection ? "h-32 md:hidden" : "h-20 md:hidden"} aria-hidden="true" />
     </>
   );
 }

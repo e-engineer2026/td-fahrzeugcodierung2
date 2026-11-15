@@ -372,3 +372,8 @@
 .td-hero-picture[data-wall-scene="4"]{--wall-offset:.300;--wall-height-offset:.600}
 .td-airplane-sky{clip-path:inset(0 max(0px,calc(50cqw - max(100cqw * var(--wall-offset),100cqh * var(--wall-height-offset)))) 0 0)}
 @media(min-width:601px) and (max-width:900px){.td-airplane-sky{clip-path:inset(0 max(0px,calc(37cqw - max(100cqw * (var(--wall-offset) - .13),100cqh * (var(--wall-height-offset) - .2311)))) 0 0)}}
+
+/* Clear guidance for the next vehicle field. */
+.td-finder-fields label[data-current-step="true"] select{border-color:#2563eb;box-shadow:0 0 0 2px #dbeafe}
+.td-finder-next{margin-top:12px;font-size:14px;color:#1d4ed8;font-weight:600}
+@media(prefers-reduced-motion:no-preference){.td-home .td-hero-slide{transition-duration:1.4s}.td-home .td-airplane-flight{animation-duration:220s}.td-home .td-airplane-banner{animation-duration:4.5s}}
