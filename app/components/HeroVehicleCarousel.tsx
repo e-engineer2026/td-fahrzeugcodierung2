@@ -7,9 +7,11 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/td-hero-a6-c8-silber-td.webp", alt: "Silberner Audi A6 C8 Avant mit TD-Schriftzug und eingeschalteten Scheinwerfern" },
-  { src: "/td-hero-s6-c8-blau-td.webp", alt: "Blauer Audi S6 C8 Avant mit S6-Emblem, TD-Schriftzug und eingeschalteten Scheinwerfern" },
-  { src: "/td-hero-rs6-c8-rot-td.webp", alt: "Roter Audi RS6 C8 Avant mit RS6-Emblem, TD-Schriftzug und eingeschalteten Scheinwerfern" },
+  { src: "/hero-brand-vw.webp", brand: "Volkswagen", label: "Volkswagen Golf 8 R", alt: "Blauer Volkswagen Golf 8 R mit TD-Schriftzug" },
+  { src: "/hero-brand-audi.webp", brand: "Audi", label: "Audi RS 6", alt: "Roter Audi RS 6 Avant mit TD-Schriftzug" },
+  { src: "/hero-brand-skoda.webp", brand: "Škoda", label: "Škoda Octavia RS", alt: "Roter Škoda Octavia RS mit TD-Schriftzug" },
+  { src: "/hero-brand-seat.webp", brand: "SEAT", label: "SEAT Leon Cupra R", alt: "Roter SEAT Leon Cupra R mit TD-Schriftzug" },
+  { src: "/hero-brand-cupra.webp", brand: "CUPRA", label: "CUPRA Formentor VZ", alt: "Petrolblauer CUPRA Formentor VZ mit TD-Schriftzug" },
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
@@ -109,13 +111,13 @@ export default function HeroVehicleCarousel() {
   const currentPhotoMatches = shownSrc === requested?.src || shownSrc === sport?.src;
   const displayLabel = selection
     ? (currentPhotoMatches ? photos.find((photo) => photo.src === shownSrc)?.label : requested?.label) || `${selection.brand} ${selection.model}`
-    : ["Audi A6 C8", "Audi S6 C8", "Audi RS6 C8"][active];
+    : vehicles[active].label;
   return <div className="td-hero-picture" data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
     <div className="td-airplane-sky" aria-hidden="true"><div key={flightNumber} className={`td-airplane-flight${flightNumber ? " td-airplane-flight-selected" : ""}`}>
       <span className="td-airplane-banner"><Image className="td-airplane-banner-logo" src="/td-logo-status.webp" alt="" width={225} height={80} /><span className="td-airplane-banner-text"><span>Fahrzeugcodierung</span><strong>{displayLabel || "Fahrzeugcodierung"}</strong></span></span><span className="td-airplane-rope"></span>
       <span className="td-airplane-body"><Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} /><span className="td-airplane-propeller" /></span>
     </div></div>
-    <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => <span key={brand}>{brand}</span>)}</div>
+    <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].map((brand) => { const visibleBrand = selection ? (selection.brand === "SEAT / CUPRA" ? (/cupra|formentor|born|tavascan|terramar/i.test(selection.model) ? "CUPRA" : "SEAT") : selection.brand) : vehicles[active].brand; return <span key={brand} className={brand === visibleBrand ? "is-active" : undefined}>{brand}</span>; })}</div>
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${showDefault && active === index ? " is-active" : ""}`} aria-hidden={!showDefault || active !== index}>
       <Image src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
     </div>)}
