@@ -73,6 +73,7 @@ export default function Home() {
         <p className="td-eyebrow">Leipzig-Süd · deutschlandweit per Remote</p>
         <h1 id="home-title">Dein Fahrzeug.<br />Mehr Möglichkeiten.</h1>
         <p className="td-hero-subtitle">Fahrzeugcodierung, Diagnose und Software für Volkswagen, Audi, Škoda, SEAT und CUPRA.</p>
+        <a href={googleBusiness} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-white underline underline-offset-4">Google-Bewertungen ansehen <ArrowRight aria-hidden="true" /></a>
         <div className="td-hero-actions"><a className="td-button" href="#fahrzeugauswahl">Fahrzeug auswählen<ArrowRight aria-hidden="true" /></a><a className="td-quiet-link" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />Frage per WhatsApp stellen</a></div>
       </div></div>
     </section>
@@ -86,6 +87,12 @@ export default function Home() {
     <section id="leistungen" className="td-container td-services" aria-labelledby="services-title">
       <div className="td-section-heading"><div><h2 id="services-title">Mehr aus deinem Fahrzeug machen.</h2><p>Passende Möglichkeiten für deine Ausstattung.</p></div></div>
       <nav className="td-service-main-links" aria-label="Fahrzeuge, Preise und Software"><Link href="/fahrzeuge">Fahrzeuge &amp; Preise<ArrowRight aria-hidden="true" /></Link><Link href="/remote-check">Remote-Check<ArrowRight aria-hidden="true" /></Link><Link href="/steuergeraete-flash">Steuergeräte-Flash &amp; Softwareupdate<ArrowRight aria-hidden="true" /></Link></nav>
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Häufige Serviceanfragen">
+        <Link href="/steuergeraete-diagnose-leipzig" className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-blue-400"><strong className="block text-lg">Fahrzeugdiagnose</strong><span className="mt-1 block text-sm text-slate-600">Fehlerspeicher und Steuergeräte prüfen lassen.</span><span className="mt-3 block font-semibold text-blue-700">Diagnose ansehen →</span></Link>
+        <a href={`${whatsapp}?text=${encodeURIComponent("Hallo, ich habe ein Problem mit meinem Infotainment-System und möchte eine Vorprüfung anfragen. Fahrzeug / Baujahr / Fehler: ")}`} target="_blank" rel="noopener noreferrer" className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-blue-400"><strong className="block text-lg">Infotainment-Probleme</strong><span className="mt-1 block text-sm text-slate-600">MMI, Radio oder Bildschirm funktionieren nicht wie erwartet?</span><span className="mt-3 block font-semibold text-blue-700">Problem anfragen →</span></a>
+        <Link href="/schluessel-anlernen-leipzig" className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-blue-400"><strong className="block text-lg">Schlüssel anlernen</strong><span className="mt-1 block text-sm text-slate-600">Fahrzeug und Schlüssel vorab prüfen lassen.</span><span className="mt-3 block font-semibold text-blue-700">Mehr erfahren →</span></Link>
+        <Link href="/steuergeraete-flash" className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:border-blue-400"><strong className="block text-lg">Steuergeräte-Service</strong><span className="mt-1 block text-sm text-slate-600">Softwarestand und Flash-Möglichkeiten prüfen lassen.</span><span className="mt-3 block font-semibold text-blue-700">Service ansehen →</span></Link>
+      </div>
       <div className="td-service-catalog">{services.map(({ Icon, title, copy, rows, models, note, href, action }) => <details key={title} className="td-service-panel">
         <summary><Icon className="td-service-icon" aria-hidden="true" /><span><h3>{title}</h3><span className="td-service-intro">{copy}</span><span className="td-service-expand">Funktionen &amp; Preise ansehen</span></span><ChevronDown className="td-service-chevron" aria-hidden="true" /></summary>
         <div className="td-service-body">
