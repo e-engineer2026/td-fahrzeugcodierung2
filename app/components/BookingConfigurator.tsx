@@ -262,7 +262,8 @@ export default function BookingConfigurator({ integrated = false }: { integrated
   const available = useMemo<UnifiedCodingEntry[]>(() => { if (!selectedVehicle || !year) return []; return vehicleSpecificCodings(selectedVehicle, year, isSfd1, isSfd2); }, [isSfd1, isSfd2, selectedVehicle, year]);
   // Open the first populated category after choosing a different vehicle.
   useEffect(() => {
-    setExpandedGroups(available.length ? [available[0].uiGroup] : []);
+    const firstGroup = platformCodingGroups.find((group) => available.some((entry) => entry.uiGroup === group));
+    setExpandedGroups(firstGroup ? [firstGroup] : []);
   }, [available]);
 
   const shown = available.filter((entry) => !showSelectedOnly || selected.includes(entry.id)).filter((entry) => activeGroup === "Alle" || entry.uiGroup === activeGroup);
