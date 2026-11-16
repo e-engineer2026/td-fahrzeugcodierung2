@@ -365,8 +365,8 @@
 
 /* Wall boundary in each start image, matched to the cover crop. */
 .td-hero-picture{--wall-offset:.300;--wall-height-offset:.5334}
-.td-hero-picture[data-wall-scene="0"]{--wall-offset:.313;--wall-height-offset:.5565}
-.td-hero-picture[data-wall-scene="1"]{--wall-offset:.303;--wall-height-offset:.5387}
+.td-hero-picture[data-wall-scene="0"]{--wall-offset:.2655;--wall-height-offset:.4718}
+.td-hero-picture[data-wall-scene="1"]{--wall-offset:.2645;--wall-height-offset:.4700}
 .td-hero-picture[data-wall-scene="2"]{--wall-offset:.288;--wall-height-offset:.512}
 .td-hero-picture[data-wall-scene="3"]{--wall-offset:.300;--wall-height-offset:.5334}
 .td-hero-picture[data-wall-scene="4"]{--wall-offset:.300;--wall-height-offset:.600}
