@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, ExternalLink, LockKeyhole, Search } from "lucide-react";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
-import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
+import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import GuideDifficultyBar from "./GuideDifficultyBar";
 import GuidePriceIndicator from "./GuidePriceIndicator";
 import { researchGuideEstimate, referenceIdeaEstimate } from "../lib/researchGuidePricing";
@@ -339,7 +339,6 @@ export default function GuideSelector() {
             </p>
           )}
           {(codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && <p className="mt-3 text-xs leading-6 text-slate-500">
-            Geplante PDF-Einzelpreise nach Schwierigkeit in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[7])}.
             Die konkrete Codierbarkeit hängt von Baujahr, Ausstattung, Steuergerät, Softwarestand und ggf. SFD-Schutz ab.
           </p>}
           {<p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
