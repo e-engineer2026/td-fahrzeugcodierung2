@@ -33,7 +33,7 @@ export default function Results({ initial }: { initial: HomeVehicleSelection | n
           {selection?.mode === "onsite" && <List title="Nachrüstungen" rows={data.retro} />}
           {year >= 2023 && selection?.mode === "onsite" && <p>Für einzelne Einparkhilfe-Pakete gelten ab Modelljahr 2023 Einschränkungen nach PR-Code.</p>}
           <List title="Funktionen codieren" rows={[...(generation === "fl" ? data.fl : data.pre), ...data.shared]} />
-          <a className="underline" download href="/downloads/TD_Audi_A4_8W_Leistungslisten.pdf">Passwortgeschützte PDF für Vorfacelift und Facelift herunterladen</a>
+          <a className="underline" href={`/anleitungen?${new URLSearchParams({brand: selection!.brand, model: selection!.model, year: String(year)})}`}>Zu den PDF-Anleitungen mit Leistungsübersicht</a>
         </>}
       </>}
     </div>}
