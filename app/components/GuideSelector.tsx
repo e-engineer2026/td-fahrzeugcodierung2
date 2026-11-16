@@ -6,6 +6,7 @@ import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle }
 import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
 import GuideDifficultyBar from "./GuideDifficultyBar";
 import { retrofitFocusFor } from "../lib/retrofitFocus";
+import { referenceIdeasForVehicle, type ReferenceIdea } from "../data/referenceIdeas";
 import { researchedGuidesForModel, type ResearchCategory, type ResearchGuide } from "../data/guideResearch";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
@@ -78,14 +79,16 @@ export default function GuideSelector() {
       : [],
     [vehicle]
   );
+  const sourceIdeas = useMemo(() => vehicle ? referenceIdeasForVehicle(vehicle) : [], [vehicle]);
   const categoryCounts = useMemo(
     () => guideCategories.map((category) => ({
       category,
-      count: category === "Nachrüstungen" || category === "Umbauten"
+      count: (category === "Nachrüstungen" || category === "Umbauten"
         ? researchEntries.filter((entry) => entry.category === category).length
-        : codings.filter((coding) => guideCategory(coding) === category).length,
+        : codings.filter((coding) => guideCategory(coding) === category).length
+      ) + sourceIdeas.filter((idea) => idea.category === category).length,
     })),
-    [codings, researchEntries]
+    [codings, researchEntries, sourceIdeas]
   );
   const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
   const retrofitEntries = researchEntries.filter((entry) => entry.category === "Nachrüstungen");
@@ -104,6 +107,13 @@ export default function GuideSelector() {
       ? Number(retrofitFocusFor(a)?.scope === "Zusätzliche Vorprüfung") - Number(retrofitFocusFor(b)?.scope === "Zusätzliche Vorprüfung")
         || a.title.localeCompare(b.title, "de")
       : 0
+  );
+  const visibleSourceIdeas = sourceIdeas.filter((idea) =>
+    idea.category === activeCategory &&
+    (activeCategory !== "Nachrüstungen" || retrofitFilter === "Alle") &&
+    (activeCategory !== "Umbauten" || researchTopic === "Alle" || researchTopic === "Weitere Umbauten") &&
+    [idea.title, idea.note, idea.sourceName].join(" ").toLocaleLowerCase("de")
+      .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleCodings = codings.filter((coding) =>
     guideCategory(coding) === activeCategory &&
@@ -139,8 +149,11 @@ export default function GuideSelector() {
         available.some((item) => guideCategory(item) === category)
       ) ?? "Codierungen");
     } else {
+      const candidates = referenceIdeasForVehicle(next);
       setActiveCategory(researchedGuidesForModel(next.model, "Nachrüstungen").length ? "Nachrüstungen"
-        : researchedGuidesForModel(next.model, "Umbauten").length ? "Umbauten" : "Codierungen");
+        : researchedGuidesForModel(next.model, "Umbauten").length ? "Umbauten"
+        : candidates.some((idea) => idea.category === "Codierungen") ? "Codierungen"
+        : candidates.length ? candidates[0].category : "Codierungen");
     }
   }
 
@@ -216,9 +229,9 @@ export default function GuideSelector() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <h2 id="guide-codings-title" className="text-xl font-black">Anleitungen und Rechercheliste</h2>
-              <p className="mt-1 text-xs text-slate-600">{vehicle.model} · {codings.length} Codierfunktionen · {researchEntries.length} recherchierte Nachrüstungen/Umbauten</p>
+              <p className="mt-1 text-xs text-slate-600">{vehicle.model} · {codings.length} bestehende Codierfunktionen · {researchEntries.length} Nachrüst-/Umbauquellen · {sourceIdeas.length} zusätzliche PDF-Referenzthemen</p>
             </div>
-            {(codings.length > 0 || researchEntries.length > 0) && (
+            {(codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
               <label className="relative block w-full sm:w-60">
                 <span className="sr-only">Anleitungen suchen</span>
                 <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
@@ -260,10 +273,35 @@ export default function GuideSelector() {
               })}
             </div>
           )}
+          {!researchCategory && visibleSourceIdeas.length > 0 && (
+            <div className="mt-3 overflow-hidden rounded-xl border border-amber-200 bg-white">
+              <div className="border-b border-amber-100 bg-amber-50 px-3 py-2.5 sm:px-4">
+                <p className="text-sm font-bold text-slate-900">Zusätzliche Funktionen aus technischen Referenzlisten</p>
+                <p className="mt-0.5 text-xs leading-5 text-slate-700">
+                  Noch keine TD-Freigabe und kein PDF-Angebot. Die Quellen nennen mögliche Codierungen,
+                  nicht die geprüfte Machbarkeit jedes Fahrzeugs. Baujahr, Software, Hardware und SFD beachten.
+                </p>
+              </div>
+              <div className="divide-y divide-slate-100">
+                {visibleSourceIdeas.map((idea: ReferenceIdea) => (
+                  <div key={idea.id} className="px-3 py-3 sm:px-4">
+                    <p className="text-sm font-bold leading-5 text-slate-900">{idea.title}</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-600">{idea.note}</p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      Quelle: {idea.sourceName}, S. {idea.sourcePage} · {idea.status === "tested"
+                        ? "Laut Quelle getestet, nicht von TD verifiziert"
+                        : "Historische Plattformreferenz, individuelle Prüfung erforderlich"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {researchCategory && (
             <>
               <p className="mt-3 text-xs leading-6 text-slate-600">
-                Recherchierte Themen mit verlinkten Originalquellen. Öffentlich zugängliche Praxisberichte sind nicht automatisch geprüfte Herstelleranleitungen; manches ist nur als Vorschau oder Anbieterleistung verfügbar.
+                Recherchierte Themen mit verlinkten Originalquellen sowie zusätzliche, nicht verlinkte Prüfthemen aus bereitgestellten technischen PDF-Referenzen. Fremde Anleitungen oder Codierwerte werden hier nicht veröffentlicht.
                 Hier gibt es vorerst nur eine Liste, keine eigenen TD-PDFs und keine Kaufpreise.
               </p>
               {activeCategory === "Nachrüstungen" && (
@@ -293,7 +331,9 @@ export default function GuideSelector() {
                 <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Umbauten nach Thema">
                   {["Alle", "Scheinwerfer & Licht", "ACC & pACC", "Lenkrad & Bedienung", "Cockpit & Infotainment", "Weitere Umbauten"].map((topic) => {
                     const count = researchEntries.filter((entry) => entry.category === "Umbauten" &&
-                      (topic === "Alle" || researchTopicFor(entry) === topic)).length;
+                      (topic === "Alle" || researchTopicFor(entry) === topic)).length +
+                      sourceIdeas.filter((idea) => idea.category === "Umbauten" &&
+                        (topic === "Alle" || topic === "Weitere Umbauten")).length;
                     return (
                       <button key={topic} type="button" aria-pressed={researchTopic === topic}
                         onClick={() => setResearchTopic(topic)}
@@ -336,25 +376,52 @@ export default function GuideSelector() {
                   ))}
                 </div>
               )}
-              {visibleResearch.length === 0 && (
+
+              {visibleSourceIdeas.length > 0 && (
+                <div className="mt-3 overflow-hidden rounded-xl border border-amber-200 bg-white">
+                  <div className="border-b border-amber-100 bg-amber-50 px-3 py-2.5 sm:px-4">
+                    <p className="text-sm font-bold text-slate-900">Weitere Themen aus technischen Referenzlisten</p>
+                    <p className="mt-0.5 text-xs leading-5 text-slate-700">
+                      Nur Prüfkandidaten. Kein TD-Funktionstest, keine zugesagte VCDS-/VCP-Freischaltung und keine kaufbare PDF-Anleitung.
+                    </p>
+                  </div>
+                  <div className="divide-y divide-slate-100">
+                    {visibleSourceIdeas.map((idea: ReferenceIdea) => (
+                      <div key={idea.id} className="px-3 py-3 sm:px-4">
+                        <p className="text-sm font-bold leading-5 text-slate-900">{idea.title}</p>
+                        <p className="mt-1 text-xs leading-5 text-slate-600">{idea.note}</p>
+                        <p className="mt-1 text-xs text-slate-500">
+                          Quelle: {idea.sourceName}, S. {idea.sourcePage} · {idea.status === "tested"
+                            ? "In der Quelle als getestet aufgeführt (nicht von TD bestätigt)"
+                            : idea.status === "unverified"
+                              ? "Quelle enthält teilweise ungetestete Nachrüstungen"
+                              : "Historische Plattformreferenz, Fahrzeugprüfung erforderlich"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {visibleResearch.length === 0 && visibleSourceIdeas.length === 0 && (
                 <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
                   {codingSearch.trim() ? "Kein passender Rechercheeintrag gefunden." : activeCategory === "Nachrüstungen" && retrofitFilter !== "Alle" ? "Für dieses Fahrzeug ist in der ausgewählten TD-Praxis-Liste noch kein Kandidat erfasst. Unter „Alle Nachrüstungen“ findest du die restliche Recherche." : "Für dieses Fahrzeug sind noch keine recherchierten Anleitungen in diesem Bereich erfasst."}
                 </p>
               )}
             </>
           )}
-          {!researchCategory && codings.length > 0 && visibleCodings.length === 0 && (
+          {!researchCategory && visibleCodings.length === 0 && visibleSourceIdeas.length === 0 && (codings.length > 0 || sourceIdeas.length > 0) && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
               {codingSearch.trim() ? "Keine passenden Anleitungen gefunden." : "Für dieses Fahrzeug sind in diesem Bereich noch keine Anleitungen zugeordnet."}
             </p>
           )}
-          {codings.length === 0 && researchEntries.length === 0 && (
+          {codings.length === 0 && researchEntries.length === 0 && sourceIdeas.length === 0 && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
               Für dieses Fahrzeug sind derzeit keine ausreichend geprüften Anleitungen hinterlegt.
               {vehicle.startYear >= 2024 ? " Für neuere Modelle ist vor einer Freigabe insbesondere der SFD-/SFD2-Schutz zu prüfen." : ""}
             </p>
           )}
-          {!researchCategory && <p className="mt-3 text-xs leading-6 text-slate-500">
+          {!researchCategory && codings.length > 0 && <p className="mt-3 text-xs leading-6 text-slate-500">
             Geplante PDF-Einzelpreise nach Schwierigkeit in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[7])}.
             Die konkrete Codierbarkeit hängt von Baujahr, Ausstattung, Steuergerät, Softwarestand und ggf. SFD-Schutz ab.
           </p>}
