@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CreditCard, LockKeyhole, UserRound } from "lucide-react";
+import { ArrowLeft, LockKeyhole, UserRound } from "lucide-react";
 import GuideSelector from "../components/GuideSelector";
-import GuideDifficultyBar from "../components/GuideDifficultyBar";
-import { formatGuidePrice, guidePriceTiers } from "../lib/guidePricing";
 
 export const metadata: Metadata = {
   title: "VCDS- und VCP-PDF-Anleitungen | TD Fahrzeugcodierung",
@@ -41,31 +39,6 @@ export default function CodieranleitungenPage() {
 
       <section className="container-x py-5 sm:py-7" aria-label="Anleitung und Fahrzeug auswählen">
         <GuideSelector />
-      </section>
-
-      <section className="container-x pb-8 sm:pb-12" aria-labelledby="anleitungen-preise">
-        <div className="mx-auto max-w-5xl rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
-          <h2 id="anleitungen-preise" className="text-base font-black">PDF-Preise nach Schwierigkeit</h2>
-          <p className="mt-1 text-xs text-slate-600">Acht vorläufige Preisstufen in 2-Euro-Schritten für künftige TD-eigene PDFs zu Codierungen, Assistenzsystemen, Nachrüstungen und Umbauten.</p>
-          <div className="mt-3 grid grid-cols-2 gap-2 text-center sm:grid-cols-4 lg:grid-cols-8">
-            {guidePriceTiers.map((price, index) => (
-              <div key={price} className="rounded-lg bg-slate-50 px-2 py-2.5">
-                <p className="text-xs font-semibold text-slate-600">Stufe {index + 1}</p>
-                <p className="mt-1 text-base font-black text-blue-700">{formatGuidePrice(price)}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-600" aria-label="Legende der Schwierigkeit">
-            <span className="font-semibold">Schwierigkeit:</span>
-            <GuideDifficultyBar level={1} />
-            <GuideDifficultyBar level={2} />
-            <GuideDifficultyBar level={3} />
-          </div>
-          <p className="mt-3 flex items-start gap-2 text-xs leading-6 text-slate-600">
-            <CreditCard size={16} className="mt-1 shrink-0 text-blue-700" aria-hidden="true" />
-            Unverbindliche PDF-Preisideen, keine Angebote für Fahrzeugumbauten, Teile oder Dienstleistung. Noch keine PDFs kaufbar; geschützte Downloads werden erst nach eigener Anleitungsprüfung und serverseitig bestätigter PayPal-Zahlung freigeschaltet.
-          </p>
-        </div>
       </section>
 
       <footer className="border-t border-slate-200 bg-white">
