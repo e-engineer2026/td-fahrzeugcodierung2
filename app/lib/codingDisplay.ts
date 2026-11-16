@@ -348,7 +348,14 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
     // Gesonderte Freigaben für Smartphonefunktionen und Start-Stopp bleiben unverändert.
     const reviewOnly = entry.uiGroup !== "Assistenz" && Boolean(entry.reviewOnly || smartphoneActivation || startStopDeactivation);
     return { ...entry, price: servicePrice(entry.price), reviewOnly,
-      hardware: mergePrerequisites(entry.hardware, hardwareForName(entry.name)),
+      // Bereits fahrzeugspezifisch beschriebene Lane-Assist-Hardware nicht mit
+      // dem allgemeinen Kamera-/Lenkungs-Hinweis doppelt ausgeben.
+      hardware: mergePrerequisites(
+        entry.hardware,
+        entry.uiGroup === "Assistenz" && /(lane assist|spurhalteassistent)/i.test(entry.name) && entry.hardware
+          ? undefined
+          : hardwareForName(entry.name),
+      ),
       requirements: mergePrerequisites(entry.requirements, reviewOnly ? "Vor Auftrag sind Teilenummern, Ausstattung, Softwarestand und gegebenenfalls vorhandene Funktionslizenzen zu prüfen. Erst nach Bestätigung buchbar." : undefined),
     };
   });
