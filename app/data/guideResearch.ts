@@ -22,6 +22,231 @@ const leonKL = ["SEAT Leon KL", "CUPRA Leon KL"];
 
 export const researchedGuides: readonly ResearchGuide[] = [
   // Nachrüstungen
+  // Weitere KUFATEC-Katalogrecherche mit belegter Produktspezifikation und Anleitungsstatus.
+  {
+    "id": "vw-golf8-sitzheizung",
+    "title": "Sitzheizung vorne nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-sitzheizung-vorne-fuer-vw-golf-8-viii-cd-cg/50805-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Sitzbezüge nach PR prüfen; Heizmatten müssen vom Sattler eingebaut werden; SFD2-Inbetriebnahme nur autorisiert"
+  },
+  {
+    "id": "vw-golf8-areaview-facelift",
+    "title": "360° Area View mit vier Kameras nachrüsten (nur Facelift)",
+    "category": "Nachrüstungen",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-umgebungsansicht-area-view-fuer-vw-golf-8-viii/50730",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur Golf-8-Facelift DA/DB mit Radio High PR 8DG; Remote-Erstinbetriebnahme und Kamera-Kalibrierung erforderlich"
+  },
+  {
+    "id": "vw-tiguan2-standheizung",
+    "title": "Original-Standheizung mit Fernbedienung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-standheizung-fuer-vw-tiguan-ad1-ax1-bw2-bj2/40674",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Klimabedienteil muss zusätzlich ersetzt werden; nicht bei Hybrid PR 0K3; Kraftstoff-/Kühlkreislauf nur fachgerecht"
+  },
+  {
+    "id": "vw-touran5t-standheizung",
+    "title": "Original-Standheizung mit Fernbedienung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-standheizung-fuer-vw-touran-5t/32750",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Komplettset und Codierhilfe; genaue Komponenten und Klimabedienteil nach Fahrzeugausstattung prüfen"
+  },
+  {
+    "id": "vw-tiguan2-phonebox",
+    "title": "Phone Box mit Qi-Laden und Außenantennenanbindung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-phone-box-induktives-laden-fuer-vw-tiguan-ad1-ax1-bw2-bj2/48365",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Nur mit PR 9ZX; KUFATEC weist ausdrücklich aus, dass keine Anleitung verfügbar ist"
+  },
+  {
+    "id": "audi-a3-8y-sitzheizung",
+    "title": "Originale Sitzheizung vorne nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A3 / S3 8Y"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-sitzheizung-vorne-fuer-audi-a3-8y/46685-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Normal-/Sportsitz und Modelljahr bis 2024 bzw. ab 2025 trennen; Klimabedienteil und Sattlerarbeit zusätzlich"
+  },
+  {
+    "id": "audi-a6-c8-sitzheizung",
+    "title": "Originale Sitzheizung vorne nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A6 / S6 C8"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-sitzheizung-vorne-fuer-audi-a6-4a/41975",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Highline-Bordnetzsteuergerät, Sitzbezug und PR-Nummern prüfen; Heizmatten nur vom Sattler einsetzen"
+  },
+  {
+    "id": "audi-a6-c8-bo-premium",
+    "title": "B&O Premium Soundsystem mit 16 Lautsprechern nachrüsten (Avant)",
+    "category": "Nachrüstungen",
+    "models": [
+      "A6 / S6 C8"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-b-o-soundsystem-premium-fuer-audi-a6-4a-avant/45900",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur Avant mit werkseitigem aktiven Sound PR 9VD; ab MJ 2024 laut Anbieter nicht möglich; Verstärker, Lautsprecher und Verkabelung"
+  },
+  {
+    "id": "audi-a6-c8-nightvision",
+    "title": "Nachtsichtassistent Night Vision mit Wärmebildkamera nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A6 / S6 C8"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-nachtsichtassistent-night-vision-fuer-audi-a6-4a/44203",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kombiinstrument mit PR 9S8/9S9/7J3; Kamera, Steuerteil und fachgerechte Kalibrierung erforderlich"
+  },
+  {
+    "id": "audi-a6-c8-kreuzungsassistent",
+    "title": "Kreuzungsassistent mit Front-Seitenradaren nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A6 / S6 C8"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kreuzungsassistent-fuer-audi-a6-4a/44460",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur mit bestehendem ACC PR 8T3/8T5/8T8; für RS6 anderer Artikel; Remote-Erstinbetriebnahme und ADAS-Kalibrierung"
+  },
+  {
+    "id": "audi-mlb-lenkradheizung",
+    "title": "Beheizbares Lenkrad inklusive Schleifring und Lenksäulenteile nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9",
+      "A5 / S5 F5",
+      "A6 / S6 C8",
+      "A7 / S7 4K",
+      "A8 D5 (4N)",
+      "Q5 FY",
+      "Q7 4M",
+      "Q8 4M",
+      "e-tron GE"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-beheizbares-lenkrad-fuer-audi-mlb/45370-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "A4/A5 nicht mit abgeflachtem Lenkrad PR 2PF; andere Modelle ggf. rundes Lenkrad; Airbagarbeiten nur durch Fachpersonal"
+  },
+  {
+    "id": "skoda-kodiaq-rdk-high",
+    "title": "Direkte Reifendruckkontrolle RDK High nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-reifendruck-kontrollsystem-rdk-fuer-skoda-kodiaq-ns/48415",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Vier Radsensoren fachgerecht im Rad montieren; ggf. Highline-CAN-Gateway erforderlich"
+  },
+  {
+    "id": "skoda-kodiaq-230v-steckdose",
+    "title": "230-V-Steckdose mit 150-W-Wechselrichter im Fond nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-230-volt-steckdose-fuer-skoda-kodiaq-ns/48110",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Herstellerseite bietet keine Anleitung; 230-V-Arbeiten nur durch Fachpersonal, Codierdongle nötig"
+  },
+  {
+    "id": "skoda-kodiaq-phonebox",
+    "title": "Phone Box mit induktivem Laden nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-phone-box-induktives-laden-fuer-skoda-kodiaq-ns/47370",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Nur mit Handyvorbereitung PR 9ZX, laut Hersteller keine Anleitung vorhanden"
+  },
+  {
+    "id": "skoda-superb3v-easyopen",
+    "title": "Easy Open: Heckklappe per Fußgeste öffnen",
+    "category": "Nachrüstungen",
+    "models": [
+      "Superb 3V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-sensorgesteuerte-heckklappenoeffnung-fuer-skoda-superb-3v/42740",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur elektrische Heckklappe PR 4E7 und Komfortschlüssel PR 4F2 oder 4I3"
+  },
+  {
+    "id": "cupra-formentor-sitzheizung",
+    "title": "Sitzheizung vorne mit originalen Heizmatten nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "CUPRA Formentor KM"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-sitzheizung-vorne-fuer-seat-formentor-km7/46775",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Heizmatten müssen vom Sattler eingebaut werden; SFD-Stand und Klimabedienung prüfen"
+  },
+  {
+    "id": "seat-leonkl-kessy",
+    "title": "Kessy/Keyless Access mit originalen Türgriffen nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komfortschluessel-kessy-fuer-seat-leon-kl/49640",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Nur PR 4I6 oder 4I7; Steuerteil, Antennen, Türgriffe und Codierdongle, SFD-Freischaltung prüfen"
+  },
+  {
+    "id": "seat-tarraco-areaview",
+    "title": "360°-Umgebungsansicht Area View nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Tarraco KN2"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-umgebungsansicht-area-view-fuer-seat-tarraco-kn2/44160",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Keine Anleitung auf Herstellerseite; nur Linkslenker, Navi PR 7UG/7UF, für 3D-Birdview 7UG"
+  },
   // SEAT/CUPRA: nach VW, Audi und Škoda recherchiert, gemeinsame Herstellergruppe.
   {
     "id": "seat-leon5f-gra",
