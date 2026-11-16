@@ -7,7 +7,7 @@ export function hardwareForName(name:string):string|undefined {
   const n=name.toLowerCase();
 
   // Fahrerassistenz
-  if(n.includes("verkehrszeichen")) return "Werksseitige Navigation mit verfügbaren Navigationsdaten, VZE-fähige Frontkamera und kompatible Anzeige erforderlich. Kameratyp (z. B. 5Q0/3Q0, 2Q0 oder 5WA), Teilenummer, Softwarestand sowie erforderliche SWaP/FEC-Freigaben werden vorab geprüft; eine Codierung ersetzt keine fehlende Lizenz.";
+  if(n.includes("verkehrszeichen")) return "Werksseitige Navigation mit verfügbaren Navigationsdaten erforderlich.";
   if(n.includes("lane assist")) return "Frontkamera/Fahrerassistenzkamera und kompatible Lenkungs-/Assistenzsteuergeräte erforderlich.";
   if(n.includes("fernlichtassistent")) return "Geeignete Frontkamera bzw. Fernlichtassistenz-Sensorik und kompatible Lichtsteuerung erforderlich.";
   if(n.includes("acc ") || n.startsWith("acc")) return "ACC-Radarsensor und kompatible Fahrerassistenz-/Gateway-Hardware erforderlich.";
