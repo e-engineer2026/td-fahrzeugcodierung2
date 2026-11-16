@@ -100,7 +100,7 @@ const sourceCodings:Coding[] = ascodingCodingNames.map((name,index)=>(
     name,
     price:priceForName(name),
     category:categoryForName(name),
-    interfaceInfo:"VCDS; je nach Steuergerät/Softwarestand ggf. VCP oder ODIS nach Vorprüfung",
+    interfaceInfo:"VCDS; je nach Steuergerät/Softwarestand ggf. VCP oder ODIS",
     hardware:hardwareForName(name),
     requirements:"Verfügbarkeit abhängig von Ausstattung, Modelljahr, Steuergerät, Softwarestand und vorhandener Hardware."
   }

@@ -105,7 +105,7 @@ const sourceCodings:Coding[] = normalizedNames.map((name,index)=>({
   price:priceForName(name),
   category:categoryForName(name),
   uiGroup:groupForName(name),
-  interfaceInfo:"VCDS; je nach Steuergerät und Softwarestand ggf. VCP oder ODIS nach Vorprüfung",
+  interfaceInfo:"VCDS; je nach Steuergerät und Softwarestand ggf. VCP oder ODIS",
   requirements:"Verfügbarkeit abhängig von Ausstattung, Modelljahr, Steuergerät, Softwarestand und vorhandener Hardware."
 }));
 

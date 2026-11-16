@@ -342,10 +342,11 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
     };
   });
   return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => {
-    const assistanceActivation = entry.uiGroup === "Assistenz" && /(freischalt|aktivier|parametrier)/i.test(entry.name);
     const smartphoneActivation = /(carplay|android auto|app-connect)/i.test(entry.name) && /(freischalt|aktivier)/i.test(entry.name);
     const startStopDeactivation = /start[- /]?stopp?/i.test(entry.name) && /deaktivier/i.test(entry.name);
-    const reviewOnly = Boolean(entry.reviewOnly || assistanceActivation || smartphoneActivation || startStopDeactivation);
+    // Assistenzsysteme zeigen ihre Preise direkt und bleiben mit vorhandener Hardware buchbar.
+    // Gesonderte Freigaben für Smartphonefunktionen und Start-Stopp bleiben unverändert.
+    const reviewOnly = entry.uiGroup !== "Assistenz" && Boolean(entry.reviewOnly || smartphoneActivation || startStopDeactivation);
     return { ...entry, price: servicePrice(entry.price), reviewOnly,
       hardware: mergePrerequisites(entry.hardware, hardwareForName(entry.name)),
       requirements: mergePrerequisites(entry.requirements, reviewOnly ? "Vor Auftrag sind Teilenummern, Ausstattung, Softwarestand und gegebenenfalls vorhandene Funktionslizenzen zu prüfen. Erst nach Bestätigung buchbar." : undefined),
