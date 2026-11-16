@@ -360,18 +360,15 @@
 /* Highlight the brand corresponding to the currently displayed vehicle. */
 .td-home .td-hero-brands span.is-active{color:#0b55c9;font-weight:900;text-decoration:none}
 
-/* Keep the complete vehicle centered in the mobile hero. */
-@media(max-width:600px){.td-home .td-hero-slide:not(.td-hero-model-photo) img{object-position:center 82%}}
+/* Keep the restored Audi vehicles fully visible in the mobile hero. */
+@media(max-width:600px){.td-home .td-hero-slide:not(.td-hero-model-photo) img{object-position:right 82%}}
 
 /* Wall boundary in each start image, matched to the cover crop. */
 .td-hero-picture{--wall-offset:.300;--wall-height-offset:.5334}
-.td-hero-picture[data-wall-scene="0"]{--wall-offset:.2655;--wall-height-offset:.4718}
-.td-hero-picture[data-wall-scene="1"]{--wall-offset:.2645;--wall-height-offset:.4700}
-.td-hero-picture[data-wall-scene="2"]{--wall-offset:.288;--wall-height-offset:.512}
-.td-hero-picture[data-wall-scene="3"]{--wall-offset:.300;--wall-height-offset:.5334}
-.td-hero-picture[data-wall-scene="4"]{--wall-offset:.300;--wall-height-offset:.600}
+.td-hero-picture[data-wall-scene="0"],.td-hero-picture[data-wall-scene="1"],.td-hero-picture[data-wall-scene="2"]{--wall-offset:.358;--wall-height-offset:.636}
 .td-airplane-sky{clip-path:inset(0 max(0px,calc(50cqw - max(100cqw * var(--wall-offset),100cqh * var(--wall-height-offset)))) 0 0)}
 @media(min-width:601px) and (max-width:900px){.td-airplane-sky{clip-path:inset(0 max(0px,calc(37cqw - max(100cqw * (var(--wall-offset) - .13),100cqh * (var(--wall-height-offset) - .2311)))) 0 0)}}
+@media(max-width:600px){.td-hero-picture:not([data-wall-scene="selected"]) .td-airplane-sky{clip-path:inset(0 max(14.2cqw,25.24cqh) 0 0)}}
 
 /* Clear guidance for the next vehicle field. */
 .td-finder-fields label[data-current-step="true"] select{border-color:#2563eb;box-shadow:0 0 0 2px #dbeafe}
