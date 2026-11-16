@@ -827,12 +827,13 @@ export const researchedGuides: readonly ResearchGuide[] = [
     "title": "Audi Phone Box mit induktivem Laden (Qi) nachrüsten",
     "category": "Nachrüstungen",
     "models": [
-      "A4 / S4 B9"
+      "A4 / S4 B9",
+      "A5 / S5 F5"
     ],
     "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-phone-box-fuer-audi-a4-8w-a5-f5/42860-1",
     "sourceName": "KUFATEC",
     "access": "Vorschau / Kauf",
-    "note": "Nur bei passender Handyvorbereitung PR 9ZX, verschiedene Ausführungen bis 2019 / Facelift ab 2020"
+    note: "Nachrüstsatz für Audi A4 8W und A5 F5; PR 9ZX vorausgesetzt, Varianten vor/nach MJ 2020 passend wählen. Vollständige Einbauanleitung je Kauf."
   },
   {
     "id": "a4-8w-memory-sitz",
@@ -1377,13 +1378,13 @@ export const researchedGuides: readonly ResearchGuide[] = [
   },
   {
     id: "a5-q5-rueckfahrkamera",
-    title: "Original-Rückfahrkamera samt Kabelsatz nachrüsten",
+    title: "Rückfahrkamera: fahrzeugspezifischen Kabelsatz nachrüsten (Kamera separat)",
     category: "Nachrüstungen",
-    models: ["A5 / S5 F5", "Q5 FY"],
+    models: ["A5 / S5 F5","Q5 FY","A4 / S4 B9"],
     sourceUrl: "https://kufatec.com/de/kufatec-kabelsatz-aps-advance-rueckfahrkamera-fuer-audi-a4-8w-a5-f5-q5-fy/41279-1",
     sourceName: "KUFATEC",
     access: "Vorschau / Kauf",
-    note: "Kabelsatz allein genügt nicht: Kamera/Steuergerät und unterstütztes Navigationssystem erforderlich",
+    note: "Kabelsatz für A4 8W, A5 F5 und Q5 FY; nur mit Navigation PR 7UF/7UG. Kamera samt Steuergerät separat erforderlich, kein vollständiger Nachrüstsatz.",
   },
   {
     id: "octavia5e-rueckfahrkamera",
@@ -1805,12 +1806,21 @@ export const researchedGuides: readonly ResearchGuide[] = [
       "Golf 8 (CD)",
       "Octavia 4 NX",
       "SEAT Leon KL",
-      "CUPRA Leon KL"
+      "CUPRA Leon KL",
+      "Q3 F3",
+      "Arteon 3H",
+      "Golf 7 (5G)",
+      "Passat B8 (3G)",
+      "Tiguan II (AD/BW)",
+      "Touran 5T",
+      "T-Roc A11",
+      "Kodiaq NS",
+      "Enyaq 5A"
     ],
     "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-beheizbares-lenkrad-lenkradheizung-fuer-mqb2020-meb/46141-1",
     "sourceName": "KUFATEC",
     "access": "Vorschau / Kauf",
-    "note": "Anleitungsvorschau und Kabelsatz; beheizbares Lenkrad, Schleifring/Lenksäulensteuerteil, Ausstattung und SFD1/SFD2 prüfen"
+    note: "Nur Kabelsatz (kein komplettes Lenkrad-Set). Modelljahr beachten: Golf 7/Passat B8/Tiguan II/Touran 5T/T-Roc/Arteon ab MJ 2019, Kodiaq NS ab MJ 2020. Beheizbares Lenkrad, Schleifring/Lenkstockteile und Dongle 44382 erforderlich; SFD2 nur auf Anfrage."
   },
   {
     "id": "golf7-aid-digitalcluster",
@@ -1967,7 +1977,7 @@ export const researchedGuides: readonly ResearchGuide[] = [
     sourceUrl: "https://kufatec.com/de/kufatec-acc-option-praediktive-regelung-fuer-mqb/44365",
     sourceName: "KUFATEC",
     access: "Produktinfo / Service",
-    note: "Keine öffentliche Schritt-für-Schritt-Anleitung; ab Werk vorhandenes ACC bzw. spezielle Nachrüstvariante, Frontkamera, Navi-PR 7UF/7UG/7UT/7T7, Radarstand, Lizenzen und Kalibrierung vorab prüfen; Remote-Inbetriebnahme erforderlich",
+    note: "KUFATEC-Mehrmodellfreigabe, beim Golf 7 erst ab Modelljahr 2017; bestehendes ACC bzw. passende Nachrüstvariante, Frontkamera, Navi-Daten/PR, Radarstand und Funktionsfreigaben erforderlich. Keine allgemeine VCDS-Anleitung, Berechtigung für Remote-Inbetriebnahme prüfen.",
   },
   {
     id: "passat-b8-acc-nachruesten",
@@ -1983,21 +1993,21 @@ export const researchedGuides: readonly ResearchGuide[] = [
     id: "mqb-acc-hardware-kabel",
     title: "ACC-Radar/Lenkradbedienung bei MQB-Modellen mit passendem Kabelsatz ergänzen",
     category: "Umbauten",
-    models: ["Golf 7 (5G)","A3 / S3 8V","Octavia 3 5E","Octavia 3 5E Facelift","SEAT Leon 5F"],
+    models: ["Golf 7 (5G)","A3 / S3 8V","Octavia 3 5E","Octavia 3 5E Facelift","SEAT Leon 5F","Passat B8 (3G)","Tiguan II (AD/BW)","Touran 5T","T-Roc A11","Arteon 3H","Superb 3V","Kodiaq NS","Karoq NU","SEAT Ateca KH7","SEAT Tarraco KN2","CUPRA Ateca KH7","Q2 GA","Q3 F3"],
     sourceUrl: "https://kufatec.com/de/kufatec-kabelsatz-automatische-distanzregelung-acc-mqb/40720",
     sourceName: "KUFATEC",
     access: "Vorschau / Kauf",
-    note: "Nur Verkabelung: Sensor, Halter, Bedienelemente, Freigaben, Radar-Abgleich und weitere Teile separat notwendig; verschiedene Radarvarianten",
+    note: "Nur ACC-Verkabelung: laut Anbieter allgemein für MQB ohne Front Assist (PR 6K0). Modell-/Radarvariante 3Q0/5Q0/3QF/2Q0/5WA und Anschlussbelegung vor Kauf per FIN prüfen; Sensor, Halter, Bedienung, Freigaben und ADAS-Kalibrierung zusätzlich erforderlich. Kein Komplettset; SFD2 auf Anfrage.",
   },
   {
     id: "mqb-acc-210",
     title: "ACC-Geschwindigkeitsbereich von 160 auf 210 km/h erweitern",
     category: "Umbauten",
-    models: ["A3 / S3 8V","SEAT Leon 5F","Fabia 3 NJ","Karoq NU","Kodiaq NS","Octavia 3 5E","Octavia 3 5E Facelift","Superb 3V","Golf 7 (5G)","Passat B8 (3G)","Polo AW","Tiguan II (AD/BW)","Touran 5T","T-Roc A11"],
+    models: ["A3 / S3 8V","SEAT Leon 5F","Fabia 3 NJ","Karoq NU","Kodiaq NS","Octavia 3 5E","Octavia 3 5E Facelift","Superb 3V","Golf 7 (5G)","Passat B8 (3G)","Tiguan II (AD/BW)","Touran 5T","T-Roc A11"],
     sourceUrl: "https://kufatec.com/de/kufatec-acc-option-210-km-h-fuer-mqb/44175",
     sourceName: "KUFATEC",
     access: "Produktinfo / Service",
-    note: "Nur bei bestehendem ACC 160 km/h mit passender Radarhardware/PR 6K3; keine allgemeine Codieranleitung, Einbau nur nach Kompatibilitätsprüfung",
+    note: "Nur bei bestehendem ACC bis 160 km/h (PR 6K3); Audi A3 8V nur bis 200 km/h. KUFATEC nennt ausdrücklich den Polo 6C, NICHT den Polo AW. Radarhardware/Freigaben individuell prüfen; Anbieterleistung, keine allgemeine Codieranleitung.",
   },
   {
     id: "t5-multifunktionslenkrad",
