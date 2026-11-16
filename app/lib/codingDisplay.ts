@@ -14,7 +14,21 @@ export type UnifiedCodingEntry = {
   interfaceInfo?: string;
   sfd?: "Ja" | "Nein" | "Unklar";
   source: "vehicle" | "platform";
+  reviewOnly?: boolean;
 };
+
+export function mergePrerequisites(...values: Array<string | undefined>): string | undefined {
+  const unique = Array.from(new Set(values.map((value) => value?.trim()).filter((value): value is string => Boolean(value))));
+  return unique.length ? unique.join(" ") : undefined;
+}
+
+function mergedEvidence(entries: UnifiedCodingEntry[]) {
+  return {
+    hardware: mergePrerequisites(...entries.map((entry) => entry.hardware)),
+    requirements: mergePrerequisites(...entries.map((entry) => entry.requirements)),
+    interfaceInfo: mergePrerequisites(...entries.map((entry) => entry.interfaceInfo)),
+  };
+}
 
 type CuratedAssistRule = {
   name: string;
@@ -89,6 +103,7 @@ function curateAssistEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[
 
     return [{
       ...source,
+      ...mergedEvidence(matches),
       id: `assist-curated-${index}`,
       name: rule.name,
       price: rule.price,
@@ -160,9 +175,10 @@ function curateComfortEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry
 
     return [{
       ...source,
+      ...mergedEvidence(matches),
       id: `comfort-curated-${index}`,
       name: rule.name,
-      hardware: index === 0 ? "Kompatible Zentralverriegelung und unterstütztes Komfort-/Bordnetzsteuergerät erforderlich; Funktionsumfang wird am Fahrzeug geprüft." : hardwareForName(rule.name) ?? source.hardware,
+      hardware: mergePrerequisites(...matches.map((entry) => entry.hardware), hardwareForName(rule.name)),
       price: rule.price,
       uiGroup: "Komfort" as const,
       sfd,
@@ -205,8 +221,8 @@ const curatedLightRules: CuratedDisplayRule[] = [
 ];
 
 const curatedInfotainmentRules: CuratedDisplayRule[] = [
-  { name: "Apple CarPlay / Android Auto Wireless freischalten", price: 35, match: /(wireless carplay|apple.*carplay|carplay.*aktivier|carplay.*freischalt)/i },
-  { name: "Android Auto / Smartphone-Integration anpassen", price: 35, match: /^(?!.*(?:wireless carplay|apple.*carplay|carplay.*android auto))(?=.*(?:android auto|mirrorlink|smartphone.*integration)).*$/i },
+  { name: "Apple CarPlay Wireless aktivieren", price: 35, match: /(?=.*carplay)(?=.*wireless)/i },
+  { name: "Android Auto / Smartphone-Integration anpassen", price: 35, match: /^(?!.*(?:wireless|carplay))(?=.*(?:android auto|mirrorlink|smartphone.*integration)).*$/i },
   { name: "Bluetooth / Zweites Telefon anpassen", price: 15, match: /(zweites telefon|bluetooth.*telefon|telefon.*bluetooth)/i },
   { name: "Green / Hidden / Developer Menu freischalten", price: 20, match: /(green menu|hidden menu|developer mode|entwicklermenü|entwicklermenu)/i },
   { name: "Sprachbedienung aktivieren", price: 25, match: /sprachbedienung/i },
@@ -222,6 +238,8 @@ const curatedInfotainmentRules: CuratedDisplayRule[] = [
   { name: "Ganganzeige / Fahrdatenanzeige anpassen", price: 15, match: /(ganganzeige|fahrdaten|schaltempfehlung)/i },
   { name: "Navigations- / Kartendarstellung anpassen", price: 20, match: /(kartendarstellung|navigation.*anzeige|karte.*kombiinstrument|kompass)/i },
   { name: "Telefon / Freisprecheinrichtung anpassen", price: 15, match: /(mikrofonempfindlichkeit|freisprecheinrichtung|telefonieren über|telefonieren ueber)/i },
+  { name: "Apple CarPlay / App-Connect aktivieren", price: 35, match: /^(?!.*wireless)(?=.*carplay).*$/i },
+  { name: "Android Auto Wireless aktivieren", price: 35, match: /(?=.*android auto)(?=.*wireless)/i },
 ];
 
 function curateDisplayGroup(
@@ -248,11 +266,12 @@ function curateDisplayGroup(
 
     return [{
       ...source,
+      ...mergedEvidence(matches),
       id: `${idPrefix}-curated-${index}`,
       name: rule.name,
       price: rule.price,
       uiGroup: group,
-      hardware: rule.hardware === null ? undefined : rule.hardware ?? hardwareForName(rule.name) ?? source.hardware,
+      hardware: mergePrerequisites(...matches.map((entry) => entry.hardware), rule.hardware ?? hardwareForName(rule.name)),
       sfd,
     }];
   });
@@ -292,14 +311,17 @@ function separateSpecificOffers(entries: UnifiedCodingEntry[]) {
     const sfd = candidates.some((entry) => entry.sfd === "Ja") ? "Ja" as const
       : candidates.some((entry) => entry.sfd === "Unklar") ? "Unklar" as const
       : candidates.some((entry) => entry.sfd === "Nein") ? "Nein" as const : undefined;
-    return [{ ...candidates[0], id: "specific-" + rule.id, name: rule.name,
-      price: rule.price, uiGroup: rule.uiGroup, hardware: rule.hardware, sfd }];
+    return [{ ...candidates[0], ...mergedEvidence(candidates), id: "specific-" + rule.id, name: rule.name,
+      price: rule.price, uiGroup: rule.uiGroup, hardware: mergePrerequisites(...candidates.map((entry) => entry.hardware), rule.hardware), sfd }];
   });
   return { offers, remaining: entries.filter((entry) => !matched.has(entry)) };
 }
 
 // Shared by the configurator and every vehicle price page.
 export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  entries = entries.flatMap((entry) => /(?=.*wireless)(?=.*carplay)(?=.*android auto)/i.test(entry.name)
+    ? [{ ...entry, id: entry.id + "-carplay", name: "Apple CarPlay Wireless aktivieren" }, { ...entry, id: entry.id + "-android", name: "Android Auto Wireless aktivieren" }]
+    : [entry]);
   const selectedGolf7Offers = entries.filter((entry) => isSelectedGolf7OfferId(entry.id));
   const selectedKeys = new Set(selectedGolf7Offers.map((entry) => selectedGolf7OfferKey(entry.name)));
   entries = entries.filter((entry) => !isSelectedGolf7OfferId(entry.id) && !selectedKeys.has(selectedGolf7OfferKey(entry.name)));
@@ -317,5 +339,14 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
       uiGroup: "Licht" as const,
     };
   });
-  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => ({ ...entry, price: servicePrice(entry.price) }));
+  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => {
+    const assistanceActivation = entry.uiGroup === "Assistenz" && /(freischalt|aktivier|parametrier)/i.test(entry.name);
+    const smartphoneActivation = /(carplay|android auto|app-connect)/i.test(entry.name) && /(freischalt|aktivier)/i.test(entry.name);
+    const startStopDeactivation = /start[- /]?stopp?/i.test(entry.name) && /deaktivier/i.test(entry.name);
+    const reviewOnly = Boolean(entry.reviewOnly || assistanceActivation || smartphoneActivation || startStopDeactivation);
+    return { ...entry, price: servicePrice(entry.price), reviewOnly,
+      hardware: mergePrerequisites(entry.hardware, hardwareForName(entry.name)),
+      requirements: mergePrerequisites(entry.requirements, reviewOnly ? "Vor Auftrag sind Teilenummern, Ausstattung, Softwarestand und gegebenenfalls vorhandene Funktionslizenzen zu prüfen. Erst nach Bestätigung buchbar." : undefined),
+    };
+  });
 }

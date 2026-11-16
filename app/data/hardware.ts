@@ -7,7 +7,7 @@ export function hardwareForName(name:string):string|undefined {
   const n=name.toLowerCase();
 
   // Fahrerassistenz
-  if(n.includes("verkehrszeichen")) return "Werksseitiges Navigationssystem mit verfügbaren Navigationsdaten, geeignete Frontkamera und kompatible Steuergeräte erforderlich. Die Machbarkeit wird vorab geprüft.";
+  if(n.includes("verkehrszeichen")) return "Werksseitige Navigation mit verfügbaren Navigationsdaten, VZE-fähige Frontkamera und kompatible Anzeige erforderlich. Kameratyp (z. B. 5Q0/3Q0, 2Q0 oder 5WA), Teilenummer, Softwarestand sowie erforderliche SWaP/FEC-Freigaben werden vorab geprüft; eine Codierung ersetzt keine fehlende Lizenz.";
   if(n.includes("lane assist")) return "Frontkamera/Fahrerassistenzkamera und kompatible Lenkungs-/Assistenzsteuergeräte erforderlich.";
   if(n.includes("fernlichtassistent")) return "Geeignete Frontkamera bzw. Fernlichtassistenz-Sensorik und kompatible Lichtsteuerung erforderlich.";
   if(n.includes("acc ") || n.startsWith("acc")) return "ACC-Radarsensor und kompatible Fahrerassistenz-/Gateway-Hardware erforderlich.";
@@ -33,7 +33,7 @@ export function hardwareForName(name:string):string|undefined {
   if(n.includes("elektrische heckklappe") || n.includes("heckklappe per") || n.includes("innentaster")) return "Elektrische Heckklappenbetätigung und kompatibles Heckklappensteuergerät erforderlich.";
   if(n.includes("easy entry")) return "Elektrisch verstellbarer Sitz bzw. kompatibles Sitz-/Komfortsteuergerät erforderlich.";
   if(n.includes("sitzheizung")) return "Werksseitige Sitzheizung und kompatibles Klima-/Sitzsteuergerät erforderlich.";
-  if(n.includes("regenschliessen")) return "Regen-/Lichtsensor und kompatibles Bordnetz-/Komfortsteuergerät erforderlich.";
+  if(/regenschlie(?:ß|ss)en/.test(n)) return "Regen-/Lichtsensor mit Unterstützung für Regenschließen sowie kompatible Bordnetz-, Tür- und Komfortsteuergeräte erforderlich; Teilenummer und Softwarestand prüfen.";
   if(n.includes("akustische quittierung") || n.includes("hornquittierung")) return "DWA/Alarmhorn oder eine vom Fahrzeug unterstützte akustische Verriegelungsquittierung erforderlich.";
 
   // Licht
@@ -48,7 +48,10 @@ export function hardwareForName(name:string):string|undefined {
   if(n.includes("coming home") || n.includes("leaving home")) return "Kompatibles Bordnetz-/Lichtsteuergerät; für automatische Varianten meist Regen-/Lichtsensor erforderlich.";
 
   // Infotainment / Anzeige
-  if(n.includes("wireless carplay") || n.includes("carplay / android auto")) return "Kompatible MIB/MMI-Hardware mit WLAN sowie unterstützte USB-/App-Connect-Schnittstelle erforderlich.";
+  if(/carplay/.test(n) && /android auto/.test(n) && /wireless/.test(n)) return "Apple CarPlay und Android Auto müssen getrennt auf USB-Funktion, Lizenz, WLAN-Hardware und unterstützten Softwarestand geprüft werden; Wireless-Unterstützung eines Systems bestätigt nicht automatisch das andere.";
+  if(/carplay.*wireless|wireless.*carplay/.test(n)) return "Apple CarPlay muss bereits per USB funktionieren; kompatibles iPhone, WLAN-Hardware und freigegebener MIB/MMI-Softwarestand erforderlich. Diese Anpassung schaltet keine fehlende App-Connect-/CarPlay-Lizenz frei und bestätigt keine Android-Auto-Unterstützung.";
+  if(/android auto.*wireless|wireless.*android auto/.test(n)) return "Android Auto muss bereits per USB funktionieren; Android-Auto-Wireless-fähige Haupteinheit mit WLAN, unterstütztem Softwarestand und kompatibles Android-Smartphone erforderlich. Apple-CarPlay-Unterstützung allein genügt nicht.";
+  if(/carplay|android auto|app-connect|mirrorlink/.test(n)) return "Kompatibles Infotainment, unterstützte USB-/Smartphone-Schnittstelle und erforderliche Funktionslizenz nötig; eine reine Codierung ersetzt keine Lizenz.";
   if(n.includes("hidden menu") || n.includes("developer mode") || n.includes("green menu")) return "Kompatibles MMI/MIB-Infotainmentsystem erforderlich.";
   if(n.includes("fahrschulmodus") || n.includes("offroad-anzeige") || n.includes("kompass im mmi")) return "Kompatibles Infotainment mit unterstützter Software-/Menüvariante erforderlich.";
   if(n.includes("startlogo") || n.includes("virtual cockpit") || n.includes("sportlayout") || n.includes("rs-ansicht") || n.includes("skin der multifunktionsanzeige")) return "Kompatibles Kombiinstrument/Virtual Cockpit mit unterstütztem Softwarestand erforderlich.";
@@ -69,7 +72,7 @@ export function hardwareForName(name:string):string|undefined {
   if(n.includes("reifendruckkontrolle im infotainment")) return "Kompatibles Reifendruck-/ABS-System und unterstütztes Infotainment erforderlich.";
   if(n.includes("reifendruckkontrolle aktivieren")) return "Kompatibles Reifendruck- bzw. ABS/ESC-System erforderlich; Systemart fahrzeugabhängig.";
   if(n.includes("batterie nach") || n.includes("batterie anlernen")) return "Fahrzeug mit Batteriemanagement/Energiemanagement und kompatiblem Gateway erforderlich.";
-  if(n.includes("start-stopp")) return "Werksseitiges Start-Stopp-System und kompatibles Motor-/Energiemanagement erforderlich.";
+  if(/start[- /]?stopp?/.test(n)) return "Werksseitiges Start-Stopp-System und unterstütztes Motor-/Energiemanagement erforderlich. Eine dauerhafte Deaktivierung ist nicht bei jedem Softwarestand per Codierung möglich; verfügbare Anpassung oder erforderliches Zusatzmodul vorab prüfen.";
 
   return undefined;
 }

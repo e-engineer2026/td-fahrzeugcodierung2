@@ -61,6 +61,7 @@ export const smartphoneAidCodings: Coding[] = rules.map((rule, index) => {
     category: "Standard-Codierungen",
     uiGroup: "Infotainment",
     hardware: profile.hardware,
+    requirements: profile.software,
     interfaceInfo: "Softwareinstallation am Infotainment nach Geräteprüfung und Sicherung des Originalzustands",
     sourceUrl: profile.sourceUrl,
   };

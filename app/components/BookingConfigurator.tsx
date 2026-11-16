@@ -1,157 +1,27 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { homeVehicleReadyEvent, homeVehicleSelectedEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSelection, type HomeVehicleSelection } from "../lib/homeVehicleSelection";
-import { curateCodingEntries, type UnifiedCodingEntry } from "../lib/codingDisplay";
+import type { UnifiedCodingEntry } from "../lib/codingDisplay";
+import { vehicleSpecificCodings, needsProtectionReview, protectionReviewMessage } from "../lib/vehicleCodings";
 import { downloadQuotePdf } from "../lib/quotePdf";
 import { sideProfiles } from "../lib/sideProfiles";
 import { vehicleHeroImage } from "../lib/vehicleHero";
-import { isSmartphoneAidId, smartphoneAidForVehicle } from "../data/smartphoneAid";
 import { ChevronDown, Laptop, MapPin, FileDown, Sparkles } from "lucide-react";
 import ConfiguratorLiveActions from "./ConfiguratorLiveActions";
 import SaveVehicleCard from "./SaveVehicleCard";
 import FunctionExample from "./FunctionExample";
-import { cockpitDesignForVehicle, isCockpitDesignName } from "../data/cockpitDesigns";
-import { brands, codingCatalog, codingsForVehicle, vehicles, type Vehicle } from "../data/catalog";
-import { platformCodingSources } from "../data/platformCodingLists";
-import type { PlatformCodingEntry, PlatformCodingSource } from "../data/platformCodingLists";
-import { mqbCodingEntries } from "../data/mqbCodingList";
-import { platformCodingGroups, pricePlatformSource, type PlatformCodingGroup, type PricedPlatformCodingEntry } from "../data/platformCodingPricing";
-
-type PricedPlatformCodingSource = Omit<PlatformCodingSource, "entries"> & { entries: PricedPlatformCodingEntry[] };
-
-const modelHintRules: Array<{ hint: RegExp; vehicle: RegExp }> = [
-  { hint: /audi a3 8v/i, vehicle: /A3 \/ S3 8V/i },
-  { hint: /audi a3 8y/i, vehicle: /A3 \/ S3 8Y/i },
-  { hint: /leon (iii )?5f/i, vehicle: /Leon 5F/i },
-  { hint: /octavia (iii )?5e/i, vehicle: /Octavia 3 5E/i },
-  { hint: /golf (vii|7)/i, vehicle: /Golf 7/i },
-  { hint: /passat b8/i, vehicle: /Passat B8/i },
-  { hint: /tiguan/i, vehicle: /Tiguan II/i },
-  { hint: /formentor/i, vehicle: /Formentor/i },
-  { hint: /golf 8/i, vehicle: /Golf 8/i },
-];
-
-const capabilityTerms: Array<[string, string[]]> = [
-  ["acc", ["adaptive cruise", "acc ", "acc-", "front assist", "notbrems"]],
-  ["lane", ["lane assist", "spurhalte", "spurwechsel", "side assist", "totwinkel"]],
-  ["dla", ["dynamic light assist", "dynamisches fernlicht", "matrix"]],
-  ["fla", ["fernlichtassistent", "light assist", "hba"]],
-  ["vze", ["verkehrszeichen", "vze"]],
-  ["park", ["einpark", "park assist", "parklenk", "pdc"]],
-  ["rear-view", ["rückfahrkamera", "rear view", "back-up camera"]],
-  ["trailer", ["anhänger", "anhaenger", "trailer assist", "gespann"]],
-  ["kessy", ["kessy", "keyless", "easy open", "easy close"]],
-  ["tfl", ["tagfahrlicht", "tfl", "dauerfahrlicht"]],
-  ["chlh", ["coming home", "leaving home"]],
-  ["mirror", ["spiegel", "bordsteinautomatik"]],
-  ["rain", ["regenschließ", "regenschliess", "regensensor"]],
-  ["lock", ["auto-lock", "auto-unlock", "zentralverriegel", "verriegel"]],
-  ["belt", ["gurtwarner", "gurterkennung"]],
-  ["staging", ["zeigertest", "needle sweep", "staging"]],
-  ["indicator", ["komfortblinken", "blinker"]],
-  ["wiper", ["wischer", "tränenwisch", "traenenwisch"]],
-  ["windows", ["fenster", "komfortöffnung", "komfortoeffnung", "komfortschließ", "komfortschliess"]],
-  ["ambient", ["ambientebeleuchtung", "ambiente-farben"]],
-  ["footwell", ["fußraumbeleuchtung", "fussraumbeleuchtung"]],
-  ["tailgate", ["heckklappe"]],
-  ["tpms", ["reifendruck", "tpms", "rdk"]],
-  ["startstop", ["start-stopp", "start/stop"]],
-  ["xds", ["xds", "differenzialsperre"]],
-  ["esc", ["esc sport", "esp ", "asr "]],
-  ["steering", ["lenkung", "lenkunterstützung", "lenkunterstuetzung", "lenkkennlinie"]],
-  ["sound", ["soundaktor", "motorsound"]],
-  ["seat", ["sitzheizung", "sitzmemory", "sitz-memory", "easy entry"]],
-  ["climate", ["klimaanlage", "air care", "gebläse", "geblaese"]],
-  ["infotainment", ["infotainment", "discover", "mmi", "carplay", "android auto", "mirrorlink", "bluetooth", "radio", "navigation", "green menu", "hidden menu", "developer mode"]],
-  ["instrument", ["kombiinstrument", "tacho", "virtual cockpit", "öltemperatur", "oeltemperatur", "laptimer", "nachtankmenge"]],
-  ["lighting", ["abbiegelicht", "standlicht", "parklicht", "kennzeichenbeleuchtung", "scheinwerferreinigungsanlage", "lichtfunktion", "leuchte"]],
-  ["hold", ["auto hold", "berganfahr", "hill hold"]],
-  ["diagnose", ["diagnose", "kalibrier", "grundeinstellung", "batterie anlernen", "serviceintervall"]],
-];
+import { brands, vehicles } from "../data/catalog";
+import { platformCodingGroups, type PlatformCodingGroup } from "../data/platformCodingPricing";
 
 const popularTerms = ["zeigertest", "rückleuchten zusätzlich aktiv", "auto-lock", "coming home", "spiegel", "tagfahrlicht", "start-stopp", "regenschließ"];
-
-function normalize(value: string) { return value.toLocaleLowerCase("de").normalize("NFD").replace(/\p{Diacritic}/gu, "").replace(/[^a-z0-9]+/g, " ").trim(); }
-function capabilityForName(name: string): string | undefined { const n = name.toLocaleLowerCase("de"); return capabilityTerms.find(([, terms]) => terms.some((term) => n.includes(term)))?.[0]; }
 function popularLabel(name: string) { if (/tagfahrlicht.*rückleuchten zusätzlich aktiv/i.test(name)) return "TFL mit Heckleuchten"; if (/zeigertest|needle sweep|staging/i.test(name)) return "Zeigertest"; return name; }
-function meaningfulTokens(name: string): string[] { const stop = new Set(["aktivieren", "deaktivieren", "anpassen", "andern", "aendern", "freischaltung", "freischalten", "einstellen", "funktion", "funktionen", "variante", "moglich", "moeglich", "uber", "ueber", "oder", "und", "bei", "mit", "ohne", "des", "der", "die", "das", "fur", "fuer", "von", "auf", "im", "menu", "anzeige"]); return normalize(name).split(" ").filter((token) => token.length >= 4 && !stop.has(token)); }
-function tokenRelated(a: string, b: string) { const left = new Set(meaningfulTokens(a)); const right = meaningfulTokens(b); return right.some((token) => left.has(token)); }
 function discountRate(value: number) { return value >= 200 ? 0.25 : value >= 150 ? 0.2 : value >= 100 ? 0.15 : value >= 50 ? 0.1 : 0; }
 function euro(value: number) { return value.toFixed(2).replace(".", ","); }
 function nextTier(value: number) { return value < 50 ? 50 : value < 100 ? 100 : value < 150 ? 150 : value < 200 ? 200 : null; }
 function track(event: string, params: Record<string, string | number | boolean> = {}) { if (typeof window === "undefined") return; const gtag = (window as typeof window & { gtag?: (...args: unknown[]) => void }).gtag; gtag?.("event", event, params); }
-function yearAllowed(name: string, year: number) { if (year > 2014 && /(video in motion|\bvim\b)/i.test(name)) return false; if (year < 2021 && /(wireless carplay|apple.*carplay|carplay.*android auto)/i.test(name)) return false; const until = name.match(/\bbis (?:mj\s*)?(\d{4})\b/i); if (until && year > Number(until[1])) return false; const from = name.match(/\bab (?:mj\s*)?(\d{4})\b/i); if (from && year < Number(from[1])) return false; return true; }
-function modelHintAllowed(name: string, vehicle: Vehicle) { const combined = `${vehicle.brand} ${vehicle.model}`; for (const rule of modelHintRules) { if (rule.hint.test(name) && !rule.vehicle.test(combined)) return false; } return true; }
 function SfdBadge({ value }: { value?: "Ja" | "Nein" | "Unklar" }) { if (!value) return null; if (value === "Ja") return <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-600">SFD1 erforderlich</span>; if (value === "Nein") return null; return <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold text-slate-500">SFD1-Bedarf wird geprüft</span>; }
-
-const exactMqbSource = platformCodingSources.find((source) => source.id === "mqb");
-const mlbEvoSource = platformCodingSources.find((source) => source.platform === "MLBevo");
-const mqbEvoSources = platformCodingSources.filter((source) => source.platform === "MQBevo");
-const mergedMqbEvoEntries = Array.from(new Map<string, PlatformCodingEntry>(mqbEvoSources.flatMap((source) => source.entries).map((entry) => [entry.name, entry])).values());
-const baseCodingSources: PlatformCodingSource[] = [
-  ...(exactMqbSource ? [{ ...exactMqbSource, entries: mqbCodingEntries.map((name) => ({ name })) }] : []),
-  ...(mqbEvoSources.length ? [{ id: "mqbevo", platform: "MQBevo" as const, title: "MQB evo Codierungen", scope: "Plattformweite Referenzliste", description: "Zusammengefasste Codiermöglichkeiten für Fahrzeuge auf MQB evo.", entries: mergedMqbEvoEntries }] : []),
-  ...(mlbEvoSource ? [mlbEvoSource] : []),
-];
-const codingSources: PricedPlatformCodingSource[] = baseCodingSources.map((source) => ({ ...source, entries: pricePlatformSource(source) }));
-
-function vehicleSpecificCodings(
-  vehicle: Vehicle,
-  year: number,
-  isSfd1: boolean,
-  isSfd2: boolean
-): UnifiedCodingEntry[] {
-  // SFD2 / UNECE: keinerlei Codierungsangebote.
-  if (isSfd2) return [];
-
-  const ids = new Set(codingsForVehicle(vehicle));
-  const vehicleCatalog = codingCatalog
-    .filter((coding) => ids.has(coding.id))
-    .filter((coding) => !isSmartphoneAidId(coding.id) || coding.id === smartphoneAidForVehicle(vehicle, year)?.id)
-    .filter((coding) => !coding.id.startsWith("cockpit-design-") || coding.id === cockpitDesignForVehicle(vehicle, year)?.id)
-    .filter((coding) => {
-      if (!isSfd1 || coding.category !== "Assistenzsysteme") return true;
-      if (coding.id === "mqbevo-lane-onstate" || coding.id === "mqbevo-adaptive-lane") return true;
-      return !/(aktivieren|freischalten|codieren|parametrieren)/i.test(coding.name);
-    });
-
-  const vehicleEntries: UnifiedCodingEntry[] = vehicleCatalog.map((coding) => ({
-    id: `vehicle-${coding.id}`,
-    name: coding.name,
-    price: coding.price,
-    uiGroup: coding.uiGroup as PlatformCodingGroup,
-    hardware: coding.hardware ?? coding.requirements,
-    requirements: isSmartphoneAidId(coding.id) ? coding.requirements : undefined,
-    source: "vehicle" as const,
-  }));
-  const source = codingSources.find((item) => item.platform === vehicle.platform);
-  if (!source) return curateCodingEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year))).map((entry) => isSfd1 && !entry.sfd ? { ...entry, sfd: "Unklar" as const } : entry);
-  const allowedCapabilities = new Set(vehicleCatalog.map((coding) => capabilityForName(coding.name)).filter((value): value is string => Boolean(value)));
-  // The Golf 8 source is not evidence that these newly added features work on
-  // every MQB-evo vehicle. Only use that source for its reference model.
-  const golf8Only = /aircare einstellung speichern|sitzheizung nach bestimmter zeit auf niedere stufe|umlufteinstellung speichern|lüfterstufen.*sanft|(?:ladedruckanzeige|drehmomentanzeige|motorleistung|getriebetemperaturanzeige).*aid/i;
-  const platformEntries: UnifiedCodingEntry[] = source.entries
-    .filter((entry) => vehicle.platform !== "MQBevo" || !golf8Only.test(entry.name) || (vehicle.brand === "Volkswagen" && vehicle.model === "Golf 8 (CD)"))
-    .filter((entry) => !cockpitDesignForVehicle(vehicle) || !isCockpitDesignName(entry.name))
-    .filter((entry) => yearAllowed(entry.name, year))
-    .filter((entry) => modelHintAllowed(entry.name, vehicle))
-    .filter((entry) => { const capability = capabilityForName(entry.name); if (capability && allowedCapabilities.has(capability)) return true; return vehicleCatalog.some((coding) => tokenRelated(entry.name, coding.name)); })
-    .map((entry) => ({ id: entry.id, name: entry.name, price: entry.price, uiGroup: entry.uiGroup, hardware: entry.hardware, interfaceInfo: entry.interfaceInfo, sfd: entry.sfd, source: "platform" as const }));
-  const byName = new Map<string, UnifiedCodingEntry>();
-  for (const entry of [...vehicleEntries, ...platformEntries]) {
-    const key = normalize(entry.name);
-    const previous = byName.get(key);
-    if (!previous) { byName.set(key, entry); continue; }
-    const preferred = entry.source === "vehicle" ? entry : previous;
-    const sfd = previous.sfd === "Ja" || entry.sfd === "Ja" ? "Ja" :
-      previous.sfd === "Unklar" || entry.sfd === "Unklar" ? "Unklar" :
-      previous.sfd === "Nein" || entry.sfd === "Nein" ? "Nein" : undefined;
-    byName.set(key, { ...preferred, sfd });
-  }
-  return curateCodingEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year)))
-    .map((entry) => isSfd1 && !entry.sfd ? { ...entry, sfd: "Unklar" as const } : entry);
-}
 
 function codingExplanation(name: string): string | null {
   const rules: Array<[RegExp, string]> = [
@@ -198,8 +68,8 @@ export default function BookingConfigurator({ integrated = false }: { integrated
       const y = Number(data.year);
       if (!vehicle || !Number.isInteger(y) || y < vehicle.startYear || y > vehicle.endYear || !Array.isArray(data.codings)) return;
       const sfd1 = Boolean(vehicle.sfd1From && y >= vehicle.sfd1From && y < 2024);
-      const sfd2 = Boolean(vehicle.sfd1From && y >= 2024);
-      const ids = new Set(vehicleSpecificCodings(vehicle, y, sfd1, sfd2).map((entry) => entry.id));
+      const sfd2 = needsProtectionReview(y);
+      const ids = new Set(vehicleSpecificCodings(vehicle, y, sfd1, sfd2).filter((entry) => !entry.reviewOnly).map((entry) => entry.id));
       setBrand(vehicle.brand); setVehicleModel(vehicle.model); setYear(y);
       setMode(data.mode === "remote" ? "remote" : "onsite");
       setSelected(data.codings.filter((id: unknown): id is string => typeof id === "string" && ids.has(id)).filter((id: string, i: number, all: string[]) => all.indexOf(id) === i));
@@ -258,8 +128,8 @@ export default function BookingConfigurator({ integrated = false }: { integrated
   const years = selectedVehicle ? Array.from({ length: selectedVehicle.endYear - selectedVehicle.startYear + 1 }, (_, index) => selectedVehicle.endYear - index) : [];
   const hasVehicle = Boolean(selectedVehicle);
   const isSfd1 = Boolean(selectedVehicle?.sfd1From && year >= selectedVehicle.sfd1From && year < 2024);
-  const isSfd2 = Boolean(selectedVehicle?.sfd1From && year >= 2024);
-  const available = useMemo<UnifiedCodingEntry[]>(() => { if (!selectedVehicle || !year) return []; return vehicleSpecificCodings(selectedVehicle, year, isSfd1, isSfd2); }, [isSfd1, isSfd2, selectedVehicle, year]);
+  const requiresProtectionReview = needsProtectionReview(year);
+  const available = useMemo<UnifiedCodingEntry[]>(() => { if (!selectedVehicle || !year) return []; return vehicleSpecificCodings(selectedVehicle, year, isSfd1, requiresProtectionReview); }, [isSfd1, requiresProtectionReview, selectedVehicle, year]);
   // Open the first populated category after choosing a different vehicle.
   useEffect(() => {
     const firstGroup = platformCodingGroups.find((group) => available.some((entry) => entry.uiGroup === group));
@@ -267,7 +137,7 @@ export default function BookingConfigurator({ integrated = false }: { integrated
   }, [available]);
 
   const shown = available.filter((entry) => !showSelectedOnly || selected.includes(entry.id)).filter((entry) => activeGroup === "Alle" || entry.uiGroup === activeGroup);
-  const selectedEntries = available.filter((entry) => selected.includes(entry.id));
+  const selectedEntries = available.filter((entry) => !entry.reviewOnly && selected.includes(entry.id));
   const codingSubtotal = selectedEntries.reduce((sum, entry) => sum + entry.price, 0);
   const sfdRequired = isSfd1 && selectedEntries.some((entry) => entry.sfd === "Ja");
   const sfdFee = sfdRequired ? 9 : 0;
@@ -280,9 +150,9 @@ export default function BookingConfigurator({ integrated = false }: { integrated
   const totalCents = Math.round(total * 100);
   const prepay = Math.round(totalCents * 0.7) / 100;
   const finalpay = (totalCents - Math.round(totalCents * 0.7)) / 100;
-  const bookingDisabled = !hasVehicle || !year || isSfd2 || selected.length === 0;
+  const bookingDisabled = !hasVehicle || !year || requiresProtectionReview || selectedEntries.length === 0;
   const paypalUrl = `https://paypal.me/TiDrechsler/${prepay.toFixed(2)}EUR`;
-  const popular = useMemo(() => { const result: UnifiedCodingEntry[] = []; for (const term of popularTerms) { const hit = available.find((entry) => entry.name.toLocaleLowerCase("de").includes(term) && !result.some((item) => item.id === entry.id)); if (hit) result.push(hit); if (result.length >= 4) break; } return result; }, [available]);
+  const popular = useMemo(() => { const result: UnifiedCodingEntry[] = []; for (const term of popularTerms) { const hit = available.find((entry) => !entry.reviewOnly && entry.name.toLocaleLowerCase("de").includes(term) && !result.some((item) => item.id === entry.id)); if (hit) result.push(hit); if (result.length >= 4) break; } return result; }, [available]);
   const calBase = mode === "remote" ? "https://cal.com/timo-drechsler-lej6jm/remote-codierung" : "https://cal.com/timo-drechsler-lej6jm/vag-codierung-vor-ort";
   const calParams = new URLSearchParams();
   if (selectedVehicle) { calParams.set("fahrzeug", `${brand} ${selectedVehicle.model}`); calParams.set("baujahr", String(year)); }
@@ -306,7 +176,7 @@ export default function BookingConfigurator({ integrated = false }: { integrated
     try { await navigator.clipboard.writeText(link); setShareMessage("Link kopiert – du kannst ihn jetzt teilen."); }
     catch { setShareMessage("Link zum Kopieren auswählen:"); }
   };
-  const toggle = (id: string) => { setQuoteFile(null); setQuoteShareMessage(""); if (!selected.includes(id)) window.dispatchEvent(new Event("td-coding-added")); const entry = available.find((item) => item.id === id); const willSelect = !selected.includes(id); setSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]); if (entry) track(willSelect ? "coding_selected" : "coding_deselected", { coding: entry.name, price: entry.price, group: entry.uiGroup }); };
+  const toggle = (id: string) => { if (!available.some((entry) => entry.id === id && !entry.reviewOnly)) return; setQuoteFile(null); setQuoteShareMessage(""); if (!selected.includes(id)) window.dispatchEvent(new Event("td-coding-added")); const entry = available.find((item) => item.id === id); const willSelect = !selected.includes(id); setSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]); if (entry) track(willSelect ? "coding_selected" : "coding_deselected", { coding: entry.name, price: entry.price, group: entry.uiGroup }); };
   const toggleGroup = (group: PlatformCodingGroup) => setExpandedGroups((current) => current.includes(group) ? current.filter((item) => item !== group) : [...current, group]);
   const savePendingBooking = () => { if (typeof window === "undefined" || mode !== "remote" || !selectedVehicle || selected.length === 0) return; try { window.localStorage.setItem("td_pending_booking", JSON.stringify({ vehicle: `${brand} ${selectedVehicle.model}`, year, codings: chosen, total: Number(total.toFixed(2)), prepay: Number(prepay.toFixed(2)), finalpay: Number(finalpay.toFixed(2)), paypalUrl })); } catch { /* Direct payment links remain usable without browser storage. */ } };
   const openBooking = (save: boolean) => { if (save) savePendingBooking(); track("booking_opened", { mode, codings: selected.length, total: Number(total.toFixed(2)), model: selectedVehicle?.model ?? "" }); };
@@ -318,10 +188,10 @@ export default function BookingConfigurator({ integrated = false }: { integrated
           <li className="rounded-xl bg-white p-3"><span className="font-bold text-blue-700">3 · Termin</span><span className="mt-1 block text-sm leading-5">PC am Fahrzeug verbinden und die vereinbarte Remote-Software starten.</span></li>
           <li className="rounded-xl bg-white p-3"><span className="font-bold text-blue-700">4 · Zahlung</span><span className="mt-1 block text-sm leading-5">70 % vor Beginn, die restlichen 30 % nach Durchführung.</span></li>
         </ol><p className="mt-3 text-sm leading-6 text-slate-600">Remote ist nur möglich, wenn Interface, Verbindung und Fahrzeug die gewünschte Arbeit unterstützen. Falls das nicht passt, stimmen wir eine Alternative ab, bevor ein Termin gebucht wird.</p></div></div>}</section>
-    <section id={integrated ? "booking-fahrzeugauswahl" : "fahrzeugauswahl"} className="card scroll-mt-20 p-4 sm:scroll-mt-24 sm:p-6"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">2 · Fahrzeug</div><h3 className="mt-1 text-xl font-black sm:mt-2 sm:text-2xl">Marke, Modell und Baujahr</h3><div className="mt-3 grid gap-2 sm:gap-3 md:grid-cols-3"><label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Marke</span><select value={brand} onChange={(e) => changeBrand(e.target.value)}><option value="">Marke auswählen</option>{brands.map((item) => <option key={item} value={item}>{item}</option>)}</select></label><label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Modell / Generation</span><select value={vehicleModel} onChange={(e) => changeModel(e.target.value)} disabled={!brand}><option value="">Modell auswählen</option>{models.map((vehicle) => <option key={`${vehicle.brand}-${vehicle.model}`} value={vehicle.model}>{vehicle.model}</option>)}</select></label><label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Baujahr</span><select value={year || ""} onChange={(e) => changeYear(Number(e.target.value))} disabled={!selectedVehicle}><option value="">Baujahr auswählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label></div>{isSfd1 && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"><b>SFD1:</b> Die einmalige Freischaltung von <strong>9,00 €</strong> wird nur berechnet, wenn mindestens eine ausgewählte Codierung SFD benötigt. Sie zählt zum Auftragswert und wird mitrabattiert.</div>}{isSfd2 && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-100 p-3 text-sm leading-6 text-slate-700"><b>SFD2 / UNECE:</b> Für SFD2-Fahrzeuge bieten wir keine Codierungen an. Diagnose und technische Prüfung können weiterhin angefragt werden.</div>}<SaveVehicleCard brand={brand} model={vehicleModel} year={year} codings={selectedEntries.map((entry) => entry.name)} /></section></>}
+    <section id={integrated ? "booking-fahrzeugauswahl" : "fahrzeugauswahl"} className="card scroll-mt-20 p-4 sm:scroll-mt-24 sm:p-6"><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">2 · Fahrzeug</div><h3 className="mt-1 text-xl font-black sm:mt-2 sm:text-2xl">Marke, Modell und Baujahr</h3><div className="mt-3 grid gap-2 sm:gap-3 md:grid-cols-3"><label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Marke</span><select value={brand} onChange={(e) => changeBrand(e.target.value)}><option value="">Marke auswählen</option>{brands.map((item) => <option key={item} value={item}>{item}</option>)}</select></label><label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Modell / Generation</span><select value={vehicleModel} onChange={(e) => changeModel(e.target.value)} disabled={!brand}><option value="">Modell auswählen</option>{models.map((vehicle) => <option key={`${vehicle.brand}-${vehicle.model}`} value={vehicle.model}>{vehicle.model}</option>)}</select></label><label><span className="mb-1.5 block text-sm font-semibold sm:mb-2">Baujahr</span><select value={year || ""} onChange={(e) => changeYear(Number(e.target.value))} disabled={!selectedVehicle}><option value="">Baujahr auswählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label></div>{isSfd1 && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm leading-6 text-slate-700"><b>SFD1:</b> Die einmalige Freischaltung von <strong>9,00 €</strong> wird nur berechnet, wenn mindestens eine ausgewählte Codierung SFD benötigt. Sie zählt zum Auftragswert und wird mitrabattiert.</div>}{requiresProtectionReview && <div className="mt-3 rounded-xl border border-slate-200 bg-slate-100 p-3 text-sm leading-6 text-slate-700"><b>Technische Vorprüfung:</b> {protectionReviewMessage}</div>}<SaveVehicleCard brand={brand} model={vehicleModel} year={year} codings={selectedEntries.map((entry) => entry.name)} /></section></>}
     {integrated && isSfd1 && <p className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700"><b>SFD1:</b> Die einmalige Freischaltung von <strong>9,00 €</strong> wird nur berechnet, wenn mindestens eine ausgewählte Codierung SFD benötigt. Sie zählt zum Auftragswert und wird mitrabattiert.</p>}
-    {integrated && isSfd2 && <p className="rounded-xl border border-slate-200 bg-slate-100 p-3 text-sm text-slate-700"><b>SFD2 / UNECE:</b> Für SFD2-Fahrzeuge bieten wir keine Codierungen an. Diagnose und technische Prüfung können weiterhin angefragt werden.</p>}
-    <section className="coding-list-section card p-4 sm:p-6"><div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">3 · Codierungen</div><h3 className="mt-2 text-xl font-black sm:text-2xl">{selectedVehicle && year ? `${brand} ${selectedVehicle.model} · ${year}` : "Fahrzeug auswählen"}</h3></div><button type="button" disabled={!hasVehicle || !year || isSfd2} onClick={() => downloadQuotePdf({ selectionUrl: makeSelectionUrl(), vehicle: `${brand} ${vehicleModel} · ${year}`, vehicleImage: sideProfiles[vehicleModel] ?? vehicleHeroImage({ brand, model: vehicleModel, year })?.src, entries: available, selected, sfdFee, subtotal, rate, discount, total }).then((file) => { setQuoteFile(file); setQuoteShareMessage(""); }).catch(() => window.alert("Der Kostenvoranschlag konnte nicht erstellt werden. Bitte versuche es erneut."))} className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-3 font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"><FileDown className="h-5 w-5" /> {selectedEntries.length ? "Kostenvoranschlag als PDF" : "Codierliste als PDF"}</button></div>{quoteFile && <div className="mt-3"><button type="button" onClick={shareQuoteFile} className="rounded-lg border border-blue-200 px-4 py-2 font-bold text-blue-700">PDF teilen</button>{quoteShareMessage && <p role="status" className="mt-2 text-sm text-slate-600">{quoteShareMessage}</p>}</div>}{selectedEntries.length > 0 && <div className="mt-4 flex flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50 p-3 sm:flex-row sm:items-center sm:justify-between"><div className="text-sm text-slate-700"><b>{selectedEntries.length} Codierung(en) gewählt</b> · {euro(subtotal)} € Zwischensumme · {Math.round(rate * 100)} % Rabatt · <b>{euro(total)} € gesamt</b></div><button type="button" aria-pressed={showSelectedOnly} onClick={() => setShowSelectedOnly((value) => !value)} className="rounded-lg border border-blue-200 bg-white px-3 py-2 text-xs font-bold text-blue-700">{showSelectedOnly ? "Alle anzeigen" : "Nur ausgewählte anzeigen"}</button></div>}{hasVehicle && year && !isSfd2 && popular.length > 0 && !showSelectedOnly && <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3"><div className="flex items-center gap-2 text-sm font-black text-slate-800"><Sparkles className="h-4 w-4 text-blue-600" /> Häufig gewählt</div><div className="mt-3 flex flex-wrap gap-2">{popular.map((entry) => { const checked = selected.includes(entry.id); return <button key={entry.id} type="button" aria-pressed={checked} onClick={() => toggle(entry.id)} className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${checked ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-blue-300"}`}>{popularLabel(entry.name)} · {entry.price} €</button>; })}</div></div>}{hasVehicle && year && !isSfd2 && <div className="-mx-1 mt-4 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap">{["Alle", ...platformCodingGroups].map((group) => <button type="button" key={group} aria-pressed={activeGroup === group} onClick={() => setActiveGroup(group as "Alle" | PlatformCodingGroup)} className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold ${activeGroup === group ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700"}`}>{group}</button>)}</div>}{!hasVehicle || !year ? <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">Bitte zuerst Marke, Modell und Baujahr auswählen.</div> : isSfd2 ? <div className="mt-6 rounded-xl border border-slate-200 bg-slate-100 p-4 text-sm text-slate-700">SFD2 / UNECE erkannt: Für dieses Fahrzeug werden keine Codierungen angeboten.</div> : shown.length === 0 ? <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">{showSelectedOnly ? "Keine ausgewählte Codierung passt zu diesem Filter." : "Keine passende Codierung in diesem Filter gefunden."}<button type="button" onClick={() => { setActiveGroup("Alle"); setShowSelectedOnly(false); }} className="mt-3 block rounded-lg border border-blue-200 bg-white px-3 py-2 font-semibold text-blue-700">Filter zurücksetzen</button></div> : <div className="mt-5 space-y-2">{platformCodingGroups.map((group) => { const list = shown.filter((entry) => entry.uiGroup === group); if (!list.length) return null; const selectedInGroup = list.filter((entry) => selected.includes(entry.id)).length; const isExpanded = activeGroup !== "Alle" || showSelectedOnly || expandedGroups.includes(group); return <div key={group} className="overflow-hidden rounded-xl border border-slate-200 bg-white"><button type="button" aria-expanded={isExpanded} onClick={() => toggleGroup(group)} className="flex min-h-12 w-full items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-slate-50"><span className="font-black text-blue-700">{group} <span className="font-semibold text-slate-400">({list.length})</span></span><span className="flex items-center gap-2">{selectedInGroup > 0 && <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">{selectedInGroup} gewählt</span>}<ChevronDown className={`h-4 w-4 text-slate-500 ${isExpanded ? "rotate-180" : ""}`} /></span></button>{isExpanded && <div className="border-t border-slate-200 bg-slate-50/60 p-2 sm:p-3"><div className="grid gap-2 lg:grid-cols-2">{list.map((entry) => { const checked = selected.includes(entry.id); return <div key={entry.id} className={`rounded-lg border px-3 py-2.5 ${checked ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white"}`}><label className="flex cursor-pointer items-start justify-between gap-2.5"><span className="flex min-w-0 flex-1 items-start text-sm leading-5"><input className="mr-2.5 mt-0.5 h-4 w-4" type="checkbox" checked={checked} onChange={() => toggle(entry.id)} /><span className="font-bold">{entry.name}</span></span><b className="shrink-0 text-sm">{entry.price} €</b></label>{codingExplanation(entry.name) && <p className="mt-2 text-xs leading-5 text-slate-600">{codingExplanation(entry.name)}</p>}<FunctionExample functionName={entry.name} />{entry.hardware && <div className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-600"><b className="text-slate-700">Fahrzeug-Hardware:</b> {entry.hardware}</div>}{entry.interfaceInfo && <div className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-600"><b className="text-slate-700">Diagnosezugang:</b> {entry.interfaceInfo}</div>}{entry.requirements && <div className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-600"><b className="text-slate-700">Weitere Voraussetzungen:</b> {entry.requirements}</div>}{entry.sfd && entry.sfd !== "Nein" && <div className="mt-2 flex flex-wrap gap-1.5 border-t border-slate-100 pt-2"><SfdBadge value={entry.sfd} /></div>}</div>; })}</div></div>}</div>; })}</div>}
+    {integrated && requiresProtectionReview && <p className="rounded-xl border border-slate-200 bg-slate-100 p-3 text-sm text-slate-700"><b>Technische Vorprüfung:</b> {protectionReviewMessage}</p>}
+    <section className="coding-list-section card p-4 sm:p-6"><div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"><div><div className="text-xs font-bold uppercase tracking-[.16em] text-blue-600 sm:text-sm">3 · Codierungen</div><h3 className="mt-2 text-xl font-black sm:text-2xl">{selectedVehicle && year ? `${brand} ${selectedVehicle.model} · ${year}` : "Fahrzeug auswählen"}</h3></div><button type="button" disabled={!hasVehicle || !year || requiresProtectionReview} onClick={() => downloadQuotePdf({ selectionUrl: makeSelectionUrl(), vehicle: `${brand} ${vehicleModel} · ${year}`, vehicleImage: sideProfiles[vehicleModel] ?? vehicleHeroImage({ brand, model: vehicleModel, year })?.src, entries: available.filter((entry) => !entry.reviewOnly), selected: selectedEntries.map((entry) => entry.id), sfdFee, subtotal, rate, discount, total }).then((file) => { setQuoteFile(file); setQuoteShareMessage(""); }).catch(() => window.alert("Der Kostenvoranschlag konnte nicht erstellt werden. Bitte versuche es erneut."))} className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-3 font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"><FileDown className="h-5 w-5" /> {selectedEntries.length ? "Kostenvoranschlag als PDF" : "Codierliste als PDF"}</button></div>{quoteFile && <div className="mt-3"><button type="button" onClick={shareQuoteFile} className="rounded-lg border border-blue-200 px-4 py-2 font-bold text-blue-700">PDF teilen</button>{quoteShareMessage && <p role="status" className="mt-2 text-sm text-slate-600">{quoteShareMessage}</p>}</div>}{selectedEntries.length > 0 && <div className="mt-4 flex flex-col gap-3 rounded-xl border border-blue-200 bg-blue-50 p-3 sm:flex-row sm:items-center sm:justify-between"><div className="text-sm text-slate-700"><b>{selectedEntries.length} Codierung(en) gewählt</b> · {euro(subtotal)} € Zwischensumme · {Math.round(rate * 100)} % Rabatt · <b>{euro(total)} € gesamt</b></div><button type="button" aria-pressed={showSelectedOnly} onClick={() => setShowSelectedOnly((value) => !value)} className="rounded-lg border border-blue-200 bg-white px-3 py-2 text-xs font-bold text-blue-700">{showSelectedOnly ? "Alle anzeigen" : "Nur ausgewählte anzeigen"}</button></div>}{hasVehicle && year && !requiresProtectionReview && popular.length > 0 && !showSelectedOnly && <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3"><div className="flex items-center gap-2 text-sm font-black text-slate-800"><Sparkles className="h-4 w-4 text-blue-600" /> Häufig gewählt</div><div className="mt-3 flex flex-wrap gap-2">{popular.map((entry) => { const checked = selected.includes(entry.id); return <button key={entry.id} type="button" aria-pressed={checked} onClick={() => toggle(entry.id)} className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${checked ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700 hover:border-blue-300"}`}>{popularLabel(entry.name)} · {entry.price} €</button>; })}</div></div>}{hasVehicle && year && !requiresProtectionReview && <div className="-mx-1 mt-4 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap">{["Alle", ...platformCodingGroups].map((group) => <button type="button" key={group} aria-pressed={activeGroup === group} onClick={() => setActiveGroup(group as "Alle" | PlatformCodingGroup)} className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold ${activeGroup === group ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700"}`}>{group}</button>)}</div>}{!hasVehicle || !year ? <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">Bitte zuerst Marke, Modell und Baujahr auswählen.</div> : requiresProtectionReview ? <div className="mt-6 rounded-xl border border-slate-200 bg-slate-100 p-4 text-sm text-slate-700">{protectionReviewMessage} <Link href="/#kontakt" className="font-semibold underline">Vorprüfung anfragen</Link></div> : shown.length === 0 ? <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">{showSelectedOnly ? "Keine ausgewählte Codierung passt zu diesem Filter." : "Keine passende Codierung in diesem Filter gefunden."}<button type="button" onClick={() => { setActiveGroup("Alle"); setShowSelectedOnly(false); }} className="mt-3 block rounded-lg border border-blue-200 bg-white px-3 py-2 font-semibold text-blue-700">Filter zurücksetzen</button></div> : <div className="mt-5 space-y-2">{platformCodingGroups.map((group) => { const list = shown.filter((entry) => entry.uiGroup === group); if (!list.length) return null; const selectedInGroup = list.filter((entry) => selected.includes(entry.id)).length; const isExpanded = activeGroup !== "Alle" || showSelectedOnly || expandedGroups.includes(group); return <div key={group} className="overflow-hidden rounded-xl border border-slate-200 bg-white"><button type="button" aria-expanded={isExpanded} onClick={() => toggleGroup(group)} className="flex min-h-12 w-full items-center justify-between gap-3 px-3 py-2.5 text-left hover:bg-slate-50"><span className="font-black text-blue-700">{group} <span className="font-semibold text-slate-400">({list.length})</span></span><span className="flex items-center gap-2">{selectedInGroup > 0 && <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">{selectedInGroup} gewählt</span>}<ChevronDown className={`h-4 w-4 text-slate-500 ${isExpanded ? "rotate-180" : ""}`} /></span></button>{isExpanded && <div className="border-t border-slate-200 bg-slate-50/60 p-2 sm:p-3"><div className="grid gap-2 lg:grid-cols-2">{list.map((entry) => { const checked = selected.includes(entry.id); return <div key={entry.id} className={`rounded-lg border px-3 py-2.5 ${checked ? "border-blue-500 bg-blue-50" : "border-slate-200 bg-white"}`}><label className="flex cursor-pointer items-start justify-between gap-2.5"><span className="flex min-w-0 flex-1 items-start text-sm leading-5"><input className="mr-2.5 mt-0.5 h-4 w-4" type="checkbox" disabled={entry.reviewOnly} checked={checked} onChange={() => toggle(entry.id)} /><span className="font-bold">{entry.name}</span></span><b className="shrink-0 text-sm">{entry.reviewOnly ? "Vorprüfung" : `${entry.price} €`}</b></label>{entry.reviewOnly && <p className="mt-2 text-xs font-semibold text-amber-800">Vorprüfung erforderlich – sende uns einen Auto-Scan sowie Angaben zu Steuergeräten und Softwarestand. <Link href="/#kontakt" className="underline">Kontakt aufnehmen</Link></p>}{codingExplanation(entry.name) && <p className="mt-2 text-xs leading-5 text-slate-600">{codingExplanation(entry.name)}</p>}<FunctionExample functionName={entry.name} />{entry.hardware && <div className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-600"><b className="text-slate-700">Fahrzeug-Hardware:</b> {entry.hardware}</div>}{entry.interfaceInfo && <div className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-600"><b className="text-slate-700">Diagnosezugang:</b> {entry.interfaceInfo}</div>}{entry.requirements && <div className="mt-2 border-t border-slate-100 pt-2 text-xs leading-5 text-slate-600"><b className="text-slate-700">Weitere Voraussetzungen:</b> {entry.requirements}</div>}{entry.sfd && entry.sfd !== "Nein" && <div className="mt-2 flex flex-wrap gap-1.5 border-t border-slate-100 pt-2"><SfdBadge value={entry.sfd} /></div>}</div>; })}</div></div>}</div>; })}</div>}
     </section>
     {integrated && selectedVehicle && year > 0 && <SaveVehicleCard brand={brand} model={vehicleModel} year={year} codings={selectedEntries.map((entry) => entry.name)} />}
     {selectedEntries.length > 0 && <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4"><button type="button" onClick={shareSelection} className="rounded-lg bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800">Auswahl teilen</button><p role="status" className="mt-2 text-sm text-slate-700">{shareMessage}</p>{shareLink && <input aria-label="Link zur Codierungsauswahl" className="mt-2 w-full" readOnly value={shareLink} onFocus={(event) => event.currentTarget.select()} />}</div>}
