@@ -6,7 +6,7 @@ import GuideSelector from "../components/GuideSelector";
 
 export const metadata: Metadata = {
   title: "VCDS- und VCP-PDF-Anleitungen | TD Fahrzeugcodierung",
-  description: "VCDS- und VCP-Codieranleitungen auswählen: zuerst Marke, Modell und Baujahr, danach passende Anleitungen. PDF-Anleitungen für VAG-Fahrzeuge in Vorbereitung.",
+  description: "VCDS- und VCP-Codieranleitungen: Hersteller auswählen, alle hinterlegten Modelle als Liste anzeigen und nach Fahrzeugwahl Codieranleitungen mit PDF-Preisen sehen.",
   alternates: { canonical: "/codieranleitungen" },
   // Erst indexieren, wenn die ersten tatsächlich kaufbaren PDFs bereitstehen.
   robots: { index: false, follow: true },
@@ -33,7 +33,7 @@ export default function CodieranleitungenPage() {
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:underline"><ArrowLeft size={16} aria-hidden="true" />Zur Startseite</Link>
           <div className="mt-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-700"><LockKeyhole size={15} aria-hidden="true" />PDF-Anleitungen</div>
           <h1 className="mt-5 max-w-3xl text-3xl font-black tracking-tight sm:text-5xl">VCDS- &amp; VCP-Codieranleitungen</h1>
-          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">Wähle zuerst dein Fahrzeug mit Marke, Modell und Baujahr. Anschließend findest du passende Codieranleitungen, etwa für Zeigertest oder Öltemperaturanzeige. Die PDFs sind in Vorbereitung.</p>
+          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">Wähle zunächst den Hersteller und dann dein Fahrzeug aus der vollständigen Modellliste. Anschließend werden die zugeordneten Codierungen mit PDF-Preisen angezeigt. Die Anleitungen sind in Vorbereitung.</p>
         </div>
       </section>
 
