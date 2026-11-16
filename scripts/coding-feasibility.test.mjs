@@ -22,7 +22,7 @@ function loadTs(file) {
 }
 const { vehicles } = loadTs('app/data/catalog');
 const { vehicleSpecificCodings, needsProtectionReview, yearAllowed } = loadTs('app/lib/vehicleCodings');
-const { curateCodingEntries } = loadTs('app/lib/codingDisplay');
+const { curateCodingEntries, mergePrerequisites } = loadTs('app/lib/codingDisplay');
 const entriesFor = (model, year) => {
   const vehicle = vehicles.find((v) => v.model === model); assert.ok(vehicle);
   return vehicleSpecificCodings(vehicle, year, Boolean(vehicle.sfd1From && year >= vehicle.sfd1From && year < 2024), needsProtectionReview(year));
@@ -88,4 +88,9 @@ test('ordinary supported comfort offers remain bookable', () => {
   assert.ok(entries.some((e) => /Komfortblinken/.test(e.name) && !e.reviewOnly));
   assert.ok(entries.some((e) => /Auto-Lock/.test(e.name) && !e.reviewOnly));
   assert.ok(entries.some((e) => /Tagfahrlicht mit Heckleuchten/.test(e.name) && !e.reviewOnly));
+});
+
+
+test('repeated evidence stays readable without dropping specific restrictions', () => {
+  assert.equal(mergePrerequisites('Kamera erforderlich. Software X nötig.', 'Kamera erforderlich.'), 'Kamera erforderlich. Software X nötig.');
 });

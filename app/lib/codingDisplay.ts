@@ -19,7 +19,9 @@ export type UnifiedCodingEntry = {
 
 export function mergePrerequisites(...values: Array<string | undefined>): string | undefined {
   const unique = Array.from(new Set(values.map((value) => value?.trim()).filter((value): value is string => Boolean(value))));
-  return unique.length ? unique.join(" ") : undefined;
+  // A specific hint can already contain a generic one after an earlier merge.
+  const complete = unique.filter((value, index) => !unique.some((other, otherIndex) => otherIndex !== index && other.includes(value)));
+  return complete.length ? complete.join(" ") : undefined;
 }
 
 function mergedEvidence(entries: UnifiedCodingEntry[]) {
