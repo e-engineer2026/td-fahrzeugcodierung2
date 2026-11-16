@@ -325,7 +325,7 @@ export const researchedGuides: readonly ResearchGuide[] = [
     ],
     "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-audi-q5-fy/43570-2",
     "sourceName": "KUFATEC",
-    "access": "Vorschau / Kauf",
+    "access": "Produktinfo / Service",
     "note": "Variante mit/ohne AHK-Vorbereitung PR 1D0/1D8, Luft-/Stahlfederung; über 750 kg ggf. Kühlerlüfter ändern; ab MJ 2024 Anbieter-Einschränkung"
   },
   {
@@ -337,7 +337,7 @@ export const researchedGuides: readonly ResearchGuide[] = [
     ],
     "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-audi-q7-4m/46999",
     "sourceName": "KUFATEC",
-    "access": "Vorschau / Kauf",
+    "access": "Produktinfo / Service",
     "note": "Nicht für US-Importe; Modelljahre vor/ab 2020; laut Anbieter nicht bei Produktion ab 14.08.2023; zulässige Anhängelast und Kühlerlüfter beachten"
   },
   // Volkswagen: Tempomat, Side Assist, AHK; Anleitungszugang erst beim Anbieter prüfen.
@@ -446,7 +446,7 @@ export const researchedGuides: readonly ResearchGuide[] = [
     ],
     "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-vw-golf-8-cd/47110",
     "sourceName": "KUFATEC",
-    "access": "Vorschau / Kauf",
+    "access": "Produktinfo / Service",
     "note": "Komplettset für Limousine/Variant, nicht für Golf R Motor PR DR5; ggf. Kühlerlüftertausch und SFD2-Prüfung"
   },
   {
