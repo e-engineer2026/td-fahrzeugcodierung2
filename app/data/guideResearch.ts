@@ -22,6 +22,128 @@ const leonKL = ["SEAT Leon KL", "CUPRA Leon KL"];
 
 export const researchedGuides: readonly ResearchGuide[] = [
   // Nachrüstungen
+  // SEAT/CUPRA: nach VW, Audi und Škoda recherchiert, gemeinsame Herstellergruppe.
+  {
+    "id": "seat-leon5f-gra",
+    "title": "SEAT Leon 5F: Tempomat GRA mit Lenkstockhebel nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Leon 5F"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-seat-leon-5f/49995",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lenkstockhebel, Freischaltung und Codierdongle; Fahrgestellnummer/Steuergeräte vor Bestellung abgleichen"
+  },
+  {
+    "id": "seat-ibiza-kj-gra",
+    "title": "SEAT Ibiza KJ: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Ibiza KJ"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-seat-ibiza-kj1/44585",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Unterschiede bis MJ 2021/ab MJ 2022; bis MJ 2021 nur ohne Kessy, SFD2 vorab klären"
+  },
+  {
+    "id": "seat-arona-kj-sideassist",
+    "title": "SEAT Arona KJ7: Blind Spot mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Arona KJ7"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-arona-kj7/48730",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Radarsensoren und Spiegelwarnleuchten, Kabelsatz und Freischaltung; SFD2-Varianten nur nach Einzelfallprüfung"
+  },
+  {
+    "id": "seat-ibiza-kj-sideassist",
+    "title": "SEAT Ibiza KJ: Blind Spot mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Ibiza KJ"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-ibiza-kj1/48750",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Radarsensoren und Spiegelgläser mit Warnanzeigen; Codierung und mögliche SFD2-Inbetriebnahme"
+  },
+  {
+    "id": "seat-tarraco-sideassist",
+    "title": "SEAT Tarraco KN2: Blind Spot und Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Tarraco KN2"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-tarraco-kn2/44150",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Links-/Rechtslenkervarianten mit Radarsensoren und Spiegelwarnleuchten; Codierdongle"
+  },
+  {
+    "id": "seat-ateca-kh-gra",
+    "title": "SEAT Ateca KH: Tempomat GRA nachrüsten (Anbieter sucht Testfahrzeug)",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Ateca KH7"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-seat-ateca-kh/49965",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Laut Anbieter derzeit Probeverbau/Testfahrzeug gesucht, keine regulär freigegebene Komplettlösung"
+  },
+  {
+    "id": "seat-leonkl-ahk-cable",
+    "title": "SEAT/CUPRA Leon KL: originale schwenkbare AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Leon KL",
+      "CUPRA Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-ahk-zentralelektrik-fuer-seat-leon-kl/46425",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur Kabelsatz, Original-AHK, Anhängersteuergerät und weitere Hardware separat; SFD und Zulassung prüfen"
+  },
+  {
+    "id": "seat-tarraco-ahk-cable",
+    "title": "SEAT Tarraco KN2: originale schwenkbare AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Tarraco KN2"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-ahk-zentralelektrik-fuer-seat-tarraco-kn2/46446",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Nur Kabelsatz, Original-AHK und Anhängersteuerteil zusätzlich; Codierung der Steuergeräte"
+  },
+  {
+    "id": "cupra-formentor-sideassist",
+    "title": "CUPRA Formentor KM: Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "CUPRA Formentor KM"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-formentor-km7/45815",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Radarsensoren hinten, Türverkleidungen mit Warnanzeigen separat; SFD-Steuergeräte nur mit berechtigtem GeKo freigeben"
+  },
+  {
+    "id": "cupra-formentor-ahk-cable",
+    "title": "CUPRA Formentor KM: originale schwenkbare AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "CUPRA Formentor KM"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-ahk-zentralelektrik-fuer-seat-formentor-km7/46426",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabelsatz für Zentralelektrik, nicht das Komplettset; AHK, Steuergerät, Schalter und Codierung erforderlich"
+  },
   // Škoda: neuer Rechercheblock nach Audi; PR-/Anleitungshinweise je Modell.
   {
     "id": "skoda-fabia-nj-gra",
