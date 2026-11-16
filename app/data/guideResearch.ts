@@ -22,6 +22,460 @@ const leonKL = ["SEAT Leon KL", "CUPRA Leon KL"];
 
 export const researchedGuides: readonly ResearchGuide[] = [
   // Nachrüstungen
+  // SEAT/CUPRA: nach VW, Audi und Škoda recherchiert, gemeinsame Herstellergruppe.
+  {
+    "id": "seat-leon5f-gra",
+    "title": "SEAT Leon 5F: Tempomat GRA mit Lenkstockhebel nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Leon 5F"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-seat-leon-5f/49995",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lenkstockhebel, Freischaltung und Codierdongle; Fahrgestellnummer/Steuergeräte vor Bestellung abgleichen"
+  },
+  {
+    "id": "seat-ibiza-kj-gra",
+    "title": "SEAT Ibiza KJ: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Ibiza KJ"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-seat-ibiza-kj1/44585",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Unterschiede bis MJ 2021/ab MJ 2022; bis MJ 2021 nur ohne Kessy, SFD2 vorab klären"
+  },
+  {
+    "id": "seat-arona-kj-sideassist",
+    "title": "SEAT Arona KJ7: Blind Spot mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Arona KJ7"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-arona-kj7/48730",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Radarsensoren und Spiegelwarnleuchten, Kabelsatz und Freischaltung; SFD2-Varianten nur nach Einzelfallprüfung"
+  },
+  {
+    "id": "seat-ibiza-kj-sideassist",
+    "title": "SEAT Ibiza KJ: Blind Spot mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Ibiza KJ"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-ibiza-kj1/48750",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Radarsensoren und Spiegelgläser mit Warnanzeigen; Codierung und mögliche SFD2-Inbetriebnahme"
+  },
+  {
+    "id": "seat-tarraco-sideassist",
+    "title": "SEAT Tarraco KN2: Blind Spot und Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Tarraco KN2"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-tarraco-kn2/44150",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Links-/Rechtslenkervarianten mit Radarsensoren und Spiegelwarnleuchten; Codierdongle"
+  },
+  {
+    "id": "seat-ateca-kh-gra",
+    "title": "SEAT Ateca KH: Tempomat GRA nachrüsten (Anbieter sucht Testfahrzeug)",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Ateca KH7"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-seat-ateca-kh/49965",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Laut Anbieter derzeit Probeverbau/Testfahrzeug gesucht, keine regulär freigegebene Komplettlösung"
+  },
+  {
+    "id": "seat-leonkl-ahk-cable",
+    "title": "SEAT/CUPRA Leon KL: originale schwenkbare AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Leon KL",
+      "CUPRA Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-ahk-zentralelektrik-fuer-seat-leon-kl/46425",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur Kabelsatz, Original-AHK, Anhängersteuergerät und weitere Hardware separat; SFD und Zulassung prüfen"
+  },
+  {
+    "id": "seat-tarraco-ahk-cable",
+    "title": "SEAT Tarraco KN2: originale schwenkbare AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Tarraco KN2"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-ahk-zentralelektrik-fuer-seat-tarraco-kn2/46446",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Nur Kabelsatz, Original-AHK und Anhängersteuerteil zusätzlich; Codierung der Steuergeräte"
+  },
+  {
+    "id": "cupra-formentor-sideassist",
+    "title": "CUPRA Formentor KM: Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "CUPRA Formentor KM"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-formentor-km7/45815",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Radarsensoren hinten, Türverkleidungen mit Warnanzeigen separat; SFD-Steuergeräte nur mit berechtigtem GeKo freigeben"
+  },
+  {
+    "id": "cupra-formentor-ahk-cable",
+    "title": "CUPRA Formentor KM: originale schwenkbare AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "CUPRA Formentor KM"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-ahk-zentralelektrik-fuer-seat-formentor-km7/46426",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabelsatz für Zentralelektrik, nicht das Komplettset; AHK, Steuergerät, Schalter und Codierung erforderlich"
+  },
+  // Škoda: neuer Rechercheblock nach Audi; PR-/Anleitungshinweise je Modell.
+  {
+    "id": "skoda-fabia-nj-gra",
+    "title": "Škoda Fabia 3 NJ: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Fabia 3 NJ"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-skoda-fabia-nj/49940-2",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Verschiedene Setvarianten mit Lenkstockhebel, Freischaltung und Diagnose; vor/nach Modelljahrwechsel prüfen"
+  },
+  {
+    "id": "skoda-scala-nw-gra",
+    "title": "Škoda Scala NW: Tempomat GRA mit Freischaltung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Scala NW"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-skoda-scala-nw1/49975",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur ohne Kessy PR 4I2/4K3, mit/ohne MuFu-Lenkrad; SFD2-Ausstattung und Codierdongle prüfen"
+  },
+  {
+    "id": "skoda-octavia5e-gra",
+    "title": "Škoda Octavia 5E: Tempomat GRA mit Bedieneinheit nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Octavia 3 5E",
+      "Octavia 3 5E Facelift"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-skoda-octavia-5e/49990",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Komplettset mit Lenkstockhebel und Freischaltung; die ausgewählte Produktseite weist derzeit keine frei abrufbare Anleitung aus"
+  },
+  {
+    "id": "skoda-kodiaqns-blindspot",
+    "title": "Škoda Kodiaq NS: Blind Spot und Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-blind-spot-sensor-inkl.-ausparkassistent-fuer-skoda-kodiaq-ns7/41950-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Ausführungen bis 2021/ab 2022, PR KA0/KA2/KA6 und LHD/RHD; Radar, Spiegelwarnleuchten und Codierung"
+  },
+  {
+    "id": "skoda-karoqnu-sideassist",
+    "title": "Škoda Karoq NU: Blind Spot/Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Karoq NU"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-skoda-karoq-nu7/43490-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Umfeldkamera PR KA6 oder KA0/KA1/KA2 und vorhandene PDC für Ausparkassistent; SFD2-Variante prüfen"
+  },
+  {
+    "id": "skoda-karoq-kodiaq-ahk",
+    "title": "Škoda Karoq/Kodiaq: schwenkbare AHK mit Original-Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Karoq NU",
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-anhaengerkupplung-zentralelektrik-fuer-skoda-karoq-nu-kodiaq-ns/44655",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur fahrzeugspezifischer Kabelsatz; AHK, Steuergerät, Taster und Stoßfängerkabel separat, Codierdongle nötig"
+  },
+  {
+    "id": "skoda-superb3v-ahk",
+    "title": "Škoda Superb 3V: schwenkbare Original-AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Superb 3V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-ahk-zentralelektrik-fuer-skoda-superb-3v/45975",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabelsatz allein, passende AHK, Steuergerät und Taster sowie Diagnosecodierung erforderlich"
+  },
+  // Audi: Nachrüstungen separat nach VW recherchiert; Typen und PR-Nummern beachten.
+  {
+    "id": "audi-a1-8x-gra",
+    "title": "Audi A1 8X: Geschwindigkeitsregelanlage GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A1 8X"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-audi-a1-8x/40205-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lenksäulenelektronik prüfen (5K0 953 569 F ungeeignet), für Fahrzeuge ohne Keyless; Diagnoseaktivierung nötig"
+  },
+  {
+    "id": "audi-a1-gb-gra",
+    "title": "Audi A1 GB: Tempomat GRA mit Lenkstockhebel nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A1 GB"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-audi-a1-gb/44575-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur für Fahrzeuge mit Speedlimiter PR 8T9; Versionen vor/nach 21.03.2024 und SFD-Einschränkungen prüfen"
+  },
+  {
+    "id": "audi-a3-8v-gra",
+    "title": "Audi A3 8V: Tempomat GRA mit Lenkstockschalter nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A3 / S3 8V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-audi-a3-8v/39710",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lenkstockhebel, Abdeckung und Freischaltung; nicht geeignet für Motor DGEA"
+  },
+  {
+    "id": "audi-a4-8k-gra",
+    "title": "Audi A4 8K: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 8K"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-audi-a4-8k/35720",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabel und Lenkstockhebel mit/ohne Multifunktionslenkrad; Lenksäulensteuergerät und Freischaltung vorab prüfen"
+  },
+  {
+    "id": "audi-a5f5-sideassist",
+    "title": "Audi A5 F5: Side Assist/Blind Spot mit Spiegelwarnanzeigen nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A5 / S5 F5"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-audi-side-assist-fuer-audi-a5-f5/41690",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Highline-Türsteuergeräte nach Teilenummer prüfen, ggf. Austausch; ab Modelljahr 2024 laut Anbieter nicht möglich"
+  },
+  {
+    "id": "audi-q3f3-sideassist",
+    "title": "Audi Q3 F3: Side Assist/Blind Spot nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Q3 F3"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-side-assist-fuer-audi-q3-f3/43255",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "SUV-/Sportback- und LHD-/RHD-Versionen; Spiegelkappen und Radarsensoren, ggf. SFD2-Freigabe"
+  },
+  {
+    "id": "audi-q3f3-rvc",
+    "title": "Audi Q3 F3: Original-Rückfahrkamera mit Hilfslinien nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Q3 F3"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-aps-advance-rueckfahrkamera-fuer-audi-q3-f3/43260",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Baujahr bis 2020 oder ab 2021 und PR-Codes I8W/7UF/7UG unterscheiden; SFD2-Fahrzeuge gesondert"
+  },
+  {
+    "id": "audi-q5fy-ahk",
+    "title": "Audi Q5 FY: schwenkbare Original-AHK nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Q5 FY"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-audi-q5-fy/43570-2",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Variante mit/ohne AHK-Vorbereitung PR 1D0/1D8, Luft-/Stahlfederung; über 750 kg ggf. Kühlerlüfter ändern; ab MJ 2024 Anbieter-Einschränkung"
+  },
+  {
+    "id": "audi-q7-4m-ahk",
+    "title": "Audi Q7 4M: schwenkbare Original-AHK nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Q7 4M"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-audi-q7-4m/46999",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Nicht für US-Importe; Modelljahre vor/ab 2020; laut Anbieter nicht bei Produktion ab 14.08.2023; zulässige Anhängelast und Kühlerlüfter beachten"
+  },
+  // Volkswagen: Tempomat, Side Assist, AHK; Anleitungszugang erst beim Anbieter prüfen.
+  {
+    "id": "vw-polo6r-gra-ohne-mfa",
+    "title": "VW Polo 6R: Tempomat GRA ohne Multifunktionsanzeige nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Polo 6R"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-anlage-fuer-vw-polo-6r-ohne-mfa/37922-2",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lenkstockhebel und Verkabelung; Motorsteuergerät freischalten, lange Codierung gesondert prüfen"
+  },
+  {
+    "id": "vw-polo6r-gra-mit-mfa",
+    "title": "VW Polo 6R: Tempomat GRA mit Multifunktionsanzeige nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Polo 6R"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-anlage-fuer-vw-polo-6r-mit-mfa/37922-3",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Unterschiedliche Ausführung bis/ab Modelljahr 2013; Lenkstockhebel, Motorsteuergerät-Freischaltung und lange Codierung prüfen"
+  },
+  {
+    "id": "vw-troc-gra-kit",
+    "title": "VW T-Roc A11: Tempomat GRA inklusive Lenkradtasten nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "T-Roc A11"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-vw-t-roc-a11-d11-ac7-ac8/43825",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Modell- und PR-abhängige Varianten mit/ohne MuFu; Lenkstock, Bedieneinheit, SVM/Freischaltung und Modelljahr prüfen"
+  },
+  {
+    "id": "vw-touran5t-gra-bis18",
+    "title": "VW Touran 5T bis Modelljahr 2018: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-vw-touran-5t-bis-2018/44240-2",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Varianten je MuFu, Speedlimiter und Lenkrad-PR; nicht mit Ausführung ab MJ 2019 verwechseln"
+  },
+  {
+    "id": "vw-touran5t-gra-ab19",
+    "title": "VW Touran 5T ab Modelljahr 2019: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-vw-touran-5t-ab-2019/44377-4",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Varianten nach PR für Multifunktionslenkrad, Speedlimiter und Kessy; mögliche Freischaltung beachten"
+  },
+  {
+    "id": "vw-troc-sideassist-kit",
+    "title": "VW T-Roc A11: Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "T-Roc A11"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-vw-t-roc-a11-d11/42660-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Zwei Radarsensoren hinten, Spiegelwarnanzeigen und Kabelsatz; Varianten A11 bis 2021 und D11 ab 2022 sowie SFD prüfen"
+  },
+  {
+    "id": "vw-touran5t-sideassist-kit",
+    "title": "VW Touran 5T: Blind Spot/Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-vw-touran-5t/41695",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Komplettset mit Radarsensoren und Spiegelwarnanzeigen; Links-/Rechtslenker und Modelljahre bis 2019/ab 2020 trennen"
+  },
+  {
+    "id": "vw-arteon3h-sideassist-kit",
+    "title": "VW Arteon 3H: Blind Spot/Side Assist und Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Arteon 3H"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-vw-arteon-3h/41722",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Unterschiedliche Ausführungen bis 2019/ab 2020; hintere Radarsensoren und Spiegelwarnanzeige, Codierung und Komponentenprüfung"
+  },
+  {
+    "id": "vw-golf8-schwenk-ahk",
+    "title": "VW Golf 8: originale schwenkbare Anhängerkupplung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-vw-golf-8-cd/47110",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Komplettset für Limousine/Variant, nicht für Golf R Motor PR DR5; ggf. Kühlerlüftertausch und SFD2-Prüfung"
+  },
+  {
+    "id": "vw-tiguan-touran-ahk-cable",
+    "title": "VW Tiguan II/Touran 5T: schwenkbare AHK mit fahrzeugspezifischem Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)",
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-anhaengerkupplung-zentralelektrik-touran-5t-tiguan-ad1-bw2/41490",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur Kabelsatz der Zentralelektrik; Kupplung, Steuergerät, Taster und Stoßfängerkabel separat, abschließende Codierung erforderlich"
+  },
+  {
+    "id": "vw-passat-arteon-troc-ahk-cable",
+    "title": "VW Passat B8/Arteon/T-Roc: originale AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Passat B8 (3G)",
+      "Arteon 3H",
+      "T-Roc A11"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-zentralelektrik-fuer-vw-passat-arteon-t-roc/40950",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabelsatz allein kein Komplettset; Passat/Arteon schwenkbar, T-Roc abnehmbar; AHK, Steuergerät, Taster und Codierung zusätzlich nötig"
+  },
   // Neue, quellenbasierte Recherche vom 16.11.2026. Fremde Einbauunterlagen nicht als eigene PDFs anbieten.
   {
     "id": "passat8-sideassist",
