@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, CreditCard, LockKeyhole, UserRound } from "lucide-react";
 import GuideSelector from "../components/GuideSelector";
+import { formatGuidePrice, guidePriceTiers } from "../lib/guidePricing";
 
 export const metadata: Metadata = {
   title: "VCDS- und VCP-PDF-Anleitungen | TD Fahrzeugcodierung",
@@ -44,19 +45,14 @@ export default function CodieranleitungenPage() {
       <section className="container-x pb-8 sm:pb-12" aria-labelledby="anleitungen-preise">
         <div className="mx-auto max-w-5xl rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
           <h2 id="anleitungen-preise" className="text-base font-black">PDF-Preise nach Aufwand</h2>
-          <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-lg bg-slate-50 px-2 py-3">
-              <p className="text-xs font-semibold text-slate-600">Einfach</p>
-              <p className="mt-1 text-lg font-black text-blue-700">6,99 €</p>
-            </div>
-            <div className="rounded-lg bg-slate-50 px-2 py-3">
-              <p className="text-xs font-semibold text-slate-600">Mittel</p>
-              <p className="mt-1 text-lg font-black text-blue-700">9,99 €</p>
-            </div>
-            <div className="rounded-lg bg-slate-50 px-2 py-3">
-              <p className="text-xs font-semibold text-slate-600">Aufwändig</p>
-              <p className="mt-1 text-lg font-black text-blue-700">14,99 €</p>
-            </div>
+          <p className="mt-1 text-xs text-slate-600">Acht Stufen in 2-Euro-Schritten, je nach Aufwand der einzelnen Anleitung.</p>
+          <div className="mt-3 grid grid-cols-2 gap-2 text-center sm:grid-cols-4 lg:grid-cols-8">
+            {guidePriceTiers.map((price, index) => (
+              <div key={price} className="rounded-lg bg-slate-50 px-2 py-2.5">
+                <p className="text-xs font-semibold text-slate-600">Stufe {index + 1}</p>
+                <p className="mt-1 text-base font-black text-blue-700">{formatGuidePrice(price)}</p>
+              </div>
+            ))}
           </div>
           <p className="mt-3 flex items-start gap-2 text-xs leading-6 text-slate-600">
             <CreditCard size={16} className="mt-1 shrink-0 text-blue-700" aria-hidden="true" />
