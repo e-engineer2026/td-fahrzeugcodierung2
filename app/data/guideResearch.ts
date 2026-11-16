@@ -2,7 +2,7 @@
 // Es handelt sich um Verweise auf Fremdquellen, nicht um eigene TD-PDF-Anleitungen.
 // Vollständige Anleitungen Dritter dürfen nicht als eigene Download-Produkte angeboten werden.
 export type ResearchCategory = "Nachrüstungen" | "Umbauten";
-export type InstructionAccess = "öffentlich" | "Vorschau / Kauf" | "beim Nachrüstsatz" | "Produktinfo / Service";
+export type InstructionAccess = "öffentlich" | "Vorschau / Kauf" | "beim Nachrüstsatz" | "Produktinfo / Service" | "Produktinformation" | "Anbieterleistung";
 
 export type ResearchGuide = {
   id: string;
@@ -13,6 +13,7 @@ export type ResearchGuide = {
   sourceName: string;
   access: InstructionAccess;
   note: string;
+  topic?: "Scheinwerfer & Licht" | "ACC & pACC" | "Lenkrad & Bedienung" | "Cockpit & Infotainment";
 };
 
 const golf7 = ["Golf 7 (5G)"];
@@ -356,6 +357,408 @@ export const researchedGuides: readonly ResearchGuide[] = [
     note: "Praxisbericht zu MIB2, Antennenverstärker und Leitungen; Infotainment-Version prüfen",
   },
   // Umbauten
+  // Zusätzliche quellenbasierte Umbauten vom 16.11.2026, ohne vorhandene Themen zu duplizieren.
+  {
+    "id": "golf8-iq-light",
+    "title": "VW Golf 8: auf IQ.LIGHT-Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-iq-light-mit-dynamischem-blinklicht-fuer-vw-golf-8-viii/49100",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Scheinwerfersatz mit Anschlussanleitungs-Vorschau; aLWR und GeKo-/SFD-Prüfung sowie fachgerechte Kalibrierung nötig"
+  },
+  {
+    "id": "golf8-iq-light-alwr",
+    "title": "VW Golf 8: automatische Leuchtweitenregulierung für IQ.LIGHT nachrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-automatische-leuchtweitenregulierung-alwr-komplettset-fuer-vw-golf-8-viii-cd-cg/49660",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "aLWR-Komplettset; vor Dongle-Inbetriebnahme Steuergerät zeitweise per berechtigtem GeKo-Zugang freischalten, Remoteunterstützung erforderlich"
+  },
+  {
+    "id": "t61-led-front",
+    "title": "VW T6.1: Halogen auf originale LED-Scheinwerfer umbauen",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Transporter / Multivan T6.1"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-scheinwerfer-led-tfl-fuer-vw-t6.1-sh-sj/44405",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Scheinwerfer/Steuergeräte und Codierhilfe; automatische Leuchtweitenregulierung muss zusätzlich installiert werden, anschließend Grundeinstellung"
+  },
+  {
+    "id": "t61-led-alwr",
+    "title": "VW T6.1: automatische Leuchtweitenregulierung für LED-Scheinwerfer nachrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Transporter / Multivan T6.1"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-alwr-komplettset-fuer-vw-t6.1-sh/46280",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Gateway-Kompatibilität prüfen; separates Codierinterface und professionelle Grundeinstellung nötig"
+  },
+  {
+    "id": "octavia-nx-matrix",
+    "title": "Škoda Octavia 4 NX: auf Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Octavia 4 NX"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-mit-led-tfl-fuer-skoda-octavia-nx/49270",
+    "sourceName": "KUFATEC",
+    "access": "Produktinformation",
+    "note": "Hersteller sucht aktuell Probeverbau; keine allgemeine Komplettanleitung oder allgemeine Verfügbarkeit bestätigt; 8G1 und aLWR nötig"
+  },
+  {
+    "id": "leonkl-matrix",
+    "title": "SEAT/CUPRA Leon KL: auf Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "SEAT Leon KL",
+      "CUPRA Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-mit-led-tfl-fuer-seat-leon-kl/49320",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur mit Fernlichtassistent PR 8G1 und separater aLWR; Freigabe ggf. FOD-Shop, SFD2 und MJ-/PR-Abgleich"
+  },
+  {
+    "id": "formentor-matrix",
+    "title": "CUPRA Formentor KM: auf originale Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "CUPRA Formentor KM"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-mit-led-tfl-fuer-seat-formentor-km7/49330",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Originale Matrix-Scheinwerfer mit Steuerteilen; weitere aLWR-, Fernlichtassistent- und SFD-Voraussetzungen vor Kauf prüfen"
+  },
+  {
+    "id": "golf8-acc-komplett",
+    "title": "VW Golf 8: Radar-ACC vollständig nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-automatische-distanzregelung-acc-fuer-vw-golf-8/50680",
+    "sourceName": "KUFATEC",
+    "access": "Anbieterleistung",
+    "note": "Komplettumbau laut Anbieter mit FIN-bezogenem Umfang; SFD1/SFD2, Assistenzhardware und Kalibrierung vorab prüfen"
+  },
+  {
+    "id": "octavia-nx-acc-komplett",
+    "title": "Škoda Octavia 4 NX: Radar-ACC vollständig nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Octavia 4 NX"
+    ],
+    "sourceUrl": "https://kufatec.com/de/skoda/octavia/octavia-nx/",
+    "sourceName": "KUFATEC",
+    "access": "Produktinformation",
+    "note": "Hersteller listet Komplettset Artikel 50665; Baureihe, Steuergeräte und SFD2 sowie Inbetriebnahme nur VIN-bezogen"
+  },
+  {
+    "id": "leon-kl-acc-komplett",
+    "title": "SEAT/CUPRA Leon KL: Radar-ACC vollständig nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "SEAT Leon KL",
+      "CUPRA Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-automatische-distanzregelung-acc-fuer-seat-leon-kl/50825",
+    "sourceName": "KUFATEC",
+    "access": "Anbieterleistung",
+    "note": "Anbieter-Komplettset für Seat Leon KL, bei CUPRA Leon Einzelfallprüfung; VIN, Freigaben, Steuergeräte und Radar-Kalibrierung notwendig"
+  },
+  {
+    "id": "golf7-xenon-osram-led",
+    "title": "Golf 7 Vor-Facelift: Xenon auf zugelassene LED-Retrofit-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Golf 7 (5G)"
+    ],
+    "sourceUrl": "https://carwiki.de/golf-7-led-scheinwerfer-dynamische-blinker/",
+    "sourceName": "CarWiki-Ratgeber",
+    "access": "öffentlich",
+    "note": "Sonderfall Xenon mit LED-TFL: ggf. AFS-Steuerteil durch LWR und Zusatzleitungen ersetzen; Genehmigung für genaue Ausführung prüfen"
+  },
+  {
+    "id": "poloaw-halogen-led",
+    "title": "Polo AW: Halogen auf originale LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Polo AW"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-scheinwerfer-led-tfl-fuer-vw-polo-aw1/42270-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "GTI-/Standardvariante beachten; aLWR fehlt im Scheinwerfersatz und muss je nach Ausführung ergänzt werden"
+  },
+  {
+    "id": "a3-8v-halogen-bixenon",
+    "title": "Audi A3 8V: Halogen auf originale Bi-Xenon-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "A3 / S3 8V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-adapter-bi-xenonscheinwerfer-fuer-audi-a3-8v/41027",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabeladapter genügt nicht; BCM, aLWR und Scheinwerferreinigungsanlage sowie Codierung beachten"
+  },
+  {
+    "id": "a3-8v-alwr",
+    "title": "Audi A3 8V: automatische Leuchtweitenregulierung für Xenon nachrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "A3 / S3 8V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-alwr-komplettset-fuer-audi-a3-8v/39254",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Set-Variante nur bis MJ 2016; Antrieb, Dämpferregelung, Gateway/BCM und SRA beachten"
+  },
+  {
+    "id": "q3-f3-led-matrix",
+    "title": "Audi Q3 F3: LED- auf Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Q3 F3"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-mit-led-tfl-und-dynamischen-blinker-fuer-audi-q3-f3/43800",
+    "sourceName": "KUFATEC",
+    "access": "Anbieterleistung",
+    "note": "Einbau nur beim Anbieter vor Ort; Frontkamera QK1/QK2, Adapter, Schlechtwetter-Lichtschalter und Codierung erforderlich"
+  },
+  {
+    "id": "golf7-pacc-praxis",
+    "title": "Golf 7 Facelift: ACC auf prädiktives ACC (pACC) erweitern, Praxisbericht",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Golf 7 (5G)"
+    ],
+    "sourceUrl": "https://www.motor-talk.de/blogs/louk/praediktives-acc-pacc-retrofitting-t7326706.html",
+    "sourceName": "Motor-Talk-Praxisbericht",
+    "access": "öffentlich",
+    "note": "Erfahrungsbericht am Golf 7 Facelift; vorhanden sein müssen geeigneter ACC-Radar, High-Kamera und Navigation, Freigaben/Parameter fahrzeugspezifisch"
+  },
+  {
+    "id": "golf7-dome-flat-acc",
+    "title": "Golf 7: ACC-Domradar auf flachen Radar umbauen",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Golf 7 (5G)"
+    ],
+    "sourceUrl": "https://www.vw-retrofit.co.uk/product/dome-to-flat-radar-upgrade/",
+    "sourceName": "VW Retrofit",
+    "access": "Anbieterleistung",
+    "note": "Fachbetrieb übernimmt CP-Anpassung, Radarhalter, Codierung und ADAS-Kalibrierung; Fahrzeugkompatibilität nur nach FIN"
+  },
+  {
+    "id": "octavia5e-acc-komplett",
+    "title": "Škoda Octavia 5E: automatisches ACC-Abstandssystem komplett nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Octavia 3 5E",
+      "Octavia 3 5E Facelift"
+    ],
+    "sourceUrl": "https://kufatec.com/en/kufatec-automatic-distance-control-acc-for-skoda-octavia-5e/43565",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Umfang abhängig von FIN, Radar/Sensorik und Bremsenelektronik; Follow-to-Stop nur bei DSG mit passendem ABS"
+  },
+  {
+    "id": "tiguan2-acc-komplett",
+    "title": "VW Tiguan II: ACC mit Radar und Steuergeräteintegration nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Tiguan II (AD/BW)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-automatische-distanzregelung-acc-fuer-vw-tiguan-ad1-ax1-bw2-bj2/41400",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Komplettsystem mit fahrzeugspezifischen Varianten, ESP-/Bremsensteuerung und Radar-Kalibrierung"
+  },
+  {
+    "id": "audiq3-f3-acc-komplett",
+    "title": "Audi Q3 F3: automatisches ACC-Abstandssystem nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Q3 F3"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-automatische-distanzregelung-acc-fuer-audi-q3-f3/43650",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Komplettset und Anleitungsvorschau; VIN-Prüfung vor Kauf; bei Hybrid/neueren SFD-Varianten gesonderte Prüfung"
+  },
+  {
+    "id": "ateca-kh-acc",
+    "title": "SEAT Ateca KH: ACC-Radar und Abstandsregelung nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "SEAT Ateca KH7"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-automatische-distanzregelung-acc-fuer-seat-ateca-kh/43610",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Komplettset mit Anleitungsvorschau; fahrzeugspezifische Teile, ACC-Bedienung und Kalibrierung beachten"
+  },
+  {
+    "id": "mqb-stauassistent",
+    "title": "MQB: ACC und Lane Assist zum Stauassistenten erweitern",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Golf 7 (5G)",
+      "Passat B8 (3G)",
+      "Tiguan II (AD/BW)",
+      "Arteon 3H",
+      "Superb 3V",
+      "SEAT Leon 5F"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-acc-option-stauassistent-fuer-mqb/43774",
+    "sourceName": "KUFATEC",
+    "access": "Anbieterleistung",
+    "note": "Nur geeignete Frontkamera 3Q0/2Q0, ACC, Lane Assist, Automatikgetriebe und elektrische Parkbremse; kein universeller VCDS-Schalter"
+  },
+  {
+    "id": "a4-b9-gra-acc",
+    "title": "Audi A4 B9: Geschwindigkeitsregelanlage auf Radar-ACC umbauen",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "A4 / S4 B9"
+    ],
+    "sourceUrl": "https://www.k-electronic-shop.de/AUDI/A4/A4-8W-B9/Komfort---Nuetzliches-A4-8W-B9/",
+    "sourceName": "k-electronic",
+    "access": "Anbieterleistung",
+    "note": "Anbieter nennt für ACC ausschließlich individuellen Vor-Ort-Umbau; Radar, Bremsenelektronik und weitere Steuergeräte nötig, keine öffentliche Anleitung"
+  },
+  {
+    "id": "golf7-mufu-lenkrad",
+    "title": "Golf 7: Lenkrad ohne MuFu auf Multifunktionslenkrad/ACC-Tasten umrüsten",
+    "category": "Umbauten",
+    "topic": "Lenkrad & Bedienung",
+    "models": [
+      "Golf 7 (5G)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-multifunktionslenkrad-mfl-fuer-vw-golf-7/39958",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabelsatz allein reicht nicht: Lenkrad, Tasten, Lenkstockhebel, ggf. Gateway High und Leitung zum Motorsteuergerät; Airbagarbeiten nur durch Fachpersonal"
+  },
+  {
+    "id": "a3-8v-mufu-lenkrad",
+    "title": "Audi A3 8V: Basislenkrad auf Multifunktionslenkrad umrüsten",
+    "category": "Umbauten",
+    "topic": "Lenkrad & Bedienung",
+    "models": [
+      "A3 / S3 8V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-multifunktionslenkrad-fuer-audi-a3-8v/40097",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Original-MuFu und ggf. Gateway High zusätzlich erforderlich; Fachbetrieb für Airbag-/Lenkradarbeiten"
+  },
+  {
+    "id": "t6-mufu-lenkrad",
+    "title": "VW T6: Multifunktionslenkrad mit GRA-/ACC-Bedienung nachrüsten",
+    "category": "Umbauten",
+    "topic": "Lenkrad & Bedienung",
+    "models": [
+      "Transporter T6"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-multifunktionslenkrad-fuer-vw-t6-sg/41427",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabelsatz mit Anleitungsvorschau; MFL, Lenkstockhebel und Highline-BCM zusätzlich; GRA/ACC abhängig von Motorkennbuchstabe"
+  },
+  {
+    "id": "poloaw-gra-lenkrad",
+    "title": "VW Polo AW: Speedlimiter auf Lenkradtempomat (GRA) umrüsten",
+    "category": "Umbauten",
+    "topic": "Lenkrad & Bedienung",
+    "models": [
+      "Polo AW"
+    ],
+    "sourceUrl": "https://www.k-electronic-shop.de/VOLKSWAGEN/Polo/Polo-AW/Assistenzsysteme---Tempomat-Polo-AW/",
+    "sourceName": "k-electronic",
+    "access": "beim Nachrüstsatz",
+    "note": "Nachrüstpaket mit MuFu-Tasten und SVM-Dokument; Vor-Facelift MJ 2018–2021, Ausstattung PR 8T9 und PR GP0 prüfen"
+  },
+  {
+    "id": "mqb2020-lenkradheizung",
+    "title": "MQB evo: auf beheizbares Multifunktionslenkrad umrüsten",
+    "category": "Umbauten",
+    "topic": "Lenkrad & Bedienung",
+    "models": [
+      "Golf 8 (CD)",
+      "Octavia 4 NX",
+      "SEAT Leon KL",
+      "CUPRA Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-beheizbares-lenkrad-lenkradheizung-fuer-mqb2020-meb/46141-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Anleitungsvorschau und Kabelsatz; beheizbares Lenkrad, Schleifring/Lenksäulensteuerteil, Ausstattung und SFD1/SFD2 prüfen"
+  },
+  {
+    "id": "golf7-aid-digitalcluster",
+    "title": "Golf 7: Analogtacho auf Active Info Display (AID) umbauen",
+    "category": "Umbauten",
+    "topic": "Cockpit & Infotainment",
+    "models": [
+      "Golf 7 (5G)"
+    ],
+    "sourceUrl": "https://retrofitinfo.com/blog/golf-7-digital-cluster-retrofit-physical-install-wiring-guide",
+    "sourceName": "RetrofitInfo",
+    "access": "öffentlich",
+    "note": "Hardware-Ratgeber zu AID, Blende und MOST; Komponentenschutz, Wegfahrsperre und Schlüssel nur autorisiert online anlernen"
+  },
+  {
+    "id": "golf7-mib1-mib2",
+    "title": "Golf 7: MIB1 auf MIB2-Infotainment umbauen",
+    "category": "Umbauten",
+    "topic": "Cockpit & Infotainment",
+    "models": [
+      "Golf 7 (5G)"
+    ],
+    "sourceUrl": "https://www.golf7freunde.de/index.php/Thread/12537-MIB1-auf-MIB2-codieren-kopieren-wie-auch-immer/",
+    "sourceName": "Golf7Freunde-Forum",
+    "access": "öffentlich",
+    "note": "Erfahrungsbericht, keine freigegebene OEM-Anleitung; Komponentenschutz und FEC/SWaP rechtmäßig behandeln, USB-Buchse/Display ggf. tauschen"
+  },
   // Intensivrecherche: Scheinwerfer, ACC/pACC, Lenkrad, Cockpit und Infotainment (16.11.2026)
   {
     id: "golf7-halogen-bixenon",

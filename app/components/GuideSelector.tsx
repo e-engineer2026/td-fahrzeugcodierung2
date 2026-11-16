@@ -5,7 +5,7 @@ import { Check, ChevronDown, ChevronUp, ExternalLink, LockKeyhole, Search } from
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
 import GuideDifficultyBar from "./GuideDifficultyBar";
-import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
+import { researchedGuidesForModel, type ResearchCategory, type ResearchGuide } from "../data/guideResearch";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
@@ -23,6 +23,16 @@ function guideCategory(coding: Coding): GuideCategory {
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") return "Assistenzsysteme";
   return "Codierungen";
+}
+
+function researchTopicFor(entry: ResearchGuide): string {
+  if (entry.topic) return entry.topic;
+  const name = entry.title;
+  if (/scheinwerfer|xenon|leuchtweiten|kurvenlicht|led.rückleuchten|heckleuchten|matrix.led|lichtumbau|voll.led/i.test(name)) return "Scheinwerfer & Licht";
+  if (/lenkrad|schaltwippen|multifunktion|mufu/i.test(name)) return "Lenkrad & Bedienung";
+  if (/\bacc\b|pacc|radar|stauassistent|abstandsregel|tempomat.*radar/i.test(name)) return "ACC & pACC";
+  if (/cockpit|kombiinstrument|mib|mmi|infotainment|fahrprofil/i.test(name)) return "Cockpit & Infotainment";
+  return "Weitere Umbauten";
 }
 
 function availableModelCodings(vehicle: Vehicle): Coding[] {
@@ -47,6 +57,7 @@ export default function GuideSelector() {
   const [modelSearch, setModelSearch] = useState("");
   const [codingSearch, setCodingSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
+  const [researchTopic, setResearchTopic] = useState("Alle");
 
   const models = useMemo(
     () => vehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
@@ -77,7 +88,8 @@ export default function GuideSelector() {
   const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
   const visibleResearch = researchEntries.filter((entry) =>
     entry.category === activeCategory &&
-    [entry.title, entry.note, entry.sourceName].join(" ").toLocaleLowerCase("de")
+    (activeCategory !== "Umbauten" || researchTopic === "Alle" || researchTopicFor(entry) === researchTopic) &&
+    [entry.title, entry.note, entry.sourceName, researchTopicFor(entry)].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleCodings = codings.filter((coding) =>
@@ -93,12 +105,14 @@ export default function GuideSelector() {
     setModelSearch("");
     setCodingSearch("");
     setActiveCategory("Codierungen");
+    setResearchTopic("Alle");
   }
 
   function chooseModel(next: Vehicle) {
     setModel(next.model);
     setShowModels(false);
     setCodingSearch("");
+    setResearchTopic("Alle");
     const available = availableModelCodings(next);
     const hasOwnCodings = guideCategories.some((category) =>
       (category === "Codierungen" || category === "Assistenzsysteme") &&
@@ -203,7 +217,7 @@ export default function GuideSelector() {
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
             {categoryCounts.map(({ category, count }) => (
               <button key={category} type="button" aria-pressed={activeCategory === category}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => { setActiveCategory(category); setResearchTopic("Alle"); }}
                 className={"flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm font-bold transition hover:border-blue-400 " +
                   (activeCategory === category ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700")}>
                 <span>{category}</span>
@@ -234,22 +248,39 @@ export default function GuideSelector() {
           {researchCategory && (
             <>
               <p className="mt-3 text-xs leading-6 text-slate-600">
-                Recherchierte Themen mit verlinkten Originalquellen. Manche Links enthalten nur Produkt- oder Serviceinformationen, andere eine Anleitungsvorschau oder vollständige Hinweise beim Nachrüstsatz.
+                Recherchierte Themen mit verlinkten Originalquellen. Öffentlich zugängliche Praxisberichte sind nicht automatisch geprüfte Herstelleranleitungen; manches ist nur als Vorschau oder Anbieterleistung verfügbar.
                 Hier gibt es vorerst nur eine Liste, keine eigenen TD-PDFs und keine Kaufpreise.
               </p>
+              {activeCategory === "Umbauten" && (
+                <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Umbauten nach Thema">
+                  {["Alle", "Scheinwerfer & Licht", "ACC & pACC", "Lenkrad & Bedienung", "Cockpit & Infotainment", "Weitere Umbauten"].map((topic) => {
+                    const count = researchEntries.filter((entry) => entry.category === "Umbauten" &&
+                      (topic === "Alle" || researchTopicFor(entry) === topic)).length;
+                    return (
+                      <button key={topic} type="button" aria-pressed={researchTopic === topic}
+                        onClick={() => setResearchTopic(topic)}
+                        className={"rounded-full border px-3 py-1.5 text-xs font-semibold hover:border-blue-400 " +
+                          (researchTopic === topic ? "border-blue-600 bg-blue-50 text-blue-800" : "border-slate-200 bg-white text-slate-600")}>
+                        {topic} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               {visibleResearch.length > 0 && (
                 <div className="mt-2 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
                   {visibleResearch.map((item) => (
                     <div key={item.id} className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 px-3 py-3 sm:px-4">
                       <div className="min-w-0 flex-1">
+                        <p className="mb-0.5 text-[11px] font-semibold text-blue-700">{researchTopicFor(item)}</p>
                         <p className="text-sm font-bold leading-5 text-slate-900">{item.title}</p>
                         <p className="mt-1 text-xs leading-5 text-slate-600">{item.note}</p>
-                        <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Anleitung öffentlich" : item.access === "Vorschau / Kauf" ? "Anleitungsvorschau, Vollversion ggf. nach Kauf" : item.access === "beim Nachrüstsatz" ? "Anleitung beim Nachrüstsatz" : "Produkt-/Serviceinformation, keine Komplettanleitung"}</p>
+                        <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Öffentlicher Ratgeber / Praxisbericht" : item.access === "Vorschau / Kauf" ? "Vorschau, Vollversion nur beim Anbieter" : item.access === "beim Nachrüstsatz" ? "Anleitung beim Nachrüstsatz" : item.access === "Anbieterleistung" ? "Fachbetrieb / Anbieterleistung, keine freie Anleitung" : item.access === "Produktinformation" ? "Nur Produktinformationen, keine Anleitung" : "Produkt-/Serviceinformation, keine Komplettanleitung"}</p>
                       </div>
                       <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer"
                         aria-label={item.title + ": Originalquelle öffnen"}
                         className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-blue-100 px-3 py-2 text-xs font-semibold text-blue-700 hover:border-blue-400 hover:bg-blue-50">
-                        {item.access === "Produktinfo / Service" ? "Umbauinformationen" : "Quelle / Anleitung"} <ExternalLink size={14} aria-hidden="true" />
+                        Quelle öffnen <ExternalLink size={14} aria-hidden="true" />
                       </a>
                     </div>
                   ))}
