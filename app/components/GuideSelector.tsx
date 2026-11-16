@@ -68,13 +68,13 @@ export default function GuideSelector() {
               </select>
             </label>
             <label className="text-sm font-bold text-slate-700">Modell / Baureihe
-              <select value={model} disabled={!brand} onChange={(e) => { setModel(e.target.value); setYear(0); setA4Variant(""); }}
+              <select value={model} disabled={!brand} onChange={(e) => { setModel(e.target.value); setYear(0); setA4Variant(""); setGuideId(""); setSearch(""); }}
                 className="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-base font-normal disabled:bg-slate-100">
                 <option value="">Modell wählen</option>{models.map((item) => <option key={item.model} value={item.model}>{item.model}</option>)}
               </select>
             </label>
             <label className="text-sm font-bold text-slate-700">Baujahr
-              <select value={year || ""} disabled={!vehicle} onChange={(e) => { setYear(Number(e.target.value)); setA4Variant(""); }}
+              <select value={year || ""} disabled={!vehicle} onChange={(e) => { setYear(Number(e.target.value)); setA4Variant(""); setGuideId(""); setSearch(""); }}
                 className="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-base font-normal disabled:bg-slate-100">
                 <option value="">Baujahr wählen</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}
               </select>
@@ -82,7 +82,7 @@ export default function GuideSelector() {
           </div>
           {isA4B9 && year > 0 && (
             <label className="mt-5 block max-w-sm text-sm font-bold text-slate-700">Audi A4 (8W) Ausführung
-              <select value={a4Variant} onChange={(e) => setA4Variant(e.target.value); setGuideId(""); setSearch(""); }}
+              <select value={a4Variant} onChange={(e) => { setA4Variant(e.target.value); setGuideId(""); setSearch(""); }}
                 className="mt-2 block w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-base font-normal">
                 <option value="">Ausführung wählen</option>
                 <option value="Vor-Facelift">Vor-Facelift (B9)</option>
@@ -95,11 +95,11 @@ export default function GuideSelector() {
 
       {vehicleReady && !availableGuides.length && (
         <p role="status" className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-sm leading-6 text-slate-600">
-          Für dieses Modell und Baujahr sind aktuell keine der vorbereiteten Anleitungsfunktionen im Fahrzeugkatalog bestätigt. Deshalb werden keine PDFs zum Kauf angeboten.
+          {year >= 2024 ? "Für Fahrzeuge ab Baujahr 2024 muss zunächst der SFD-/SFD2-Schutz geprüft werden. Ohne bestätigte Machbarkeit werden keine Anleitungen angeboten." : "Für dieses Modell und Baujahr sind aktuell keine der vorbereiteten Anleitungsfunktionen im Fahrzeugkatalog bestätigt. Deshalb werden keine PDFs zum Kauf angeboten."}
         </p>
       )}
 
-      {vehicleReady && (
+      {vehicleReady && availableGuides.length > 0 && (
       <section className="mt-10" aria-labelledby="guides-title">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
