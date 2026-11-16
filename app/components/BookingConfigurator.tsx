@@ -33,7 +33,6 @@ function codingExplanation(name: string): string | null {
     [/coming.home|leaving.home/i, "Passt die Beleuchtung beim Verlassen oder Öffnen des Fahrzeugs an."],
     [/heckleuchten.*tagfahrlicht|tagfahrlicht.*heckleuchten/i, "Passt an, ob die Heckleuchten zusammen mit dem Tagfahrlicht leuchten."],
     [/zeigertest|staging/i, "Lässt die Instrumentenzeiger beim Start einmal ausschlagen."],
-    [/verkehrszeichenerkennung/i, "Zeigt unterstützte Verkehrszeichen im Fahrzeug an."],
     [/fernlichtassistent/i, "Unterstützt das automatische Auf- und Abblenden des Fernlichts, wenn die Ausstattung es ermöglicht."],
     [/smartphone.navigation.*(aid|cockpit)|navigation.*active info display/i, "Zeigt unterstützte Smartphone-Navigation im digitalen Kombiinstrument an, sofern das Fahrzeug kompatibel ist."],
   ];
