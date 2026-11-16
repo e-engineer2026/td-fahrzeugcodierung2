@@ -45,7 +45,7 @@ export function guideEffortStep(coding: GuideCoding): number {
 }
 
 export function guidePrice(coding: GuideCoding): number {
-  return guidePriceTiers[guideEffortStep(coding)];
+  return guidePriceTiers[guideEffortStep(coding)] ?? guidePriceTiers[0];
 }
 
 export function formatGuidePrice(value: number): string {
