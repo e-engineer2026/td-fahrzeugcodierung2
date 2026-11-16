@@ -23,7 +23,7 @@ const vcdsAssistCatalog: Coding[] = [
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – fahrzeug- und steuergeräteabhängig",
     hardware: "Geeignete Frontkamera und kompatibles Fahrerassistenz-Steuergerät erforderlich.",
-    requirements: "Nur nach VCDS-Vorprüfung. Je nach Fahrzeug können Parametrierung, Grundeinstellung und Kamerakalibrierung erforderlich sein.",
+    requirements: "Je nach Fahrzeug können Parametrierung, Grundeinstellung und Kamerakalibrierung erforderlich sein.",
     sourceUrl: VCDS_WIKI_HOME,
   },
   {
@@ -78,7 +78,7 @@ const vcdsAssistCatalog: Coding[] = [
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – fahrzeug- und steuergeräteabhängig",
     hardware: "Geeignete Kamera/Sensorik, kompatibles Bordnetz und unterstützte Scheinwerfer erforderlich.",
-    requirements: "Vorprüfung von Kamera, Bordnetz, Scheinwerfern und Softwarestand erforderlich.",
+    requirements: "Kompatible Kamera, Bordnetz, Scheinwerfer und Softwarestand erforderlich.",
     sourceUrl: VCDS_WIKI_HOME,
   },
   {
@@ -89,7 +89,7 @@ const vcdsAssistCatalog: Coding[] = [
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – nur bei geeigneter Licht- und Kamera-Hardware",
     hardware: "Frontkamera sowie DLA-/Matrix-fähige Scheinwerfer und passende Lichtsteuergeräte erforderlich.",
-    requirements: "Nicht bei jeder Scheinwerfervariante codierbar; Vorprüfung zwingend erforderlich.",
+    requirements: "Nicht bei jeder Scheinwerfervariante codierbar.",
     sourceUrl: VCDS_WIKI_HOME,
   },
   {
@@ -122,7 +122,7 @@ const vcdsAssistCatalog: Coding[] = [
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – nur bei unterstützter Plattform und Software",
     hardware: "ACC/Radar, Frontkamera und kompatibles Navigations-/Infotainmentsystem erforderlich.",
-    requirements: "Nur nach vollständiger Vorprüfung; nicht bei jedem MQB/MLB-Fahrzeug verfügbar.",
+    requirements: "Nur bei unterstütztem MQB-/MLB-Fahrzeug verfügbar.",
     sourceUrl: VCDS_WIKI_HOME,
   },
   {
@@ -133,7 +133,7 @@ const vcdsAssistCatalog: Coding[] = [
     uiGroup: "Assistenz",
     interfaceInfo: "VCDS – abhängig von Frontkamera, Kombiinstrument und Infotainment",
     hardware: "VZE-fähige Frontkamera sowie kompatibles Kombiinstrument/Infotainment erforderlich.",
-    requirements: "Navigationsdaten je nach System erforderlich. Nach Ausbau, Tausch oder Arbeiten an der Kamera kann eine Kalibrierung nötig sein; Kamera-, Navigations- und Anzeigeunterstützung vorab prüfen.",
+    requirements: "Navigationsdaten je nach System erforderlich. Nach Ausbau, Tausch oder Arbeiten an der Kamera kann eine Kalibrierung nötig sein.",
     sourceUrl: VCDS_WIKI_HOME,
   },
   {
