@@ -7,8 +7,8 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/hero-audi-s6-octavia-scene.webp", brand: "Audi", label: "Audi S6 Avant", alt: "Roter Audi S6 Avant mit TD-Schriftzug auf Steinplatz vor Leipziger Skyline" },
-  { src: "/hero-passat-b9-octavia-scene.webp", brand: "Volkswagen", label: "Volkswagen Passat B9 R-Line", alt: "Blauer Volkswagen Passat B9 Variant im R-Line-Stil mit TD-Schriftzug auf Steinplatz vor Leipziger Skyline" },
+  { src: "/hero-audi-s6-td-decal.webp", brand: "Audi", label: "Audi S6 Avant", alt: "Roter Audi S6 Avant mit großer weißer TD-Fahrzeugcodierung-Beschriftung auf den Türen vor Leipziger Skyline" },
+  { src: "/hero-passat-b9-td-decal.webp", brand: "Volkswagen", label: "Volkswagen Passat B9 R-Line", alt: "Blauer Volkswagen Passat B9 Variant im R-Line-Stil mit großer weißer TD-Fahrzeugcodierung-Beschriftung auf den Türen vor Leipziger Skyline" },
   { src: "/hero-skoda-photo.webp", brand: "Škoda", label: "Škoda Octavia RS", alt: "Roter Škoda Octavia RS mit TD-Schriftzug" },
   { src: "/hero-seat-photo.webp", brand: "SEAT", label: "SEAT Leon Cupra R", alt: "Roter SEAT Leon Cupra R mit TD-Schriftzug" },
   { src: "/hero-cupra-photo.webp", brand: "CUPRA", label: "CUPRA Formentor VZ", alt: "Petrolblauer CUPRA Formentor VZ mit TD-Schriftzug" },
