@@ -115,10 +115,10 @@ const caddyCodings: Coding[] = [
   { id:"caddy-sitzheizung", name:"Sitzheizung Verhalten / Speicherfunktion anpassen", price:20, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"VCDS / OBD11", hardware:"Werkseitige Sitzheizung erforderlich." },
 
   // Caddy V (SB) / MQB-evo / SFD1
-  { id:"caddysb-autolock", name:"Auto-Lock / Auto-Unlock anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"OBD11 oder VCDS nach SFD1-Freischaltung", requirements:"SFD1-Freischaltung und unterstützte Anpassungskanäle erforderlich." },
-  { id:"caddysb-gurt", name:"Gurtwarner anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"OBD11 oder VCDS nach SFD1-Freischaltung", requirements:"SFD1-Freischaltung erforderlich." },
-  { id:"caddysb-licht", name:"Tagfahrlicht / Dauerfahrlicht anpassen", price:29, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"OBD11 oder VCDS nach SFD1-Freischaltung", requirements:"SFD1-Freischaltung und kompatibles Bordnetzsteuergerät erforderlich." },
-  { id:"caddysb-chlh", name:"Coming Home / Leaving Home anpassen", price:29, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"OBD11 oder VCDS nach SFD1-Freischaltung", requirements:"SFD1-Freischaltung; Funktionsumfang abhängig von Licht-/Sensor-Ausstattung." },
+  { id:"caddysb-autolock", name:"Auto-Lock / Auto-Unlock anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"OBD11 oder VCDS", requirements:"Unterstützte Anpassungskanäle erforderlich." },
+  { id:"caddysb-gurt", name:"Gurtwarner anpassen", price:25, category:"Standard-Codierungen", uiGroup:"Komfort", interfaceInfo:"OBD11 oder VCDS", requirements:"" },
+  { id:"caddysb-licht", name:"Tagfahrlicht / Dauerfahrlicht anpassen", price:29, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"OBD11 oder VCDS", requirements:"Kompatibles Bordnetzsteuergerät erforderlich." },
+  { id:"caddysb-chlh", name:"Coming Home / Leaving Home anpassen", price:29, category:"Standard-Codierungen", uiGroup:"Licht", interfaceInfo:"OBD11 oder VCDS", requirements:"Funktionsumfang abhängig von Licht-/Sensor-Ausstattung." },
 ];
 
 const reducedPriceByOriginal = new Map<number, number>([

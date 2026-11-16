@@ -68,10 +68,12 @@ export function vehicleSpecificCodings(
     hardware: coding.hardware,
     requirements: coding.requirements,
     interfaceInfo: coding.interfaceInfo,
+    // Only explicitly identified SFD1-protected coding items are marked.
+    sfd: isSfd1 && (coding.id.startsWith("caddysb-") || /SFD1-Freischaltung/i.test(coding.requirements ?? "")) ? "Ja" as const : undefined,
     source: "vehicle" as const,
   }));
   const source = codingSources.find((item) => item.platform === vehicle.platform);
-  if (!source) return curateCodingEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year))).filter((entry) => yearAllowed(entry.name, year)).map((entry) => isSfd1 && !entry.sfd ? { ...entry, sfd: "Unklar" as const } : entry);
+  if (!source) return curateCodingEntries(vehicleEntries.filter((entry) => yearAllowed(entry.name, year))).filter((entry) => yearAllowed(entry.name, year)).map((entry) => ({ ...entry, sfd: isSfd1 && entry.sfd === "Ja" ? "Ja" as const : undefined }));
   // The Golf 8 source is not evidence that these newly added features work on
   // every MQB-evo vehicle. Only use that source for its reference model.
   const golf8Only = /aircare einstellung speichern|sitzheizung nach bestimmter zeit auf niedere stufe|umlufteinstellung speichern|lüfterstufen.*sanft|(?:ladedruckanzeige|drehmomentanzeige|motorleistung|getriebetemperaturanzeige).*aid/i;
@@ -96,6 +98,6 @@ export function vehicleSpecificCodings(
     byName.set(key, { ...preferred, hardware: mergePrerequisites(previous.hardware, entry.hardware), requirements: mergePrerequisites(previous.requirements, entry.requirements), sfd });
   }
   return curateCodingEntries(Array.from(byName.values()).filter((entry) => yearAllowed(entry.name, year))).filter((entry) => yearAllowed(entry.name, year))
-    .map((entry) => isSfd1 && !entry.sfd ? { ...entry, sfd: "Unklar" as const } : entry);
+    .map((entry) => ({ ...entry, sfd: isSfd1 && entry.sfd === "Ja" ? "Ja" as const : undefined }));
 }
 

@@ -50,7 +50,7 @@ export async function downloadQuotePdf({ vehicle, model, vehicleImage, entries, 
       for (const part of lines.slice(1)) { line(part, 42, y, 9, true); y -= 13; }
     }
     ensure(85);
-    if (sfdFee) { line('SFD1-Freischaltung (einmalig)', 42, y); line(money(sfdFee), 500, y); y -= 16; }
+    if (sfdFee) { line('SFD (1)', 42, y); line(money(sfdFee), 500, y); y -= 16; }
     line('Zwischensumme', 42, y); line(money(subtotal), 500, y); y -= 16;
     line(`Aktionsrabatt (${Math.round(rate * 100)} %)`, 42, y); line('-' + money(discount), 500, y); y -= 18;
     line('Gesamtpreis', 42, y, 12, true); line(money(total), 500, y, 12, true); y -= 24;
@@ -69,7 +69,7 @@ export async function downloadQuotePdf({ vehicle, model, vehicleImage, entries, 
   for (const entry of [...entries].sort((a, b) => (a.uiGroup || 'Weitere').localeCompare(b.uiGroup || 'Weitere', 'de') || a.name.localeCompare(b.name, 'de'))) {
     const nextGroup = entry.uiGroup || 'Weitere';
     const nameLines = wrap(entry.name);
-    const notes = [entry.hardware ? 'Voraussetzung: ' + entry.hardware : '', entry.requirements ? 'Hinweis: ' + entry.requirements : '', entry.sfd === 'Ja' ? 'SFD1-Freischaltung erforderlich.' : entry.sfd === 'Unklar' ? 'SFD1-Bedarf wird geprüft.' : ''].filter(Boolean);
+    const notes = [entry.hardware ? 'Voraussetzung: ' + entry.hardware : '', entry.requirements ? 'Hinweis: ' + entry.requirements : '', entry.sfd === 'Ja' ? 'SFD (1)' : ''].filter(Boolean);
     const noteLines = notes.flatMap(note => wrap(note, 90));
     // Keep the bold function, its notes and the checkbox on the same page.
     // Notes sit directly below the function; spacing follows the entire block.

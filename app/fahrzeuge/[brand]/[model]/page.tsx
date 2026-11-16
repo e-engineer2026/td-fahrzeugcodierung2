@@ -192,7 +192,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               <h2 className="text-2xl font-black">Technische Voraussetzungen beim {name}</h2>
               <p className="mt-3 leading-7 text-slate-600">Der {name} gehört zur Plattform {vehicle.platform} und wurde {years} angeboten. Für die {vehicle.diagnosticsOnly ? "Diagnose" : "Codierungen"} sind die tatsächlich verbauten Steuergeräte, der Softwarestand und die vorhandene Hardware maßgeblich. Die nötigen Hardwarevoraussetzungen stehen bei den jeweiligen Funktionen.</p>
               <p className="mt-3 leading-7 text-slate-600">Je nach gewünschter Funktion erfolgt die Umsetzung über Codierung, Anpassung oder Grundeinstellung. Für Remote-Termine wird zusätzlich geprüft, ob Diagnoseinterface und Verbindung für die jeweilige Arbeit geeignet sind.</p>
-              {vehicle.sfd1From && <p className="mt-3 leading-7 text-slate-600">Ab Modelljahr {vehicle.sfd1From} kann bei dieser Baureihe SFD relevant sein. Ob eine SFD-Freischaltung benötigt wird, hängt vom konkreten Steuergerät und der gewünschten Anpassung ab.</p>}
+              
             </section>
 
             <div className="mt-10 rounded-2xl border border-blue-100 bg-blue-50 p-5 sm:p-6">
