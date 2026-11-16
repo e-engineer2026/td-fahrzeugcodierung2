@@ -8,7 +8,7 @@ import { formatGuidePrice, guidePriceTiers } from "../lib/guidePricing";
 
 export const metadata: Metadata = {
   title: "VCDS- und VCP-PDF-Anleitungen | TD Fahrzeugcodierung",
-  description: "Fahrzeugbezogene VCDS- und VCP-Anleitungen sowie recherchierte Nachrüstungen und Umbauten mit Originalquellen. SEAT und CUPRA gemeinsam auswählen.",
+  description: "Fahrzeugbezogene VCDS-/VCP-Codierungen, Nachrüstungen, Umbauten und Assistenzsysteme nach Schwierigkeit und geplantem TD-PDF-Preis sortieren. Alle Beträge unverbindlich, noch kein Download.",
   alternates: { canonical: "/codieranleitungen" },
   // Erst indexieren, wenn die ersten tatsächlich kaufbaren PDFs bereitstehen.
   robots: { index: false, follow: true },
@@ -35,7 +35,7 @@ export default function CodieranleitungenPage() {
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:underline"><ArrowLeft size={16} aria-hidden="true" />Zur Startseite</Link>
           <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700"><LockKeyhole size={15} aria-hidden="true" />PDF-Anleitungen</div>
           <h1 className="mt-3 max-w-3xl text-2xl font-black tracking-tight sm:text-3xl">VCDS- &amp; VCP-Codieranleitungen</h1>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">Hersteller und Fahrzeug auswählen. Neben bestehenden Codierangeboten zeigen wir Nachrüst- und Umbau-Recherchen sowie zusätzliche Prüfthemen aus Golf-8-, MQB- und MLB-evo-Referenzlisten. Originalanleitungen werden nicht kopiert oder zum Kauf angeboten.</p>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">Hersteller und Fahrzeug auswählen. Codierungen, Assistenzsysteme, Nachrüstungen und Umbauten sind nach Schwierigkeit einsehbar und erhalten eine individuelle Preisidee für künftig eigens erstellte TD-PDFs. Auch die zusätzlichen Golf-8-, MQB- und MLB-evo-Referenzthemen sind berücksichtigt. Originalanleitungen Dritter werden weder kopiert noch verkauft.</p>
         </div>
       </section>
 
@@ -46,7 +46,7 @@ export default function CodieranleitungenPage() {
       <section className="container-x pb-8 sm:pb-12" aria-labelledby="anleitungen-preise">
         <div className="mx-auto max-w-5xl rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
           <h2 id="anleitungen-preise" className="text-base font-black">PDF-Preise nach Schwierigkeit</h2>
-          <p className="mt-1 text-xs text-slate-600">Acht Stufen in 2-Euro-Schritten, je nach Schwierigkeit der einzelnen Anleitung.</p>
+          <p className="mt-1 text-xs text-slate-600">Acht vorläufige Preisstufen in 2-Euro-Schritten für künftige TD-eigene PDFs zu Codierungen, Assistenzsystemen, Nachrüstungen und Umbauten.</p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-center sm:grid-cols-4 lg:grid-cols-8">
             {guidePriceTiers.map((price, index) => (
               <div key={price} className="rounded-lg bg-slate-50 px-2 py-2.5">
@@ -63,7 +63,7 @@ export default function CodieranleitungenPage() {
           </div>
           <p className="mt-3 flex items-start gap-2 text-xs leading-6 text-slate-600">
             <CreditCard size={16} className="mt-1 shrink-0 text-blue-700" aria-hidden="true" />
-            Geplante Einzelpreise für PDF-Anleitungen, nicht für die Durchführung am Fahrzeug. Der Kauf und geschützte Download werden erst nach erfolgreicher serverseitiger PayPal-Prüfung freigeschaltet.
+            Unverbindliche PDF-Preisideen, keine Angebote für Fahrzeugumbauten, Teile oder Dienstleistung. Noch keine PDFs kaufbar; geschützte Downloads werden erst nach eigener Anleitungsprüfung und serverseitig bestätigter PayPal-Zahlung freigeschaltet.
           </p>
         </div>
       </section>

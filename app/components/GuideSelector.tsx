@@ -5,6 +5,8 @@ import { Check, ChevronDown, ChevronUp, ExternalLink, LockKeyhole, Search } from
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
 import GuideDifficultyBar from "./GuideDifficultyBar";
+import GuidePriceIndicator from "./GuidePriceIndicator";
+import { researchGuideEstimate, referenceIdeaEstimate } from "../lib/researchGuidePricing";
 import { retrofitFocusFor } from "../lib/retrofitFocus";
 import { referenceIdeasForVehicle, type ReferenceIdea } from "../data/referenceIdeas";
 import { researchedGuidesForModel, type ResearchCategory, type ResearchGuide } from "../data/guideResearch";
@@ -60,6 +62,7 @@ export default function GuideSelector() {
   const [codingSearch, setCodingSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
   const [researchTopic, setResearchTopic] = useState("Alle");
+  const [levelFilter, setLevelFilter] = useState<0 | 1 | 2 | 3>(0);
   const [retrofitFilter, setRetrofitFilter] = useState<"Alle" | "Praxis-Auswahl" | "Kompakter Einbau">("Alle");
 
   const models = useMemo(
@@ -96,6 +99,7 @@ export default function GuideSelector() {
   const compactCount = retrofitEntries.filter((entry) => retrofitFocusFor(entry)?.scope === "Kompakter Einbau").length;
   const visibleResearch = researchEntries.filter((entry) =>
     entry.category === activeCategory &&
+    (levelFilter === 0 || researchGuideEstimate(entry).level === levelFilter) &&
     (activeCategory !== "Umbauten" || researchTopic === "Alle" || researchTopicFor(entry) === researchTopic) &&
     (activeCategory !== "Nachrüstungen" || retrofitFilter === "Alle" ||
       (retrofitFilter === "Praxis-Auswahl" && !!retrofitFocusFor(entry)) ||
@@ -110,6 +114,7 @@ export default function GuideSelector() {
   );
   const visibleSourceIdeas = sourceIdeas.filter((idea) =>
     idea.category === activeCategory &&
+    (levelFilter === 0 || referenceIdeaEstimate(idea).level === levelFilter) &&
     (activeCategory !== "Nachrüstungen" || retrofitFilter === "Alle") &&
     (activeCategory !== "Umbauten" || researchTopic === "Alle" || researchTopic === "Weitere Umbauten") &&
     [idea.title, idea.note, idea.sourceName].join(" ").toLocaleLowerCase("de")
@@ -117,6 +122,7 @@ export default function GuideSelector() {
   );
   const visibleCodings = codings.filter((coding) =>
     guideCategory(coding) === activeCategory &&
+    (levelFilter === 0 || guideDifficultyLevel(guideDifficultyStep(coding)) === levelFilter) &&
     [coding.name, coding.uiGroup ?? ""].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
@@ -130,6 +136,7 @@ export default function GuideSelector() {
     setActiveCategory("Codierungen");
     setResearchTopic("Alle");
     setRetrofitFilter("Alle");
+    setLevelFilter(0);
   }
 
   function chooseModel(next: Vehicle) {
@@ -138,6 +145,7 @@ export default function GuideSelector() {
     setCodingSearch("");
     setResearchTopic("Alle");
     setRetrofitFilter("Alle");
+    setLevelFilter(0);
     const available = availableModelCodings(next);
     const hasOwnCodings = guideCategories.some((category) =>
       (category === "Codierungen" || category === "Assistenzsysteme") &&
@@ -245,7 +253,7 @@ export default function GuideSelector() {
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
             {categoryCounts.map(({ category, count }) => (
               <button key={category} type="button" aria-pressed={activeCategory === category}
-                onClick={() => { setActiveCategory(category); setResearchTopic("Alle"); setRetrofitFilter("Alle"); }}
+                onClick={() => { setActiveCategory(category); setResearchTopic("Alle"); setRetrofitFilter("Alle"); setLevelFilter(0); }}
                 className={"flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm font-bold transition hover:border-blue-400 " +
                   (activeCategory === category ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700")}>
                 <span>{category}</span>
@@ -253,6 +261,27 @@ export default function GuideSelector() {
               </button>
             ))}
           </div>
+
+          <div className="mt-3 flex flex-wrap items-center gap-1.5" role="group" aria-label="Nach Schwierigkeit filtern">
+            <span className="mr-1 text-xs font-semibold text-slate-600">Schwierigkeit:</span>
+            {([
+              { value: 0, label: "Alle" },
+              { value: 1, label: "Leicht" },
+              { value: 2, label: "Mittel" },
+              { value: 3, label: "Schwer" },
+            ] as const).map(({ value, label }) => (
+              <button key={value} type="button" aria-pressed={levelFilter === value}
+                onClick={() => setLevelFilter(value)}
+                className={"rounded-full border px-3 py-1.5 text-xs font-semibold hover:border-blue-400 " +
+                  (levelFilter === value ? "border-blue-600 bg-blue-50 text-blue-800" : "border-slate-200 bg-white text-slate-600")}>
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-xs leading-5 text-slate-600">
+            Preis = geplanter Einzelpreis für eine künftig eigenständig erstellte TD-PDF-Anleitung.
+            Installation, Diagnose am Fahrzeug, Bauteile und externe Anleitungen sind nicht enthalten.
+          </p>
 
           {!researchCategory && codings.length > 0 && (
             <div className="mt-3 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -285,7 +314,10 @@ export default function GuideSelector() {
               <div className="divide-y divide-slate-100">
                 {visibleSourceIdeas.map((idea: ReferenceIdea) => (
                   <div key={idea.id} className="px-3 py-3 sm:px-4">
-                    <p className="text-sm font-bold leading-5 text-slate-900">{idea.title}</p>
+                    <div className="mb-1 flex flex-wrap items-start justify-between gap-2">
+                      <p className="min-w-0 flex-1 text-sm font-bold leading-5 text-slate-900">{idea.title}</p>
+                      <GuidePriceIndicator estimate={referenceIdeaEstimate(idea)} />
+                    </div>
                     <p className="mt-1 text-xs leading-5 text-slate-600">{idea.note}</p>
                     <p className="mt-1 text-xs text-slate-500">
                       Quelle: {idea.sourceName}, S. {idea.sourcePage} · {idea.status === "tested"
@@ -301,14 +333,13 @@ export default function GuideSelector() {
           {researchCategory && (
             <>
               <p className="mt-3 text-xs leading-6 text-slate-600">
-                Recherchierte Themen mit verlinkten Originalquellen sowie zusätzliche, nicht verlinkte Prüfthemen aus bereitgestellten technischen PDF-Referenzen. Fremde Anleitungen oder Codierwerte werden hier nicht veröffentlicht.
-                Hier gibt es vorerst nur eine Liste, keine eigenen TD-PDFs und keine Kaufpreise.
+                Recherchierte Themen mit Originalquellen sowie Prüfthemen aus technischen PDF-Referenzen. Die Beträge sind unverbindliche Preisideen für künftig selbst erstellte TD-Anleitungen, keine Preise für Hardware, Einbau oder fremde PDFs. Noch nichts kaufbar.
               </p>
               {activeCategory === "Nachrüstungen" && (
                 <div className="mt-3">
                   <div className="flex flex-wrap gap-1.5" role="group" aria-label="Nachrüstungen filtern">
                     {([
-                      { value: "Alle", label: "Alle Nachrüstungen", count: retrofitEntries.length },
+                      { value: "Alle", label: "Alle Nachrüstungen", count: retrofitEntries.length + sourceIdeas.filter((idea) => idea.category === "Nachrüstungen").length },
                       { value: "Praxis-Auswahl", label: "TD-Praxis-Auswahl", count: focusCount },
                       { value: "Kompakter Einbau", label: "Kompakte Einbauten", count: compactCount },
                     ] as const).map((option) => (
@@ -367,11 +398,14 @@ export default function GuideSelector() {
                         )}
                         <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Öffentlicher Ratgeber / Praxisbericht" : item.access === "Vorschau / Kauf" ? "Vorschau, Vollversion nur beim Anbieter" : item.access === "beim Nachrüstsatz" ? "Anleitung beim Nachrüstsatz" : item.access === "Anbieterleistung" ? "Fachbetrieb / Anbieterleistung, keine freie Anleitung" : item.access === "Produktinformation" ? "Nur Produktinformationen, keine Anleitung" : "Produkt-/Serviceinformation, keine Komplettanleitung"}</p>
                       </div>
-                      <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer"
+                      <div className="flex shrink-0 flex-col items-end gap-2">
+                        <GuidePriceIndicator estimate={researchGuideEstimate(item)} />
+                        <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer"
                         aria-label={item.title + ": Originalquelle öffnen"}
                         className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-blue-100 px-3 py-2 text-xs font-semibold text-blue-700 hover:border-blue-400 hover:bg-blue-50">
                         Quelle öffnen <ExternalLink size={14} aria-hidden="true" />
-                      </a>
+                        </a>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -388,7 +422,10 @@ export default function GuideSelector() {
                   <div className="divide-y divide-slate-100">
                     {visibleSourceIdeas.map((idea: ReferenceIdea) => (
                       <div key={idea.id} className="px-3 py-3 sm:px-4">
-                        <p className="text-sm font-bold leading-5 text-slate-900">{idea.title}</p>
+                        <div className="mb-1 flex flex-wrap items-start justify-between gap-2">
+                          <p className="min-w-0 flex-1 text-sm font-bold leading-5 text-slate-900">{idea.title}</p>
+                          <GuidePriceIndicator estimate={referenceIdeaEstimate(idea)} />
+                        </div>
                         <p className="mt-1 text-xs leading-5 text-slate-600">{idea.note}</p>
                         <p className="mt-1 text-xs text-slate-500">
                           Quelle: {idea.sourceName}, S. {idea.sourcePage} · {idea.status === "tested"
@@ -421,11 +458,11 @@ export default function GuideSelector() {
               {vehicle.startYear >= 2024 ? " Für neuere Modelle ist vor einer Freigabe insbesondere der SFD-/SFD2-Schutz zu prüfen." : ""}
             </p>
           )}
-          {!researchCategory && codings.length > 0 && <p className="mt-3 text-xs leading-6 text-slate-500">
+          {(codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && <p className="mt-3 text-xs leading-6 text-slate-500">
             Geplante PDF-Einzelpreise nach Schwierigkeit in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[7])}.
             Die konkrete Codierbarkeit hängt von Baujahr, Ausstattung, Steuergerät, Softwarestand und ggf. SFD-Schutz ab.
           </p>}
-          {!researchCategory && <p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
+          {<p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
             <LockKeyhole size={15} className="mt-1 shrink-0" aria-hidden="true" />
             Noch keine PDFs kaufbar. Downloads erst nach fertiggestellter Anleitung und serverseitig bestätigter PayPal-Zahlung.
           </p>}
