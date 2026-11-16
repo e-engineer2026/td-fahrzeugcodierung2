@@ -35,11 +35,11 @@ export function guideEffortStep(coding: GuideCoding): number {
   // Komfortfunktionen mit mehreren Voraussetzungen oder Anpassungen.
   if (/spiegelabsenkung|spiegelanklappen|regenschließ|regenschliess|coming.home|leaving.home|komfortöffn|komfortschließ|komfortschliess|start.stopp/i.test(name)) return 2;
 
+  // Direkte, typische Anpassung im Kombiinstrument oder einzelne Blinkoption.
+  if (/zeigertest|needle.sweep|staging|öltemperatur|oeltemperatur|laptimer|rundenzähler|nachtankmenge|komfortblinken/i.test(name)) return 0;
+
   // Einzelne Anpassungen und Anzeigeoptionen.
   if (/auto.lock|auto.unlock|gurtwarner|tagfahrlicht|heckleuchten|tfl|reifendruck|xds|berg-anfahr|blinken/i.test(name)) return 1;
-
-  // Direkte, typische Anpassung im Kombiinstrument.
-  if (/zeigertest|needle.sweep|staging|öltemperatur|oeltemperatur|laptimer|rundenzähler|nachtankmenge|komfortblinken/i.test(name)) return 0;
 
   return 1;
 }
