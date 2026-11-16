@@ -278,10 +278,6 @@ export default function GuideSelector() {
               </button>
             ))}
           </div>
-          <p className="mt-2 text-xs leading-5 text-slate-600">
-            Preis = geplanter Einzelpreis für eine künftig eigenständig erstellte TD-PDF-Anleitung.
-            Installation, Diagnose am Fahrzeug, Bauteile und externe Anleitungen sind nicht enthalten.
-          </p>
 
           {!researchCategory && codings.length > 0 && (
             <div className="mt-3 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -332,9 +328,6 @@ export default function GuideSelector() {
 
           {researchCategory && (
             <>
-              <p className="mt-3 text-xs leading-6 text-slate-600">
-                Recherchierte Themen mit Originalquellen sowie Prüfthemen aus technischen PDF-Referenzen. Die Beträge sind unverbindliche Preisideen für künftig selbst erstellte TD-Anleitungen, keine Preise für Hardware, Einbau oder fremde PDFs. Noch nichts kaufbar.
-              </p>
               {activeCategory === "Nachrüstungen" && (
                 <div className="mt-3">
                   <div className="flex flex-wrap gap-1.5" role="group" aria-label="Nachrüstungen filtern">
