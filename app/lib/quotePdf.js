@@ -1,6 +1,6 @@
 import QRCode from './qr/index.js';
 
-export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selected, sfdFee, subtotal, rate, discount, total, selectionUrl }) {
+export async function downloadQuotePdf({ vehicle, model, vehicleImage, entries, selected, sfdFee, subtotal, rate, discount, total, selectionUrl }) {
   const encoder = new TextEncoder();
   const bytes = (s) => encoder.encode(s);
   const concat = (...parts) => { const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0)); let i = 0; for (const p of parts) { out.set(p, i); i += p.length; } return out; };
@@ -46,8 +46,8 @@ export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selecte
     ensure(70); line('Deine ausgewählten Codierungen', 42, y, 12, true); y -= 18;
     for (const entry of entries.filter(e => selected.includes(e.id))) {
       const lines = wrap(entry.name); ensure(lines.length * 13 + 4);
-      line(lines[0], 42, y, 9); line(money(entry.price), 500, y, 9, true); y -= 13;
-      for (const part of lines.slice(1)) { line(part, 42, y, 9); y -= 13; }
+      line(lines[0], 42, y, 9, true); line(money(entry.price), 500, y, 9, true); y -= 13;
+      for (const part of lines.slice(1)) { line(part, 42, y, 9, true); y -= 13; }
     }
     ensure(85);
     if (sfdFee) { line('SFD1-Freischaltung (einmalig)', 42, y); line(money(sfdFee), 500, y); y -= 16; }
@@ -71,8 +71,8 @@ export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selecte
     if (nextGroup !== group) { ensure(38); group = nextGroup; y -= 4; line(group, 42, y, 10, true); y -= 16; }
     const lines = wrap(entry.name); ensure(lines.length * 13 + 7);
     ops.push(`0.6 w 43 ${y - 1} 9 9 re S`); if (selected.includes(entry.id)) { ops.push(`43 ${y - 1} m 52 ${y + 8} l S 43 ${y + 8} m 52 ${y - 1} l S`); }
-    line(lines[0], 60, y, 9); line(money(entry.price), 500, y, 9, true); y -= 13;
-    for (const part of lines.slice(1)) { line(part, 60, y, 9); y -= 13; } y -= 5;
+    line(lines[0], 60, y, 9, true); line(money(entry.price), 500, y, 9, true); y -= 13;
+    for (const part of lines.slice(1)) { line(part, 60, y, 9, true); y -= 13; } y -= 5;
     const notes = [entry.hardware ? 'Voraussetzung: ' + entry.hardware : '', entry.requirements ? 'Hinweis: ' + entry.requirements : '', entry.sfd === 'Ja' ? 'SFD1-Freischaltung erforderlich.' : entry.sfd === 'Unklar' ? 'SFD1-Bedarf wird geprüft.' : ''].filter(Boolean);
     for (const note of notes) for (const part of wrap(note, 90)) { ensure(13); line(part, 60, y, 8); y -= 11; }
   }
@@ -87,7 +87,8 @@ export async function downloadQuotePdf({ vehicle, vehicleImage, entries, selecte
   const chunks = [bytes('%PDF-1.4\n')]; const offsets = [0]; let size = chunks[0].length;
   for (let i = 1; i < objects.length; i++) { offsets[i] = size; const item = concat(bytes(`${i} 0 obj\n`), objects[i], bytes('\nendobj\n')); chunks.push(item); size += item.length; }
   const xref = size; chunks.push(bytes(`xref\n0 ${objects.length}\n0000000000 65535 f \n${offsets.slice(1).map(n => String(n).padStart(10, '0') + ' 00000 n ').join('\n')}\ntrailer\n<< /Size ${objects.length} /Root ${catalog} 0 R >>\nstartxref\n${xref}\n%%EOF`));
-  const name = selected.length ? `${quoteNumber}-Kostenvoranschlag.pdf` : 'TD-Codierliste.pdf';
+  const safeModel = (model || vehicle).replace(/[\\/:*?"<>|\x00-\x1F]/g, '-').replace(/\s+/g, ' ').trim().slice(0, 90);
+  const name = `TD Fahrzeugcodierung - ${safeModel} - ${selected.length ? 'Kostenvoranschlag' : 'Codierliste'}.pdf`;
   const file = new File(chunks, name, { type: 'application/pdf' });
   const url = URL.createObjectURL(file); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
   return file;
