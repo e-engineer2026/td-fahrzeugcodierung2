@@ -17,6 +17,7 @@ export default function HomeMenu() {
       <a href="#fahrzeugauswahl">Fahrzeug auswählen</a>
       <a href="#ablauf">So funktioniert’s</a>
       <Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link>
+      <Link href="/codieranleitungen">PDF-Codieranleitungen</Link>
       <a href="#kontakt">Kontakt</a>
       <Link href="/sign-in?redirect_url=%2Fkonto">Mein Konto / Anmelden</Link>
     </nav>}
