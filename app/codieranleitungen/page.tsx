@@ -35,7 +35,7 @@ export default function CodieranleitungenPage() {
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:underline"><ArrowLeft size={16} aria-hidden="true" />Zur Startseite</Link>
           <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700"><LockKeyhole size={15} aria-hidden="true" />PDF-Anleitungen</div>
           <h1 className="mt-3 max-w-3xl text-2xl font-black tracking-tight sm:text-3xl">VCDS- &amp; VCP-Codieranleitungen</h1>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">Hersteller und Fahrzeug auswählen. Codierungen, Assistenzsysteme, Nachrüstungen und Umbauten sind nach Schwierigkeit einsehbar und erhalten eine individuelle Preisidee für künftig eigens erstellte TD-PDFs. Auch die zusätzlichen Golf-8-, MQB- und MLB-evo-Referenzthemen sind berücksichtigt. Originalanleitungen Dritter werden weder kopiert noch verkauft.</p>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">Anleitungen PDF</p>
         </div>
       </section>
 
