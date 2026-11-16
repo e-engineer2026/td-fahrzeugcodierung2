@@ -35,7 +35,6 @@ function codingExplanation(name: string): string | null {
     [/zeigertest|staging/i, "Lässt die Instrumentenzeiger beim Start einmal ausschlagen."],
     [/verkehrszeichenerkennung/i, "Zeigt unterstützte Verkehrszeichen im Fahrzeug an; die Voraussetzungen werden geprüft."],
     [/fernlichtassistent/i, "Unterstützt das automatische Auf- und Abblenden des Fernlichts, wenn die Ausstattung es ermöglicht."],
-    [/lane assist|spurhalteassistent/i, "Betrifft Einstellungen oder Freischaltung des Spurhalteassistenten, abhängig von Fahrzeug und Funktion."],
     [/smartphone.navigation.*(aid|cockpit)|navigation.*active info display/i, "Zeigt unterstützte Smartphone-Navigation im digitalen Kombiinstrument an, sofern das Fahrzeug kompatibel ist."],
   ];
   return rules.find(([pattern]) => pattern.test(name))?.[1] ?? null;
