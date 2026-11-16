@@ -1,9 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, ChevronUp, FileText, LockKeyhole, Search } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
-import { formatGuidePrice, guideEffortStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
+import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
+import GuideDifficultyBar from "./GuideDifficultyBar";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
@@ -188,16 +189,16 @@ export default function GuideSelector() {
           {codings.length > 0 && (
             <div className="mt-3 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
               {visibleCodings.map((coding) => {
-                const effortStep = guideEffortStep(coding) + 1;
+                const difficultyStep = guideDifficultyStep(coding);
                 return (
                   <div key={coding.id} className="flex items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
                     <div className="min-w-0">
                       <p className="text-sm font-bold leading-5 text-slate-950">{coding.name}</p>
-                      <p className="mt-0.5 text-xs text-slate-500">Aufwandstufe {effortStep}/8 · PDF in Vorbereitung</p>
+                      <p className="mt-0.5 text-xs text-slate-500">PDF-Anleitung in Vorbereitung</p>
                     </div>
                     <div className="shrink-0 text-right">
                       <p className="text-sm font-black tabular-nums text-blue-700">{formatGuidePrice(guidePrice(coding))}</p>
-                      <span className="inline-flex items-center gap-1 text-[11px] text-slate-500"><FileText size={12} aria-hidden="true" />PDF</span>
+                      <GuideDifficultyBar level={guideDifficultyLevel(difficultyStep)} />
                     </div>
                   </div>
                 );
@@ -216,7 +217,7 @@ export default function GuideSelector() {
             </p>
           )}
           <p className="mt-3 text-xs leading-6 text-slate-500">
-            Geplante PDF-Einzelpreise nach geschätztem Aufwand in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[7])}.
+            Geplante PDF-Einzelpreise nach Schwierigkeit in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[7])}.
             Die konkrete Codierbarkeit hängt von Baujahr, Ausstattung, Steuergerät, Softwarestand und ggf. SFD-Schutz ab.
           </p>
           <p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
