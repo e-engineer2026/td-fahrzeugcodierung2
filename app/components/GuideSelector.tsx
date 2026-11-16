@@ -333,7 +333,7 @@ export default function GuideSelector() {
 
               {visibleResearch.length === 0 && visibleSourceIdeas.length === 0 && (
                 <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
-                  {codingSearch.trim() ? "Kein passender Rechercheeintrag gefunden." : activeCategory === "Nachrüstungen" && retrofitFilter !== "Alle" ? "Für dieses Fahrzeug ist in der ausgewählten TD-Praxis-Liste noch kein Kandidat erfasst. Unter „Alle Nachrüstungen“ findest du die restliche Recherche." : "Für dieses Fahrzeug sind noch keine recherchierten Anleitungen in diesem Bereich erfasst."}
+                  {codingSearch.trim() ? "Kein passender Rechercheeintrag gefunden." : "Für dieses Fahrzeug sind noch keine recherchierten Anleitungen in diesem Bereich erfasst."}
                 </p>
               )}
             </>
