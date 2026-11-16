@@ -51,7 +51,6 @@ export default function GuideSelector() {
   const [modelSearch, setModelSearch] = useState("");
   const [codingSearch, setCodingSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
-  const [levelFilter, setLevelFilter] = useState<0 | 1 | 2 | 3>(0);
 
   const models = useMemo(
     () => vehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
@@ -84,19 +83,16 @@ export default function GuideSelector() {
   const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
   const visibleResearch = researchEntries.filter((entry) =>
     entry.category === activeCategory &&
-    (levelFilter === 0 || researchGuideEstimate(entry).level === levelFilter) &&
     [entry.title, entry.note, entry.sourceName].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleSourceIdeas = sourceIdeas.filter((idea) =>
     idea.category === activeCategory &&
-    (levelFilter === 0 || referenceIdeaEstimate(idea).level === levelFilter) &&
     [idea.title, idea.note, idea.sourceName].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleCodings = codings.filter((coding) =>
     guideCategory(coding) === activeCategory &&
-    (levelFilter === 0 || guideDifficultyLevel(guideDifficultyStep(coding)) === levelFilter) &&
     [coding.name, coding.uiGroup ?? ""].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
@@ -108,14 +104,12 @@ export default function GuideSelector() {
     setModelSearch("");
     setCodingSearch("");
     setActiveCategory("Codierungen");
-    setLevelFilter(0);
   }
 
   function chooseModel(next: Vehicle) {
     setModel(next.model);
     setShowModels(false);
     setCodingSearch("");
-    setLevelFilter(0);
     const available = availableModelCodings(next);
     const hasOwnCodings = guideCategories.some((category) =>
       (category === "Codierungen" || category === "Assistenzsysteme") &&
@@ -203,12 +197,8 @@ export default function GuideSelector() {
       )}
 
       {vehicle && (
-        <section className="mt-6" aria-labelledby="guide-codings-title" aria-live="polite">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h2 id="guide-codings-title" className="text-xl font-black">Anleitungen und Rechercheliste</h2>
-              <p className="mt-1 text-xs text-slate-600">{vehicle.model} · {codings.length} bestehende Codierfunktionen · {researchEntries.length} Nachrüst-/Umbauquellen · {sourceIdeas.length} zusätzliche PDF-Referenzthemen</p>
-            </div>
+        <section className="mt-6" aria-label="Fahrzeuganleitungen" aria-live="polite">
+          <div className="flex justify-end">
             {(codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
               <label className="relative block w-full sm:w-60">
                 <span className="sr-only">Anleitungen suchen</span>
@@ -223,28 +213,11 @@ export default function GuideSelector() {
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
             {categoryCounts.map(({ category, count }) => (
               <button key={category} type="button" aria-pressed={activeCategory === category}
-                onClick={() => { setActiveCategory(category); setLevelFilter(0); }}
+                onClick={() => setActiveCategory(category)}
                 className={"flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm font-bold transition hover:border-blue-400 " +
                   (activeCategory === category ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700")}>
                 <span>{category}</span>
                 <span className={activeCategory === category ? "rounded-full bg-white/20 px-2 py-0.5 text-xs" : "rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600"}>{count}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-3 flex flex-wrap items-center gap-1.5" role="group" aria-label="Nach Schwierigkeit filtern">
-            <span className="mr-1 text-xs font-semibold text-slate-600">Schwierigkeit:</span>
-            {([
-              { value: 0, label: "Alle" },
-              { value: 1, label: "Leicht" },
-              { value: 2, label: "Mittel" },
-              { value: 3, label: "Schwer" },
-            ] as const).map(({ value, label }) => (
-              <button key={value} type="button" aria-pressed={levelFilter === value}
-                onClick={() => setLevelFilter(value)}
-                className={"rounded-full border px-3 py-1.5 text-xs font-semibold hover:border-blue-400 " +
-                  (levelFilter === value ? "border-blue-600 bg-blue-50 text-blue-800" : "border-slate-200 bg-white text-slate-600")}>
-                {label}
               </button>
             ))}
           </div>
