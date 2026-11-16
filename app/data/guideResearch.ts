@@ -22,6 +22,406 @@ const leonKL = ["SEAT Leon KL", "CUPRA Leon KL"];
 
 export const researchedGuides: readonly ResearchGuide[] = [
   // Nachrüstungen
+  // Neue, quellenbasierte Recherche vom 16.11.2026. Fremde Einbauunterlagen nicht als eigene PDFs anbieten.
+  {
+    "id": "passat8-sideassist",
+    "title": "Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Passat B8 (3G)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-vw-passat-b8/41150-2",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Radarsensoren, Spiegelwarnanzeigen und Dongle; Varianten bis MJ 2019 bzw. ab 2020 und je Lenkradposition"
+  },
+  {
+    "id": "passat8-kessy-komplett",
+    "title": "Kessy/Keyless Access mit Türgriff-Sensoren nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Passat B8 (3G)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komfortschluessel-kessy-fuer-vw-passat-b8/44528",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur Fahrzeuge mit PR 4I6 oder 4I7; Baujahr und mögliche Online-Inbetriebnahme anhand FIN prüfen"
+  },
+  {
+    "id": "passat8-rdk-high",
+    "title": "Direkte Reifendruckkontrolle (RDK High) mit vier Radsensoren nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Passat B8 (3G)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-reifendruck-kontrollsystem-rdk-fuer-vw-passat-b8/48285",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Steuergerät, Kabelsatz und vier Ventilsensoren; Sensormontage beim Reifendienst, Codierdongle"
+  },
+  {
+    "id": "passat8-easyopen",
+    "title": "Fußgeste Easy Open für elektrische Heckklappe nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Passat B8 (3G)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-sensorgesteuerte-heckklappenoeffnung-fuer-vw-passat-b8/42680",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur bei elektrischer Heckklappe PR 4E7 und Komfortschlüssel PR 4F2 oder 4I3"
+  },
+  {
+    "id": "tiguan2-sideassist",
+    "title": "Side Assist inklusive Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-vw-tiguan-ad1/41395",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Seitliche Radarsensoren und Warnanzeigen in Spiegeln; Varianten bis MJ 2019 und ab MJ 2020"
+  },
+  {
+    "id": "tiguan2-elektroheckklappe",
+    "title": "Elektrische Heckklappe mit Motorantrieben und Einklemmschutz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-nachruest-set-elektrische-heckklappe-fuer-vw-tiguan-ad1-ax1/41319",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Komplettset mit Dämpfern/Motoren, Zuziehilfe, Schaltern und Steuergerät; bis MJ 2020 / ab MJ 2021 unterschiedlich"
+  },
+  {
+    "id": "tiguan2-areaview",
+    "title": "360°-Umgebungsansicht Area View nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-umgebungsansicht-area-view-fuer-vw-tiguan-ad1-ax1/41480",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Vier Kameras, Steuergerät und Infotainmentanbindung; verschiedene Stoßfänger-/PR-Versionen; ab MJ 2021 aktuell eingeschränkt"
+  },
+  {
+    "id": "tiguan2-anklappspiegel",
+    "title": "Elektrisch anklappbare Spiegel inklusive Umfeldbeleuchtung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anklappbare-aussenspiegel-fuer-vw-tiguan-ad1-ax1/41770",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur LHD mit PR 6XN ohne Area View; Highline-Türsteuergeräte erforderlich, sonst Steuergerätewechsel"
+  },
+  {
+    "id": "tiguan2-front-heckkamera",
+    "title": "Original-Frontkamera und Rückfahrkamera gemeinsam nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-front-und-rueckfahrkamera-fuer-vw-tiguan-ad1/42095-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "2-Kamera-System mit Codierdongle; Navi-PR 7UF/7UG und Stoßfängerversion prüfen"
+  },
+  {
+    "id": "a4-8w-sideassist",
+    "title": "Audi Side Assist mit Querverkehrwarnung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-side-assist-fuer-audi-a4-8w/40779-m",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Highline-Türsteuergeräte erforderlich; Komponentenschutz der Radarsensorsteuergeräte muss autorisiert aufgehoben werden"
+  },
+  {
+    "id": "a4-8w-phonebox",
+    "title": "Audi Phone Box mit induktivem Laden (Qi) nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-phone-box-fuer-audi-a4-8w-a5-f5/42860-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur bei passender Handyvorbereitung PR 9ZX, verschiedene Ausführungen bis 2019 / Facelift ab 2020"
+  },
+  {
+    "id": "a4-8w-memory-sitz",
+    "title": "Memoryfunktion für elektrisch verstellbaren Fahrersitz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-memory-fahrersitz-fuer-audi-a4-8w/43455",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Elektrischer Fahrersitz PR 3L5 oder 3PB erforderlich; Sitzmemory-Tasten und Steuergerät"
+  },
+  {
+    "id": "a4-8w-parklenkassist",
+    "title": "Parklenkassistent PLA / Park Assist nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-parklenkassistent-pla-fuer-audi-a4-8w/43220",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Sensorpaket je vorhandener Einparkhilfe; bei PR 7X0 BCM prüfen; laut Anbieter ab MJ 2024 derzeit nicht möglich"
+  },
+  {
+    "id": "a4-8w-autohold",
+    "title": "Auto Hold mit Originalschalter und Codierdongle nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9",
+      "A5 / S5 F5"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-auto-hold-berganfahrassistent-fuer-audi-a4-8w-a5-f5/42105",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Schalt- oder Automatikgetriebe und Links-/Rechtslenker bei der Variantenwahl berücksichtigen"
+  },
+  {
+    "id": "a4-8w-usb-fond",
+    "title": "USB-Ladehub in der hinteren Mittelkonsole nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-usb-hub-fuer-audi-a4-8w/43399",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Originaler Ladehub und Leitungssatz; funktioniert bei eingeschalteter Zündung; keine Codierung erforderlich"
+  },
+  {
+    "id": "a4-8w-homelink",
+    "title": "HomeLink-Garagentoröffnung mit Bedienfeld nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-homelink-garagentoroeffnung-fuer-audi-a4-8w/43335-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Varianten bis MJ 2019 und ab MJ 2020; Kompatibilität zum Garagentor-Sender vorab klären"
+  },
+  {
+    "id": "a4-8w-rdk-high",
+    "title": "Direkte Reifendruckanzeige mit Druck und Temperatur im MMI nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9",
+      "A5 / S5 F5"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-reifendruck-kontrollsystem-rdk-fuer-audi-a4-8w-a5-f5/43730",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Zusätzliche vier Radsensoren und Empfängersteuerteil; Sensoren müssen in die Felgen montiert werden"
+  },
+  {
+    "id": "a4-8w-schwenk-ahk",
+    "title": "Original schwenkbare Anhängerkupplung inklusive Steuergerät nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 B9"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-audi-a4-8w/46990",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Nur für zulässige Anhängelast laut Fahrzeugpapieren; laut Produkt nicht für US-Fahrzeuge/RS4; ggf. Kühlerlüfteranpassung, Angebot anfordern"
+  },
+  {
+    "id": "a3-8v-sideassist",
+    "title": "Audi Side Assist als Original-Radarsystem nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A3 / S3 8V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-audi-side-assist-fuer-audi-a3-8v/41120-9",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Radarsensoren hinten, Spiegelwarnanzeigen und Codierung; Ausführung nach Karosserie/Modelljahr"
+  },
+  {
+    "id": "octavia5e-blindspot",
+    "title": "Blind Spot und Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Octavia 3 5E",
+      "Octavia 3 5E Facelift"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-skoda-octavia-5e/43055-m",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "ABS 3Q0 oder kompatible 5Q0-Ausführung ab MJ 2016 prüfen; Ausparkassistent braucht PDC"
+  },
+  {
+    "id": "superb3v-heckkamera",
+    "title": "Original-Rückfahrkamera in der Heckklappengriffleiste nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Superb 3V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-rueckfahrkamera-fuer-skoda-superb-3v/41559",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "MIB2/MIB3-Navi-PR notwendig, Kameraausführung vor/nach 02.04.2018 unterscheiden"
+  },
+  {
+    "id": "superb3v-sideassist",
+    "title": "Spurwechsel- und Ausparkassistent inklusive Warnanzeigen nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Superb 3V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-skoda-superb-3v/43065",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Limousine/Combi und Modelljahr bis 2019 / ab 2020 unterscheiden; Radar- und Türsteuergeräte prüfen"
+  },
+  {
+    "id": "superb3v-standheizung",
+    "title": "Standheizung mit Steuerung über Radio oder Fernbedienung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Superb 3V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-standheizung-fuer-skoda-superb-3v/50900",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nicht für Hybrid PR 0K3; Klimabedienteil separat erforderlich; Einbau nur fachgerecht"
+  },
+  {
+    "id": "superb3v-rdk-high",
+    "title": "Reifendruckkontrolle High mit vier Drucksensoren nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Superb 3V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-reifendruck-kontrollsystem-rdk-fuer-skoda-superb-3v/48565",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Feldruckanzeige je Rad; Highline-CAN-Gateway ggf. nötig, Sensoren vom Reifendienst montieren lassen"
+  },
+  {
+    "id": "kodiaqns-heckkamera",
+    "title": "Original-Rückfahrkamera mit dynamischen Hilfslinien nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-rueckfahrkamera-fuer-skoda-kodiaq-ns7/41940",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kompatible Navigationsgeräte PR 7UF/7UG/7UT/7UH bzw. Radio I8F+QV3 notwendig"
+  },
+  {
+    "id": "kodiaqns-front-heckkamera",
+    "title": "Kodiaq NS: Front- und Heckkamera mit zwei Ansichten nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-front-und-rueckfahrkamera-fuer-skoda-kodiaq-ns7/47175",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Zwei Kameras mit Steuergerät und Codierdongle; Navi und Einparkhilfe-PR-Codes prüfen"
+  },
+  {
+    "id": "octavianx-rfk-dynamisch",
+    "title": "Original-Rückfahrkamera mit dynamischen Linien nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Octavia 4 NX"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-rueckfahrkamera-fuer-skoda-octavia-nx/45278",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Infotainment PR 8AR/8DG/I8U oder I8Q unterscheidet Kamera; SFD-Schutz und berechtigte Inbetriebnahme prüfen"
+  },
+  {
+    "id": "octavianx-front-heckkamera",
+    "title": "Front- und Heckkamera mit dynamischen Hilfslinien nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Octavia 4 NX"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-front-und-rueckfahrkamera-fuer-skoda-octavia-nx/47294",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Zwei Kameras und Steuergerät; SFD1/SFD2, Lizenz und PR-Codes vor Bestellung prüfen"
+  },
+  {
+    "id": "octavianx-230v-steckdose",
+    "title": "230-V-Steckdose im Fond samt Wechselrichter nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Octavia 4 NX"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-230-volt-steckdose-fuer-skoda-octavia-nx/48115",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "150-W-Wechselrichter, Anschlussset und Codierung; GeKo/SFD-Status klären, 230-V-Arbeiten nur fachgerecht"
+  },
+  {
+    "id": "golf8-rueckfahrkamera",
+    "title": "Original-Rückfahrkamera im VW Golf 8 nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-rueckfahrkamera-fuer-vw-golf-8-cd-viii/45105",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Golf-8-Varianten I8Q/8AR, Limousine/Variant und SFD-Generation unterscheiden; dynamische Hilfslinien"
+  },
+  {
+    "id": "tarraco-kn2-rfk",
+    "title": "Original-Rückfahrkamera in Griffleiste nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Tarraco KN2"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-rueckfahrkamera-fuer-seat-tarraco-kn2/43900",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Originalkamera mit dynamischen Hilfslinien; Wischwasseranschluss benötigt zusätzliche Teile; Codierdongle"
+  },
+  {
+    "id": "ateca-kh-frontrear",
+    "title": "Ateca KH: Original-Front- und Heckkamera nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Ateca KH7"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-front-und-rueckfahrkamera-fuer-seat-ateca-kh/47180-3",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Stoßfänger-/Modelljahrvariante und Navi-PR 7UF/7UG beachten; PDC-Taster ggf. ersetzen"
+  },
+  {
+    "id": "leonkl-blindspot",
+    "title": "Blind Spot / Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "SEAT Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-seat-leon-kl/45285-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lichtleiter in Türverkleidung nicht enthalten, GeKo/SFD-Freigabe und kompatibles Modelljahr vorab prüfen"
+  },
   // Rechercheerweiterung vom 16.11.2026: nur Themen mit belegtem Anleitungsbezug.
   {
     "id": "golf7-rfk-high-kufatec",
