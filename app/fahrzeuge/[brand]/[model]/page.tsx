@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { curateCodingEntries } from "../../../lib/codingDisplay";
-import { codingCatalog, codingGroups, codingsForVehicle } from "../../../data/catalog";
+import { vehicleSpecificCodings, protectionReviewMessage } from "../../../lib/vehicleCodings";
+import { codingGroups } from "../../../data/catalog";
 import { priorityVehicleSeoByPath as prioritySeoByPath } from "../../../lib/priorityVehicleSeo";
 import { findVehicleBySlugs, seoVehicles, vehicleBrandSlug, vehicleModelSlug } from "../../../lib/vehicleSeo";
 
@@ -69,10 +69,8 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
   const years = vehicle.endYear >= 2026 ? `ab ${vehicle.startYear}` : `${vehicle.startYear}–${vehicle.endYear}`;
   const url = `${BASE}/fahrzeuge/${params.brand}/${params.model}`;
   const landing = brandLanding(vehicle.brand);
-  const codingIds = new Set(codingsForVehicle(vehicle));
-  const serviceCodings = curateCodingEntries(
-    codingCatalog.filter((coding) => codingIds.has(coding.id) && coding.id !== "diagnose" && (vehicle.platform === "MQBevo" || !["mqbevo-lane-onstate", "mqbevo-adaptive-lane", "mqbevo-fla-memory"].includes(coding.id))).map((coding) => ({ ...coding, source: "vehicle" as const }))
-  );
+  const exampleYear = Math.min(vehicle.endYear, 2023);
+  const serviceCodings = vehicleSpecificCodings(vehicle, exampleYear, Boolean(vehicle.sfd1From && exampleYear >= vehicle.sfd1From), false).filter((coding) => coding.id !== "vehicle-diagnose");
   const relatedPriority = Object.entries(prioritySeoByPath)
     .filter(([key]) => key !== seoKey && key.startsWith(`${params.brand}/`))
     .slice(0, 5);
@@ -166,7 +164,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               <h2 className="mt-2 text-3xl font-black">{vehicle.diagnosticsOnly ? `Diagnose für ${name}` : `Funktionen für ${name}`}</h2>
               <p className="mt-3 leading-7 text-slate-600">{vehicle.diagnosticsOnly
                 ? "Für diese Baureihe ist derzeit die Fehlerdiagnose hinterlegt. Codierungen werden erst ergänzt, wenn passende Funktionen für Plattform und Steuergeräte verifiziert sind."
-                : "Preise gelten je ausgewählter Funktion. Mehrere Codierungen werden auf der Hauptseite automatisch nach der aktuellen Rabattstaffel zusammengefasst."}</p>
+                : "Die Beispiele gelten für unterstützte Ausstattungen bis Baujahr 2023. Wähle dein genaues Baujahr im Konfigurator. Mit „Vorprüfung“ gekennzeichnete Funktionen sind erst nach technischer Bestätigung buchbar. Preise gelten je ausgewählter Funktion. Mehrere Codierungen werden auf der Hauptseite automatisch nach der aktuellen Rabattstaffel zusammengefasst."}</p>
             </div>
             {vehicle.diagnosticsOnly && <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 leading-7 text-slate-700">Fehlerspeicher auslesen und Steuergeräte prüfen: <strong>39 €</strong>. Für den Audi Q6 e-tron (PPE) sind noch keine Codierungen zur Auswahl freigegeben.</div>}
             <div className="mt-8 space-y-9">
@@ -179,7 +177,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
                     <div className="mt-3 grid gap-3 md:grid-cols-2">
                       {list.map((coding) => (
                         <div key={coding.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                          <div className="flex items-start justify-between gap-4"><div className="font-semibold leading-6">{coding.name}</div><div className="shrink-0 font-black">{coding.price} €</div></div>
+                          <div className="flex items-start justify-between gap-4"><div className="font-semibold leading-6">{coding.name}</div><div className="shrink-0 font-black">{coding.reviewOnly ? "Vorprüfung" : `${coding.price} €`}</div></div>
                           {coding.hardware && <p className="mt-3 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-600"><b>Hardware:</b> {coding.hardware}</p>}
                           {coding.requirements && <p className="mt-2 text-xs leading-5 text-slate-600"><b>Hinweis:</b> {coding.requirements}</p>}
                         </div>
@@ -211,7 +209,8 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               <div><dt className="text-slate-500">Baujahre</dt><dd className="font-semibold">{years}</dd></div>
               <div><dt className="text-slate-500">Plattform</dt><dd className="font-semibold">{vehicle.platform}</dd></div>
             </dl>
-            {vehicle.sfd1From && vehicle.endYear >= 2024 ? <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-slate-700"><b>SFD2 / UNECE ab 2024:</b> Für SFD2-Fahrzeuge werden keine Codierungen angeboten. Die aufgeführten Codiermöglichkeiten gelten nur für unterstützte Fahrzeuge/Baujahre vor SFD2. Diagnose und technische Prüfung bleiben möglich.</div> : vehicle.sfd1From ? <div className="mt-5 rounded-xl border border-blue-200 bg-white p-3 text-xs leading-5 text-slate-700">SFD ist bei dieser Baureihe ab Modelljahr {vehicle.sfd1From} relevant. Die konkrete Buchbarkeit wird nach Baujahr und Steuergerät geprüft.</div> : null}
+            {vehicle.endYear >= 2024 && <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-slate-700"><b>Fahrzeuge ab 2024:</b> {protectionReviewMessage}</div>}
+
             <Link href={bookingHref} className="btn-primary mt-5 w-full text-center">{vehicle.diagnosticsOnly ? "Diagnose konfigurieren" : "Jetzt konfigurieren"}</Link>
           </aside>
         </div>
