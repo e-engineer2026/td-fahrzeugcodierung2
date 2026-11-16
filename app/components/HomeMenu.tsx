@@ -18,6 +18,7 @@ export default function HomeMenu() {
       <a href="#ablauf">So funktioniert’s</a>
       <Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link>
       <a href="#kontakt">Kontakt</a>
+      <Link href="/codieranleitungen">PDF-Codieranleitungen (VCDS / VCP)</Link>
       <Link href="/sign-in?redirect_url=%2Fkonto">Mein Konto / Anmelden</Link>
     </nav>}
   </div>;
