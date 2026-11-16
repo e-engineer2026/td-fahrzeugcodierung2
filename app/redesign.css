@@ -363,12 +363,19 @@
 /* Keep the restored Audi vehicles fully visible in the mobile hero. */
 @media(max-width:600px){.td-home .td-hero-slide:not(.td-hero-model-photo) img{object-position:right 82%}}
 
-/* Wall boundary in each start image, matched to the cover crop. */
-.td-hero-picture{--wall-offset:.300;--wall-height-offset:.5334}
-.td-hero-picture[data-wall-scene="0"],.td-hero-picture[data-wall-scene="1"],.td-hero-picture[data-wall-scene="2"]{--wall-offset:.358;--wall-height-offset:.636}
-.td-airplane-sky{clip-path:inset(0 max(0px,calc(50cqw - max(100cqw * var(--wall-offset),100cqh * var(--wall-height-offset)))) 0 0)}
-@media(min-width:601px) and (max-width:900px){.td-airplane-sky{clip-path:inset(0 max(0px,calc(37cqw - max(100cqw * (var(--wall-offset) - .13),100cqh * (var(--wall-height-offset) - .2311)))) 0 0)}}
-@media(max-width:600px){.td-hero-picture:not([data-wall-scene="selected"]) .td-airplane-sky{clip-path:inset(0 max(14.2cqw,25.24cqh) 0 0)}}
+/* Clip plane and banner at the wall for every hero scene and viewport.
+   Lengths are calculated for the cover crop without CSS multiplication (which
+   can invalidate the clip-path and let the plane pass in front of the wall). */
+.td-hero-picture{--wall-reach:max(35.8cqw,63.6cqh);--wall-min-inset:14.2cqw;--wall-center:50cqw}
+.td-hero-picture[data-wall-scene="selected"]{--wall-reach:max(30cqw,53.34cqh);--wall-min-inset:20cqw}
+.td-airplane-sky{clip-path:inset(0 max(var(--wall-min-inset),calc(var(--wall-center) - var(--wall-reach))) 0 0)}
+@media(min-width:601px) and (max-width:900px){
+  .td-hero-picture{--wall-center:37cqw;--wall-reach:max(22.8cqw,40.49cqh)}
+  .td-hero-picture[data-wall-scene="selected"]{--wall-reach:max(17cqw,30.23cqh)}
+}
+@media(max-width:600px){
+  .td-airplane-sky{clip-path:inset(0 max(var(--wall-min-inset),25.24cqh) 0 0)}
+}
 
 /* Clear guidance for the next vehicle field. */
 .td-finder-fields label[data-current-step="true"] select{border-color:#2563eb;box-shadow:0 0 0 2px #dbeafe}
