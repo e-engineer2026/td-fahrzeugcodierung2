@@ -16,7 +16,7 @@ export type ReferenceIdea = {
   sourcePage: number;
   status: ReferenceStatus;
   note: string;
-  modelScope?: "octavia5e";
+  modelScope?: "octavia5e" | "vw-mqb";
 };
 
 const mqbReferenceModels = new Set([
@@ -538,6 +538,7 @@ export const referenceIdeas: readonly ReferenceIdea[] = [
     "title": "Navigationsradio: WLAN-Medienstreaming einschalten",
     "category": "Codierungen",
     "scope": "mqb",
+    "modelScope": "vw-mqb",
     "sourceName": "MQB Codierungen (Daniel Fuchs, 2020)",
     "sourcePage": 22,
     "status": "historical",
@@ -558,6 +559,7 @@ export const referenceIdeas: readonly ReferenceIdea[] = [
     "title": "Aktuellen Standort statt Fahrprofil im Displaykopf zeigen",
     "category": "Codierungen",
     "scope": "mqb",
+    "modelScope": "vw-mqb",
     "sourceName": "MQB Codierungen (Daniel Fuchs, 2020)",
     "sourcePage": 21,
     "status": "historical",
@@ -645,7 +647,7 @@ export const referenceIdeas: readonly ReferenceIdea[] = [
   },
   {
     "id": "ref-mqb-016",
-    "title": "Klimaanlage: Innenraumbefeuchtungssensor justieren",
+    "title": "Klimaanlage: Innenraumfeuchtigkeitssensor einstellen",
     "category": "Codierungen",
     "scope": "mqb",
     "sourceName": "MQB Codierungen (Daniel Fuchs, 2020)",
@@ -1169,6 +1171,7 @@ export const referenceIdeas: readonly ReferenceIdea[] = [
 export function referenceIdeasForVehicle(vehicle: Vehicle): ReferenceIdea[] {
   return referenceIdeas.filter((idea) => {
     if (idea.modelScope === "octavia5e" && !["Octavia 3 5E","Octavia 3 5E Facelift"].includes(vehicle.model)) return false;
+    if (idea.modelScope === "vw-mqb" && vehicle.brand !== "Volkswagen") return false;
     if (idea.scope === "golf8") return vehicle.model === "Golf 8 (CD)";
     if (idea.scope === "mqb") return mqbReferenceModels.has(vehicle.model);
     return mlbevoReferenceModels.has(vehicle.model);
