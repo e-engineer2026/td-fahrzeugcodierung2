@@ -7,11 +7,9 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/hero-audi-s6-td-decal.webp", brand: "Audi", label: "Audi S6 Avant", alt: "Roter Audi S6 Avant mit großer weißer TD-Fahrzeugcodierung-Beschriftung auf den Türen vor Leipziger Skyline" },
-  { src: "/hero-passat-b9-td-decal.webp", brand: "Volkswagen", label: "Volkswagen Passat B9 R-Line", alt: "Blauer Volkswagen Passat B9 Variant im R-Line-Stil mit großer weißer TD-Fahrzeugcodierung-Beschriftung auf den Türen vor Leipziger Skyline" },
-  { src: "/hero-skoda-photo.webp", brand: "Škoda", label: "Škoda Octavia RS", alt: "Roter Škoda Octavia RS mit TD-Schriftzug" },
-  { src: "/hero-seat-photo.webp", brand: "SEAT", label: "SEAT Leon Cupra R", alt: "Roter SEAT Leon Cupra R mit TD-Schriftzug" },
-  { src: "/hero-cupra-photo.webp", brand: "CUPRA", label: "CUPRA Formentor VZ", alt: "Petrolblauer CUPRA Formentor VZ mit TD-Schriftzug" },
+  { src: "/td-hero-a6-c8-silber-td.webp", brand: "Audi", label: "Audi A6 C8", alt: "Silberner Audi A6 C8 Avant mit TD-Schriftzug und eingeschalteten Scheinwerfern" },
+  { src: "/td-hero-s6-c8-blau-td.webp", brand: "Audi", label: "Audi S6 C8", alt: "Blauer Audi S6 C8 Avant mit S6-Emblem, TD-Schriftzug und eingeschalteten Scheinwerfern" },
+  { src: "/td-hero-rs6-c8-rot-td.webp", brand: "Audi", label: "Audi RS6 C8", alt: "Roter Audi RS6 C8 Avant mit RS6-Emblem, TD-Schriftzug und eingeschalteten Scheinwerfern" },
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
