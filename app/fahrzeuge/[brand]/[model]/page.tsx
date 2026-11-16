@@ -164,7 +164,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               <h2 className="mt-2 text-3xl font-black">{vehicle.diagnosticsOnly ? `Diagnose für ${name}` : `Funktionen für ${name}`}</h2>
               <p className="mt-3 leading-7 text-slate-600">{vehicle.diagnosticsOnly
                 ? "Für diese Baureihe ist derzeit die Fehlerdiagnose hinterlegt. Codierungen werden erst ergänzt, wenn passende Funktionen für Plattform und Steuergeräte verifiziert sind."
-                : "Die Beispiele gelten für unterstützte Ausstattungen bis Baujahr 2023. Wähle dein genaues Baujahr im Konfigurator. Mit „Vorprüfung“ gekennzeichnete Funktionen sind erst nach technischer Bestätigung buchbar. Preise gelten je ausgewählter Funktion. Mehrere Codierungen werden auf der Hauptseite automatisch nach der aktuellen Rabattstaffel zusammengefasst."}</p>
+                : "Die Beispiele gelten für unterstützte Ausstattungen bis Baujahr 2023. Wähle dein genaues Baujahr im Konfigurator. Die angezeigten Hardwarevoraussetzungen sind zu beachten. Preise gelten je ausgewählter Funktion. Mehrere Codierungen werden auf der Hauptseite automatisch nach der aktuellen Rabattstaffel zusammengefasst."}</p>
             </div>
             {vehicle.diagnosticsOnly && <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5 leading-7 text-slate-700">Fehlerspeicher auslesen und Steuergeräte prüfen: <strong>39 €</strong>. Für den Audi Q6 e-tron (PPE) sind noch keine Codierungen zur Auswahl freigegeben.</div>}
             <div className="mt-8 space-y-9">
@@ -177,7 +177,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
                     <div className="mt-3 grid gap-3 md:grid-cols-2">
                       {list.map((coding) => (
                         <div key={coding.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                          <div className="flex items-start justify-between gap-4"><div className="font-semibold leading-6">{coding.name}</div><div className="shrink-0 font-black">{coding.reviewOnly ? "Vorprüfung" : `${coding.price} €`}</div></div>
+                          <div className="flex items-start justify-between gap-4"><div className="font-semibold leading-6">{coding.name}</div><div className="shrink-0 font-black">{coding.uiGroup === "Assistenz" || !coding.reviewOnly ? `${coding.price} €` : "Vorprüfung"}</div></div>
                           {coding.hardware && <p className="mt-3 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-600"><b>Hardware:</b> {coding.hardware}</p>}
                           {coding.requirements && <p className="mt-2 text-xs leading-5 text-slate-600"><b>Hinweis:</b> {coding.requirements}</p>}
                         </div>
@@ -189,8 +189,8 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
             </div>
 
             <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
-              <h2 className="text-2xl font-black">Technische Vorprüfung beim {name}</h2>
-              <p className="mt-3 leading-7 text-slate-600">Der {name} gehört zur Plattform {vehicle.platform} und wurde {years} angeboten. Vor einer {vehicle.diagnosticsOnly ? "Diagnose" : "Codierung"} prüfen wir die tatsächlich verbauten Steuergeräte, den Softwarestand und die vorhandene Hardware. So lassen sich nicht unterstützte Funktionen vorab ausschließen.</p>
+              <h2 className="text-2xl font-black">Technische Voraussetzungen beim {name}</h2>
+              <p className="mt-3 leading-7 text-slate-600">Der {name} gehört zur Plattform {vehicle.platform} und wurde {years} angeboten. Für die {vehicle.diagnosticsOnly ? "Diagnose" : "Codierungen"} sind die tatsächlich verbauten Steuergeräte, der Softwarestand und die vorhandene Hardware maßgeblich. Die nötigen Hardwarevoraussetzungen stehen bei den jeweiligen Funktionen.</p>
               <p className="mt-3 leading-7 text-slate-600">Je nach gewünschter Funktion erfolgt die Umsetzung über Codierung, Anpassung oder Grundeinstellung. Für Remote-Termine wird zusätzlich geprüft, ob Diagnoseinterface und Verbindung für die jeweilige Arbeit geeignet sind.</p>
               {vehicle.sfd1From && <p className="mt-3 leading-7 text-slate-600">Ab Modelljahr {vehicle.sfd1From} kann bei dieser Baureihe SFD relevant sein. Ob eine SFD-Freischaltung benötigt wird, hängt vom konkreten Steuergerät und der gewünschten Anpassung ab.</p>}
             </section>
