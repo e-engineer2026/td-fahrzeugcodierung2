@@ -22,6 +22,142 @@ const leonKL = ["SEAT Leon KL", "CUPRA Leon KL"];
 
 export const researchedGuides: readonly ResearchGuide[] = [
   // Nachrüstungen
+  // Volkswagen: Tempomat, Side Assist, AHK; Anleitungszugang erst beim Anbieter prüfen.
+  {
+    "id": "vw-polo6r-gra-ohne-mfa",
+    "title": "VW Polo 6R: Tempomat GRA ohne Multifunktionsanzeige nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Polo 6R"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-anlage-fuer-vw-polo-6r-ohne-mfa/37922-2",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lenkstockhebel und Verkabelung; Motorsteuergerät freischalten, lange Codierung gesondert prüfen"
+  },
+  {
+    "id": "vw-polo6r-gra-mit-mfa",
+    "title": "VW Polo 6R: Tempomat GRA mit Multifunktionsanzeige nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Polo 6R"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-anlage-fuer-vw-polo-6r-mit-mfa/37922-3",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Unterschiedliche Ausführung bis/ab Modelljahr 2013; Lenkstockhebel, Motorsteuergerät-Freischaltung und lange Codierung prüfen"
+  },
+  {
+    "id": "vw-troc-gra-kit",
+    "title": "VW T-Roc A11: Tempomat GRA inklusive Lenkradtasten nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "T-Roc A11"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-vw-t-roc-a11-d11-ac7-ac8/43825",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Modell- und PR-abhängige Varianten mit/ohne MuFu; Lenkstock, Bedieneinheit, SVM/Freischaltung und Modelljahr prüfen"
+  },
+  {
+    "id": "vw-touran5t-gra-bis18",
+    "title": "VW Touran 5T bis Modelljahr 2018: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-vw-touran-5t-bis-2018/44240-2",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Varianten je MuFu, Speedlimiter und Lenkrad-PR; nicht mit Ausführung ab MJ 2019 verwechseln"
+  },
+  {
+    "id": "vw-touran5t-gra-ab19",
+    "title": "VW Touran 5T ab Modelljahr 2019: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-vw-touran-5t-ab-2019/44377-4",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Varianten nach PR für Multifunktionslenkrad, Speedlimiter und Kessy; mögliche Freischaltung beachten"
+  },
+  {
+    "id": "vw-troc-sideassist-kit",
+    "title": "VW T-Roc A11: Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "T-Roc A11"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-vw-t-roc-a11-d11/42660-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Zwei Radarsensoren hinten, Spiegelwarnanzeigen und Kabelsatz; Varianten A11 bis 2021 und D11 ab 2022 sowie SFD prüfen"
+  },
+  {
+    "id": "vw-touran5t-sideassist-kit",
+    "title": "VW Touran 5T: Blind Spot/Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-vw-touran-5t/41695",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Komplettset mit Radarsensoren und Spiegelwarnanzeigen; Links-/Rechtslenker und Modelljahre bis 2019/ab 2020 trennen"
+  },
+  {
+    "id": "vw-arteon3h-sideassist-kit",
+    "title": "VW Arteon 3H: Blind Spot/Side Assist und Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Arteon 3H"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-vw-arteon-3h/41722",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Unterschiedliche Ausführungen bis 2019/ab 2020; hintere Radarsensoren und Spiegelwarnanzeige, Codierung und Komponentenprüfung"
+  },
+  {
+    "id": "vw-golf8-schwenk-ahk",
+    "title": "VW Golf 8: originale schwenkbare Anhängerkupplung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-vw-golf-8-cd/47110",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Komplettset für Limousine/Variant, nicht für Golf R Motor PR DR5; ggf. Kühlerlüftertausch und SFD2-Prüfung"
+  },
+  {
+    "id": "vw-tiguan-touran-ahk-cable",
+    "title": "VW Tiguan II/Touran 5T: schwenkbare AHK mit fahrzeugspezifischem Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Tiguan II (AD/BW)",
+      "Touran 5T"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-anhaengerkupplung-zentralelektrik-touran-5t-tiguan-ad1-bw2/41490",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur Kabelsatz der Zentralelektrik; Kupplung, Steuergerät, Taster und Stoßfängerkabel separat, abschließende Codierung erforderlich"
+  },
+  {
+    "id": "vw-passat-arteon-troc-ahk-cable",
+    "title": "VW Passat B8/Arteon/T-Roc: originale AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Passat B8 (3G)",
+      "Arteon 3H",
+      "T-Roc A11"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-zentralelektrik-fuer-vw-passat-arteon-t-roc/40950",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabelsatz allein kein Komplettset; Passat/Arteon schwenkbar, T-Roc abnehmbar; AHK, Steuergerät, Taster und Codierung zusätzlich nötig"
+  },
   // Neue, quellenbasierte Recherche vom 16.11.2026. Fremde Einbauunterlagen nicht als eigene PDFs anbieten.
   {
     "id": "passat8-sideassist",
