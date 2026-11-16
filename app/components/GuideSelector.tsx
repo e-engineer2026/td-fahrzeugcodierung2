@@ -301,7 +301,7 @@ export default function GuideSelector() {
           {researchCategory && (
             <>
               <p className="mt-3 text-xs leading-6 text-slate-600">
-                Recherchierte Themen mit verlinkten Originalquellen. Öffentlich zugängliche Praxisberichte sind nicht automatisch geprüfte Herstelleranleitungen; manches ist nur als Vorschau oder Anbieterleistung verfügbar.
+                Recherchierte Themen mit verlinkten Originalquellen sowie zusätzliche, nicht verlinkte Prüfthemen aus bereitgestellten technischen PDF-Referenzen. Fremde Anleitungen oder Codierwerte werden hier nicht veröffentlicht.
                 Hier gibt es vorerst nur eine Liste, keine eigenen TD-PDFs und keine Kaufpreise.
               </p>
               {activeCategory === "Nachrüstungen" && (
@@ -410,7 +410,7 @@ export default function GuideSelector() {
               )}
             </>
           )}
-          {!researchCategory && codings.length > 0 && visibleCodings.length === 0 && (
+          {!researchCategory && visibleCodings.length === 0 && visibleSourceIdeas.length === 0 && (codings.length > 0 || sourceIdeas.length > 0) && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
               {codingSearch.trim() ? "Keine passenden Anleitungen gefunden." : "Für dieses Fahrzeug sind in diesem Bereich noch keine Anleitungen zugeordnet."}
             </p>
