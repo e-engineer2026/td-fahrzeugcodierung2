@@ -197,12 +197,8 @@ export default function GuideSelector() {
       )}
 
       {vehicle && (
-        <section className="mt-6" aria-labelledby="guide-codings-title" aria-live="polite">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h2 id="guide-codings-title" className="text-xl font-black">Anleitungen und Rechercheliste</h2>
-              <p className="mt-1 text-xs text-slate-600">{vehicle.model} · {codings.length} bestehende Codierfunktionen · {researchEntries.length} Nachrüst-/Umbauquellen · {sourceIdeas.length} zusätzliche PDF-Referenzthemen</p>
-            </div>
+        <section className="mt-6" aria-label="Fahrzeuganleitungen" aria-live="polite">
+          <div className="flex justify-end">
             {(codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
               <label className="relative block w-full sm:w-60">
                 <span className="sr-only">Anleitungen suchen</span>
