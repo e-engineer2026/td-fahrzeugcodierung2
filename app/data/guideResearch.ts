@@ -360,6 +360,138 @@ export const researchedGuides: readonly ResearchGuide[] = [
   // Umbauten
   // Intensive, quellenbasierte Umbau-Recherche vom 16.11.2026. Keine frei nutzbaren Drittanbieter-PDFs.
   {
+    "id": "golf8-iq-light",
+    "title": "VW Golf 8: auf IQ.LIGHT-Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-iq-light-mit-dynamischem-blinklicht-fuer-vw-golf-8-viii/49100",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Scheinwerfersatz mit Anschlussanleitungs-Vorschau; aLWR und GeKo-/SFD-Prüfung sowie fachgerechte Kalibrierung nötig"
+  },
+  {
+    "id": "golf8-iq-light-alwr",
+    "title": "VW Golf 8: automatische Leuchtweitenregulierung für IQ.LIGHT nachrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-automatische-leuchtweitenregulierung-alwr-komplettset-fuer-vw-golf-8-viii-cd-cg/49660",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "aLWR-Komplettset; vor Dongle-Inbetriebnahme Steuergerät zeitweise per berechtigtem GeKo-Zugang freischalten, Remoteunterstützung erforderlich"
+  },
+  {
+    "id": "t61-led-front",
+    "title": "VW T6.1: Halogen auf originale LED-Scheinwerfer umbauen",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Transporter / Multivan T6.1"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-scheinwerfer-led-tfl-fuer-vw-t6.1-sh-sj/44405",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Scheinwerfer/Steuergeräte und Codierhilfe; automatische Leuchtweitenregulierung muss zusätzlich installiert werden, anschließend Grundeinstellung"
+  },
+  {
+    "id": "t61-led-alwr",
+    "title": "VW T6.1: automatische Leuchtweitenregulierung für LED-Scheinwerfer nachrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Transporter / Multivan T6.1"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-alwr-komplettset-fuer-vw-t6.1-sh/46280",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Gateway-Kompatibilität prüfen; separates Codierinterface und professionelle Grundeinstellung nötig"
+  },
+  {
+    "id": "octavia-nx-matrix",
+    "title": "Škoda Octavia 4 NX: auf Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "Octavia 4 NX"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-mit-led-tfl-fuer-skoda-octavia-nx/49270",
+    "sourceName": "KUFATEC",
+    "access": "Produktinformation",
+    "note": "Hersteller sucht aktuell Probeverbau; keine allgemeine Komplettanleitung oder allgemeine Verfügbarkeit bestätigt; 8G1 und aLWR nötig"
+  },
+  {
+    "id": "leonkl-matrix",
+    "title": "SEAT/CUPRA Leon KL: auf Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "SEAT Leon KL",
+      "CUPRA Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-mit-led-tfl-fuer-seat-leon-kl/49320",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur mit Fernlichtassistent PR 8G1 und separater aLWR; Freigabe ggf. FOD-Shop, SFD2 und MJ-/PR-Abgleich"
+  },
+  {
+    "id": "formentor-matrix",
+    "title": "CUPRA Formentor KM: auf originale Matrix-LED-Scheinwerfer umrüsten",
+    "category": "Umbauten",
+    "topic": "Scheinwerfer & Licht",
+    "models": [
+      "CUPRA Formentor KM"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-led-matrix-scheinwerfer-mit-led-tfl-fuer-seat-formentor-km7/49330",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Originale Matrix-Scheinwerfer mit Steuerteilen; weitere aLWR-, Fernlichtassistent- und SFD-Voraussetzungen vor Kauf prüfen"
+  },
+  {
+    "id": "golf8-acc-komplett",
+    "title": "VW Golf 8: Radar-ACC vollständig nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Golf 8 (CD)"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-automatische-distanzregelung-acc-fuer-vw-golf-8/50680",
+    "sourceName": "KUFATEC",
+    "access": "Anbieterleistung",
+    "note": "Komplettumbau laut Anbieter mit FIN-bezogenem Umfang; SFD1/SFD2, Assistenzhardware und Kalibrierung vorab prüfen"
+  },
+  {
+    "id": "octavia-nx-acc-komplett",
+    "title": "Škoda Octavia 4 NX: Radar-ACC vollständig nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "Octavia 4 NX"
+    ],
+    "sourceUrl": "https://kufatec.com/de/skoda/octavia/octavia-nx/",
+    "sourceName": "KUFATEC",
+    "access": "Produktinformation",
+    "note": "Hersteller listet Komplettset Artikel 50665; Baureihe, Steuergeräte und SFD2 sowie Inbetriebnahme nur VIN-bezogen"
+  },
+  {
+    "id": "leon-kl-acc-komplett",
+    "title": "SEAT/CUPRA Leon KL: Radar-ACC vollständig nachrüsten",
+    "category": "Umbauten",
+    "topic": "ACC & pACC",
+    "models": [
+      "SEAT Leon KL",
+      "CUPRA Leon KL"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-automatische-distanzregelung-acc-fuer-seat-leon-kl/50825",
+    "sourceName": "KUFATEC",
+    "access": "Anbieterleistung",
+    "note": "Anbieter-Komplettset für Seat Leon KL, bei CUPRA Leon Einzelfallprüfung; VIN, Freigaben, Steuergeräte und Radar-Kalibrierung notwendig"
+  },
+  {
     "id": "golf7-bixenon-umbau",
     "title": "Golf 7: Halogen auf originale Bi-Xenon-Scheinwerfer umrüsten",
     "category": "Umbauten",
@@ -590,7 +722,7 @@ export const researchedGuides: readonly ResearchGuide[] = [
     "sourceUrl": "https://kufatec.com/de/kufatec-acc-option-praediktive-regelung-fuer-mqb/44365-m",
     "sourceName": "KUFATEC",
     "access": "Anbieterleistung",
-    "note": "Software-/Remote-Freigabe, keine freie Schrittanleitung; ACC, kompatible Navigation, Kamera, Radar/FEC und PR-Codes vor Bestellung per FIN prüfen"
+    "note": "Software-/Remote-Freigabe, keine freie Schrittanleitung; Golf 7 erst ab MJ 2017; ACC, kompatible Navigation, Kamera, Radar/FEC und PR-Codes per FIN prüfen"
   },
   {
     "id": "golf7-dome-flat-acc",
@@ -644,7 +776,7 @@ export const researchedGuides: readonly ResearchGuide[] = [
     "sourceUrl": "https://kufatec.com/de/kufatec-acc-option-210-km-h-fuer-mqb/44175",
     "sourceName": "KUFATEC",
     "access": "Anbieterleistung",
-    "note": "Nur für Fahrzeuge mit bestehendem ACC bis 160 km/h (PR 6K3); Radargeneration, Herstellerfreigabe und ADAS-Prüfung nötig"
+    "note": "Nur bei vorhandenem ACC bis 160 km/h (PR 6K3); Audi A3 8V laut Anbieter bis 200 km/h; Radargeneration, Freigabe und ADAS-Prüfung nötig"
   },
   {
     "id": "octavia5e-acc-komplett",
@@ -709,9 +841,7 @@ export const researchedGuides: readonly ResearchGuide[] = [
       "Passat B8 (3G)",
       "Tiguan II (AD/BW)",
       "Arteon 3H",
-      "Octavia 3 5E",
-      "Octavia 3 5E Facelift",
-      "Superb 3V",
+          "Superb 3V",
       "SEAT Leon 5F"
     ],
     "sourceUrl": "https://kufatec.com/de/kufatec-acc-option-stauassistent-fuer-mqb/43774",
