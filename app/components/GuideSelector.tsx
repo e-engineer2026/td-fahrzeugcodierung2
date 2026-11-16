@@ -5,7 +5,7 @@ import { Check, ChevronDown, ChevronUp, ExternalLink, LockKeyhole, Search } from
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
 import GuideDifficultyBar from "./GuideDifficultyBar";
-import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
+import { researchedGuidesForModel, type ResearchCategory, type ResearchGuide } from "../data/guideResearch";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
@@ -23,6 +23,16 @@ function guideCategory(coding: Coding): GuideCategory {
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") return "Assistenzsysteme";
   return "Codierungen";
+}
+
+function researchTopicFor(entry: ResearchGuide): string {
+  if (entry.topic) return entry.topic;
+  const name = entry.title;
+  if (/scheinwerfer|xenon|leuchtweiten|kurvenlicht|led.rückleuchten|heckleuchten|matrix.led|lichtumbau|voll.led/i.test(name)) return "Scheinwerfer & Licht";
+  if (/lenkrad|schaltwippen|multifunktion|mufu/i.test(name)) return "Lenkrad & Bedienung";
+  if (/\bacc\b|pacc|radar|stauassistent|abstandsregel|tempomat.*radar/i.test(name)) return "ACC & pACC";
+  if (/cockpit|kombiinstrument|mib|mmi|infotainment|fahrprofil/i.test(name)) return "Cockpit & Infotainment";
+  return "Weitere Umbauten";
 }
 
 function availableModelCodings(vehicle: Vehicle): Coding[] {
@@ -78,8 +88,8 @@ export default function GuideSelector() {
   const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
   const visibleResearch = researchEntries.filter((entry) =>
     entry.category === activeCategory &&
-    (activeCategory !== "Umbauten" || researchTopic === "Alle" || entry.topic === researchTopic || (!entry.topic && researchTopic === "Weitere Umbauten")) &&
-    [entry.title, entry.note, entry.sourceName, entry.topic ?? ""].join(" ").toLocaleLowerCase("de")
+    (activeCategory !== "Umbauten" || researchTopic === "Alle" || researchTopicFor(entry) === researchTopic) &&
+    [entry.title, entry.note, entry.sourceName, researchTopicFor(entry)].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleCodings = codings.filter((coding) =>
@@ -245,7 +255,7 @@ export default function GuideSelector() {
                 <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Umbauten nach Thema">
                   {["Alle", "Scheinwerfer & Licht", "ACC & pACC", "Lenkrad & Bedienung", "Cockpit & Infotainment", "Weitere Umbauten"].map((topic) => {
                     const count = researchEntries.filter((entry) => entry.category === "Umbauten" &&
-                      (topic === "Alle" || entry.topic === topic || (topic === "Weitere Umbauten" && !entry.topic))).length;
+                      (topic === "Alle" || researchTopicFor(entry) === topic)).length;
                     return (
                       <button key={topic} type="button" aria-pressed={researchTopic === topic}
                         onClick={() => setResearchTopic(topic)}
@@ -262,7 +272,7 @@ export default function GuideSelector() {
                   {visibleResearch.map((item) => (
                     <div key={item.id} className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 px-3 py-3 sm:px-4">
                       <div className="min-w-0 flex-1">
-                        {item.topic && <p className="mb-0.5 text-[11px] font-semibold text-blue-700">{item.topic}</p>}
+                        <p className="mb-0.5 text-[11px] font-semibold text-blue-700">{researchTopicFor(item)}</p>
                         <p className="text-sm font-bold leading-5 text-slate-900">{item.title}</p>
                         <p className="mt-1 text-xs leading-5 text-slate-600">{item.note}</p>
                         <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Öffentlicher Ratgeber / Praxisbericht" : item.access === "Vorschau / Kauf" ? "Vorschau, Vollversion nur beim Anbieter" : item.access === "beim Nachrüstsatz" ? "Anleitung beim Nachrüstsatz" : item.access === "Anbieterleistung" ? "Fachbetrieb / Anbieterleistung, keine freie Anleitung" : item.access === "Produktinformation" ? "Nur Produktinformationen, keine Anleitung" : "Produkt-/Serviceinformation, keine Komplettanleitung"}</p>
