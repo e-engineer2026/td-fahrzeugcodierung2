@@ -56,7 +56,7 @@ test('camera software, licensing, navigation and Travel Assist prerequisites sur
   const adaptive = entriesFor('Golf 8 (CD)', 2022).find((e) => /Adaptive Spurführung/.test(e.name));
   assert.ok(adaptive?.reviewOnly); assert.match(adaptive.requirements, /Travel Assist ab Werk/);
   const vze = entriesFor('Golf 7 (5G)', 2018).find((e) => /Verkehrszeichenerkennung freischalten/.test(e.name));
-  assert.ok(vze?.reviewOnly); assert.match(vze.hardware, /Navigation/); assert.match(vze.hardware, /SWaP\/FEC/);
+  assert.equal(vze?.reviewOnly, false); assert.match(vze.hardware, /Navigation/); assert.match(vze.hardware, /SWaP\/FEC/);
   const maps = entriesFor('Golf 7 (5G)', 2018).find((e) => /Smartphone-Navigation/.test(e.name));
   assert.match(maps.requirements, /MU1102|MU1367/);
   const rain = entriesFor('Golf 7 (5G)', 2018).find((e) => /Regenschließen/.test(e.name));
@@ -93,4 +93,29 @@ test('ordinary supported comfort offers remain bookable', () => {
 
 test('repeated evidence stays readable without dropping specific restrictions', () => {
   assert.equal(mergePrerequisites('Kamera erforderlich. Software X nötig.', 'Kamera erforderlich.'), 'Kamera erforderlich. Software X nötig.');
+});
+
+
+test('Golf 7 assistants show prices and hardware without a preliminary review gate', () => {
+  for (const year of [2012, 2016, 2017, 2020]) {
+    const entries = entriesFor('Golf 7 (5G)', year);
+    const assistants = entries.filter((e) => /^vehicle-golf7-selected-assist-/.test(e.id));
+    assert.ok(assistants.length >= 17);
+    for (const offer of assistants) {
+      assert.equal(offer.reviewOnly, false, offer.name);
+      assert.ok(offer.price > 0, offer.name);
+      assert.ok(offer.hardware?.length > 30, offer.name);
+      assert.doesNotMatch(offer.requirements, /Erst nach Bestätigung|Vor Auftrag/);
+    }
+    for (const name of [/Lane Assist – Freischaltung/, /Verkehrszeichenerkennung freischalten/, /^Fernlichtassistent freischalten/, /Side Assist/, /Ausparkassistent/, /Park Assist/, /Müdigkeitserkennung/]) {
+      assert.equal(entries.filter((e) => name.test(e.name)).length, 1, `${year}: ${name}`);
+    }
+    assert.equal(assistants.some((e) => /Traffic Jam Assist/.test(e.name)), year >= 2017);
+    assert.equal(assistants.some((e) => /Emergency Assist/.test(e.name)), year >= 2017);
+    assert.equal(assistants.some((e) => /Trailer Assist/.test(e.name)), year >= 2017);
+    assert.ok(!assistants.some((e) => /Travel Assist/.test(e.name)));
+  }
+  for (const model of ['Golf 8 (CD)', 'Octavia 3 5E', 'Polo AW']) {
+    assert.ok(!entriesFor(model, 2018).some((e) => /golf7-selected-assist-/.test(e.id)));
+  }
 });
