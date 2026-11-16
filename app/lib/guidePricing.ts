@@ -1,7 +1,7 @@
 import type { Coding } from "../data/catalog";
 
 // PDF-Einzelpreise, nicht die Preise für eine Fahrzeugcodierung vor Ort.
-// Die Einstufung ist eine Vorschau nach typischem Dokumentationsaufwand;
+// Die Einstufung ist eine Vorschau nach typischem Schwierigkeitsgrad der Anleitung;
 // vor Veröffentlichung kann jede fahrzeugspezifische Anleitung geprüft werden.
 export const guidePriceTiers = [5.99, 7.99, 9.99, 11.99, 13.99, 15.99, 17.99, 19.99] as const;
 
@@ -11,7 +11,7 @@ function isAssistance(coding: GuideCoding) {
   return coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz";
 }
 
-export function guideEffortStep(coding: GuideCoding): number {
+export function guideDifficultyStep(coding: GuideCoding): number {
   const name = coding.name;
 
   // Umfangreiche Umbauten, Softwarearbeiten oder Anlernen mehrerer Komponenten.
@@ -44,8 +44,15 @@ export function guideEffortStep(coding: GuideCoding): number {
   return 1;
 }
 
+/** Die acht Preisstufen werden als drei verständliche Schwierigkeitsgrade angezeigt. */
+export function guideDifficultyLevel(step: number): 1 | 2 | 3 {
+  if (step <= 2) return 1;
+  if (step <= 4) return 2;
+  return 3;
+}
+
 export function guidePrice(coding: GuideCoding): number {
-  return guidePriceTiers[guideEffortStep(coding)] ?? guidePriceTiers[0];
+  return guidePriceTiers[guideDifficultyStep(coding)] ?? guidePriceTiers[0];
 }
 
 export function formatGuidePrice(value: number): string {
