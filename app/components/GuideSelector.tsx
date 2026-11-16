@@ -9,7 +9,7 @@ import GuidePriceIndicator from "./GuidePriceIndicator";
 import { researchGuideEstimate, referenceIdeaEstimate } from "../lib/researchGuidePricing";
 import { retrofitFocusFor } from "../lib/retrofitFocus";
 import { referenceIdeasForVehicle, type ReferenceIdea } from "../data/referenceIdeas";
-import { researchedGuidesForModel, type ResearchCategory, type ResearchGuide } from "../data/guideResearch";
+import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
@@ -27,16 +27,6 @@ function guideCategory(coding: Coding): GuideCategory {
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") return "Assistenzsysteme";
   return "Codierungen";
-}
-
-function researchTopicFor(entry: ResearchGuide): string {
-  if (entry.topic) return entry.topic;
-  const name = entry.title;
-  if (/scheinwerfer|xenon|leuchtweiten|kurvenlicht|led.rückleuchten|heckleuchten|matrix.led|lichtumbau|voll.led/i.test(name)) return "Scheinwerfer & Licht";
-  if (/lenkrad|schaltwippen|multifunktion|mufu/i.test(name)) return "Lenkrad & Bedienung";
-  if (/\bacc\b|pacc|radar|stauassistent|abstandsregel|tempomat.*radar/i.test(name)) return "ACC & pACC";
-  if (/cockpit|kombiinstrument|mib|mmi|infotainment|fahrprofil/i.test(name)) return "Cockpit & Infotainment";
-  return "Weitere Umbauten";
 }
 
 function availableModelCodings(vehicle: Vehicle): Coding[] {
@@ -61,9 +51,6 @@ export default function GuideSelector() {
   const [modelSearch, setModelSearch] = useState("");
   const [codingSearch, setCodingSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
-  const [researchTopic, setResearchTopic] = useState("Alle");
-  const [levelFilter, setLevelFilter] = useState<0 | 1 | 2 | 3>(0);
-  const [retrofitFilter, setRetrofitFilter] = useState<"Alle" | "Praxis-Auswahl" | "Kompakter Einbau">("Alle");
 
   const models = useMemo(
     () => vehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
@@ -78,7 +65,7 @@ export default function GuideSelector() {
   const codings = useMemo(() => vehicle ? availableModelCodings(vehicle) : [], [vehicle]);
   const researchEntries = useMemo(
     () => vehicle
-      ? (["Nachrüstungen", "Umbauten"] as ResearchCategory[]).flatMap((category) => researchedGuidesForModel(vehicle.model, category))
+      ? (["Nachrüstungen", "Umbauten"] as ResearchCategory[]).flatMap((category) => researchedGuidesForModel(vehicle.model, category).filter((entry) => entry.access !== "Anbieterleistung"))
       : [],
     [vehicle]
   );
@@ -94,35 +81,18 @@ export default function GuideSelector() {
     [codings, researchEntries, sourceIdeas]
   );
   const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
-  const retrofitEntries = researchEntries.filter((entry) => entry.category === "Nachrüstungen");
-  const focusCount = retrofitEntries.filter((entry) => retrofitFocusFor(entry)).length;
-  const compactCount = retrofitEntries.filter((entry) => retrofitFocusFor(entry)?.scope === "Kompakter Einbau").length;
   const visibleResearch = researchEntries.filter((entry) =>
     entry.category === activeCategory &&
-    (levelFilter === 0 || researchGuideEstimate(entry).level === levelFilter) &&
-    (activeCategory !== "Umbauten" || researchTopic === "Alle" || researchTopicFor(entry) === researchTopic) &&
-    (activeCategory !== "Nachrüstungen" || retrofitFilter === "Alle" ||
-      (retrofitFilter === "Praxis-Auswahl" && !!retrofitFocusFor(entry)) ||
-      (retrofitFilter === "Kompakter Einbau" && retrofitFocusFor(entry)?.scope === "Kompakter Einbau")) &&
-    [entry.title, entry.note, entry.sourceName, entry.category === "Umbauten" ? researchTopicFor(entry) : (retrofitFocusFor(entry)?.topic ?? "")].join(" ").toLocaleLowerCase("de")
+    [entry.title, entry.note, entry.sourceName].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
-  ).sort((a, b) =>
-    activeCategory === "Nachrüstungen" && retrofitFilter !== "Alle"
-      ? Number(retrofitFocusFor(a)?.scope === "Zusätzliche Vorprüfung") - Number(retrofitFocusFor(b)?.scope === "Zusätzliche Vorprüfung")
-        || a.title.localeCompare(b.title, "de")
-      : 0
   );
   const visibleSourceIdeas = sourceIdeas.filter((idea) =>
     idea.category === activeCategory &&
-    (levelFilter === 0 || referenceIdeaEstimate(idea).level === levelFilter) &&
-    (activeCategory !== "Nachrüstungen" || retrofitFilter === "Alle") &&
-    (activeCategory !== "Umbauten" || researchTopic === "Alle" || researchTopic === "Weitere Umbauten") &&
     [idea.title, idea.note, idea.sourceName].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleCodings = codings.filter((coding) =>
     guideCategory(coding) === activeCategory &&
-    (levelFilter === 0 || guideDifficultyLevel(guideDifficultyStep(coding)) === levelFilter) &&
     [coding.name, coding.uiGroup ?? ""].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
@@ -134,18 +104,12 @@ export default function GuideSelector() {
     setModelSearch("");
     setCodingSearch("");
     setActiveCategory("Codierungen");
-    setResearchTopic("Alle");
-    setRetrofitFilter("Alle");
-    setLevelFilter(0);
   }
 
   function chooseModel(next: Vehicle) {
     setModel(next.model);
     setShowModels(false);
     setCodingSearch("");
-    setResearchTopic("Alle");
-    setRetrofitFilter("Alle");
-    setLevelFilter(0);
     const available = availableModelCodings(next);
     const hasOwnCodings = guideCategories.some((category) =>
       (category === "Codierungen" || category === "Assistenzsysteme") &&
@@ -158,8 +122,8 @@ export default function GuideSelector() {
       ) ?? "Codierungen");
     } else {
       const candidates = referenceIdeasForVehicle(next);
-      setActiveCategory(researchedGuidesForModel(next.model, "Nachrüstungen").length ? "Nachrüstungen"
-        : researchedGuidesForModel(next.model, "Umbauten").length ? "Umbauten"
+      setActiveCategory(researchedGuidesForModel(next.model, "Nachrüstungen").some((entry) => entry.access !== "Anbieterleistung") ? "Nachrüstungen"
+        : researchedGuidesForModel(next.model, "Umbauten").some((entry) => entry.access !== "Anbieterleistung") ? "Umbauten"
         : candidates.some((idea) => idea.category === "Codierungen") ? "Codierungen"
         : candidates.length ? candidates[0].category : "Codierungen");
     }
@@ -253,28 +217,11 @@ export default function GuideSelector() {
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
             {categoryCounts.map(({ category, count }) => (
               <button key={category} type="button" aria-pressed={activeCategory === category}
-                onClick={() => { setActiveCategory(category); setResearchTopic("Alle"); setRetrofitFilter("Alle"); setLevelFilter(0); }}
+                onClick={() => setActiveCategory(category)}
                 className={"flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm font-bold transition hover:border-blue-400 " +
                   (activeCategory === category ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700")}>
                 <span>{category}</span>
                 <span className={activeCategory === category ? "rounded-full bg-white/20 px-2 py-0.5 text-xs" : "rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600"}>{count}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-3 flex flex-wrap items-center gap-1.5" role="group" aria-label="Nach Schwierigkeit filtern">
-            <span className="mr-1 text-xs font-semibold text-slate-600">Schwierigkeit:</span>
-            {([
-              { value: 0, label: "Alle" },
-              { value: 1, label: "Leicht" },
-              { value: 2, label: "Mittel" },
-              { value: 3, label: "Schwer" },
-            ] as const).map(({ value, label }) => (
-              <button key={value} type="button" aria-pressed={levelFilter === value}
-                onClick={() => setLevelFilter(value)}
-                className={"rounded-full border px-3 py-1.5 text-xs font-semibold hover:border-blue-400 " +
-                  (levelFilter === value ? "border-blue-600 bg-blue-50 text-blue-800" : "border-slate-200 bg-white text-slate-600")}>
-                {label}
               </button>
             ))}
           </div>
@@ -328,60 +275,11 @@ export default function GuideSelector() {
 
           {researchCategory && (
             <>
-              {activeCategory === "Nachrüstungen" && (
-                <div className="mt-3">
-                  <div className="flex flex-wrap gap-1.5" role="group" aria-label="Nachrüstungen filtern">
-                    {([
-                      { value: "Alle", label: "Alle Nachrüstungen", count: retrofitEntries.length + sourceIdeas.filter((idea) => idea.category === "Nachrüstungen").length },
-                      { value: "Praxis-Auswahl", label: "TD-Praxis-Auswahl", count: focusCount },
-                      { value: "Kompakter Einbau", label: "Kompakte Einbauten", count: compactCount },
-                    ] as const).map((option) => (
-                      <button key={option.value} type="button" aria-pressed={retrofitFilter === option.value}
-                        onClick={() => setRetrofitFilter(option.value)}
-                        className={"rounded-full border px-3 py-1.5 text-xs font-semibold hover:border-blue-400 " +
-                          (retrofitFilter === option.value ? "border-blue-600 bg-blue-50 text-blue-800" : "border-slate-200 bg-white text-slate-600")}>
-                        {option.label} ({option.count})
-                      </button>
-                    ))}
-                  </div>
-                  <p className="mt-2 text-xs leading-5 text-slate-600">
-                    Die TD-Praxis-Auswahl bündelt Beleuchtung, Ladefunktionen, Reifendruck und kleinere Komfort-/Parksysteme.
-                    „Kompakt“ beschreibt nur den voraussichtlichen Hardwareumfang. VCDS/VCP, Hersteller-Dongles,
-                    PR-Codes, SFD und tatsächliche Machbarkeit müssen je Fahrzeug geprüft werden.
-                  </p>
-                </div>
-              )}
-              {activeCategory === "Umbauten" && (
-                <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Umbauten nach Thema">
-                  {["Alle", "Scheinwerfer & Licht", "ACC & pACC", "Lenkrad & Bedienung", "Cockpit & Infotainment", "Weitere Umbauten"].map((topic) => {
-                    const count = researchEntries.filter((entry) => entry.category === "Umbauten" &&
-                      (topic === "Alle" || researchTopicFor(entry) === topic)).length +
-                      sourceIdeas.filter((idea) => idea.category === "Umbauten" &&
-                        (topic === "Alle" || topic === "Weitere Umbauten")).length;
-                    return (
-                      <button key={topic} type="button" aria-pressed={researchTopic === topic}
-                        onClick={() => setResearchTopic(topic)}
-                        className={"rounded-full border px-3 py-1.5 text-xs font-semibold hover:border-blue-400 " +
-                          (researchTopic === topic ? "border-blue-600 bg-blue-50 text-blue-800" : "border-slate-200 bg-white text-slate-600")}>
-                        {topic} ({count})
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
               {visibleResearch.length > 0 && (
                 <div className="mt-2 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
                   {visibleResearch.map((item) => (
                     <div key={item.id} className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 px-3 py-3 sm:px-4">
                       <div className="min-w-0 flex-1">
-                        {activeCategory === "Umbauten" && (
-                          <p className="mb-0.5 text-[11px] font-semibold text-blue-700">{researchTopicFor(item)}</p>
-                        )}
-                        {activeCategory === "Nachrüstungen" && retrofitFocusFor(item) && (
-                          <p className="mb-0.5 text-[11px] font-semibold text-blue-700">
-                            TD-Praxis-Auswahl · {retrofitFocusFor(item)?.topic} · {retrofitFocusFor(item)?.scope}
-                          </p>
-                        )}
                         <p className="text-sm font-bold leading-5 text-slate-900">{item.title}</p>
                         <p className="mt-1 text-xs leading-5 text-slate-600">{item.note}</p>
                         {activeCategory === "Nachrüstungen" && retrofitFocusFor(item) && (
@@ -389,7 +287,7 @@ export default function GuideSelector() {
                             Codierung/Inbetriebnahme: {retrofitFocusFor(item)?.activation}
                           </p>
                         )}
-                        <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Öffentlicher Ratgeber / Praxisbericht" : item.access === "Vorschau / Kauf" ? "Vorschau, Vollversion nur beim Anbieter" : item.access === "beim Nachrüstsatz" ? "Anleitung beim Nachrüstsatz" : item.access === "Anbieterleistung" ? "Fachbetrieb / Anbieterleistung, keine freie Anleitung" : item.access === "Produktinformation" ? "Nur Produktinformationen, keine Anleitung" : "Produkt-/Serviceinformation, keine Komplettanleitung"}</p>
+                        <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Öffentlicher Ratgeber / Praxisbericht" : item.access === "Vorschau / Kauf" ? "Vorschau, Vollversion nur beim Anbieter" : item.access === "beim Nachrüstsatz" ? "Anleitung beim Nachrüstsatz" : item.access === "Produktinformation" ? "Nur Produktinformationen, keine Anleitung" : "Produkt-/Serviceinformation, keine Komplettanleitung"}</p>
                       </div>
                       <div className="flex shrink-0 flex-col items-end gap-2">
                         <GuidePriceIndicator estimate={researchGuideEstimate(item)} />
