@@ -345,7 +345,8 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
     const assistanceActivation = entry.uiGroup === "Assistenz" && /(freischalt|aktivier|parametrier)/i.test(entry.name);
     const smartphoneActivation = /(carplay|android auto|app-connect)/i.test(entry.name) && /(freischalt|aktivier)/i.test(entry.name);
     const startStopDeactivation = /start[- /]?stopp?/i.test(entry.name) && /deaktivier/i.test(entry.name);
-    const reviewOnly = Boolean(entry.reviewOnly || assistanceActivation || smartphoneActivation || startStopDeactivation);
+    const golf7AssistanceOffer = /^(vehicle-)?golf7-selected-assist-/.test(entry.id);
+    const reviewOnly = !golf7AssistanceOffer && Boolean(entry.reviewOnly || assistanceActivation || smartphoneActivation || startStopDeactivation);
     return { ...entry, price: servicePrice(entry.price), reviewOnly,
       hardware: mergePrerequisites(entry.hardware, hardwareForName(entry.name)),
       requirements: mergePrerequisites(entry.requirements, reviewOnly ? "Vor Auftrag sind Teilenummern, Ausstattung, Softwarestand und gegebenenfalls vorhandene Funktionslizenzen zu prüfen. Erst nach Bestätigung buchbar." : undefined),
