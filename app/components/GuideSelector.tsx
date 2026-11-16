@@ -3,12 +3,12 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, FileText, LockKeyhole, Search } from "lucide-react";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
+import { formatGuidePrice, guideEffortStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
 const guideCategories = ["Codierungen", "Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
 type GuideCategory = (typeof guideCategories)[number];
-type GuideEffort = "Einfach" | "Mittel" | "Aufwändig";
 
 function manufacturerOf(vehicle: Vehicle): Manufacturer {
   if (vehicle.brand === "SEAT / CUPRA") return vehicle.model.toUpperCase().startsWith("CUPRA ") ? "CUPRA" : "SEAT";
@@ -22,25 +22,6 @@ function guideCategory(coding: Coding): GuideCategory {
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") return "Assistenzsysteme";
   return "Codierungen";
-}
-
-function guideEffort(coding: Coding): GuideEffort {
-  const category = guideCategory(coding);
-  if (category === "Nachrüstungen" || category === "Umbauten") return "Aufwändig";
-  if (/parametrier|kalibrier|flash|firmware|SWaP|FEC|wegfahrsperre|immo|steuergeräte.*anlern|steuergeraete.*anlern|mehrere steuergeräte/i.test(coding.name)) return "Aufwändig";
-  if (category === "Assistenzsysteme") {
-    return /anpass|einstell|speicher|memory|warnung|vibration|toleranz|geschwindigkeit|abstand/i.test(coding.name) ? "Mittel" : "Aufwändig";
-  }
-  return /rückfahrkamera|kamera|navigation|ambientebeleuchtung|lichtanimation|carplay|android auto|infotainment|zusammen mit|software|mib|digital cockpit|active info display/i.test(coding.name) ? "Mittel" : "Einfach";
-}
-
-function guidePrice(coding: Coding): number {
-  const effort = guideEffort(coding);
-  return effort === "Einfach" ? 6.99 : effort === "Mittel" ? 9.99 : 14.99;
-}
-
-function euro(value: number) {
-  return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(value);
 }
 
 function availableModelCodings(vehicle: Vehicle): Coding[] {
@@ -207,15 +188,15 @@ export default function GuideSelector() {
           {codings.length > 0 && (
             <div className="mt-3 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
               {visibleCodings.map((coding) => {
-                const effort = guideEffort(coding);
+                const effortStep = guideEffortStep(coding) + 1;
                 return (
                   <div key={coding.id} className="flex items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
                     <div className="min-w-0">
                       <p className="text-sm font-bold leading-5 text-slate-950">{coding.name}</p>
-                      <p className="mt-0.5 text-xs text-slate-500">{effort} · PDF in Vorbereitung</p>
+                      <p className="mt-0.5 text-xs text-slate-500">Aufwandstufe {effortStep}/8 · PDF in Vorbereitung</p>
                     </div>
                     <div className="shrink-0 text-right">
-                      <p className="text-sm font-black tabular-nums text-blue-700">{euro(guidePrice(coding))}</p>
+                      <p className="text-sm font-black tabular-nums text-blue-700">{formatGuidePrice(guidePrice(coding))}</p>
                       <span className="inline-flex items-center gap-1 text-[11px] text-slate-500"><FileText size={12} aria-hidden="true" />PDF</span>
                     </div>
                   </div>
@@ -235,7 +216,7 @@ export default function GuideSelector() {
             </p>
           )}
           <p className="mt-3 text-xs leading-6 text-slate-500">
-            Geplante PDF-Preise nach geschätztem Anleitungsaufwand: einfach 6,99 €, mittel 9,99 €, aufwändig 14,99 €.
+            Geplante PDF-Einzelpreise nach geschätztem Aufwand in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[guidePriceTiers.length - 1])}.
             Die konkrete Codierbarkeit hängt von Baujahr, Ausstattung, Steuergerät, Softwarestand und ggf. SFD-Schutz ab.
           </p>
           <p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
