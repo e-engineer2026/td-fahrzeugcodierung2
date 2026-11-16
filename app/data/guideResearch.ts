@@ -22,6 +22,93 @@ const leonKL = ["SEAT Leon KL", "CUPRA Leon KL"];
 
 export const researchedGuides: readonly ResearchGuide[] = [
   // Nachrüstungen
+  // Škoda: neuer Rechercheblock nach Audi; PR-/Anleitungshinweise je Modell.
+  {
+    "id": "skoda-fabia-nj-gra",
+    "title": "Škoda Fabia 3 NJ: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Fabia 3 NJ"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-skoda-fabia-nj/49940-2",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Verschiedene Setvarianten mit Lenkstockhebel, Freischaltung und Diagnose; vor/nach Modelljahrwechsel prüfen"
+  },
+  {
+    "id": "skoda-scala-nw-gra",
+    "title": "Škoda Scala NW: Tempomat GRA mit Freischaltung nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Scala NW"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-skoda-scala-nw1/49975",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur ohne Kessy PR 4I2/4K3, mit/ohne MuFu-Lenkrad; SFD2-Ausstattung und Codierdongle prüfen"
+  },
+  {
+    "id": "skoda-octavia5e-gra",
+    "title": "Škoda Octavia 5E: Tempomat GRA mit Bedieneinheit nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Octavia 3 5E",
+      "Octavia 3 5E Facelift"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-skoda-octavia-5e/49990",
+    "sourceName": "KUFATEC",
+    "access": "Produktinfo / Service",
+    "note": "Komplettset mit Lenkstockhebel und Freischaltung; die ausgewählte Produktseite weist derzeit keine frei abrufbare Anleitung aus"
+  },
+  {
+    "id": "skoda-kodiaqns-blindspot",
+    "title": "Škoda Kodiaq NS: Blind Spot und Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-blind-spot-sensor-inkl.-ausparkassistent-fuer-skoda-kodiaq-ns7/41950-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Ausführungen bis 2021/ab 2022, PR KA0/KA2/KA6 und LHD/RHD; Radar, Spiegelwarnleuchten und Codierung"
+  },
+  {
+    "id": "skoda-karoqnu-sideassist",
+    "title": "Škoda Karoq NU: Blind Spot/Side Assist mit Ausparkassistent nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Karoq NU"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-inkl.-ausparkassistent-fuer-skoda-karoq-nu7/43490-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Umfeldkamera PR KA6 oder KA0/KA1/KA2 und vorhandene PDC für Ausparkassistent; SFD2-Variante prüfen"
+  },
+  {
+    "id": "skoda-karoq-kodiaq-ahk",
+    "title": "Škoda Karoq/Kodiaq: schwenkbare AHK mit Original-Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Karoq NU",
+      "Kodiaq NS"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-anhaengerkupplung-zentralelektrik-fuer-skoda-karoq-nu-kodiaq-ns/44655",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur fahrzeugspezifischer Kabelsatz; AHK, Steuergerät, Taster und Stoßfängerkabel separat, Codierdongle nötig"
+  },
+  {
+    "id": "skoda-superb3v-ahk",
+    "title": "Škoda Superb 3V: schwenkbare Original-AHK mit Kabelsatz nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Superb 3V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-kabelsatz-schwenkbare-anhaengerkupplung-ahk-zentralelektrik-fuer-skoda-superb-3v/45975",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabelsatz allein, passende AHK, Steuergerät und Taster sowie Diagnosecodierung erforderlich"
+  },
   // Audi: Nachrüstungen separat nach VW recherchiert; Typen und PR-Nummern beachten.
   {
     "id": "audi-a1-8x-gra",
