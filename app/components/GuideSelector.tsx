@@ -216,7 +216,7 @@ export default function GuideSelector() {
             </p>
           )}
           <p className="mt-3 text-xs leading-6 text-slate-500">
-            Geplante PDF-Einzelpreise nach geschätztem Aufwand in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[guidePriceTiers.length - 1])}.
+            Geplante PDF-Einzelpreise nach geschätztem Aufwand in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[7])}.
             Die konkrete Codierbarkeit hängt von Baujahr, Ausstattung, Steuergerät, Softwarestand und ggf. SFD-Schutz ab.
           </p>
           <p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
