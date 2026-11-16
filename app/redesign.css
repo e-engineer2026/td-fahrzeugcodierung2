@@ -381,3 +381,6 @@
 .td-finder-fields label[data-current-step="true"] select{border-color:#2563eb;box-shadow:0 0 0 2px #dbeafe}
 .td-finder-next{margin-top:12px;font-size:14px;color:#1d4ed8;font-weight:600}
 @media(prefers-reduced-motion:no-preference){.td-home .td-hero-slide{transition-duration:1.4s}.td-home .td-airplane-banner{animation-duration:4.5s}}
+
+/* Leave room for the additional protected-guides shortcut on small phones. */
+@media(max-width:420px){.td-home .td-header .td-brand>span{display:none}.td-header-actions .td-header-icon{width:36px;flex-basis:36px}}
