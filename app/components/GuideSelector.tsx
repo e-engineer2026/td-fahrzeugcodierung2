@@ -5,6 +5,7 @@ import { Check, ChevronDown, ChevronUp, ExternalLink, LockKeyhole, Search } from
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
 import GuideDifficultyBar from "./GuideDifficultyBar";
+import { retrofitFocusFor } from "../lib/retrofitFocus";
 import { researchedGuidesForModel, type ResearchCategory, type ResearchGuide } from "../data/guideResearch";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
@@ -58,6 +59,7 @@ export default function GuideSelector() {
   const [codingSearch, setCodingSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
   const [researchTopic, setResearchTopic] = useState("Alle");
+  const [retrofitFilter, setRetrofitFilter] = useState<"Alle" | "Praxis-Auswahl" | "Kompakter Einbau">("Alle");
 
   const models = useMemo(
     () => vehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
@@ -86,11 +88,22 @@ export default function GuideSelector() {
     [codings, researchEntries]
   );
   const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
+  const retrofitEntries = researchEntries.filter((entry) => entry.category === "Nachrüstungen");
+  const focusCount = retrofitEntries.filter((entry) => retrofitFocusFor(entry)).length;
+  const compactCount = retrofitEntries.filter((entry) => retrofitFocusFor(entry)?.scope === "Kompakter Einbau").length;
   const visibleResearch = researchEntries.filter((entry) =>
     entry.category === activeCategory &&
     (activeCategory !== "Umbauten" || researchTopic === "Alle" || researchTopicFor(entry) === researchTopic) &&
-    [entry.title, entry.note, entry.sourceName, researchTopicFor(entry)].join(" ").toLocaleLowerCase("de")
+    (activeCategory !== "Nachrüstungen" || retrofitFilter === "Alle" ||
+      (retrofitFilter === "Praxis-Auswahl" && !!retrofitFocusFor(entry)) ||
+      (retrofitFilter === "Kompakter Einbau" && retrofitFocusFor(entry)?.scope === "Kompakter Einbau")) &&
+    [entry.title, entry.note, entry.sourceName, entry.category === "Umbauten" ? researchTopicFor(entry) : (retrofitFocusFor(entry)?.topic ?? "")].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
+  ).sort((a, b) =>
+    activeCategory === "Nachrüstungen" && retrofitFilter !== "Alle"
+      ? Number(retrofitFocusFor(a)?.scope === "Zusätzliche Vorprüfung") - Number(retrofitFocusFor(b)?.scope === "Zusätzliche Vorprüfung")
+        || a.title.localeCompare(b.title, "de")
+      : 0
   );
   const visibleCodings = codings.filter((coding) =>
     guideCategory(coding) === activeCategory &&
@@ -106,6 +119,7 @@ export default function GuideSelector() {
     setCodingSearch("");
     setActiveCategory("Codierungen");
     setResearchTopic("Alle");
+    setRetrofitFilter("Alle");
   }
 
   function chooseModel(next: Vehicle) {
@@ -113,6 +127,7 @@ export default function GuideSelector() {
     setShowModels(false);
     setCodingSearch("");
     setResearchTopic("Alle");
+    setRetrofitFilter("Alle");
     const available = availableModelCodings(next);
     const hasOwnCodings = guideCategories.some((category) =>
       (category === "Codierungen" || category === "Assistenzsysteme") &&
@@ -217,7 +232,7 @@ export default function GuideSelector() {
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
             {categoryCounts.map(({ category, count }) => (
               <button key={category} type="button" aria-pressed={activeCategory === category}
-                onClick={() => { setActiveCategory(category); setResearchTopic("Alle"); }}
+                onClick={() => { setActiveCategory(category); setResearchTopic("Alle"); setRetrofitFilter("Alle"); }}
                 className={"flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm font-bold transition hover:border-blue-400 " +
                   (activeCategory === category ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700")}>
                 <span>{category}</span>
@@ -251,6 +266,29 @@ export default function GuideSelector() {
                 Recherchierte Themen mit verlinkten Originalquellen. Öffentlich zugängliche Praxisberichte sind nicht automatisch geprüfte Herstelleranleitungen; manches ist nur als Vorschau oder Anbieterleistung verfügbar.
                 Hier gibt es vorerst nur eine Liste, keine eigenen TD-PDFs und keine Kaufpreise.
               </p>
+              {activeCategory === "Nachrüstungen" && (
+                <div className="mt-3">
+                  <div className="flex flex-wrap gap-1.5" role="group" aria-label="Nachrüstungen filtern">
+                    {([
+                      { value: "Alle", label: "Alle Nachrüstungen", count: retrofitEntries.length },
+                      { value: "Praxis-Auswahl", label: "TD-Praxis-Auswahl", count: focusCount },
+                      { value: "Kompakter Einbau", label: "Kompakte Einbauten", count: compactCount },
+                    ] as const).map((option) => (
+                      <button key={option.value} type="button" aria-pressed={retrofitFilter === option.value}
+                        onClick={() => setRetrofitFilter(option.value)}
+                        className={"rounded-full border px-3 py-1.5 text-xs font-semibold hover:border-blue-400 " +
+                          (retrofitFilter === option.value ? "border-blue-600 bg-blue-50 text-blue-800" : "border-slate-200 bg-white text-slate-600")}>
+                        {option.label} ({option.count})
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-xs leading-5 text-slate-600">
+                    Die TD-Praxis-Auswahl bündelt Beleuchtung, Ladefunktionen, Reifendruck und kleinere Komfort-/Parksysteme.
+                    „Kompakt“ beschreibt nur den voraussichtlichen Hardwareumfang. VCDS/VCP, Hersteller-Dongles,
+                    PR-Codes, SFD und tatsächliche Machbarkeit müssen je Fahrzeug geprüft werden.
+                  </p>
+                </div>
+              )}
               {activeCategory === "Umbauten" && (
                 <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Umbauten nach Thema">
                   {["Alle", "Scheinwerfer & Licht", "ACC & pACC", "Lenkrad & Bedienung", "Cockpit & Infotainment", "Weitere Umbauten"].map((topic) => {
@@ -272,9 +310,21 @@ export default function GuideSelector() {
                   {visibleResearch.map((item) => (
                     <div key={item.id} className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 px-3 py-3 sm:px-4">
                       <div className="min-w-0 flex-1">
-                        <p className="mb-0.5 text-[11px] font-semibold text-blue-700">{researchTopicFor(item)}</p>
+                        {activeCategory === "Umbauten" && (
+                          <p className="mb-0.5 text-[11px] font-semibold text-blue-700">{researchTopicFor(item)}</p>
+                        )}
+                        {activeCategory === "Nachrüstungen" && retrofitFocusFor(item) && (
+                          <p className="mb-0.5 text-[11px] font-semibold text-blue-700">
+                            TD-Praxis-Auswahl · {retrofitFocusFor(item)?.topic} · {retrofitFocusFor(item)?.scope}
+                          </p>
+                        )}
                         <p className="text-sm font-bold leading-5 text-slate-900">{item.title}</p>
                         <p className="mt-1 text-xs leading-5 text-slate-600">{item.note}</p>
+                        {activeCategory === "Nachrüstungen" && retrofitFocusFor(item) && (
+                          <p className="mt-1 text-xs font-medium text-slate-700">
+                            Codierung/Inbetriebnahme: {retrofitFocusFor(item)?.activation}
+                          </p>
+                        )}
                         <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Öffentlicher Ratgeber / Praxisbericht" : item.access === "Vorschau / Kauf" ? "Vorschau, Vollversion nur beim Anbieter" : item.access === "beim Nachrüstsatz" ? "Anleitung beim Nachrüstsatz" : item.access === "Anbieterleistung" ? "Fachbetrieb / Anbieterleistung, keine freie Anleitung" : item.access === "Produktinformation" ? "Nur Produktinformationen, keine Anleitung" : "Produkt-/Serviceinformation, keine Komplettanleitung"}</p>
                       </div>
                       <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer"
@@ -288,7 +338,7 @@ export default function GuideSelector() {
               )}
               {visibleResearch.length === 0 && (
                 <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
-                  {codingSearch.trim() ? "Kein passender Rechercheeintrag gefunden." : "Für dieses Fahrzeug sind noch keine recherchierten Anleitungen in diesem Bereich erfasst."}
+                  {codingSearch.trim() ? "Kein passender Rechercheeintrag gefunden." : activeCategory === "Nachrüstungen" && retrofitFilter !== "Alle" ? "Für dieses Fahrzeug ist in der ausgewählten TD-Praxis-Liste noch kein Kandidat erfasst. Unter „Alle Nachrüstungen“ findest du die restliche Recherche." : "Für dieses Fahrzeug sind noch keine recherchierten Anleitungen in diesem Bereich erfasst."}
                 </p>
               )}
             </>
