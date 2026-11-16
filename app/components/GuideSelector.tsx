@@ -1,18 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, ExternalLink, LockKeyhole, Search } from "lucide-react";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice, guidePriceTiers } from "../lib/guidePricing";
 import GuideDifficultyBar from "./GuideDifficultyBar";
+import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
 
-const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"] as const;
+const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
 const guideCategories = ["Codierungen", "Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
 type GuideCategory = (typeof guideCategories)[number];
 
 function manufacturerOf(vehicle: Vehicle): Manufacturer {
-  if (vehicle.brand === "SEAT / CUPRA") return vehicle.model.toUpperCase().startsWith("CUPRA ") ? "CUPRA" : "SEAT";
   return vehicle.brand as Manufacturer;
 }
 
@@ -59,12 +59,26 @@ export default function GuideSelector() {
   );
   const vehicle = models.find((item) => item.model === model);
   const codings = useMemo(() => vehicle ? availableModelCodings(vehicle) : [], [vehicle]);
+  const researchEntries = useMemo(
+    () => vehicle
+      ? (["Nachrüstungen", "Umbauten"] as ResearchCategory[]).flatMap((category) => researchedGuidesForModel(vehicle.model, category))
+      : [],
+    [vehicle]
+  );
   const categoryCounts = useMemo(
     () => guideCategories.map((category) => ({
       category,
-      count: codings.filter((coding) => guideCategory(coding) === category).length,
+      count: category === "Nachrüstungen" || category === "Umbauten"
+        ? researchEntries.filter((entry) => entry.category === category).length
+        : codings.filter((coding) => guideCategory(coding) === category).length,
     })),
-    [codings]
+    [codings, researchEntries]
+  );
+  const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
+  const visibleResearch = researchEntries.filter((entry) =>
+    entry.category === activeCategory &&
+    [entry.title, entry.note, entry.sourceName].join(" ").toLocaleLowerCase("de")
+      .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleCodings = codings.filter((coding) =>
     guideCategory(coding) === activeCategory &&
@@ -86,7 +100,19 @@ export default function GuideSelector() {
     setShowModels(false);
     setCodingSearch("");
     const available = availableModelCodings(next);
-    setActiveCategory(guideCategories.find((category) => available.some((item) => guideCategory(item) === category)) ?? "Codierungen");
+    const hasOwnCodings = guideCategories.some((category) =>
+      (category === "Codierungen" || category === "Assistenzsysteme") &&
+      available.some((item) => guideCategory(item) === category)
+    );
+    if (hasOwnCodings) {
+      setActiveCategory(guideCategories.find((category) =>
+        (category === "Codierungen" || category === "Assistenzsysteme") &&
+        available.some((item) => guideCategory(item) === category)
+      ) ?? "Codierungen");
+    } else {
+      setActiveCategory(researchedGuidesForModel(next.model, "Nachrüstungen").length ? "Nachrüstungen"
+        : researchedGuidesForModel(next.model, "Umbauten").length ? "Umbauten" : "Codierungen");
+    }
   }
 
   return (
@@ -98,7 +124,7 @@ export default function GuideSelector() {
 
       <section aria-labelledby="guide-manufacturer-title">
         <h2 id="guide-manufacturer-title" className="text-lg font-black sm:text-xl">Hersteller wählen</h2>
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5" role="group" aria-label="Hersteller">
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Hersteller">
           {manufacturers.map((item) => (
             <button key={item} type="button" aria-pressed={manufacturer === item} onClick={() => chooseManufacturer(item)}
               className={"flex min-h-11 items-center justify-center rounded-lg border px-2 py-2 text-sm font-bold transition hover:border-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 " +
@@ -160,10 +186,10 @@ export default function GuideSelector() {
         <section className="mt-6" aria-labelledby="guide-codings-title" aria-live="polite">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 id="guide-codings-title" className="text-xl font-black">Codieranleitungen</h2>
-              <p className="mt-1 text-xs text-slate-600">{vehicle.model} · {codings.length} mögliche Anleitungen</p>
+              <h2 id="guide-codings-title" className="text-xl font-black">Anleitungen und Rechercheliste</h2>
+              <p className="mt-1 text-xs text-slate-600">{vehicle.model} · {codings.length} Codierfunktionen · {researchEntries.length} recherchierte Nachrüstungen/Umbauten</p>
             </div>
-            {codings.length > 0 && (
+            {(codings.length > 0 || researchEntries.length > 0) && (
               <label className="relative block w-full sm:w-60">
                 <span className="sr-only">Anleitungen suchen</span>
                 <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
@@ -186,7 +212,7 @@ export default function GuideSelector() {
             ))}
           </div>
 
-          {codings.length > 0 && (
+          {!researchCategory && codings.length > 0 && (
             <div className="mt-3 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
               {visibleCodings.map((coding) => {
                 const difficultyStep = guideDifficultyStep(coding);
@@ -205,25 +231,56 @@ export default function GuideSelector() {
               })}
             </div>
           )}
-          {codings.length > 0 && visibleCodings.length === 0 && (
+          {researchCategory && (
+            <>
+              <p className="mt-3 text-xs leading-6 text-slate-600">
+                Recherchierte Themen mit verlinkten Originalquellen. Bei Anbietern ist die vollständige Anleitung teilweise erst nach Kauf des Nachrüstsatzes zugänglich.
+                Hier gibt es vorerst nur eine Liste, keine TD-PDFs und keine Kaufpreise.
+              </p>
+              {visibleResearch.length > 0 && (
+                <div className="mt-2 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                  {visibleResearch.map((item) => (
+                    <div key={item.id} className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 px-3 py-3 sm:px-4">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold leading-5 text-slate-900">{item.title}</p>
+                        <p className="mt-1 text-xs leading-5 text-slate-600">{item.note}</p>
+                        <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Anleitung öffentlich" : item.access === "Vorschau / Kauf" ? "Vorschau, Vollversion beim Anbieter" : "Anleitung beim Nachrüstsatz"}</p>
+                      </div>
+                      <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer"
+                        aria-label={item.title + ": Originalquelle öffnen"}
+                        className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-blue-100 px-3 py-2 text-xs font-semibold text-blue-700 hover:border-blue-400 hover:bg-blue-50">
+                        Quelle / Anleitung <ExternalLink size={14} aria-hidden="true" />
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {visibleResearch.length === 0 && (
+                <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
+                  {codingSearch.trim() ? "Kein passender Rechercheeintrag gefunden." : "Für dieses Fahrzeug sind noch keine recherchierten Anleitungen in diesem Bereich erfasst."}
+                </p>
+              )}
+            </>
+          )}
+          {!researchCategory && codings.length > 0 && visibleCodings.length === 0 && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
               {codingSearch.trim() ? "Keine passenden Anleitungen gefunden." : "Für dieses Fahrzeug sind in diesem Bereich noch keine Anleitungen zugeordnet."}
             </p>
           )}
-          {codings.length === 0 && (
+          {codings.length === 0 && researchEntries.length === 0 && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
               Für dieses Fahrzeug sind derzeit keine ausreichend geprüften Anleitungen hinterlegt.
               {vehicle.startYear >= 2024 ? " Für neuere Modelle ist vor einer Freigabe insbesondere der SFD-/SFD2-Schutz zu prüfen." : ""}
             </p>
           )}
-          <p className="mt-3 text-xs leading-6 text-slate-500">
+          {!researchCategory && <p className="mt-3 text-xs leading-6 text-slate-500">
             Geplante PDF-Einzelpreise nach Schwierigkeit in 2-€-Schritten: {formatGuidePrice(guidePriceTiers[0])} bis {formatGuidePrice(guidePriceTiers[7])}.
             Die konkrete Codierbarkeit hängt von Baujahr, Ausstattung, Steuergerät, Softwarestand und ggf. SFD-Schutz ab.
-          </p>
-          <p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
+          </p>}
+          {!researchCategory && <p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
             <LockKeyhole size={15} className="mt-1 shrink-0" aria-hidden="true" />
             Noch keine PDFs kaufbar. Downloads erst nach fertiggestellter Anleitung und serverseitig bestätigter PayPal-Zahlung.
-          </p>
+          </p>}
         </section>
       )}
     </div>
