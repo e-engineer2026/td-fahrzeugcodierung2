@@ -22,6 +22,115 @@ const leonKL = ["SEAT Leon KL", "CUPRA Leon KL"];
 
 export const researchedGuides: readonly ResearchGuide[] = [
   // Nachrüstungen
+  // Audi: Nachrüstungen separat nach VW recherchiert; Typen und PR-Nummern beachten.
+  {
+    "id": "audi-a1-8x-gra",
+    "title": "Audi A1 8X: Geschwindigkeitsregelanlage GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A1 8X"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-audi-a1-8x/40205-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lenksäulenelektronik prüfen (5K0 953 569 F ungeeignet), für Fahrzeuge ohne Keyless; Diagnoseaktivierung nötig"
+  },
+  {
+    "id": "audi-a1-gb-gra",
+    "title": "Audi A1 GB: Tempomat GRA mit Lenkstockhebel nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A1 GB"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-audi-a1-gb/44575-1",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nur für Fahrzeuge mit Speedlimiter PR 8T9; Versionen vor/nach 21.03.2024 und SFD-Einschränkungen prüfen"
+  },
+  {
+    "id": "audi-a3-8v-gra",
+    "title": "Audi A3 8V: Tempomat GRA mit Lenkstockschalter nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A3 / S3 8V"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-audi-a3-8v/39710",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Lenkstockhebel, Abdeckung und Freischaltung; nicht geeignet für Motor DGEA"
+  },
+  {
+    "id": "audi-a4-8k-gra",
+    "title": "Audi A4 8K: Tempomat GRA nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A4 / S4 8K"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-gra-tempomat-komplettset-fuer-audi-a4-8k/35720",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Kabel und Lenkstockhebel mit/ohne Multifunktionslenkrad; Lenksäulensteuergerät und Freischaltung vorab prüfen"
+  },
+  {
+    "id": "audi-a5f5-sideassist",
+    "title": "Audi A5 F5: Side Assist/Blind Spot mit Spiegelwarnanzeigen nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "A5 / S5 F5"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-audi-side-assist-fuer-audi-a5-f5/41690",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Highline-Türsteuergeräte nach Teilenummer prüfen, ggf. Austausch; ab Modelljahr 2024 laut Anbieter nicht möglich"
+  },
+  {
+    "id": "audi-q3f3-sideassist",
+    "title": "Audi Q3 F3: Side Assist/Blind Spot nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Q3 F3"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-spurwechselassistent-side-assist-fuer-audi-q3-f3/43255",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "SUV-/Sportback- und LHD-/RHD-Versionen; Spiegelkappen und Radarsensoren, ggf. SFD2-Freigabe"
+  },
+  {
+    "id": "audi-q3f3-rvc",
+    "title": "Audi Q3 F3: Original-Rückfahrkamera mit Hilfslinien nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Q3 F3"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-aps-advance-rueckfahrkamera-fuer-audi-q3-f3/43260",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Baujahr bis 2020 oder ab 2021 und PR-Codes I8W/7UF/7UG unterscheiden; SFD2-Fahrzeuge gesondert"
+  },
+  {
+    "id": "audi-q5fy-ahk",
+    "title": "Audi Q5 FY: schwenkbare Original-AHK nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Q5 FY"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-audi-q5-fy/43570-2",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Variante mit/ohne AHK-Vorbereitung PR 1D0/1D8, Luft-/Stahlfederung; über 750 kg ggf. Kühlerlüfter ändern; ab MJ 2024 Anbieter-Einschränkung"
+  },
+  {
+    "id": "audi-q7-4m-ahk",
+    "title": "Audi Q7 4M: schwenkbare Original-AHK nachrüsten",
+    "category": "Nachrüstungen",
+    "models": [
+      "Q7 4M"
+    ],
+    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-anhaengerkupplung-ahk-fuer-audi-q7-4m/46999",
+    "sourceName": "KUFATEC",
+    "access": "Vorschau / Kauf",
+    "note": "Nicht für US-Importe; Modelljahre vor/ab 2020; laut Anbieter nicht bei Produktion ab 14.08.2023; zulässige Anhängelast und Kühlerlüfter beachten"
+  },
   // Volkswagen: Tempomat, Side Assist, AHK; Anleitungszugang erst beim Anbieter prüfen.
   {
     "id": "vw-polo6r-gra-ohne-mfa",
