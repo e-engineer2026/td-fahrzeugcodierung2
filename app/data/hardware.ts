@@ -48,6 +48,7 @@ export function hardwareForName(name:string):string|undefined {
   if(n.includes("coming home") || n.includes("leaving home")) return "Kompatibles Bordnetz-/Lichtsteuergerät; für automatische Varianten meist Regen-/Lichtsensor erforderlich.";
 
   // Infotainment / Anzeige
+  if(/carplay/.test(n) && /android auto/.test(n) && /wireless/.test(n)) return "Apple CarPlay und Android Auto müssen getrennt auf USB-Funktion, Lizenz, WLAN-Hardware und unterstützten Softwarestand geprüft werden; Wireless-Unterstützung eines Systems bestätigt nicht automatisch das andere.";
   if(/carplay.*wireless|wireless.*carplay/.test(n)) return "Apple CarPlay muss bereits per USB funktionieren; kompatibles iPhone, WLAN-Hardware und freigegebener MIB/MMI-Softwarestand erforderlich. Diese Anpassung schaltet keine fehlende App-Connect-/CarPlay-Lizenz frei und bestätigt keine Android-Auto-Unterstützung.";
   if(/android auto.*wireless|wireless.*android auto/.test(n)) return "Android Auto muss bereits per USB funktionieren; Android-Auto-Wireless-fähige Haupteinheit mit WLAN, unterstütztem Softwarestand und kompatibles Android-Smartphone erforderlich. Apple-CarPlay-Unterstützung allein genügt nicht.";
   if(/carplay|android auto|app-connect|mirrorlink/.test(n)) return "Kompatibles Infotainment, unterstützte USB-/Smartphone-Schnittstelle und erforderliche Funktionslizenz nötig; eine reine Codierung ersetzt keine Lizenz.";
