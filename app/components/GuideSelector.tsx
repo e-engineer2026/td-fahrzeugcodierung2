@@ -243,13 +243,6 @@ export default function GuideSelector() {
           )}
           {!researchCategory && visibleSourceIdeas.length > 0 && (
             <div className="mt-3 overflow-hidden rounded-xl border border-amber-200 bg-white">
-              <div className="border-b border-amber-100 bg-amber-50 px-3 py-2.5 sm:px-4">
-                <p className="text-sm font-bold text-slate-900">Zusätzliche Funktionen aus technischen Referenzlisten</p>
-                <p className="mt-0.5 text-xs leading-5 text-slate-700">
-                  Noch keine TD-Freigabe und kein PDF-Angebot. Die Quellen nennen mögliche Codierungen,
-                  nicht die geprüfte Machbarkeit jedes Fahrzeugs. Baujahr, Software, Hardware und SFD beachten.
-                </p>
-              </div>
               <div className="divide-y divide-slate-100">
                 {visibleSourceIdeas.map((idea: ReferenceIdea) => (
                   <div key={idea.id} className="px-3 py-3 sm:px-4">
