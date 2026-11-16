@@ -16,7 +16,7 @@ export default function Results({ initial }: { initial: HomeVehicleSelection | n
         <ul className="divide-y">{guides.map((guide) => <li className="py-4" key={guide.pdf}>
           <h3 className="font-bold"><a className="underline" href={guide.pdf}>{guide.title}</a></h3>
           <p>{guide.tool} · {guide.scope}</p>
-          <a href={guide.pdf} download aria-label={guide.title + " als PDF herunterladen"}>PDF herunterladen</a>
+          <a href={guide.pdf} download aria-label={guide.title + " als PDF herunterladen"}>Passwortgeschützte PDF herunterladen</a>
         </li>)}</ul>}
     </section>}
   </>;
