@@ -1,0 +1,62 @@
+{
+  "retro": [
+    [
+      "Rückfahrkamera",
+      "Kamerasatz passend zu Modelljahr, MMI und Karosserie (Avant oder Limousine)."
+    ],
+    [
+      "Einparkhilfe vorne",
+      "Vier Frontsensoren ergänzen die originale hintere Einparkhilfe (PR-Code 7X1)."
+    ],
+    [
+      "Mehrfarbige Ambientebeleuchtung",
+      "Leisten, Kabelsatz und Controller müssen zum Fahrzeug passen. MMI-Bedienung ist vom Set abhängig."
+    ]
+  ],
+  "shared": [
+    [
+      "Komfortblinken",
+      "Anzahl der Blinksignale beim Antippen des Hebels einstellen."
+    ],
+    [
+      "Heckleuchten mit Tagfahrlicht",
+      "Bei kompatibler Lichtkonfiguration die Heckleuchten mit dem Tagfahrlicht einschalten."
+    ],
+    [
+      "Spiegel per Funk anklappen",
+      "Kurzen oder langen Tastendruck einstellen. Elektrisch anklappbare Spiegel erforderlich."
+    ],
+    [
+      "Lane Assist: letzte Einstellung",
+      "Letzten Einschaltzustand speichern. Aktiver Spurhalteassistent mit passendem Softwarestand erforderlich."
+    ],
+    [
+      "Zeigertest",
+      "Zeiger beim Einschalten der Zündung ausschlagen lassen. Kombiinstrument muss die Funktion unterstützen."
+    ],
+    [
+      "Heckklappe per Funk öffnen",
+      "Dauer des Tastendrucks am Schlüssel anpassen. Funköffnung muss bereits vorhanden sein."
+    ]
+  ],
+  "pre": [
+    [
+      "ACC-Grundabstand im MMI",
+      "Grundeinstellung im MMI zugänglich machen. ACC muss bereits verbaut sein."
+    ],
+    [
+      "Sportlayout im Virtual Cockpit",
+      "Zentralen Drehzahlmesser anzeigen. Kompatibles Virtual Cockpit erforderlich."
+    ]
+  ],
+  "fl": [
+    [
+      "Kabelloses Apple CarPlay",
+      "Vorhandenes CarPlay kabellos nutzen. Kompatibles MMI mit 5-GHz-WLAN erforderlich."
+    ],
+    [
+      "RS4-Hecklichtanimation",
+      "Animation umstellen. Die verbauten LED-Heckleuchten müssen bereits eine Animation unterstützen."
+    ]
+  ]
+}

@@ -1,4 +1,7 @@
 const nextConfig = {
+  outputFileTracingIncludes: {
+    "/api/account/anleitungen": ["./private/guide-files/*.bin"],
+  },
   reactStrictMode: true,
   images: {
     remotePatterns: [
