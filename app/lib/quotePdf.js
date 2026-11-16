@@ -68,13 +68,19 @@ export async function downloadQuotePdf({ vehicle, model, vehicleImage, entries, 
   let group = '';
   for (const entry of [...entries].sort((a, b) => (a.uiGroup || 'Weitere').localeCompare(b.uiGroup || 'Weitere', 'de') || a.name.localeCompare(b.name, 'de'))) {
     const nextGroup = entry.uiGroup || 'Weitere';
-    if (nextGroup !== group) { ensure(38); group = nextGroup; y -= 4; line(group, 42, y, 10, true); y -= 16; }
-    const lines = wrap(entry.name); ensure(lines.length * 13 + 7);
-    ops.push(`0.6 w 43 ${y - 1} 9 9 re S`); if (selected.includes(entry.id)) { ops.push(`43 ${y - 1} m 52 ${y + 8} l S 43 ${y + 8} m 52 ${y - 1} l S`); }
-    line(lines[0], 60, y, 9, true); line(money(entry.price), 500, y, 9, true); y -= 13;
-    for (const part of lines.slice(1)) { line(part, 60, y, 9, true); y -= 13; } y -= 5;
+    const nameLines = wrap(entry.name);
     const notes = [entry.hardware ? 'Voraussetzung: ' + entry.hardware : '', entry.requirements ? 'Hinweis: ' + entry.requirements : '', entry.sfd === 'Ja' ? 'SFD1-Freischaltung erforderlich.' : entry.sfd === 'Unklar' ? 'SFD1-Bedarf wird geprüft.' : ''].filter(Boolean);
-    for (const note of notes) for (const part of wrap(note, 90)) { ensure(13); line(part, 60, y, 8); y -= 11; }
+    const noteLines = notes.flatMap(note => wrap(note, 90));
+    // Keep the bold function, its notes and the checkbox on the same page.
+    // Notes sit directly below the function; spacing follows the entire block.
+    const blockHeight = nameLines.length * 12 + noteLines.length * 11 + 9;
+    if (nextGroup !== group) { ensure(blockHeight + 20); group = nextGroup; y -= 4; line(group, 42, y, 10, true); y -= 16; }
+    else ensure(blockHeight);
+    ops.push(`0.6 w 43 ${y - 1} 9 9 re S`); if (selected.includes(entry.id)) { ops.push(`43 ${y - 1} m 52 ${y + 8} l S 43 ${y + 8} m 52 ${y - 1} l S`); }
+    line(nameLines[0], 60, y, 9, true); line(money(entry.price), 500, y, 9, true); y -= 12;
+    for (const part of nameLines.slice(1)) { line(part, 60, y, 9, true); y -= 12; }
+    for (const part of noteLines) { line(part, 60, y, 8); y -= 11; }
+    y -= 9;
   }
   for (const t of wrap('Preis und Durchführbarkeit vorbehaltlich Prüfung von Fahrzeug, Ausstattung und Softwarestand. Kleinunternehmer gemäß § 19 UStG; Umsatzsteuer wird nicht gesondert ausgewiesen.', 98)) { ensure(15); line(t, 42, y, 8); y -= 12; }
   const objects = [null]; const add = data => { objects.push(data); return objects.length - 1; };
