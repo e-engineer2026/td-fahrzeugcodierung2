@@ -44,6 +44,11 @@ function exampleForFunction(name: string): string | undefined {
   return undefined;
 }
 
+export function hasFunctionExample(functionName: string): boolean {
+  const key = exampleForFunction(functionName);
+  return Boolean(key && examples[key]);
+}
+
 export default function FunctionExample({ exampleKey, functionName }: { exampleKey?: string; functionName?: string }) {
   const [expanded, setExpanded] = useState(false);
   const key = functionName ? exampleForFunction(functionName) : exampleKey;
