@@ -254,7 +254,7 @@ export default function GuideSelector() {
 
           {showModels && (
             <>
-              <div className="mt-2 grid max-h-72 gap-1.5 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3" role="group" aria-label="Fahrzeugmodelle">
+              <div className="mt-2 grid max-h-[36rem] gap-1.5 overflow-y-auto sm:max-h-[42rem] sm:grid-cols-2 lg:grid-cols-3" role="group" aria-label="Fahrzeugmodelle">
                 {models.map((item) => (
                   <button key={item.model} type="button" aria-pressed={model === item.model} onClick={() => chooseModel(item)}
                     className={"flex min-h-12 items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left hover:border-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 " +
