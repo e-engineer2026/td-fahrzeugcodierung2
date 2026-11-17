@@ -223,3 +223,36 @@ test("Recherchierte Referenzanpassungen sind Kandidaten, keine pauschale Freigab
     source:"reference", vehicleYear:2025 });
   assert.equal(newCar.label,"Herstellerverfahren prüfen");
 });
+
+test("Recherche: GRA und direkte Reifendruckkontrolle", () => {
+  const gra = guideInterface({title:"VW Polo 6R: Tempomat GRA ohne Multifunktionsanzeige nachrüsten",source:"research",vehicleYear:2010});
+  assert.equal(gra.label, "VCDS / VCP (GRA-Codierung) · ggf. ODIS/SWaP");
+  const rdk = guideInterface({title:"Direkte Reifendruckkontrolle RDK High nachrüsten",source:"research",vehicleYear:2017});
+  assert.equal(rdk.label, "VCDS / VCP (RDK-Codierung)");
+});
+
+test("ACC-Anzeigemenü und VZE im Katalog von vollständiger Aktivierung trennen", () => {
+  const acc = guideInterface({title:"ACC Fahrprofilauswahl im MMI aktivieren",source:"catalog",vehicleYear:2017});
+  assert.equal(acc.label,"VCDS / VCP (ACC-Menü)");
+  const vze = guideInterface({title:"Verkehrszeichenerkennung auf geeigneten Fahrzeugen aktivieren",source:"reference",vehicleYear:2017});
+  assert.equal(vze.label,"VCDS / VCP (Codieranteil, modellabhängig)");
+});
+
+test("Kamera High und Xenon-aLWR nicht als reine Codierung verkaufen", () => {
+  const camera = guideInterface({title:"Original-Rückfahrkamera mit dynamischen Hilfslinien nachrüsten",source:"research",vehicleYear:2017});
+  assert.equal(camera.label,"VCDS / VCP (Codierung) · ggf. VCP (Datensatz)");
+  const lwr = guideInterface({title:"Audi A3 8V: automatische Leuchtweitenregulierung für Xenon nachrüsten",source:"research",vehicleYear:2017});
+  assert.equal(lwr.label,"VCDS / VCP (Codierung) + Kalibrierung");
+});
+
+test("AID-Umbau benötigt Online-Autorisierung, Blind Spot zusätzliche Inbetriebnahme", () => {
+  const aid = guideInterface({title:"Golf 7: Analogtacho auf Active Info Display (AID) umbauen",source:"research",vehicleYear:2015});
+  assert.equal(aid.label,"ODIS Service (Online) · ggf. VCP");
+  const side = guideInterface({title:"Blind Spot und Ausparkassistent nachrüsten",source:"research",vehicleYear:2017});
+  assert.equal(side.label,"VCDS / VCP (Codierung) + Fachinbetriebnahme");
+});
+
+test("Neue SFD2-Fahrzeuge ohne Freigabe nicht pauschal als VCDS-kompatibel deklarieren", () => {
+  const a = guideInterface({title:"Anhängerkupplung nachrüsten",source:"research",vehicleYear:2025,platform:"MQBevo"});
+  assert.equal(a.label,"Herstellerverfahren prüfen");
+});
