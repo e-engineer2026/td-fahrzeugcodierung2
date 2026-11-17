@@ -40,6 +40,8 @@ function addUnique(list: string[], value: string): void {
 /** Nur eine kurze Funktionsbeschreibung, kein zweites Mal die Voraussetzung. */
 function explanationFromTitle(title: string): string | null {
   const name = title.toLocaleLowerCase("de");
+  if (/stauassistent|traffic.?jam/.test(name)) return "Die Funktion kombiniert unterstützte Abstands- und Spurhaltefunktionen im zähfließenden Verkehr.";
+  if (/acc.*(?:tempo|schritt|intervall|abstandseinstell)/.test(name)) return "Die vorhandene Abstandsregelung wird in ihrem Bedien- oder Regelverhalten angepasst.";
   if (/reifendruck|\brdk\b/.test(name)) return "Reifendruckinformationen werden je nach System direkt oder indirekt im Fahrzeug bereitgestellt.";
   if (/rückfahrkamera|rueckfahrkamera/.test(name)) return "Das Kamerabild unterstützt die Sicht nach hinten beim Rangieren; Hilfslinien hängen vom System ab.";
   if (/360.?|area.?view|umgebungsansicht/.test(name)) return "Mehrere Kameraansichten unterstützen die Orientierung beim Rangieren.";
@@ -86,15 +88,22 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
     // Metatext vor dem eigentlichen technischen Inhalt entfernen.
     cleaned = cleaned.replace(/^(?:keine geprüfte Komplettanleitung|keine frei verfügbare Anleitung|Anleitungsvorschau|Praxisbericht|Einbauanleitung|vollständige Anleitung)\s*[,;:]\s*/i, "");
     cleaned = cleaned.replace(/^Anleitung (?:und|mit)\s+(?=(?:Software|Hardware|Steuergerät|Freischaltung))/i, "");
-    // Produktwerbung und Hinweise auf fremde Montageanleitungen nicht
-    // als technische Voraussetzung ausgeben. Bauteile aus demselben Satz
-    // bleiben erhalten.
+    // Produkt-/Fremdanleitungs-Metadaten entfernen, ohne konkrete
+    // Software-, PR- oder Hardwareinformationen zu verlieren.
+    if (/^(?:anbieter|hersteller) sucht (?:aktuell |derzeit )?(?:probeverbau|testfahrzeug)|^derzeit probeverbau|^keine allgemeine (?:komplettanleitung|verfügbarkeit)|^anbieterleistung/i.test(cleaned)) continue;
     cleaned = cleaned
       .replace(/Einbauanleitung inklusive anschließender Codierung mit\s+(VCDS|VCP|ODIS)/gi, "Codierung mit $1")
-      .replace(/(?:\s+und\s+|,\s*)?(?:(?:deutschsprachige|bebilderte|vollständige|öffentliche|freie)\s+)?(?:Einbauanleitung|Anleitungsvorschau|Anschlussanleitung|Montageanleitung)\b[^,;]*/gi, "")
-      .replace(/\b(?:laut Anbieter|beim Anbieter|Produktseite)\b.*$/i, "")
+      .replace(/(?:\s+und\s+|,\s*)?(?:(?:deutschsprachige|bebilderte|vollständige|öffentliche|freie)\s+)?(?:Einbauanleitung|Einbauvorschau|Anleitungsvorschau|Anschlussanleitung(?:s-Vorschau)?|Montageanleitung)\b[^,;]*/gi, "")
+      .replace(/\b(?:bei|vom) Anbieter vor Ort\b/gi, "")
+      .replace(/\b(?:laut Anbieter|laut Hersteller|laut Quelle)\s*/gi, "")
+      .replace(/^Anbieter (?:nennt|verlangt|bietet|weist aus)\s*(?:für [^,;]+)?[,;:]?\s*/i, "")
+      .replace(/^KUFATEC nennt ausdrücklich den\s*/i, "")
+      .replace(/,?\s*keine (?:öffentliche|frei verfügbare|allgemeine) (?:Codier)?anleitung(?:en)?(?: verfügbar)?/gi, "")
+      .replace(/,?\s*keine allgemeine Komplettanleitung/gi, "")
+      .replace(/,?\s*keine regulär freigegebene Komplettlösung/gi, "")
+      .replace(/,?\s*Anbieterleistung\b/gi, "")
       .trim()
-      .replace(/(?:\s+(?:mit|und)|,)+$/i, "")
+      .replace(/(?:\s+(?:mit|und)|,|:)+$/i, "")
       .trim();
     if (!cleaned) continue;
     if (/^(?:keine|ohne) (?:zusätzliche )?codierung(?: erforderlich)?$/i.test(cleaned)) continue;
