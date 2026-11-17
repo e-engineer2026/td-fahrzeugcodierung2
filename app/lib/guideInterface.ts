@@ -204,12 +204,41 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
       "Die Codierung kann mit VCDS oder VCP erfolgen. Wird für diese Ausstattungs-/Kameraversion ein neuer Parameterdatensatz benötigt, ist zusätzlich VCP nötig. Kalibrierung und erforderliche Online-Freigaben sind eigene Schritte.");
   }
 
+  // Nachrüst-Codierungen, soweit VCDS-Verfahren in Ross-Tech belegt sind:
+  // https://wiki.ross-tech.com/wiki/index.php/Cruise_Control_Retrofitting_%281K%29
+  // https://wiki.ross-tech.com/wiki/index.php/Cruise_Control_Retrofitting_%286R%29
+  // https://wiki.ross-tech.com/wiki/index.php/Cruise_Control_Retrofitting_%285G%29
+  // https://wiki.ross-tech.com/wiki/index.php/VW_TPMS_Systems_without_Wheel_Position_Recognition
+  if (!modern && input.source === "research" &&
+      /tempomat|geschwindigkeitsregelanlage|\bgra\b/.test(title) &&
+      /nachrüst|umbau|aktivier/.test(title) && !/\bacc\b.*nachrüst/.test(title)) {
+    return withSfd("VCDS / VCP (GRA-Codierung) · ggf. ODIS/SWaP",
+      "Ross-Tech dokumentiert die Tempomat-Nachrüstung für mehrere VAG-Baureihen mit VCDS. Passender Lenkstockschalter/Lenkrad, Motor-/Lenkungssteuergerät und Verkabelung nötig. Bei einzelnen neueren Modellen ist zusätzlich eine originale Funktionsfreigabe erforderlich.");
+  }
+  if (!modern && input.source === "research" &&
+      /reifendruckkontrolle|rdk.high|rdks|tpms/.test(title)) {
+    return withSfd("VCDS / VCP (RDK-Codierung)",
+      "Direktes RDK benötigt passende Sensoren und ggf. STG 65/Gateway, indirektes RDK ein unterstütztes ABS/ESC-Steuergerät. Bei neuen oder nicht parametrierten Steuergeräten sind zusätzliche Verfahren möglich.");
+  }
+  if (!modern && input.source === "research" &&
+      /b&o|bang.olufsen|premium.soundsystem|soundsystem.*nachrüst/.test(title)) {
+    return withSfd("ODIS Service (Komponentenschutz) · ggf. VCP",
+      "Bei originalem gebrauchten/ersetzten Verstärker sind Komponentenschutz und ggf. Softwaredatensatz separat zu behandeln. ODIS Service Online für Herstellerfreigaben; bei passendem Steuergerät VCP zur notwendigen Parametrierung. Kein VCDS-Alleinverfahren.");
+  }
+
   // Recherchierte Nachrüstungen: nur den belegbaren Arbeitsteil nennen.
   if (!modern && input.source === "research" &&
       /codierdongle|codierinterface|freischaltdongle/.test(note) &&
       !/vcp.*parametrier|zdc/.test(note)) {
     return withSfd("Codierdongle des Nachrüstsatzes",
       "Der beschriebene Kit nennt einen spezifischen Codierdongle. Dessen Umfang ersetzt nicht automatisch weitere SFD-Freigaben, Datensätze, Kalibrierungen oder die Freigabe fremder Hardware.");
+  }
+  // Bei sonstigen Komfort-Hardware-Nachrüstungen ist nur der
+  // Codieranteil benennbar, nicht die komplette Inbetriebnahme.
+  if (!modern && input.source === "research" &&
+      /sitzheizung|lenkradheizung|beheizbares.lenkrad|standheizung|kessy|keyless|elektrische.heckklappe|heckklappe.*fußgeste|spiegel.*nachrüst|licht.regensensor|fußraumbeleuchtung|fussraumbeleuchtung|dwa|diebstahlwarnanlage/.test(title)) {
+    return withSfd("VCDS / VCP (Codieranteil) · ggf. ODIS/VCP",
+      "VCDS/VCP sind nur für unterstützte Steuergerätecodierungen vorgesehen. Steuergeräteaustausch, Komponentenschutz, SFD, Parameterdatensätze, Sensoranlernen und herstellerspezifische Inbetriebnahme müssen separat geprüft werden. Keine zugesagte Komplettnachrüstung mit einem einzigen Interface.");
   }
   if (!modern && input.source === "research" &&
       /rückfahrkamera|rear.view/.test(title) && !/datensatz|parametrier|high|dynamische/.test(combined)) {
