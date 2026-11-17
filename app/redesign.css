@@ -381,3 +381,8 @@
 .td-finder-fields label[data-current-step="true"] select{border-color:#2563eb;box-shadow:0 0 0 2px #dbeafe}
 .td-finder-next{margin-top:12px;font-size:14px;color:#1d4ed8;font-weight:600}
 @media(prefers-reduced-motion:no-preference){.td-home .td-hero-slide{transition-duration:1.4s}.td-home .td-airplane-banner{animation-duration:4.5s}}
+
+/* Keep Startseite and PDF-Anleitungen visible without crowding the header on compact desktops. */
+@media (min-width: 901px) and (max-width: 1150px) {
+  .td-desktop-nav a:nth-child(n+3) { display: none; }
+}
