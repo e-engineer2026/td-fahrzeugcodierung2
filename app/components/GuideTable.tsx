@@ -28,7 +28,7 @@ export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
             className="grid grid-cols-[minmax(0,1fr)_112px] gap-x-3 gap-y-2 border-b border-slate-100 px-3 py-3 last:border-b-0 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_128px] sm:gap-4 sm:px-4">
             <div role="cell" className="min-w-0">
               <p className="text-sm font-bold leading-5 text-slate-900">{row.title}</p>
-              {(row.description || row.requirements || row.diagnosticInterface.qualification) && (
+              {(row.description || row.requirements) && (
                 <details className="group mt-1.5">
                   <summary className="inline-flex cursor-pointer list-none items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 [&::-webkit-details-marker]:hidden">
                     Beschreibung
@@ -37,14 +37,14 @@ export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
                   <div className="mt-2 space-y-2 text-xs leading-5 text-slate-600">
                     {row.description && <p><strong className="text-slate-800">Funktion:</strong> {row.description}</p>}
                     <p><strong className="text-slate-800">Hardware / Voraussetzungen:</strong> {row.requirements || "Fahrzeugspezifisch prüfen"}</p>
-                    <p><strong className="text-slate-800">Interface / Verfahren:</strong> {row.diagnosticInterface.qualification}</p>
                   </div>
                 </details>
               )}
             </div>
             <div role="cell" className="col-span-2 min-w-0 sm:col-span-1 sm:col-start-2 sm:row-start-1">
               <p className="text-[11px] font-semibold text-slate-600 sm:sr-only">Interface</p>
-              <p className="mt-0.5 text-xs font-semibold leading-5 text-slate-700 sm:mt-0">{row.diagnosticInterface.label}</p>
+              <p className="mt-0.5 text-xs font-semibold leading-5 text-slate-700 sm:mt-0" title={row.diagnosticInterface.qualification}>{row.diagnosticInterface.label}</p>
+              {row.diagnosticInterface.sfdNotice && <p className="mt-1 text-[11px] leading-4 text-amber-800">{row.diagnosticInterface.sfdNotice}</p>}
             </div>
             <div role="cell" className="col-start-2 row-start-1 flex justify-end sm:col-start-3">
               <GuidePriceIndicator estimate={row.estimate} />

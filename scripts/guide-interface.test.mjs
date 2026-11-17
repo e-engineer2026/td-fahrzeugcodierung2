@@ -5,11 +5,11 @@ import { guideVehicleRequirements } from "../app/lib/guideVehicleRequirements.ts
 
 test("VCDS nur bei belegtem reinen Anpassungsschritt", () => {
   assert.equal(guideInterface({ title: "Lane Assist letzte Einstellung speichern", interfaceInfo: "VCDS", vehicleYear: 2018 }).label, "VCDS");
-  assert.equal(guideInterface({ title: "Coming Home anpassen", interfaceInfo: "VCDS; ggf. VCP oder ODIS", vehicleYear: 2016 }).label, "Interface prüfen");
+  assert.equal(guideInterface({ title: "Coming Home anpassen", interfaceInfo: "VCDS; ggf. VCP oder ODIS", vehicleYear: 2016 }).label, "Nicht festgelegt");
 });
 
 test("VZE wegen FEC, Kamera und Navigation nicht pauschal für VCDS freigeben", () => {
-  assert.equal(guideInterface({ title: "Verkehrszeichenerkennung aktivieren", interfaceInfo: "VCDS", vehicleYear: 2018 }).label, "Interface prüfen");
+  assert.equal(guideInterface({ title: "Verkehrszeichenerkennung aktivieren", interfaceInfo: "VCDS", vehicleYear: 2018 }).label, "VCDS (Codierung)");
   const hardware = guideVehicleRequirements({ title: "Verkehrszeichenerkennung aktivieren" });
   assert.match(hardware, /Front-\/Umfeldkamera/);
   assert.match(hardware, /Navigationssystem/);
@@ -57,5 +57,26 @@ test("Modellreihe mit möglichen SFD2-Baujahren erfordert zusätzliche Prüfung"
   assert.equal(guideInterface({
     title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS", platform: "MQBevo",
     vehicleYear: 2020, vehicleEndYear: 2026
-  }).label, "Herstellerverfahren prüfen");
+  }).label, "VCDS");
+});
+
+test("SFD1-Online-Freischaltung und konkretes Baujahr anzeigen", () => {
+  const golf = guideInterface({ title: "Zeigertest aktivieren", interfaceInfo: "VCDS",
+    vehicleYear: 2019, vehicleEndYear: 2026, platform: "MQBevo", sfd1From: 2019 });
+  assert.equal(golf.label, "VCDS");
+  assert.match(golf.sfdNotice, /Baujahr 2019/);
+  assert.match(golf.sfdNotice, /VCDS-Online-Freischaltung/);
+  const born = guideInterface({ title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS \/ OBD11",
+    vehicleYear: 2021, vehicleEndYear: 2026, platform: "MEB", sfd1From: 2021 });
+  assert.equal(born.label, "VCDS");
+  assert.match(born.sfdNotice, /Baujahr 2021/);
+  const oldCar = guideInterface({ title: "Komfortblinken anpassen", interfaceInfo: "VCDS", vehicleYear: 2015 });
+  assert.equal(oldCar.sfdNotice, undefined);
+});
+
+test("2024er Modelle trotz SFD1 nicht pauschal als VCDS-kompatibel behaupten", () => {
+  const recent = guideInterface({ title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS",
+    vehicleYear: 2024, vehicleEndYear: 2026, platform: "MQBevo", sfd1From: 2024 });
+  assert.equal(recent.label, "Herstellerverfahren prüfen");
+  assert.match(recent.sfdNotice, /Baujahr 2024/);
 });

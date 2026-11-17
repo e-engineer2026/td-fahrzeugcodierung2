@@ -108,6 +108,7 @@ export default function GuideSelector() {
         interfaceInfo: coding.interfaceInfo,
         vehicleYear: vehicle?.startYear,
         vehicleEndYear: vehicle?.endYear,
+        sfd1From: vehicle?.sfd1From,
         platform: vehicle?.platform
       });
       return {
@@ -134,6 +135,7 @@ export default function GuideSelector() {
         category: item.category,
         vehicleYear: vehicle?.startYear,
         vehicleEndYear: vehicle?.endYear,
+        sfd1From: vehicle?.sfd1From,
         platform: vehicle?.platform
       });
       return {
@@ -154,6 +156,7 @@ export default function GuideSelector() {
         category: idea.category,
         vehicleYear: vehicle?.startYear,
         vehicleEndYear: vehicle?.endYear,
+        sfd1From: vehicle?.sfd1From,
         platform: vehicle?.platform
       });
       return {
