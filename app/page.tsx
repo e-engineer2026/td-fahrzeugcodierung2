@@ -26,8 +26,8 @@ export default function Home() {
     <header className="td-header">
       <div className="td-container td-header-inner">
         <Link href="/" className="td-brand" aria-label="TD Fahrzeugcodierung – Startseite"><span className="td-logo-shine"><Image src="/td-logo-status.webp" alt="TD" width={225} height={80} sizes="(max-width: 600px) 68px, 94px" priority /></span><span>Fahrzeugcodierung</span></Link>
-        <nav className="td-desktop-nav" aria-label="Hauptnavigation"><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
-        <div className="td-header-actions"><AccountMenu /><Link href="/codieranleitungen" className="td-header-icon td-guides-icon" aria-label="PDF-Codieranleitungen" title="VCDS-/VCP-Anleitungen"><LockKeyhole aria-hidden="true" /></Link><HeaderBookingSummary /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
+        <nav className="td-desktop-nav" aria-label="Hauptnavigation"><Link href="/" aria-current="page">Startseite</Link><Link href="/codieranleitungen" className="inline-flex items-center gap-1.5"><LockKeyhole size={17} aria-hidden="true" />PDF-Anleitungen</Link><a href="#ablauf">So funktioniert’s</a><a href="#kontakt">Kontakt</a></nav>
+        <div className="td-header-actions"><AccountMenu /><HeaderBookingSummary /><a className="td-whatsapp-outline" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />WhatsApp</a><HomeMenu /></div>
       </div>
       <SelectedVehicleHeader />
     </header>
