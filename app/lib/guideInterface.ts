@@ -152,6 +152,13 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
       "Niveau-/Lift-Menü und Niveausensor-Kalibrierung sind getrennte Arbeiten. VCDS ist für dokumentierte Grundeinstellungen nutzbar; bei fehlender EOL-Parametrierung oder Steuergerätetausch kann ODIS erforderlich sein. Kalibrierung nur mit korrektem Messverfahren.");
   }
 
+  // Ein ausdrücklich erforderlicher High-Kamera-Datensatz ist kein
+  // optionaler Menüschritt. Seine Parametrierung benötigt VCP.
+  if (!modern && /rückfahrkamera|rear.view/.test(title) &&
+      /(?:datensatz|zdc|parameterdatei).{0,55}(?:parametrier|aufspiel|einspiel|laden)|(?:parametrier|aufspiel|einspiel).{0,55}(?:datensatz|zdc|parameterdatei)/.test(note)) {
+    return withSfd("VCP (Kamera-Parametrierung) + VCDS / VCP",
+      "Ein ausdrücklich benötigter Kamera-Datensatz wird mit VCP parametriert. Zusätzliche Codierung mit VCDS oder VCP; bei High-Systemen gegebenenfalls eine Kalibrierung.");
+  }
   // Ab Werk installierte Rückfahrkamera Low oder FLA kann eine reine
   // Codierung sein. Kamera High mit fehlendem Datensatz nicht.
   if (!modern && /rückfahrkamera|rear.view/.test(title) &&
