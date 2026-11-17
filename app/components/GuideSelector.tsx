@@ -5,7 +5,7 @@ import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import GuideTable, { type GuideTableRow } from "./GuideTable";
-import { guideHardware } from "../lib/guideHardware";
+import { guideDetails } from "../lib/guideDetails";
 import { researchGuideEstimate, referenceIdeaEstimate } from "../lib/researchGuidePricing";
 import { retrofitFocusFor } from "../lib/retrofitFocus";
 import { referenceIdeasForVehicle } from "../data/referenceIdeas";
@@ -93,33 +93,44 @@ export default function GuideSelector() {
   const visibleGuideRows: GuideTableRow[] = [
     ...visibleCodings.map((coding) => {
       const step = guideDifficultyStep(coding);
+      const details = guideDetails({
+        title: coding.name,
+        note: coding.requirements,
+        explicitHardware: coding.hardware,
+        interfaceInfo: coding.interfaceInfo
+      });
       return {
         id: "coding-" + coding.id,
         title: coding.name,
-        hardware: guideHardware(coding.requirements, coding.hardware),
-        description: [coding.requirements, coding.interfaceInfo].filter(Boolean).join(" · ")
-          || "PDF-Anleitung in Vorbereitung.",
+        requirements: details.prerequisites,
+        description: details.description,
         estimate: { step, level: guideDifficultyLevel(step), price: guidePrice(coding) }
       };
     }),
-    ...visibleResearch.map((item) => ({
-      id: "research-" + item.id,
-      title: item.title,
-      hardware: guideHardware(item.note),
-      description: [item.note,
-        activeCategory === "Nachrüstungen" && retrofitFocusFor(item)
-          ? "Codierung/Inbetriebnahme: " + retrofitFocusFor(item)?.activation
-          : ""
-      ].filter(Boolean).join(" · "),
-      estimate: researchGuideEstimate(item)
-    })),
-    ...visibleSourceIdeas.map((idea) => ({
-      id: "reference-" + idea.id,
-      title: idea.title,
-      hardware: guideHardware(idea.note),
-      description: idea.note,
-      estimate: referenceIdeaEstimate(idea)
-    }))
+    ...visibleResearch.map((item) => {
+      const details = guideDetails({
+        title: item.title,
+        note: item.note,
+        activation: activeCategory === "Nachrüstungen" ? retrofitFocusFor(item)?.activation : undefined
+      });
+      return {
+        id: "research-" + item.id,
+        title: item.title,
+        requirements: details.prerequisites,
+        description: details.description,
+        estimate: researchGuideEstimate(item)
+      };
+    }),
+    ...visibleSourceIdeas.map((idea) => {
+      const details = guideDetails({ title: idea.title, note: idea.note });
+      return {
+        id: "reference-" + idea.id,
+        title: idea.title,
+        requirements: details.prerequisites,
+        description: details.description,
+        estimate: referenceIdeaEstimate(idea)
+      };
+    })
   ];
 
   function chooseManufacturer(next: Manufacturer) {
