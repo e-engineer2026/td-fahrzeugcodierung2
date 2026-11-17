@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, ChevronUp, ExternalLink, LockKeyhole, Search } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import GuideDifficultyBar from "./GuideDifficultyBar";
@@ -253,11 +253,6 @@ export default function GuideSelector() {
                       <GuidePriceIndicator estimate={referenceIdeaEstimate(idea)} />
                     </div>
                     <p className="mt-1 text-xs leading-5 text-slate-600">{idea.note}</p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      Quelle: {idea.sourceName}, S. {idea.sourcePage} · {idea.status === "tested"
-                        ? "Laut Quelle getestet, nicht von TD verifiziert"
-                        : "Historische Plattformreferenz, individuelle Prüfung erforderlich"}
-                    </p>
                   </div>
                 ))}
               </div>
@@ -278,16 +273,8 @@ export default function GuideSelector() {
                             Codierung/Inbetriebnahme: {retrofitFocusFor(item)?.activation}
                           </p>
                         )}
-                        <p className="mt-1 text-xs text-slate-500">{item.sourceName} · {item.access === "öffentlich" ? "Öffentlicher Ratgeber / Praxisbericht" : item.access === "Vorschau / Kauf" ? "Vorschau, Vollversion nur beim Anbieter" : item.access === "beim Nachrüstsatz" ? "Anleitung beim Nachrüstsatz" : item.access === "Produktinformation" ? "Nur Produktinformationen, keine Anleitung" : "Produkt-/Serviceinformation, keine Komplettanleitung"}</p>
                       </div>
-                      <div className="flex shrink-0 flex-col items-end gap-2">
-                        <GuidePriceIndicator estimate={researchGuideEstimate(item)} />
-                        <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer"
-                        aria-label={item.title + ": Originalquelle öffnen"}
-                        className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-blue-100 px-3 py-2 text-xs font-semibold text-blue-700 hover:border-blue-400 hover:bg-blue-50">
-                        Quelle öffnen <ExternalLink size={14} aria-hidden="true" />
-                        </a>
-                      </div>
+                      <GuidePriceIndicator estimate={researchGuideEstimate(item)} />
                     </div>
                   ))}
                 </div>
@@ -295,12 +282,6 @@ export default function GuideSelector() {
 
               {visibleSourceIdeas.length > 0 && (
                 <div className="mt-3 overflow-hidden rounded-xl border border-amber-200 bg-white">
-                  <div className="border-b border-amber-100 bg-amber-50 px-3 py-2.5 sm:px-4">
-                    <p className="text-sm font-bold text-slate-900">Weitere Themen aus technischen Referenzlisten</p>
-                    <p className="mt-0.5 text-xs leading-5 text-slate-700">
-                      Nur Prüfkandidaten. Kein TD-Funktionstest, keine zugesagte VCDS-/VCP-Freischaltung und keine kaufbare PDF-Anleitung.
-                    </p>
-                  </div>
                   <div className="divide-y divide-slate-100">
                     {visibleSourceIdeas.map((idea: ReferenceIdea) => (
                       <div key={idea.id} className="px-3 py-3 sm:px-4">
@@ -309,13 +290,6 @@ export default function GuideSelector() {
                           <GuidePriceIndicator estimate={referenceIdeaEstimate(idea)} />
                         </div>
                         <p className="mt-1 text-xs leading-5 text-slate-600">{idea.note}</p>
-                        <p className="mt-1 text-xs text-slate-500">
-                          Quelle: {idea.sourceName}, S. {idea.sourcePage} · {idea.status === "tested"
-                            ? "In der Quelle als getestet aufgeführt (nicht von TD bestätigt)"
-                            : idea.status === "unverified"
-                              ? "Quelle enthält teilweise ungetestete Nachrüstungen"
-                              : "Historische Plattformreferenz, Fahrzeugprüfung erforderlich"}
-                        </p>
                       </div>
                     ))}
                   </div>
