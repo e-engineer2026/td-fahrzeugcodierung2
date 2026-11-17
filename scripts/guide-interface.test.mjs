@@ -42,3 +42,20 @@ test("Codierfreie Maßnahmen benötigen kein Interface", () => {
 test("Neuere SFD2-Plattform ohne Nachweis nicht pauschal mit VCDS anbieten", () => {
   assert.equal(guideInterface({ title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS", vehicleYear: 2025 }).label, "Herstellerverfahren prüfen");
 });
+
+
+test("GeKo-Status allein ist kein Beweis für eine zwingende ODIS-Maßnahme", () => {
+  assert.equal(guideInterface({ title: "230-V-Steckdose nachrüsten", note: "GeKo/SFD-Status klären" }).label, "Herstellerfreigabe prüfen");
+  assert.equal(guideInterface({ title: "Side Assist nachrüsten", note: "Nur mit berechtigtem GeKo freigeben" }).label, "ODIS Service (Online)");
+});
+
+test("Gateway-Datensatz nicht ohne Werkzeugnachweis als VCP ausgeben", () => {
+  assert.equal(guideInterface({ title: "R-Mode-Tasten nachrüsten", note: "Gateway-Parametrierung nötig" }).label, "Parametrierung prüfen");
+});
+
+test("Modellreihe mit möglichen SFD2-Baujahren erfordert zusätzliche Prüfung", () => {
+  assert.equal(guideInterface({
+    title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS", platform: "MQBevo",
+    vehicleYear: 2020, vehicleEndYear: 2026
+  }).label, "Herstellerverfahren prüfen");
+});
