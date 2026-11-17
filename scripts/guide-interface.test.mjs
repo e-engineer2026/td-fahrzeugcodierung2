@@ -31,7 +31,7 @@ test("VCP-ZDC statt VCDS und GeKo statt VCP für Online-Schutz", () => {
 });
 
 test("Vollständige ACC-Inbetriebnahme nicht als einfache VCDS-Codierung verkaufen", () => {
-  assert.equal(guideInterface({ title: "ACC-Radar vollständig nachrüsten", vehicleYear: 2018 }).label, "Inbetriebnahme prüfen");
+  assert.equal(guideInterface({ title: "ACC-Radar vollständig nachrüsten", vehicleYear: 2018 }).label, "VCDS / VCP (Codierung) + Fachinbetriebnahme");
   assert.equal(guideInterface({ title: "Rückfahrkamera nachrüsten", note: "Datensatz parametrieren" }).label, "VCP");
 });
 
