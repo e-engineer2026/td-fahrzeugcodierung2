@@ -31,7 +31,7 @@ test("VCP-ZDC statt VCDS und GeKo statt VCP für Online-Schutz", () => {
 });
 
 test("Vollständige ACC-Inbetriebnahme nicht als einfache VCDS-Codierung verkaufen", () => {
-  assert.equal(guideInterface({ title: "ACC-Radar vollständig nachrüsten", vehicleYear: 2018 }).label, "Inbetriebnahme prüfen");
+  assert.equal(guideInterface({ title: "ACC-Radar vollständig nachrüsten", vehicleYear: 2018 }).label, "VCDS / VCP (Codierung) + Fachinbetriebnahme");
   assert.equal(guideInterface({ title: "Rückfahrkamera nachrüsten", note: "Datensatz parametrieren" }).label, "VCP");
 });
 
@@ -102,11 +102,11 @@ test("Komplexe Arbeiten ohne nachgewiesenes Verfahren bekommen keine pauschale V
     title: "Wireless CarPlay aktivieren",
     interfaceInfo: "VCDS; ggf. VCP oder ODIS",
     category: "Codierungen", source: "catalog", vehicleYear: 2018
-  }).label, "Interfaceprüfung erforderlich");
+  }).label, "ODIS Service (FEC/SWaP) + ggf. VCDS / VCP");
   assert.equal(guideInterface({
     title: "AHK nachrüsten und codieren",
     category: "Nachrüstungen", source: "research", vehicleYear: 2018
-  }).label, "Interfaceprüfung erforderlich");
+  }).label, "VCDS / VCP (AHK-Codierung)");
   assert.equal(guideInterface({
     title: "Ambientebeleuchtung nachrüsten",
     category: "Nachrüstungen", source: "reference", vehicleYear: 2020
@@ -151,6 +151,109 @@ test("VCP für Parameterdateien, ODIS bei SVM, Flash nicht als VCP-only ausgeben
   assert.equal(flash.label, "Hersteller-/Flashverfahren prüfen");
   const sfd2 = guideInterface({ title: "Kamera parametrieren", note: "SFD2 erforderlich", vehicleYear: 2024 });
   assert.equal(sfd2.label, "Herstellerfreigabe prüfen");
+});
+
+
+test("Golf 7 Fahrprofilauswahl: originale Lizenz statt nur VCDS-Schalter", () => {
+  const r = guideInterface({ title: "Fahrprofilauswahl aktivieren",
+    vehicleBrand:"Volkswagen", platform:"MQB", vehicleYear:2015,
+    source:"catalog", category:"Codierungen" });
+  assert.equal(r.label, "ODIS Service (SWaP) + VCDS / VCP");
+  assert.match(r.qualification, /SWaP/);
+});
+
+test("Audi QQ2 mit zusätzlichem Parameterdatensatz braucht VCP", () => {
+  const r = guideInterface({ title: "Mehrfarbige Kontur-Ambientebeleuchtung (QQ2) nachrüsten",
+    vehicleBrand:"Audi", platform:"MLBevo", vehicleYear:2019, source:"research" });
+  assert.equal(r.label, "VCP");
+});
+
+test("AHK, Drive Select, Easy Entry und Ambientemenü unterstützen reine VCDS/VCP-Codierung", () => {
+  const cases = [
+    ["Anhängerkupplung codieren", "VCDS / VCP (AHK-Codierung)", "Volkswagen", "MQB"],
+    ["Audi Drive Select aktivieren", "VCDS / VCP (Codierung)", "Audi", "MLBevo"],
+    ["Easy Entry für Fahrersitz aktivieren", "VCDS / VCP (Sitzeinstellung)", "Škoda", "MQB"],
+    ["Ambientebeleuchtung im MMI aktivieren", "VCDS / VCP (Menü) · ggf. VCP (Datensatz)", "Audi", "MLBevo"],
+    ["Fernlichtassistent aktivieren", "VCDS / VCP (Codierung)", "Audi", "MLBevo"]
+  ];
+  for (const [title, label, vehicleBrand, platform] of cases) {
+    assert.equal(guideInterface({ title, vehicleBrand, platform, vehicleYear: 2018, source: "catalog",
+      category: "Codierungen" }).label, label, title);
+  }
+});
+
+test("Aktivierbares Cockpit-Layout von notwendigem Softwareverfahren trennen", () => {
+  const r = guideInterface({ title:"Sportlayout / RS-Ansicht im Virtual Cockpit aktivieren",
+    vehicleBrand:"Audi", platform:"MLBevo", vehicleYear:2018, source:"catalog", category:"Codierungen" });
+  assert.match(r.label,/VCDS \/ VCP/);
+  assert.match(r.qualification,/Softwarestand/);
+});
+
+test("Luftfahrwerk VCDS Grundeinstellung, aber ODIS bei unparametriertem Steuergerät", () => {
+  const r = guideInterface({ title:"Luftfahrwerk Niveauanzeige / Lift-Funktion prüfen",
+    vehicleBrand:"Audi", platform:"MLBevo", vehicleYear:2018, source:"catalog" });
+  assert.equal(r.label,"VCDS (Diagnose/Grundeinstellung) · ggf. ODIS");
+});
+
+test("Rückfahrkamera Low gegen parametrisierungspflichtige High-Kamera abgrenzen", () => {
+  const low = guideInterface({ title:"Rückfahrkamera aktivieren", source:"catalog",
+    vehicleYear:2017, category:"Codierungen" });
+  assert.equal(low.label,"VCDS / VCP (Kameracodierung)");
+  const high = guideInterface({ title:"Original-Rückfahrkamera mit dynamischen Hilfslinien nachrüsten",
+    note:"Datensatz parametrieren", source:"research", vehicleYear:2017 });
+  assert.equal(high.label,"VCP");
+});
+
+test("Assistenz-Nachrüstung nur als Codierung plus Fachinbetriebnahme", () => {
+  const r = guideInterface({ title:"Radar-ACC vollständig nachrüsten",
+    source:"research", vehicleYear:2018, category:"Nachrüstungen" });
+  assert.equal(r.label,"VCDS / VCP (Codierung) + Fachinbetriebnahme");
+  const matrix = guideInterface({ title:"Halogen auf originale LED-Scheinwerfer umrüsten",
+    source:"research", vehicleYear:2018, category:"Umbauten" });
+  assert.equal(matrix.label,"VCDS / VCP (Codierung) + Kalibrierung");
+});
+
+test("Recherchierte Referenzanpassungen sind Kandidaten, keine pauschale Freigabe", () => {
+  const r = guideInterface({ title:"ACC-Tempo in 1-km/h-Schritten einstellen",
+    source:"reference", vehicleYear:2018 });
+  assert.equal(r.label,"VCDS / VCP (Anpassung, modellabhängig)");
+  assert.match(r.qualification,/nicht am konkreten Fahrzeug geprüft/);
+  const newCar = guideInterface({ title:"ACC-Tempo in 1-km/h-Schritten einstellen",
+    source:"reference", vehicleYear:2025 });
+  assert.equal(newCar.label,"Herstellerverfahren prüfen");
+});
+
+test("Recherche: GRA und direkte Reifendruckkontrolle", () => {
+  const gra = guideInterface({title:"VW Polo 6R: Tempomat GRA ohne Multifunktionsanzeige nachrüsten",source:"research",vehicleYear:2010});
+  assert.equal(gra.label, "VCDS / VCP (GRA-Codierung) · ggf. ODIS/SWaP");
+  const rdk = guideInterface({title:"Direkte Reifendruckkontrolle RDK High nachrüsten",source:"research",vehicleYear:2017});
+  assert.equal(rdk.label, "VCDS / VCP (RDK-Codierung)");
+});
+
+test("ACC-Anzeigemenü und VZE im Katalog von vollständiger Aktivierung trennen", () => {
+  const acc = guideInterface({title:"ACC Fahrprofilauswahl im MMI aktivieren",source:"catalog",vehicleYear:2017});
+  assert.equal(acc.label,"VCDS / VCP (ACC-Menü)");
+  const vze = guideInterface({title:"Verkehrszeichenerkennung auf geeigneten Fahrzeugen aktivieren",source:"reference",vehicleYear:2017});
+  assert.equal(vze.label,"VCDS / VCP (Codieranteil, modellabhängig)");
+});
+
+test("Kamera High und Xenon-aLWR nicht als reine Codierung verkaufen", () => {
+  const camera = guideInterface({title:"Original-Rückfahrkamera mit dynamischen Hilfslinien nachrüsten",source:"research",vehicleYear:2017});
+  assert.equal(camera.label,"VCDS / VCP (Codierung) · ggf. VCP (Datensatz)");
+  const lwr = guideInterface({title:"Audi A3 8V: automatische Leuchtweitenregulierung für Xenon nachrüsten",source:"research",vehicleYear:2017});
+  assert.equal(lwr.label,"VCDS / VCP (Codierung) + Kalibrierung");
+});
+
+test("AID-Umbau benötigt Online-Autorisierung, Blind Spot zusätzliche Inbetriebnahme", () => {
+  const aid = guideInterface({title:"Golf 7: Analogtacho auf Active Info Display (AID) umbauen",source:"research",vehicleYear:2015});
+  assert.equal(aid.label,"ODIS Service (Online) · ggf. VCP");
+  const side = guideInterface({title:"Blind Spot und Ausparkassistent nachrüsten",source:"research",vehicleYear:2017});
+  assert.equal(side.label,"VCDS / VCP (Codierung) + Fachinbetriebnahme");
+});
+
+test("Neue SFD2-Fahrzeuge ohne Freigabe nicht pauschal als VCDS-kompatibel deklarieren", () => {
+  const a = guideInterface({title:"Anhängerkupplung nachrüsten",source:"research",vehicleYear:2025,platform:"MQBevo"});
+  assert.equal(a.label,"Herstellerverfahren prüfen");
 });
 
 test("SFD-Anzeige nur mit kurzen Typ- und Baujahrangaben", () => {
