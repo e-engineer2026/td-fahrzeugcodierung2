@@ -17,7 +17,7 @@ type GuideDetailsInput = {
   activation?: string;
 };
 
-const TECHNICAL = /(?:\b(?:PR[\s-]?[A-Z0-9]+|BCM|ABS|CAN|MIB|MMI|AID|SFD\d?|GeKo|SWaP|FEC|SVM|FOD|VCDS|VCP|ODIS|OBD11|ACC|PDC|aLWR|SRA|RDK|DSG)\b|hardware|steuergerät|steuerteil|steuerung|steuerger[aä]te|sensor|kamera|radar|gateway|lenkrad|lenkstock|heizmatte|sitzbez(?:ug|üge)|sitzheizung|klimabedien|climatronic|klimaelektronik|klimasteuer|lichtpaket|leucht|scheinwerfer|spiegel|türgriff|keyless|kessy|kabel|leitun|antenne|lautsprecher|verstärker|schalter|taster|display|navi|infotainment|cockpit|heckklappe|anhänger|schleifring|steckdose|wechselrichter|bedienteil|bremsen|airbag|reinigungsdüse|reifendruck|frontscheibe|sto[ßs]fänger|wischwasser|anschluss|tacho|schlüssel|pin\b|anpassbar|zündung|dwa\b|kombi(?:instrument)?|automatikgetriebe|sitzbelüft|originalteile|steckerbelegung|teilenummer|zugelassen|passend|hardware|software|datensatz|lizenz|freigabe|freischalt|kalibrier|grundeinstellung|parametrier|codier|modelljahr|baujahr|fahrgestell|fin\b|komponentenschutz|kompatib|geeignet|voraussetz|erforderlich|prüfen|vorhanden|nur bei|nur mit|nur für|nur bis|nur ab|km\/h|nicht bei|nicht für|ab mj|bis mj|vor.?facelift|facelift|linkslenker|rechtslenker|lhd|rhd|motorkennbuchstab|fahrwerk|ausstattungsvariante|pr.code|pr.nummer)/i;
+const TECHNICAL = /(?:\b(?:PR[\s-]?[A-Z0-9]+|BCM|ABS|CAN|MIB|MMI|AID|SFD\d?|GeKo|SWaP|FEC|SVM|FOD|VCDS|VCP|ODIS|OBD11|ACC|PDC|aLWR|SRA|RDK|DSG)\b|hardware|steuergerät|steuerteil|steuerung|steuerger[aä]te|sensor|kamera|radar|gateway|lenkrad|lenkstock|heizmatte|sitzbez(?:ug|üge)|sitzheizung|klimabedien|climatronic|klimaelektronik|klimasteuer|lichtpaket|leucht|scheinwerfer|spiegel|türgriff|keyless|kessy|kabel|leitun|antenne|lautsprecher|verstärker|schalter|taster|display|navi|infotainment|cockpit|heckklappe|anhänger|schleifring|steckdose|wechselrichter|bedienteil|bremsen|airbag|reinigungsdüse|reifendruck|frontscheibe|sto[ßs]fänger|wischwasser|anschluss|kühlerlüfter|federung|(?:über|unter|ab|bis)\s*\d{1,4}\s*(?:kg|km\/h)|tacho|schlüssel|pin\b|anpassbar|zündung|dwa\b|kombi(?:instrument)?|automatikgetriebe|sitzbelüft|originalteile|steckerbelegung|teilenummer|zugelassen|passend|hardware|software|datensatz|lizenz|freigabe|freischalt|kalibrier|grundeinstellung|parametrier|codier|modelljahr|baujahr|fahrgestell|fin\b|komponentenschutz|kompatib|geeignet|voraussetz|erforderlich|prüfen|vorhanden|nur bei|nur mit|nur für|nur bis|nur ab|km\/h|nicht bei|nicht für|ab mj|bis mj|vor.?facelift|facelift|linkslenker|rechtslenker|lhd|rhd|motorkennbuchstab|fahrwerk|ausstattungsvariante|pr.code|pr.nummer)/i;
 
 const NON_REQUIREMENT_META = /(?:\banleitung(?:svorschau|en)?\b|\beinbauanleitung\b|\banschlussanleitung\b|\bvollversion\b|\bkomplettanleitung\b|\bproduktseite\b|\bproduktkauf\b|\bherstellerseite\b|\bquelle\b|\bpraxisbericht\b|\bprobeverbau\b|\btestfahrzeug\b|\böffentlich\b|\bangebot\b|\bkufatec\b)/i;
 
@@ -90,14 +90,15 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
     cleaned = cleaned.replace(/^Anleitung (?:und|mit)\s+(?=(?:Software|Hardware|Steuergerät|Freischaltung))/i, "");
     // Produkt-/Fremdanleitungs-Metadaten entfernen, ohne konkrete
     // Software-, PR- oder Hardwareinformationen zu verlieren.
-    if (/^(?:anbieter|hersteller) sucht (?:aktuell |derzeit )?(?:probeverbau|testfahrzeug)|^derzeit probeverbau|^keine allgemeine (?:komplettanleitung|verfügbarkeit)|^anbieterleistung/i.test(cleaned)) continue;
+    if (/^(?:anbieter|hersteller) sucht (?:aktuell |derzeit )?(?:probeverbau|testfahrzeug)|^derzeit probeverbau|^keine allgemeine (?:komplettanleitung|verfügbarkeit)|^anbieterleistung|^die ausgewählte Produktseite|^einbau nur beim anbieter|^werkstatteinbau, keine frei verfügbare/i.test(cleaned)) continue;
     cleaned = cleaned
       .replace(/Einbauanleitung inklusive anschließender Codierung mit\s+(VCDS|VCP|ODIS)/gi, "Codierung mit $1")
       .replace(/(?:\s+und\s+|,\s*)?(?:(?:deutschsprachige|bebilderte|vollständige|öffentliche|freie)\s+)?(?:Einbauanleitung|Einbauvorschau|Anleitungsvorschau|Anschlussanleitung(?:s-Vorschau)?|Montageanleitung)\b[^,;]*/gi, "")
       .replace(/\b(?:bei|vom) Anbieter vor Ort\b/gi, "")
       .replace(/\b(?:laut Anbieter|laut Hersteller|laut Quelle)\s*/gi, "")
       .replace(/^Anbieter (?:nennt|verlangt|bietet|weist aus)\s*(?:für [^,;]+)?[,;:]?\s*/i, "")
-      .replace(/^KUFATEC nennt ausdrücklich den\s*/i, "")
+      .replace(/\bKUFATEC nennt ausdrücklich den\s*/gi, "")
+      .replace(/\bAnbieter-Einschränkung\b/gi, "Einschränkung")
       .replace(/,?\s*keine (?:öffentliche|frei verfügbare|allgemeine) (?:Codier)?anleitung(?:en)?(?: verfügbar)?/gi, "")
       .replace(/,?\s*keine allgemeine Komplettanleitung/gi, "")
       .replace(/,?\s*keine regulär freigegebene Komplettlösung/gi, "")
