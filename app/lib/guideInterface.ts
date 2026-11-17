@@ -80,14 +80,15 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // Eindeutig als VCDS-Einstellungsanleitung erfasste Funktionen, sofern
   // keine zusätzlichen Freischalt- oder Parametrierschritte erforderlich.
   const adjustment = /anpass|einstell|speicher|memory|warnintensität|start.stopp|zeigertest|gurtwarn|komfortblink|coming.home|leaving.home|auto.lock|auto.unlock|regenschließ|fenster|tfl|tagfahrlicht|heckleuchten|spiegelabsenk|spiegelanklapp/.test(title);
-  const vcdsDocumented = /\bvcds\b/.test(hint) || /\bvcds\b/.test(note) || input.category === "Codierungen";
+  const vcdsDocumented = (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b|\bobd11\b/.test(hint)) ||
+    (/\bvcds\b/.test(note) && !/\bvcp\b|\bodis\b|\bobd11\b/.test(note));
   if (vcdsDocumented && adjustment && !modern) {
     return result("VCDS", "Für die reine Anpassung vorgesehen, sofern Steuergerät und Kanal die Funktion unterstützen; SFD1 erfordert gegebenenfalls Freigabe.", false);
   }
 
   // Eindeutig in vorhandenen Codierdaten als VCDS hinterlegte Aktivierung,
   // nur wenn keine weitere Inbetriebnahme in den Daten erkennbar ist.
-  if (/\bvcds\b/.test(hint) && !modern &&
+  if (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b|\bobd11\b/.test(hint) && !modern &&
       !/nachrüst|umbau|umrüst|aktivieren \/ anpassen|freischalt|kalibrier|grundstellung|lizenz/.test(title) &&
       !/parametrier|kalibrier|grundeinstellung|online|ge[kc]o|sfd2/.test(note)) {
     return result("VCDS", "Nur für den dokumentierten Codier-/Anpassungsschritt, abhängig von Steuergerät und Softwarestand.", false);
