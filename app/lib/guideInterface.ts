@@ -80,7 +80,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // Bei mehreren Prozessschritten wird nicht nur das fürs Codieren
   // geeignete Interface als vollständiges Werkzeug ausgegeben.
   if (/vcp[- /]parametrier|zdc.*\bvcp\b/.test(combined)) {
-    return withSfd("VCP (Parametrierung)", "Nur bei nachgewiesener Unterstützung des Steuergeräts und passendem Datensatz; zusätzliche Online-Freigaben separat prüfen.");
+    return withSfd("VCP (Parametrierung)", "VCP-spezifischer Parameter-/ZDC-Schritt mit passendem Datensatz und unterstütztem Steuergerät; reine VCDS-Codierung genügt hierfür nicht. Zusätzliche Freigaben separat prüfen.");
   }
   if (/\bzdc\b|parameterdatei|datensatz.*(?:flash|einspiel|aufspiel|upload)|gateway.parametrier|softwaredatensatz/.test(combined)) {
     return withSfd("Parametrierung prüfen", "Datensatz/Steuergerät muss vorab abgeglichen werden; das geeignete Parametrierinterface ist nicht nachgewiesen.");
@@ -100,7 +100,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     return withSfd("Inbetriebnahme prüfen", "Codierung, mögliche Datensätze und Kalibrierung müssen anhand der realen Steuergeräte geprüft werden.");
   }
   if (/verkehrszeichenerkennung|verkehrszeichen.*aktivier|\bvze\b/.test(title)) {
-    return withSfd(/\bvcds\b/.test(hint) && !modern ? "VCDS (Codierung)" : "Freigabe abhängig", "VCDS nur für den belegten Codierschritt; vorhandene FEC-/SWaP-Freigabe, kompatible Navigation, Kamera und Softwarestand sind Voraussetzung.");
+    return withSfd(/\bvcds\b/.test(hint) && !modern ? "VCDS / VCP (Codierung)" : "Freigabe abhängig", "VCDS nur für den belegten Codierschritt; vorhandene FEC-/SWaP-Freigabe, kompatible Navigation, Kamera und Softwarestand sind Voraussetzung.");
   }
 
   // Eindeutig als VCDS-Einstellungsanleitung erfasste Funktionen, sofern
@@ -109,7 +109,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   const vcdsDocumented = (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b/.test(hint)) ||
     (/\bvcds\b/.test(note) && !/\bvcp\b|\bodis\b/.test(note));
   if (vcdsDocumented && adjustment && !modern) {
-    return withSfd("VCDS", "Für die reine Anpassung vorgesehen, sofern Steuergerät und Kanal die Funktion unterstützen; SFD1 erfordert gegebenenfalls Freigabe.", false);
+    return withSfd("VCDS / VCP", "Beide Werkzeuge sind für den Codier-/Anpassungsschritt grundsätzlich geeignet, sofern das jeweilige Steuergerät und der Kanal unterstützt werden. Für SFD1 ist eine passende Freischaltung erforderlich.", false);
   }
 
   // Eindeutig in vorhandenen Codierdaten als VCDS hinterlegte Aktivierung,
@@ -117,7 +117,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   if (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b/.test(hint) && !modern &&
       !/nachrüst|umbau|umrüst|aktivieren \/ anpassen|freischalt|kalibrier|grundstellung|lizenz/.test(title) &&
       !/parametrier|kalibrier|grundeinstellung|online|ge[kc]o|sfd2/.test(note)) {
-    return withSfd("VCDS", "Nur für den dokumentierten Codier-/Anpassungsschritt, abhängig von Steuergerät und Softwarestand.", false);
+    return withSfd("VCDS / VCP", "Nur für den dokumentierten Codier-/Anpassungsschritt. Die tatsächliche VCP-Unterstützung hängt von Interface, Steuergerät und Softwarestand ab.", false);
   }
 
   if (modern) return withSfd("Herstellerverfahren prüfen", "Bei neueren Plattformen sind SFD2/UNECE und signierte Herstellermaßnahmen möglich; keine VCDS-/VCP-Zusage.");
@@ -132,7 +132,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   const complexStep =
     /nachrüst|nachruest|retrofit|umbau|umrüst|umruest|tausch|flash|update|parametrier|kalibrier|grundstellung|komponentenschutz|wegfahrsperre|schl[üu]ssel.*anlern|carplay|android.auto|mirrorlink|app.connect|mib.*upgrade|mmi.*upgrade|\bacc\b.*aktivier|pacc|travel.assist.*aktivier|360.|area.view.*aktivier|virtual.cockpit.*nachrüst/i.test(title);
   if (ordinaryCoding && typicalVcdsCoding && !complexStep) {
-    return withSfd("VCDS", "Für die genannte reine Codierung/Anpassung üblich. Konkretes Steuergerät, Softwarestand, unterstützte Kanäle und ggf. SFD1-Freischaltung müssen passen.");
+    return withSfd("VCDS / VCP", "Beide für reine Codier-/Anpassungsarbeiten möglich, sofern der konkrete Kanal in VCDS und VCP unterstützt wird. Kein Nachweis für zusätzliche Parametrierung, Lizenzen oder Herstellerfreigaben.");
   }
 
   // Nur explizit dokumentierte, allein benötigte Werkzeuge ausweisen.

@@ -78,7 +78,53 @@ function explanationFromTitle(title: string): string | null {
   if (/usb|ladehub|lademodul|phone box|qi.laden/.test(name)) return "Die vorhandenen Lade- und Anschlussmöglichkeiten werden erweitert.";
   if (/spiegelabsenk|spiegelanklapp|anklappbare spiegel/.test(name)) return "Die Spiegelbewegung wird mit den Komfortfunktionen verknüpft.";
   if (/licht.?regensensor|regen.?lichtsensor/.test(name)) return "Licht- und Wischerfunktionen können abhängig von den Sensordaten arbeiten.";
+
+  // Spezifische Kurzbeschreibungen für häufige Referenz- und Nachrüstthemen.
+  if (/air.?care|luftgüte|umluft/.test(name)) return "Das Verhalten der Innenraumluftregelung und der automatischen Umluftfunktion wird angepasst.";
+  if (/lüfterprofil|gebläse|klimatisierung|klima(?:anlage|automatik)|climatronic/.test(name)) return "Die Klimabedienung oder die verfügbaren Lüfter- und Luftverteilungseinstellungen werden angepasst.";
+  if (/sitzheiz|sitzlüft|sitzbelüft/.test(name)) return "Die Bedienung, Speicherung oder Intensität der vorhandenen Sitztemperierung wird angepasst.";
+  if (/ambiente|konturbeleucht|lichtleiste|fußraum|fussraum/.test(name)) return "Die Beleuchtungsbereiche, Helligkeit oder verfügbaren Lichtfarben werden ergänzt beziehungsweise angepasst.";
+  if (/audioabsenk|sound.*system|lautsprecher|subwoofer|verstärker|freisprech|mikrofon/.test(name)) return "Die Audioausgabe und die dazugehörigen Fahrzeugfunktionen werden entsprechend der genannten Ausstattung erweitert oder eingestellt.";
+  if (/digital.?cockpit|g.meter|beschleunigungswert|ladedruck|drehmoment|getriebetemperatur/.test(name)) return "Im digitalen Kombiinstrument werden die genannten Fahr- oder Fahrzeugdaten dargestellt, sofern das Anzeigeprofil sie unterstützt.";
+  if (/wlan|bluetooth|mobiltelefon|phone.?box|qi.laden|apple.carplay|android.auto/.test(name)) return "Die im Titel genannte Smartphone-, Lade- oder Konnektivitätsfunktion wird in das kompatible Infotainmentsystem eingebunden.";
+  if (/lichtautomatik|schaltschwelle|lichtsensor|regensensor/.test(name)) return "Die automatische Licht- oder Wischersteuerung wird anhand der verfügbaren Sensorfunktionen angepasst.";
+  if (/parklicht|standlicht|abblendlicht|bremslicht|rückleuchte|lichtinszenierung|leuchtstärke/.test(name)) return "Die im Titel genannte Außenlichtfunktion oder deren Ansteuerung wird angepasst.";
+  if (/lenkrad|favoritentaste|r.mode|schaltwippe/.test(name)) return "Die Lenkradbedienung oder die im Titel genannten Tastenfunktionen werden entsprechend der Fahrzeugausstattung eingebunden.";
+  if (/diebstahlwarn|dwa|alarm|verriegel|entriegel|zentralverriegel/.test(name)) return "Das Verhalten der Zentralverriegelung oder der Diebstahlwarnanlage wird angepasst.";
+  if (/geschwindigkeit|tempo|tempomat|limiter|geschwindigkeitsregel/.test(name)) return "Die vorhandene Geschwindigkeitsregelung oder ihre Bedienung und Anzeige wird angepasst.";
+  if (/spiegelheiz|seitenspiegel|innenspiegel|außenspiegel|aussenspiegel/.test(name)) return "Die im Titel genannte Spiegel- und Komfortfunktion wird angepasst oder ergänzt.";
+  if (/beheizbare.rücksitz|elektrische.sitze|memoryfunktion|sitz.*schlüssel|komforteinstieg/.test(name)) return "Die vorhandenen Sitzverstellungen und ihre zugeordneten Komfort- beziehungsweise Speicherfunktionen werden erweitert.";
+  if (/parkhilfe|parksensor|parkassistent|parklenk|einpark|auspark/.test(name)) return "Die Einpark- oder Ausparkunterstützung einschließlich ihrer Bedienung oder Anzeige wird angepasst.";
+  if (/spurwechsel|blind.spot|seitenradar|kreuzungsassistent|night.vision|nachtsicht/.test(name)) return "Die genannte Fahrerassistenzfunktion ergänzt die vorhandene Umfeldüberwachung, sofern die notwendigen Sensoren und Freigaben vorhanden sind.";
+  if (/adblue|ölstand|oelstand|batterie|ladeanzeige|reichweite/.test(name)) return "Die genannten Betriebs- oder Zustandsdaten werden im vorhandenen Anzeigesystem ergänzt oder angepasst.";
+  if (/garagentor|homelink/.test(name)) return "Eine kompatible Garagentorsteuerung wird in die Fahrzeugbedienung integriert.";
+  if (/anhängerkupplung|anhänger|ahk/.test(name)) return "Die Anhängerfunktion wird in die beteiligten Fahrzeugsteuergeräte eingebunden.";
+  if (/l[aä]uftweitenregulier|matrix.?led|bi.xenon|led.scheinwerfer|halogen.*scheinwerfer/.test(name)) return "Die im Titel genannte Scheinwerferausstattung und ihre Lichtsteuerung werden fahrzeugspezifisch integriert.";
+  if (/acc.radar|prädiktive.acc|pacc|abstandsregelung/.test(name)) return "Die Abstandsregelung wird um die genannte Hardware oder Bedienfunktion erweitert.";
+  if (/kofferraum|heckklappe|easy.open/.test(name)) return "Die Bedienung beziehungsweise Öffnung der Heckklappe wird angepasst oder erweitert.";
+  if (/fensterheber|fenster.*öffn|fenster.*schließ/.test(name)) return "Die vorhandene Fensterbedienung und deren Komfortfunktionen werden angepasst.";
+  if (/wischer|wischtempo|reinigungsdüse/.test(name)) return "Die Wischer- oder Reinigungsfunktion wird entsprechend der gewählten Einstellung angepasst.";
   return null;
+}
+
+
+/** Liefert auch für seltene Referenzthemen eine sachliche Kurzbeschreibung,
+ * ohne aus einer bloßen Titelangabe eine bestätigte technische Freigabe zu machen. */
+function fallbackDescription(title: string): string {
+  const name = title.toLocaleLowerCase("de");
+  if (/nachrüst|ergänz|einbau|einbauen|installier/.test(name)) {
+    return "Die im Titel genannte Ausstattung wird ergänzt und mit den passenden Fahrzeugfunktionen verbunden. Die genaue Umsetzung ist modell- und ausstattungsabhängig.";
+  }
+  if (/umbau|umrüst|tausch|ersetz|upgrade/.test(name)) {
+    return "Die vorhandene Ausstattung wird auf die im Titel genannte Ausführung umgestellt. Elektronische Einbindung und gegebenenfalls weitere Inbetriebnahmeschritte sind fahrzeugabhängig.";
+  }
+  if (/aktivier|freischalt|einschalt|einblend|anzeig|darstell|hinzufüg|anbiet|zeigen/.test(name)) {
+    return "Die bezeichnete Funktion oder Anzeige wird in den dafür vorgesehenen Fahrzeugmenüs beziehungsweise Steuergeräten zugänglich gemacht, soweit das System sie unterstützt.";
+  }
+  if (/anpass|konfigurier|einstell|veränder|änder|speicher|beibehalt|übernehm|wiederherstell|herunterstuf|justier/.test(name)) {
+    return "Das Verhalten oder die Darstellung der genannten Fahrzeugfunktion wird über die verfügbaren Einstellungen angepasst.";
+  }
+  return "Das Thema betrifft die im Titel genannte fahrzeugabhängige Funktion und ihre technische Einbindung beziehungsweise Anpassung.";
 }
 
 function splitClauses(value?: string): string[] {
@@ -152,6 +198,6 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
   // Nur sinnvolle Zusatzinformation aufklappbar machen, keine leeren Floskeln.
   return {
     prerequisites: prerequisites.length ? prerequisites.join("; ") : null,
-    description: descriptions.length ? descriptions.slice(0, 3).join(". ") + "." : null
+    description: descriptions.length ? descriptions.slice(0, 3).join(". ") + "." : (explanation ?? fallbackDescription(input.title))
   };
 }
