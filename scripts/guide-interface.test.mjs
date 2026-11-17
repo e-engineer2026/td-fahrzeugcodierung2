@@ -354,3 +354,37 @@ test("Flash-Verfahren und Anbieter-Remote-Inbetriebnahme bleiben von VCP-ZDC get
   const parameter=guideInterface({title:"Steuergerät parametrieren",source:"research",vehicleYear:2018});
   assert.equal(parameter.label,"VCP");
 });
+
+test("Betreiber-SFD-Liste: Monatsdaten und Steuergeräte vollständig zugeordnet", async () => {
+  const { SFD1_CONTROL_UNITS, SFD_VEHICLES, sfdNoticeForVehicle } =
+    await import("../app/lib/sfdProtection.ts");
+  assert.deepEqual(SFD1_CONTROL_UNITS.map(x => x.address),
+    ["01","03","09","15","16","17","19","23","4B","51","5F","75"]);
+  assert.ok(SFD_VEHICLES.length >= 50);
+  assert.equal(new Set(SFD_VEHICLES.map(x => x.catalogKey)).size, SFD_VEHICLES.length);
+  const cases = [
+    ["Volkswagen","Golf 8 (CD)","SFD (1) ab Bj. 2019 · SFD (2) ab Bj. 04/2024"],
+    ["Audi","Q7 4M","SFD (2) ab Bj. 08/2023"],
+    ["Audi","Q4 e-tron (FZ)","SFD (1) ab Bj. 2021 · SFD (2) ab Bj. 11/2023"],
+    ["Audi","A6 / S6 C8","SFD (1) ab Bj. 2022 · SFD (2) ab Bj. 2024"],
+    ["Škoda","Octavia 4 NX","SFD (1) ab Bj. 2020 · SFD (2) ab Bj. 03/2024"],
+    ["SEAT / CUPRA","SEAT Ibiza KJ","SFD (2) ab Bj. 02/2024"],
+    ["SEAT / CUPRA","CUPRA Tavascan (KX)","SFD (1) ab Bj. 2023 · SFD (2) ab Bj. 2025"],
+    ["Volkswagen","T-Cross C1","SFD (2) ab Bj. 03/2024"],
+    ["Volkswagen","T-Roc A11","SFD (2) ab Bj. 03/2024"],
+    ["Škoda","Enyaq 5A","SFD (1) ab Bj. 2020 · SFD (2) ab Bj. 2024"],
+  ];
+  for(const [vehicleBrand,vehicleModel,label] of cases){
+    assert.equal(sfdNoticeForVehicle({vehicleBrand,vehicleModel}),label,vehicleModel);
+  }
+  assert.equal(sfdNoticeForVehicle({vehicleBrand:"Volkswagen",vehicleModel:"Golf 7 (5G)"}),undefined);
+});
+
+test("Die neuen SFD-Baujahre werden auch in Codieranleitungen angewendet", () => {
+  const a6 = guideInterface({title:"Spiegelanklappen anpassen",vehicleBrand:"Audi",vehicleModel:"A6 / S6 C8",
+    platform:"MLBevo",vehicleYear:2018});
+  assert.equal(a6.sfdNotice,"SFD (1) ab Bj. 2022 · SFD (2) ab Bj. 2024");
+  const golf = guideInterface({title:"Zeigertest",vehicleBrand:"Volkswagen",vehicleModel:"Golf 8 (CD)",
+    platform:"MQBevo",vehicleYear:2019,sfd1From:2019});
+  assert.equal(golf.sfdNotice,"SFD (1) ab Bj. 2019 · SFD (2) ab Bj. 04/2024");
+});
