@@ -16,7 +16,11 @@ export type GuideTableRow = {
 export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
   if (!rows.length) return null;
   return (
-    <div role="table" aria-label="Professionelle PDF-Codieranleitungen" className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <>
+      <p className="mt-2 text-[11px] leading-4 text-slate-500" role="note">
+        Benötigte Hardware und Voraussetzungen stehen in der jeweiligen PDF-Anleitung.
+      </p>
+      <div role="table" aria-label="Professionelle PDF-Codieranleitungen" className="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white">
       <div role="rowgroup">
         <div role="row" className="hidden grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_128px] gap-3 border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-700 sm:grid">
           <div role="columnheader">Funktion</div>
@@ -51,6 +55,7 @@ export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
