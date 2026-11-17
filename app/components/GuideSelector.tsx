@@ -107,6 +107,7 @@ export default function GuideSelector() {
         note: coding.requirements,
         interfaceInfo: coding.interfaceInfo,
         vehicleYear: vehicle?.startYear,
+        vehicleEndYear: vehicle?.endYear,
         platform: vehicle?.platform
       });
       return {
@@ -132,6 +133,7 @@ export default function GuideSelector() {
         activation: focus,
         category: item.category,
         vehicleYear: vehicle?.startYear,
+        vehicleEndYear: vehicle?.endYear,
         platform: vehicle?.platform
       });
       return {
@@ -151,6 +153,7 @@ export default function GuideSelector() {
         note: idea.note,
         category: idea.category,
         vehicleYear: vehicle?.startYear,
+        vehicleEndYear: vehicle?.endYear,
         platform: vehicle?.platform
       });
       return {
