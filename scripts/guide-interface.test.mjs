@@ -344,3 +344,13 @@ test("Für recherchierte Quellen keine reinen Status-Texte statt einer Zuordnung
   }
   assert.deepEqual(bad,[]);
 });
+
+test("Flash-Verfahren und Anbieter-Remote-Inbetriebnahme bleiben von VCP-ZDC getrennt", () => {
+  const flash=guideInterface({title:"Steuergerät flashen",source:"research",category:"Umbauten",vehicleYear:2018});
+  assert.equal(flash.label,"VCP / ODIS Engineering");
+  const remote=guideInterface({title:"360° Kamera nachrüsten",note:"Remote-Erstinbetriebnahme erforderlich",
+    source:"research",category:"Nachrüstungen",vehicleYear:2025});
+  assert.equal(remote.label,"Anbieter-Remote-Service");
+  const parameter=guideInterface({title:"Steuergerät parametrieren",source:"research",vehicleYear:2018});
+  assert.equal(parameter.label,"VCP");
+});

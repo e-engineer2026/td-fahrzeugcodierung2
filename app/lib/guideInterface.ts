@@ -338,6 +338,14 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   }
   if (/(?:steuergerät|firmware|flash).*flash|softwareupdate|mib1.*mib2|mmi.*upgrade|kalibrierung.*online/.test(title) ||
       /(?:datensatz|software).*(?:laden|spielen)|remote.erstinbetriebnahme/.test(note)) {
+    if (input.source && /remote.erstinbetriebnahme/.test(note)) {
+      return withSfd("Anbieter-Remote-Service",
+        "Die Quelle nennt ausdrücklich eine anbietergeführte Erstinbetriebnahme. Ein beliebiges VCP- oder VCDS-Interface ist kein nachgewiesener Ersatz für den vom Anbieter geforderten Remote-Dienst.");
+    }
+    if (input.source) {
+      return withSfd("VCP / ODIS Engineering",
+        "Flashen ist von der ZDC-Parametrierung zu unterscheiden. VCP unterstützt ausgewählte Flashformate, ODIS Engineering geeignete Herstellerdateien und Verfahren. Verfügbarkeit von Flashcontainer, Steuergerätefreigabe und notwendigem Online-SVM ist vorab zu bestätigen.");
+    }
     return withSfd("Hersteller-/Flashverfahren prüfen",
       "Flash- oder Inbetriebnahmeverfahren sind nicht automatisch eine VCP-Parametrierung. Benötigter Softwarestand, Lizenz, Datensatz und gegebenenfalls ODIS/SVM müssen getrennt geprüft werden.");
   }
