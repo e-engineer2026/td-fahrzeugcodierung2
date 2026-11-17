@@ -133,6 +133,23 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
       "Vorhandene Ambientebeleuchtung: MMI-/5F- und BCM-Anpassungen mit VCDS oder VCP, sofern unterstützt. Für neue mehrfarbige Systeme kann zusätzlich eine VCP-Parametrierung erforderlich sein; fehlende Leuchten/Controller werden nicht durch Codierung ersetzt.");
   }
 
+  // Audi B9/C8 ACC-Einstellungsmenüs: es wird kein Radar freigeschaltet.
+  // https://www.vag-coding.net/audi/a4-b9/a4-b9-acc-driving-profile-selection-on-the-mmi/
+  // https://www.vag-coding.fr/audi/a4-b9/a4-b9-reglage-de-distance-acc-dans-mmi/
+  if (!modern && /\bacc\b.*(?:abstandseinstellung|fahrprofil|distanzeinstellung|grundeinstellung)/.test(title) &&
+      /mmi|infotainment/.test(title)) {
+    return withSfd("VCDS / VCP (ACC-Menü)",
+      "Nur bei bereits vorhandenem, funktionsfähigem ACC. Unterstützte Menü- und Abstandsvorgaben lassen sich codieren; keine Erstfreischaltung von Radar, pACC oder Fahrassistent. Softwarestand und ggf. Funktionslizenz beachten.");
+  }
+  if (!modern && /dual.view|doppel.*(?:kamera|parkansicht)/.test(title)) {
+    return withSfd("VCDS / VCP (Kamera-Menü)",
+      "Aktiviert bei bereits vorhandenen geeigneten Umgebungskameras eine unterstützte Ansicht. Ersetzt weder Kameranachrüstung noch 6C-Parametrierung und Kalibrierung.");
+  }
+  if (!modern && /prädiktiven.effizienzassistenten.*aktivier/.test(title)) {
+    return withSfd("Herstellerfreigabe / VCDS / VCP (Einstellungen)",
+      "Prädiktive Funktionen benötigen geeignete Navigation/Kartendaten, Radar und Frontkamera sowie ggf. Funktionsfreigaben. Mit VCDS/VCP sind nur nachweislich vorhandene Einstellungen codierbar; keine pauschale Erstfreischaltung.");
+  }
+
   // Beim vorhandenen Virtual Cockpit genügt für ein bereits unterstütztes
   // Layout mitunter Codierung; bei anderen Versionen ist ein VCP-/
   // herstellerseitiger Freischalt- bzw. Softwarestand-Schritt nötig.
@@ -290,7 +307,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // Diagnose-Codieranteil benennen, ohne die konkrete Machbarkeit zu versprechen.
   const referenceAdjustment = input.source === "reference" &&
     !/nachrüst|umbau|umrüst|fahrzeugansicht.*prüfen|aktivierungsberechtigung|traffic.jam.assist|garagentoröffner|anhänger.rangierassistent/.test(title) &&
-    /einstell|anpass|konfigurier|anzeigen|einblend|veränder|beibehalt|speicher|aktivier|deaktivier|freigeb|start|ausw[äa]hl|belegen|verriegel|entriegel|komfort|lichtautomatik|fernlichtassistent.*(?:merke|aktivierungsverhalten|stadterkennung)|lenkrad.*favoriten|instrumentenansicht|digital.cockpit|klimaanlage|sitzheizung|einparkhilfe|abblendlicht|fahrprofil|dsg.*(?:tür|gang)|acc.*(?:tempo|abstand)|adblue|front.assist.*(?:warn|vorwarn)/.test(title);
+    /einstell|anpass|konfigurier|anzeigen|einblend|veränder|beibehalt|speicher|aktivier|deaktivier|freigeb|start|ausw[äa]hl|belegen|verriegel|entriegel|ergänz|erhöh|änder|einschalten|freischalt|komfort|lichtautomatik|fernlichtassistent.*(?:merke|aktivierungsverhalten|stadterkennung)|lenkrad.*favoriten|instrumentenansicht|digital.cockpit|klimaanlage|sitzheizung|einparkhilfe|abblendlicht|fahrprofil|dsg.*(?:tür|gang)|acc.*(?:tempo|abstand)|adblue|front.assist.*(?:warn|vorwarn)/.test(title);
   if (!modern && referenceAdjustment) {
     return withSfd("VCDS / VCP (Anpassung, modellabhängig)",
       "Die Tätigkeit entspricht einer Codierung/Anpassung an bereits vorhandener Hardware. Werkzeugweg plausibel, aber als Recherchekandidat nicht am konkreten Fahrzeug geprüft. Unterstützten Anpassungskanal und eventuelle Freischaltungen vor einer PDF-Anleitung belegen.");
