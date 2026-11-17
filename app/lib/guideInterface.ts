@@ -59,6 +59,12 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     return withSfd("Nicht erforderlich", "Für den beschriebenen Arbeitsschritt ist keine Codierung angegeben.", false);
   }
 
+  // Der Austausch eines MQB-Instruments gegen AID bzw. der Einbau
+  // einer anderen MIB-Generation kann WFS/Komponentenschutz/Lizenz betreffen.
+  if (/analogtacho.*(?:aid|active.info.display).*umbau|mib1.*mib2|mib.?2.*(?:nachrüst|tausch)|mmi.*(?:komplett|upgrade).*umbau/.test(title)) {
+    return withSfd("ODIS Service (Online) · ggf. VCP",
+      "Bei Kombiinstrument-/Infotainment-Generationstausch sind Komponentenschutz/Wegfahrsperre und gültige FEC-/SWaP-Lizenzen möglich. ODIS Service mit Herstellerberechtigung für den geschützten Arbeitsschritt; VCP nur bei gesondert nötigen kompatiblen Parametern. Keine reine VCDS-Komplettfreischaltung.");
+  }
   // FAZIT/GeKo ist kein Ersatz für ein klassisches VCDS-Login.
   if (/wegfahrsperre|komponentenschutz|(^|[^a-z])immo[345]?\b|schlüssel.*anlernen|(?:aid|virtual cockpit|kombiinstrument|tacho).*tausch/.test(combined) &&
       !/nur.*(?:anpassung|einstellung).*komponentenschutz/.test(combined)) {
@@ -178,8 +184,8 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   }
   // Ab Werk installierte Rückfahrkamera Low oder FLA kann eine reine
   // Codierung sein. Kamera High mit fehlendem Datensatz nicht.
-  if (!modern && /rückfahrkamera|rear.view/.test(title) &&
-      /high|dynamische hilfslinien|dynamische linien|datensatz/.test(combined)) {
+  if (!modern && /rückfahrkamera|rear.view|front.*heckkamera|heckkamera.*front/.test(title) &&
+      /high|dynamisch\w*.*(?:hilfslinien|linien)|datensatz/.test(combined)) {
     return withSfd("VCDS / VCP (Codierung) · ggf. VCP (Datensatz)",
       "Für Kamera High kann ein passend parametriertes Steuergerät 6C nötig sein. Fehlende Datensätze mit VCP, die unterstützte Fahrzeug- und Infotainment-Codierung mit VCDS oder VCP; ggf. Kalibrierung erforderlich.");
   }
@@ -228,7 +234,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
 
   // Recherchierte Nachrüstungen: nur den belegbaren Arbeitsteil nennen.
   if (!modern && input.source === "research" &&
-      /codierdongle|codierinterface|freischaltdongle/.test(note) &&
+      /codierdongle|codierinterface|freischaltdongle/.test(combined) &&
       !/vcp.*parametrier|zdc/.test(note)) {
     return withSfd("Codierdongle des Nachrüstsatzes",
       "Der beschriebene Kit nennt einen spezifischen Codierdongle. Dessen Umfang ersetzt nicht automatisch weitere SFD-Freigaben, Datensätze, Kalibrierungen oder die Freigabe fremder Hardware.");
@@ -236,7 +242,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // Bei sonstigen Komfort-Hardware-Nachrüstungen ist nur der
   // Codieranteil benennbar, nicht die komplette Inbetriebnahme.
   if (!modern && input.source === "research" &&
-      /sitzheizung|lenkradheizung|beheizbares.lenkrad|standheizung|kessy|keyless|elektrische.heckklappe|heckklappe.*fußgeste|spiegel.*nachrüst|licht.regensensor|fußraumbeleuchtung|fussraumbeleuchtung|dwa|diebstahlwarnanlage/.test(title)) {
+      /sitzheizung|lenkradheizung|beheizbares.lenkrad|standheizung|kessy|keyless|elektrische.heckklappe|heckklappe.*fußgeste|spiegel.*nachrüst|licht.*regensensor|fußraumbeleuchtung|fussraumbeleuchtung|dwa|diebstahlwarnanlage|multifunktionslenkrad|mufu|lenkradtempomat|lenkrad.*acc.tasten|memoryfunktion.*sitz/.test(title)) {
     return withSfd("VCDS / VCP (Codieranteil) · ggf. ODIS/VCP",
       "VCDS/VCP sind nur für unterstützte Steuergerätecodierungen vorgesehen. Steuergeräteaustausch, Komponentenschutz, SFD, Parameterdatensätze, Sensoranlernen und herstellerspezifische Inbetriebnahme müssen separat geprüft werden. Keine zugesagte Komplettnachrüstung mit einem einzigen Interface.");
   }
@@ -246,7 +252,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
       "Passende Kamera, Verkabelung und Infotainment vorausgesetzt. VCDS/VCP können die unterstützte Codierung vornehmen; bei High-Kamera oder fehlendem Datensatz ist ein separater VCP-Schritt notwendig.");
   }
   if (!modern && input.source === "research" &&
-      /matrix|led.scheinwerfer|bi.xenon|lichtweitenregulierung|scheinwerfer.*(?:nachrüst|umrüst)/.test(title)) {
+      /matrix|led.scheinwerfer|bi.xenon|leuchtweitenregulierung|lichtweitenregulierung|scheinwerfer.*(?:nachrüst|umrüst)/.test(title)) {
     return withSfd("VCDS / VCP (Codierung) + Kalibrierung",
       "Umbau verlangt passende Steuergeräte, automatische Leuchtweitenregulierung und fachgerechte Licht-/ADAS-Kalibrierung. Gegebenenfalls VCP-Datensätze oder ODIS-Herstellerverfahren nötig. Keine Freigabe allein durch VCDS-Codierung.");
   }
@@ -285,6 +291,11 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   if (/^(?:.*)(?:\bacc\b|pacc|travel assist|stauassistent|side assist|blind spot|parklenkassistent|night vision|area view|360.)/.test(title) &&
       /nachrüst|umbau|umrüst|vollständig|komplett|radar.*einb|front.*heckkamera/.test(title)) {
     return withSfd("Inbetriebnahme prüfen", "Codierung, mögliche Datensätze und Kalibrierung müssen anhand der realen Steuergeräte geprüft werden.");
+  }
+  if (!modern && /(?:blind.spot|side.assist|spurwechselassistent|parklenkassistent|park.assist|einparkhilfe|pla|traffic.jam.assist|stauassistent)/.test(title) &&
+      /nachrüst|umbau|erweitern|komplett|aktivierungsberechtigung/.test(title)) {
+    return withSfd("VCDS / VCP (Codierung) + Fachinbetriebnahme",
+      "Für unterstützte Steuergeräte sind Codierungen mit VCDS/VCP möglich. Radar- und Parkassistenten benötigen abhängig vom Modell passende Datensätze (VCP), Kalibrierung und ggf. ODIS/Online-Freigaben. Die Codierung allein bedeutet keine vollständige Freischaltung.");
   }
   if (/verkehrszeichenerkennung|verkehrszeichen.*aktivier|\bvze\b/.test(title)) {
     return withSfd(/\bvcds\b/.test(hint) && !modern ? "VCDS / VCP" : "Freigabe abhängig", "VCDS nur für den belegten Codierschritt; vorhandene FEC-/SWaP-Freigabe, kompatible Navigation, Kamera und Softwarestand sind Voraussetzung.");
