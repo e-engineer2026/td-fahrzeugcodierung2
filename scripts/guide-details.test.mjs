@@ -53,13 +53,14 @@ test("bereits vorhandene Hardware- und Toolfelder werden als Technik übernommen
   });
   assert.match(result.prerequisites, /Kompatibles BCM erforderlich/);
   assert.match(result.prerequisites, /VCDS \/ VCP/);
-  assert.equal(result.description, null);
+  assert.match(result.description, /Zentralverriegelung/);
 });
 
 test("kein Beschreibungsknopf ohne zusätzlichen Informationstext", () => {
-  const result = guideDetails({ title: "Zeigertest aktivieren" });
+  const result = guideDetails({ title: "Funktion ohne hinterlegte technische Erklärung" });
   assert.equal(result.prerequisites, null);
   assert.equal(result.description, null);
+  assert.match(guideDetails({ title: "Zeigertest aktivieren" }).description, /Zeiger/);
 });
 
 test("gemischte QQ2-Hinweise enthalten keine Fremdanleitungs-Metadaten", () => {
