@@ -78,12 +78,12 @@ export default function GuideSelector() {
   const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
   const visibleResearch = researchEntries.filter((entry) =>
     entry.category === activeCategory &&
-    [entry.title, entry.note, entry.sourceName].join(" ").toLocaleLowerCase("de")
+    [entry.title, entry.note].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleSourceIdeas = sourceIdeas.filter((idea) =>
     idea.category === activeCategory &&
-    [idea.title, idea.note, idea.sourceName].join(" ").toLocaleLowerCase("de")
+    [idea.title, idea.note].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
   const visibleCodings = codings.filter((coding) =>
