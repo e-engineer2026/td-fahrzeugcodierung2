@@ -17,7 +17,7 @@ type GuideDetailsInput = {
   activation?: string;
 };
 
-const TECHNICAL = /(?:\b(?:PR[\s-]?[A-Z0-9]|BCM|ABS|CAN|MIB|MMI|AID|SFD\d?|GeKo|SWaP|FEC|SVM|FOD|VCDS|VCP|ODIS|OBD11|ACC|PDC|aLWR|SRA|RDK|DSG)\b|hardware|steuergerät|steuerteil|steuerung|steuerger[aä]te|sensor|kamera|radar|gateway|lenkrad|lenkstock|heizmatte|sitzbez(?:ug|üge)|sitzheizung|klimabedien|climatronic|klimaelektronik|klimasteuer|lichtpaket|leucht|scheinwerfer|spiegel|türgriff|keyless|kessy|kabel|leitun|antenne|lautsprecher|verstärker|schalter|taster|display|navi|infotainment|cockpit|heckklappe|anhänger|schleifring|steckdose|wechselrichter|bedienteil|bremsen|airbag|reinigungsdüse|reifendruck|frontscheibe|sto[ßs]fänger|hardware|software|datensatz|lizenz|freigabe|freischalt|kalibrier|grundeinstellung|parametrier|codier|modelljahr|baujahr|fahrgestell|fin\b|komponentenschutz|kompatib|geeignet|voraussetz|erforderlich|prüfen|vorhanden|nur bei|nur mit|nur für|nicht bei|nicht für|ab mj|bis mj|vor.?facelift|facelift|linkslenker|rechtslenker|lhd|rhd|motorkennbuchstab|fahrwerk|ausstattungsvariante|pr.code|pr.nummer)/i;
+const TECHNICAL = /(?:\b(?:PR[\s-]?[A-Z0-9]|BCM|ABS|CAN|MIB|MMI|AID|SFD\d?|GeKo|SWaP|FEC|SVM|FOD|VCDS|VCP|ODIS|OBD11|ACC|PDC|aLWR|SRA|RDK|DSG)\b|hardware|steuergerät|steuerteil|steuerung|steuerger[aä]te|sensor|kamera|radar|gateway|lenkrad|lenkstock|heizmatte|sitzbez(?:ug|üge)|sitzheizung|klimabedien|climatronic|klimaelektronik|klimasteuer|lichtpaket|leucht|scheinwerfer|spiegel|türgriff|keyless|kessy|kabel|leitun|antenne|lautsprecher|verstärker|schalter|taster|display|navi|infotainment|cockpit|heckklappe|anhänger|schleifring|steckdose|wechselrichter|bedienteil|bremsen|airbag|reinigungsdüse|reifendruck|frontscheibe|sto[ßs]fänger|wischwasser|anschluss|tacho|schlüssel|pin\b|anpassbar|zündung|hardware|software|datensatz|lizenz|freigabe|freischalt|kalibrier|grundeinstellung|parametrier|codier|modelljahr|baujahr|fahrgestell|fin\b|komponentenschutz|kompatib|geeignet|voraussetz|erforderlich|prüfen|vorhanden|nur bei|nur mit|nur für|nur bis|nur ab|km\/h|nicht bei|nicht für|ab mj|bis mj|vor.?facelift|facelift|linkslenker|rechtslenker|lhd|rhd|motorkennbuchstab|fahrwerk|ausstattungsvariante|pr.code|pr.nummer)/i;
 
 const NON_REQUIREMENT_META = /(?:\banleitung(?:svorschau|en)?\b|\beinbauanleitung\b|\banschlussanleitung\b|\bvollversion\b|\bkomplettanleitung\b|\bproduktseite\b|\bproduktkauf\b|\bherstellerseite\b|\bquelle\b|\bpraxisbericht\b|\bprobeverbau\b|\btestfahrzeug\b|\böffentlich\b|\bangebot\b|\bkufatec\b)/i;
 
@@ -83,6 +83,9 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
     // Technische Angaben im selben Teilsatz werden nicht verworfen.
     if (NON_REQUIREMENT_META.test(clause) && !TECHNICAL.test(clause)) continue;
     let cleaned = clause.replace(/^(?:laut (?:anbieter|quelle|hersteller)\s*[:,]?\s*)/i, "").trim();
+    // Metatext vor dem eigentlichen technischen Inhalt entfernen.
+    cleaned = cleaned.replace(/^(?:keine geprüfte Komplettanleitung|keine frei verfügbare Anleitung|Anleitungsvorschau|Praxisbericht|Einbauanleitung|vollständige Anleitung)\s*[,;:]\s*/i, "");
+    cleaned = cleaned.replace(/^Anleitung (?:und|mit)\s+(?=(?:Software|Hardware|Steuergerät|Freischaltung))/i, "");
     if (!cleaned) continue;
     if (/^(?:keine|ohne) (?:zusätzliche )?codierung(?: erforderlich)?$/i.test(cleaned)) continue;
     if (NON_REQUIREMENT_META.test(cleaned) && /^(?:anleitung|einbauanleitung|anschlussanleitung|vollversion|produkt|praxisbericht|testfahrzeug)/i.test(cleaned)) continue;
@@ -101,7 +104,7 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
 
   const explanation = explanationFromTitle(input.title);
   if (explanation && !descriptions.some((value) => key(value) === key(explanation))) {
-    descriptions.unshift(explanation);
+    descriptions.unshift(normalize(explanation));
   }
 
   // Nur sinnvolle Zusatzinformation aufklappbar machen, keine leeren Floskeln.
