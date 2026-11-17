@@ -40,11 +40,11 @@ export function codingEffortStep(
   if (/\bacc\b|\bpacc\b|prädiktives acc|travel assist|traffic jam|stauassistent|parklenkassistent|park assist|pla\b|blind.?spot|side assist|spurwechselassistent|kreuzungsassistent|nachtsichtassistent|night vision|360.?(?:area view|umgebungsansicht)|area.view|front.und.heckkamera/.test(title)) {
     if (/kabelsatz|verkabelung|adapter/.test(title) && /nur (?:acc.)?(?:verkabelung|kabelsatz)|kein komplettset|nur kabelsatz/.test(note)) return 1;
     if (/geschwindigkeitsbereich|160 auf 210/.test(title)) return 5;
-    return /kalibrier|grundeinstellung|remote.erstinbetriebnahme|radar.kalibrier|ge[kc]o/i.test(note) ? 6 : 5;
+    return /parametrier|datensatz|online.aktivier|remote.erstinbetriebnahme/i.test(note) ? 6 : 5;
   }
 
   // Erforderliche Online-Aktivierungen, neue Softwarestände oder Lizenzdaten.
-  if (/\b(swap|fec|sfd2|svm)\b|fod.shop|freischalt(?:dokument|lizenz)|funktionen?freigabe|online.frei(?:schalt|gabe)/i.test(combined)) {
+  if (/\b(swap|fec|svm)\b|fod.shop|freischalt(?:dokument|lizenz)|funktionen?freigabe|online.frei(?:schalt|gabe)/i.test(combined)) {
     return /\b(swap|fec)\b|fod.shop|online.frei(?:schalt|gabe)/.test(combined) ? 6 : 4;
   }
 
@@ -54,7 +54,7 @@ export function codingEffortStep(
 
   // Lichtsteuerungen mit zusätzlicher Grundeinstellung.
   if (/matrix|xenon|iq.light|leuchtweitenregulier|\balwr\b|led.scheinwerfer|lichtverteilung|kurvenlicht|voll.led/.test(title)) {
-    return /kalibrier|grundeinstellung|softwarekonfig|parametrier/.test(note) ? 5 : 4;
+    return /grundeinstellung|softwarekonfig|parametrier/.test(note) ? 5 : 4;
   }
 
   // Zentrale Anhänger- und Kameraeinbindung in mehrere Steuergeräte.
