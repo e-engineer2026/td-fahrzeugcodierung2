@@ -14,7 +14,7 @@ export function guideHardware(note?: string, explicitHardware?: string): string 
   const hardwareClauses: string[] = [];
   for (const clause of clauses) {
     let text = clause.trim();
-    if (!text || NOT_HARDWARE.test(text)) continue;
+    if (!text || NOT_HARDWARE.test(text) || /^(?:SFD\d?[- ]|GeKo\b|Codier|Freischalt|Parametrier|Software(?:stand|version)|Online[- ])|(?:keine|ohne) (?:zusätzliche )?(?:fahrzeug)?hardware/i.test(text)) continue;
     // Rein elektronische Anforderungen nicht irrtümlich als Bauteile markieren.
     text = text.split(/\s+(?:und|sowie)\s+(?=(?:SFD\d?|GeKo|SWaP|FEC|SVM|Softwarestand|Codierung|Freischaltung|Kalibrierung|Parametrierung)\b)/i)[0].trim();
     text = text.replace(/,\s*(?:SFD\d?|GeKo|SWaP|FEC|SVM|Softwarestand|Codierung|Freischaltung|Kalibrierung|Parametrierung)\b.*$/i, "").trim();
