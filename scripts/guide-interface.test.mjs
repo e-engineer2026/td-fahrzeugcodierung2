@@ -9,7 +9,7 @@ test("VCDS nur bei belegtem reinen Anpassungsschritt", () => {
 });
 
 test("VZE wegen FEC, Kamera und Navigation nicht pauschal für VCDS freigeben", () => {
-  assert.equal(guideInterface({ title: "Verkehrszeichenerkennung aktivieren", interfaceInfo: "VCDS", vehicleYear: 2018 }).label, "VCDS / VCP (Codierung)");
+  assert.equal(guideInterface({ title: "Verkehrszeichenerkennung aktivieren", interfaceInfo: "VCDS", vehicleYear: 2018 }).label, "VCDS / VCP");
   const hardware = guideVehicleRequirements({ title: "Verkehrszeichenerkennung aktivieren" });
   assert.match(hardware, /Front-\/Umfeldkamera/);
   assert.match(hardware, /Navigationssystem/);
@@ -25,14 +25,14 @@ test("AHK: benötigte Steuergeräte und Software benennen", () => {
 });
 
 test("VCP-ZDC statt VCDS und GeKo statt VCP für Online-Schutz", () => {
-  assert.equal(guideInterface({ title: "QQ2 Ambientebeleuchtung", note: "VCP-Parametrierung erforderlich" }).label, "VCP (Parametrierung)");
+  assert.equal(guideInterface({ title: "QQ2 Ambientebeleuchtung", note: "VCP-Parametrierung erforderlich" }).label, "VCP");
   assert.equal(guideInterface({ title: "Kombiinstrument tauschen", note: "Komponentenschutz anlernen" }).label, "ODIS Service (Online)");
   assert.equal(guideInterface({ title: "Area View nachrüsten", note: "SFD2 erforderlich" }).label, "Herstellerfreigabe prüfen");
 });
 
 test("Vollständige ACC-Inbetriebnahme nicht als einfache VCDS-Codierung verkaufen", () => {
   assert.equal(guideInterface({ title: "ACC-Radar vollständig nachrüsten", vehicleYear: 2018 }).label, "Inbetriebnahme prüfen");
-  assert.equal(guideInterface({ title: "Rückfahrkamera nachrüsten", note: "Datensatz parametrieren" }).label, "VCP (Parametrierung)");
+  assert.equal(guideInterface({ title: "Rückfahrkamera nachrüsten", note: "Datensatz parametrieren" }).label, "VCP");
 });
 
 test("Codierfreie Maßnahmen benötigen kein Interface", () => {
@@ -50,7 +50,7 @@ test("GeKo-Status allein ist kein Beweis für eine zwingende ODIS-Maßnahme", ()
 });
 
 test("Gateway-Datensatz nicht ohne Werkzeugnachweis als VCP ausgeben", () => {
-  assert.equal(guideInterface({ title: "R-Mode-Tasten nachrüsten", note: "Gateway-Parametrierung nötig" }).label, "VCP (Parametrierung)");
+  assert.equal(guideInterface({ title: "R-Mode-Tasten nachrüsten", note: "Gateway-Parametrierung nötig" }).label, "VCP");
 });
 
 test("Modellreihe mit möglichen SFD2-Baujahren erfordert zusätzliche Prüfung", () => {
@@ -118,7 +118,7 @@ test("VCP für belegte VCDS-Codierungen mitnennen, nicht bei Herstellerfreigaben
   const coding = guideInterface({title:"Komfortblinken anpassen", interfaceInfo:"VCDS", source:"catalog", category:"Codierungen", vehicleYear:2017});
   assert.equal(coding.label, "VCDS / VCP");
   const zdc = guideInterface({title:"QQ2 Ambientebeleuchtung", note:"VCP-Parametrierung mittels ZDC erforderlich", vehicleYear:2022});
-  assert.equal(zdc.label, "VCP (Parametrierung)");
+  assert.equal(zdc.label, "VCP");
   assert.doesNotMatch(zdc.label, /VCDS/);
   const online = guideInterface({title:"Wegfahrsperre anlernen", vehicleYear:2015});
   assert.equal(online.label, "ODIS Service (Online)");
@@ -130,22 +130,22 @@ test("Audi VZE auf MLB/MLB-evo wird regelmäßig als VCP-Parametrierung dargeste
   for (const platform of ["MLB", "MLBevo"]) {
     const audi = guideInterface({ title: "Verkehrszeichenerkennung aktivieren", vehicleBrand: "Audi",
       platform, vehicleYear: 2016, interfaceInfo: "VCDS" });
-    assert.equal(audi.label, "VCP (meist erforderlich)");
+    assert.equal(audi.label, "VCP");
     assert.match(audi.qualification, /parametriert/);
   }
   const audiA3 = guideInterface({ title: "Verkehrszeichenerkennung aktivieren", vehicleBrand: "Audi",
     platform: "MQB", vehicleYear: 2017, interfaceInfo: "VCDS" });
-  assert.equal(audiA3.label, "VCDS / VCP (Codierung)");
+  assert.equal(audiA3.label, "VCDS / VCP");
   const vw = guideInterface({ title: "Verkehrszeichenerkennung aktivieren", vehicleBrand: "Volkswagen",
     platform: "MQB", vehicleYear: 2017, interfaceInfo: "VCDS" });
-  assert.equal(vw.label, "VCDS / VCP (Codierung)");
+  assert.equal(vw.label, "VCDS / VCP");
 });
 
 test("VCP für Parameterdateien, ODIS bei SVM, Flash nicht als VCP-only ausgeben", () => {
   const param = guideInterface({ title: "Kamera parametrieren", vehicleBrand: "Audi", vehicleYear: 2019 });
-  assert.equal(param.label, "VCP (Parametrierung)");
+  assert.equal(param.label, "VCP");
   const zdc = guideInterface({ title: "Steuergerät", note: "ZDC Datei aufspielen", vehicleYear: 2019 });
-  assert.equal(zdc.label, "VCP (Parametrierung)");
+  assert.equal(zdc.label, "VCP");
   const svm = guideInterface({ title: "Steuergerät parametrieren", note: "SVM erforderlich", vehicleYear: 2020 });
   assert.equal(svm.label, "Lizenz/Freigabe prüfen");
   const flash = guideInterface({ title: "Steuergerät flashen", vehicleYear: 2019 });

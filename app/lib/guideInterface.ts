@@ -83,7 +83,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     /verkehrszeichenerkennung|verkehrszeichen.*(?:aktivier|freischalt|erkenn|anzeig)|\bvze\b|sign.assist/.test(title) &&
     !/(?:nur|lediglich).*(?:einstell|anzeig|anpass)|(?:warn|anzeige).*anpassen/.test(title);
   if (audiVzeActivation && !/\bsvm\b|herstellerseitige.online.freigabe|online.inbetriebnahme/.test(note)) {
-    return withSfd("VCP (meist erforderlich)",
+    return withSfd("VCP",
       "Bei der erstmaligen Aktivierung wird die Frontkamera häufig mit VCP und einem passenden Datensatz parametriert. VCDS allein kann diesen Schritt nicht ersetzen. Bereits passend parametrierte Kameras können eine reine VCDS-/VCP-Codierung zulassen. Kamera, Navigation, Softwarestand sowie gegebenenfalls FEC-/SWaP-Freigaben prüfen.");
   }
 
@@ -94,14 +94,14 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // Bei mehreren Prozessschritten wird nicht nur das fürs Codieren
   // geeignete Interface als vollständiges Werkzeug ausgegeben.
   if (/vcp[- /]parametrier|zdc.*\bvcp\b/.test(combined)) {
-    return withSfd("VCP (Parametrierung)", "VCP-spezifischer Parameter-/ZDC-Schritt mit passendem Datensatz und unterstütztem Steuergerät; reine VCDS-Codierung genügt hierfür nicht. Zusätzliche Freigaben separat prüfen.");
+    return withSfd("VCP", "VCP-spezifischer Parameter-/ZDC-Schritt mit passendem Datensatz und unterstütztem Steuergerät; reine VCDS-Codierung genügt hierfür nicht. Zusätzliche Freigaben separat prüfen.");
   }
   // TD-Anleitungsbereich: Parameter-/ZDC-Dateien nur als VCP-Arbeit
   // ausweisen. Online-SVM und herstellergesteuerte Maßnahmen sind ein
   // anderes Verfahren und wurden bereits oben abgefangen.
   const parameterStep = /parametrier|\bzdc\b|parameterdatei|gateway.parametrier|softwaredatensatz|datensatz.*(?:einspiel|aufspiel|upload)/.test(combined);
   if (parameterStep && !/nur ausstattung|datensatz unterscheiden/.test(note)) {
-    return withSfd("VCP (Parametrierung)",
+    return withSfd("VCP",
       "Für das Einspielen eines kompatiblen Parameter-/ZDC-Datensatzes wird VCP benötigt; VCDS allein kann diese Parametrierung nicht durchführen. Teilenummer, Softwarestand, passende Datensatzdatei sowie VCP-Unterstützung und Freigaben sind Voraussetzung.");
   }
   if (/(?:steuergerät|firmware|flash).*flash|softwareupdate|mib1.*mib2|mmi.*upgrade|kalibrierung.*online/.test(title) ||
@@ -117,7 +117,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     return withSfd("Inbetriebnahme prüfen", "Codierung, mögliche Datensätze und Kalibrierung müssen anhand der realen Steuergeräte geprüft werden.");
   }
   if (/verkehrszeichenerkennung|verkehrszeichen.*aktivier|\bvze\b/.test(title)) {
-    return withSfd(/\bvcds\b/.test(hint) && !modern ? "VCDS / VCP (Codierung)" : "Freigabe abhängig", "VCDS nur für den belegten Codierschritt; vorhandene FEC-/SWaP-Freigabe, kompatible Navigation, Kamera und Softwarestand sind Voraussetzung.");
+    return withSfd(/\bvcds\b/.test(hint) && !modern ? "VCDS / VCP" : "Freigabe abhängig", "VCDS nur für den belegten Codierschritt; vorhandene FEC-/SWaP-Freigabe, kompatible Navigation, Kamera und Softwarestand sind Voraussetzung.");
   }
 
   // Eindeutig als VCDS-Einstellungsanleitung erfasste Funktionen, sofern
