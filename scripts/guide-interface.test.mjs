@@ -103,11 +103,11 @@ test("Komplexe Arbeiten ohne nachgewiesenes Verfahren bekommen keine pauschale V
     title: "Wireless CarPlay aktivieren",
     interfaceInfo: "VCDS; ggf. VCP oder ODIS",
     category: "Codierungen", source: "catalog", vehicleYear: 2018
-  }).label, "Interfaceprüfung erforderlich");
+  }).label, "ODIS Service (FEC/SWaP) + ggf. VCDS / VCP");
   assert.equal(guideInterface({
     title: "AHK nachrüsten und codieren",
     category: "Nachrüstungen", source: "research", vehicleYear: 2018
-  }).label, "Interfaceprüfung erforderlich");
+  }).label, "VCDS / VCP (AHK-Codierung)");
   assert.equal(guideInterface({
     title: "Ambientebeleuchtung nachrüsten",
     category: "Nachrüstungen", source: "reference", vehicleYear: 2020
@@ -152,4 +152,74 @@ test("VCP für Parameterdateien, ODIS bei SVM, Flash nicht als VCP-only ausgeben
   assert.equal(flash.label, "Hersteller-/Flashverfahren prüfen");
   const sfd2 = guideInterface({ title: "Kamera parametrieren", note: "SFD2 erforderlich", vehicleYear: 2024 });
   assert.equal(sfd2.label, "Herstellerfreigabe prüfen");
+});
+
+
+test("Golf 7 Fahrprofilauswahl: originale Lizenz statt nur VCDS-Schalter", () => {
+  const r = guideInterface({ title: "Fahrprofilauswahl aktivieren",
+    vehicleBrand:"Volkswagen", platform:"MQB", vehicleYear:2015,
+    source:"catalog", category:"Codierungen" });
+  assert.equal(r.label, "ODIS Service (SWaP) + VCDS / VCP");
+  assert.match(r.qualification, /SWaP/);
+});
+
+test("Audi QQ2 mit zusätzlichem Parameterdatensatz braucht VCP", () => {
+  const r = guideInterface({ title: "Mehrfarbige Kontur-Ambientebeleuchtung (QQ2) nachrüsten",
+    vehicleBrand:"Audi", platform:"MLBevo", vehicleYear:2019, source:"research" });
+  assert.equal(r.label, "VCP (QQ2-Parametrierung) + VCDS / VCP");
+});
+
+test("AHK, Drive Select, Easy Entry und Ambientemenü unterstützen reine VCDS/VCP-Codierung", () => {
+  const cases = [
+    ["Anhängerkupplung codieren", "VCDS / VCP (AHK-Codierung)", "Volkswagen", "MQB"],
+    ["Audi Drive Select aktivieren", "VCDS / VCP (Codierung)", "Audi", "MLBevo"],
+    ["Easy Entry für Fahrersitz aktivieren", "VCDS / VCP (Sitzeinstellung)", "Škoda", "MQB"],
+    ["Ambientebeleuchtung im MMI aktivieren", "VCDS / VCP (Menü) · ggf. VCP (Datensatz)", "Audi", "MLBevo"],
+    ["Fernlichtassistent aktivieren", "VCDS / VCP (Codierung)", "Audi", "MLBevo"]
+  ];
+  for (const [title, label, vehicleBrand, platform] of cases) {
+    assert.equal(guideInterface({ title, vehicleBrand, platform, vehicleYear: 2018, source: "catalog",
+      category: "Codierungen" }).label, label, title);
+  }
+});
+
+test("Aktivierbares Cockpit-Layout von notwendigem Softwareverfahren trennen", () => {
+  const r = guideInterface({ title:"Sportlayout / RS-Ansicht im Virtual Cockpit aktivieren",
+    vehicleBrand:"Audi", platform:"MLBevo", vehicleYear:2018, source:"catalog", category:"Codierungen" });
+  assert.match(r.label,/VCDS \/ VCP/);
+  assert.match(r.qualification,/Softwarestand/);
+});
+
+test("Luftfahrwerk VCDS Grundeinstellung, aber ODIS bei unparametriertem Steuergerät", () => {
+  const r = guideInterface({ title:"Luftfahrwerk Niveauanzeige / Lift-Funktion prüfen",
+    vehicleBrand:"Audi", platform:"MLBevo", vehicleYear:2018, source:"catalog" });
+  assert.equal(r.label,"VCDS (Diagnose/Grundeinstellung) · ggf. ODIS");
+});
+
+test("Rückfahrkamera Low gegen parametrisierungspflichtige High-Kamera abgrenzen", () => {
+  const low = guideInterface({ title:"Rückfahrkamera aktivieren", source:"catalog",
+    vehicleYear:2017, category:"Codierungen" });
+  assert.equal(low.label,"VCDS / VCP (Kameracodierung)");
+  const high = guideInterface({ title:"Original-Rückfahrkamera mit dynamischen Hilfslinien nachrüsten",
+    note:"Datensatz parametrieren", source:"research", vehicleYear:2017 });
+  assert.equal(high.label,"VCP (Kamera-Parametrierung) + VCDS / VCP");
+});
+
+test("Assistenz-Nachrüstung nur als Codierung plus Fachinbetriebnahme", () => {
+  const r = guideInterface({ title:"Radar-ACC vollständig nachrüsten",
+    source:"research", vehicleYear:2018, category:"Nachrüstungen" });
+  assert.equal(r.label,"VCDS / VCP (Codierung) + Fachinbetriebnahme");
+  const matrix = guideInterface({ title:"Halogen auf originale LED-Scheinwerfer umrüsten",
+    source:"research", vehicleYear:2018, category:"Umbauten" });
+  assert.equal(matrix.label,"VCDS / VCP (Codierung) + Kalibrierung");
+});
+
+test("Recherchierte Referenzanpassungen sind Kandidaten, keine pauschale Freigabe", () => {
+  const r = guideInterface({ title:"ACC-Tempo in 1-km/h-Schritten einstellen",
+    source:"reference", vehicleYear:2018 });
+  assert.equal(r.label,"VCDS / VCP (Anpassung, modellabhängig)");
+  assert.match(r.qualification,/nicht am konkreten Fahrzeug geprüft/);
+  const newCar = guideInterface({ title:"ACC-Tempo in 1-km/h-Schritten einstellen",
+    source:"reference", vehicleYear:2025 });
+  assert.equal(newCar.label,"Herstellerverfahren prüfen");
 });
