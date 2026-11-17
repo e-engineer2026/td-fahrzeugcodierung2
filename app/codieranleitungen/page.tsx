@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, LockKeyhole, UserRound } from "lucide-react";
+import { AlertTriangle, ArrowLeft, ChevronDown, LockKeyhole, UserRound } from "lucide-react";
 import GuideSelector from "../components/GuideSelector";
 
 export const metadata: Metadata = {
@@ -34,12 +34,19 @@ export default function CodieranleitungenPage() {
           <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700"><LockKeyhole size={15} aria-hidden="true" />PDF-Anleitungen</div>
           <h1 className="mt-3 max-w-3xl text-2xl font-black tracking-tight sm:text-3xl">Professionelle Codieranleitungen</h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">Download PDF-Anleitungen</p>
-          <div className="mt-5 max-w-4xl rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700" role="note" aria-label="Fachanwender und Haftungsausschluss">
-            <p className="font-black text-slate-900">Ausschließlich für professionelle Anwender</p>
-            <p className="mt-1">Diese technischen Informationen richten sich ausschließlich an qualifizierte Fachkräfte und Fachbetriebe mit Erfahrung in Fahrzeugdiagnose, Codierung und Steuergeräteprogrammierung. Vor jeder Änderung sind der Fahrzeugzustand, die Teilenummern, der Softwarestand, die Freigaben und eine Sicherung der Originaldaten zu prüfen. Sicherheits- und zulassungsrelevante Arbeiten dürfen nur berechtigt und nach Herstellervorgaben durchgeführt werden.</p>
-            <p className="mt-3 font-bold text-slate-900">Haftungsausschluss und Sicherheitshinweis</p>
-            <p className="mt-1">Die Angaben sind allgemeine technische Orientierung und keine Garantie für Funktion, Zulässigkeit oder Eignung im konkreten Fahrzeug. Umsetzung und Prüfung erfolgen in eigener fachlicher Verantwortung. Soweit gesetzlich zulässig, übernimmt TD Fahrzeugcodierung keine Haftung für Schäden aus unsachgemäßer, unberechtigter oder fehlerhafter Anwendung. Unberührt bleiben zwingende gesetzliche Haftungsansprüche, insbesondere bei Vorsatz, grober Fahrlässigkeit sowie Verletzung von Leben, Körper oder Gesundheit.</p>
-          </div>
+          <details className="group mt-5 max-w-4xl overflow-hidden rounded-xl border-2 border-amber-400 bg-amber-50 text-sm leading-6 text-amber-950" role="note" aria-label="Sicherheitshinweise und Haftungsausschluss">
+            <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 font-bold marker:hidden hover:bg-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-amber-700 [&::-webkit-details-marker]:hidden">
+              <AlertTriangle size={23} className="shrink-0 text-amber-700" aria-hidden="true" />
+              <span className="flex-1">Sicherheitshinweise &amp; Haftungsausschluss</span>
+              <ChevronDown size={20} className="shrink-0 text-amber-700 transition-transform group-open:rotate-180" aria-hidden="true" />
+            </summary>
+            <div className="border-t border-amber-300 px-4 pb-4 pt-3">
+              <p className="font-black">Ausschließlich für professionelle Anwender</p>
+              <p className="mt-1">Diese technischen Informationen richten sich ausschließlich an qualifizierte Fachkräfte und Fachbetriebe mit Erfahrung in Fahrzeugdiagnose, Codierung und Steuergeräteprogrammierung. Vor jeder Änderung sind der Fahrzeugzustand, die Teilenummern, der Softwarestand, die Freigaben und eine Sicherung der Originaldaten zu prüfen. Sicherheits- und zulassungsrelevante Arbeiten dürfen nur berechtigt und nach Herstellervorgaben durchgeführt werden.</p>
+              <p className="mt-3 font-bold">Haftungsausschluss und Sicherheitshinweis</p>
+              <p className="mt-1">Die Angaben sind allgemeine technische Orientierung und keine Garantie für Funktion, Zulässigkeit oder Eignung im konkreten Fahrzeug. Umsetzung und Prüfung erfolgen in eigener fachlicher Verantwortung. Soweit gesetzlich zulässig, übernimmt TD Fahrzeugcodierung keine Haftung für Schäden aus unsachgemäßer, unberechtigter oder fehlerhafter Anwendung. Unberührt bleiben zwingende gesetzliche Haftungsansprüche, insbesondere bei Vorsatz, grober Fahrlässigkeit sowie Verletzung von Leben, Körper oder Gesundheit.</p>
+            </div>
+          </details>
         </div>
       </section>
 
