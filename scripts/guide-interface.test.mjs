@@ -220,7 +220,7 @@ test("Recherchierte Referenzanpassungen sind Kandidaten, keine pauschale Freigab
   assert.match(r.qualification,/nicht am konkreten Fahrzeug geprüft/);
   const newCar = guideInterface({ title:"ACC-Tempo in 1-km/h-Schritten einstellen",
     source:"reference", vehicleYear:2025 });
-  assert.equal(newCar.label,"Herstellerverfahren prüfen");
+  assert.equal(newCar.label,"ODIS Service (Online)");
 });
 
 test("Recherche: GRA und direkte Reifendruckkontrolle", () => {
@@ -253,7 +253,7 @@ test("AID-Umbau benötigt Online-Autorisierung, Blind Spot zusätzliche Inbetrie
 
 test("Neue SFD2-Fahrzeuge ohne Freigabe nicht pauschal als VCDS-kompatibel deklarieren", () => {
   const a = guideInterface({title:"Anhängerkupplung nachrüsten",source:"research",vehicleYear:2025,platform:"MQBevo"});
-  assert.equal(a.label,"Herstellerverfahren prüfen");
+  assert.equal(a.label,"ODIS Service (Online)");
 });
 
 test("SFD-Anzeige nur mit kurzen Typ- und Baujahrangaben", () => {
@@ -310,4 +310,37 @@ test("Bisher offene Sonderfälle bekommen nur plausible und entsprechend eingesc
     assert.equal(r.label,t.label,t.title);
     assert.match(r.qualification,/je nach|voraussicht|konkreten|fahrzeugseitigen/i);
   }
+});
+
+test("SFD2-Prüfvorbehalte sind keine bestätigte Sperre für den gesamten Umbau", () => {
+  const optional=guideInterface({title:"VW Golf 8: Radar-ACC vollständig nachrüsten",
+    note:"SFD1/SFD2, Assistenzhardware und Kalibrierung vorab prüfen",
+    source:"research",category:"Nachrüstungen",platform:"MQBevo",vehicleYear:2020});
+  assert.equal(optional.label,"VCDS / VCP (Codierung) + Fachinbetriebnahme");
+  const required=guideInterface({title:"Sitzheizung vorne nachrüsten",
+    note:"SFD2-Inbetriebnahme nur autorisiert",
+    source:"research",category:"Nachrüstungen",vehicleYear:2020});
+  assert.equal(required.label,"ODIS Service (Online)");
+  const geko=guideInterface({title:"230-V-Steckdose im Fond samt Wechselrichter nachrüsten",
+    note:"Anschlussset und Codierung; GeKo/SFD-Status klären",
+    source:"research",category:"Nachrüstungen",vehicleYear:2018});
+  assert.equal(geko.label,"VCDS / VCP");
+});
+
+test("Für recherchierte Quellen keine reinen Status-Texte statt einer Zuordnung", async () => {
+  const {researchedGuides}=await import("../app/data/guideResearch.ts");
+  const {referenceIdeas}=await import("../app/data/referenceIdeas.ts");
+  const unavailable=/^(?:Interfaceprüfung erforderlich|Herstellerverfahren prüfen|Herstellerfreigabe prüfen|Lizenz\/Freigabe prüfen)$/;
+  const bad=[];
+  for (const x of researchedGuides) {
+    const result=guideInterface({id:x.id,title:x.title,note:x.note,source:"research",
+      category:x.category,vehicleYear:2018,platform:"MQB"});
+    if(unavailable.test(result.label)) bad.push([x.id,result.label]);
+  }
+  for (const x of referenceIdeas) {
+    const result=guideInterface({id:x.id,title:x.title,note:x.note,source:"reference",
+      category:x.category,vehicleYear:2018,platform:"MQB"});
+    if(unavailable.test(result.label)) bad.push([x.id,result.label]);
+  }
+  assert.deepEqual(bad,[]);
 });

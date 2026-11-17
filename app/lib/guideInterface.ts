@@ -106,13 +106,26 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     return withSfd("ODIS Service (Online)", "Für Komponentenschutz/Wegfahrsperre ist die passende FAZIT-/GeKo-Berechtigung erforderlich. VCDS/VCP allein reichen nicht.");
   }
   if (/ge[kc]o|\bfazit\b/.test(combined)) {
-    return /freischalten|freigeben|online anlernen|berechtigtem ge[kc]o|ge[kc]o.zugang nötig|ge[kc]o erforderlich/.test(note)
-      ? result("ODIS Service (Online)", "Herstellerseitige Online-Berechtigung für die genannte Inbetriebnahme erforderlich.")
-      : result("Herstellerfreigabe prüfen", "GeKo-/SFD-Status ist nur als Prüfthema genannt. Das tatsächlich benötigte Verfahren ist noch nicht bestätigt.");
+    const gekOnlineRequired = /online.anlern|berechtigtem.ge[kc]o|ge[kc]o.zugang.nötig|ge[kc]o.erforderlich|ge[kc]o.freigeben|ge[kc]o.freischalten/.test(note);
+    if (gekOnlineRequired) {
+      return withSfd("ODIS Service (Online)", "Herstellerseitige FAZIT-/GeKo-Berechtigung ist für den geschützten Schritt erforderlich; VCDS/VCP ersetzen die Online-Freigabe nicht.");
+    }
+    if (!input.source) {
+      return withSfd("Herstellerfreigabe prüfen", "GeKo ist bislang nur als zu klärender Status erwähnt; aus der bloßen Nennung folgt kein zwingendes Online-Verfahren.");
+    }
+    // Nur als Prüfvorbehalt genannt: Zuordnung nach dem eigentlichen
+    // Codier-/Nachrüstschritt unten, ggf. ODIS bei realem GeKo-Schutz.
   }
 
   if (sfd2) {
-    return withSfd("Herstellerfreigabe prüfen", "SFD2/UNECE kann signierte Herstellermaßnahmen erfordern. VCDS/VCP allein sind für die vollständige Aktivierung nicht freigegeben.");
+    const hardSfd2 = /sfd2.{0,45}(?:erforderlich|nur.autorisier|zwingend|geschützt|inbetriebnahme.nur.autorisier)|signiert.{0,35}(?:erforderlich|zwingend)/.test(note);
+    const conditionalSfd2 = /(?:ggf\.?|gegebenenfalls|prüf|klären|auf.anfrage|vorab|varianten?|möglich|ausschluss|ausstattung|gesondert|sfd2-fahrzeuge|unece.einschränkung)/.test(note) && !hardSfd2;
+    if (!conditionalSfd2 || !input.source) {
+      return withSfd(input.source ? "ODIS Service (Online)" : "Herstellerfreigabe prüfen",
+        "Für ausdrücklich SFD2-geschützte Maßnahmen ist ein autorisiertes Herstellerverfahren mit passender Berechtigung erforderlich. Keine VCDS-/VCP-Freischaltungszusage.");
+    }
+    // Ein Hinweis »SFD2 prüfen« bedeutet nicht, dass die gesamte
+    // Baureihe oder der aktuelle Arbeitsschritt bereits SFD2-geschützt ist.
   }
 
   // Beim Audi auf MLB-/MLB-evo-Basis ist für eine erstmalige VZE-
@@ -299,7 +312,15 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   }
 
   if (/\b(svm|fec|swap)\b|fod.shop|lizenz.*freischalt|offizielle.*freigabe|freischaltdokument|sicherheitsfreigabe/.test(combined)) {
-    return withSfd("Lizenz/Freigabe prüfen", "Eine erforderliche FEC-/SWaP-/SVM-Freigabe lässt sich nicht durch reine VCDS-Codierung ersetzen. Das autorisierte Verfahren muss feststehen.");
+    const onlyLicenceCheck = input.source &&
+      /\b(?:prüfen|klären|eventuell|ggf\.?|je nach)\b/.test(note) &&
+      !/\b(?:zwingend|erforderlich|muss|nur mit)\b.{0,45}\b(?:fec|swap|svm|freigabe)\b/.test(note);
+    if (onlyLicenceCheck && /verkehrszeichenerkennung|verkehrszeichen|\bvze\b/.test(title)) {
+      return withSfd("VCDS / VCP",
+        "Für die unterstützte VZE-Codierung möglich, jedoch nur bei kompatibler Kamera/Navigation und bereits vorhandener oder offiziell beschaffter FEC-/SWaP-Berechtigung. Fehlende Lizenz kann nicht codiert werden.");
+    }
+    return withSfd(input.source ? "ODIS Service (Online)" : "Lizenz/Freigabe prüfen",
+      "Eine für die vollständige Freischaltung erforderliche OEM-FEC-/SWaP-/SVM-Berechtigung ist keine reine VCDS-/VCP-Codierung. Autorisierten Herstellerweg und vorhandene Lizenz prüfen.");
   }
 
   // Bei mehreren Prozessschritten wird nicht nur das fürs Codieren
@@ -353,7 +374,8 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     return withSfd("VCDS / VCP", "Nur für den dokumentierten Codier-/Anpassungsschritt. Die tatsächliche VCP-Unterstützung hängt von Interface, Steuergerät und Softwarestand ab.", false);
   }
 
-  if (modern) return withSfd("Herstellerverfahren prüfen", "Bei neueren Plattformen sind SFD2/UNECE und signierte Herstellermaßnahmen möglich; keine VCDS-/VCP-Zusage.");
+  if (modern) return withSfd(input.source ? "ODIS Service (Online)" : "Herstellerverfahren prüfen",
+    "Bei neueren Plattformen ist ODIS Service der konservative Herstellerweg für geschützte Maßnahmen. Ohne konkrete FIN/Steuergeräteprüfung wird keine SFD2-Freischaltung und keine alternative VCDS-/VCP-Komplettbearbeitung zugesagt.");
 
   // Ausschließlich bei bekannten, einfachen Codier- oder Anpassungsarbeiten:
   // Der allgemeine Katalog-Hinweis "VCDS; ggf. VCP oder ODIS" alleine ist KEIN
