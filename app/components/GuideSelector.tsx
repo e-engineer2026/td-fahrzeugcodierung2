@@ -3,12 +3,12 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
-import { formatGuidePrice, guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
-import GuideDifficultyBar from "./GuideDifficultyBar";
-import GuidePriceIndicator from "./GuidePriceIndicator";
+import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
+import GuideTable, { type GuideTableRow } from "./GuideTable";
+import { guideHardware } from "../lib/guideHardware";
 import { researchGuideEstimate, referenceIdeaEstimate } from "../lib/researchGuidePricing";
 import { retrofitFocusFor } from "../lib/retrofitFocus";
-import { referenceIdeasForVehicle, type ReferenceIdea } from "../data/referenceIdeas";
+import { referenceIdeasForVehicle } from "../data/referenceIdeas";
 import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
@@ -68,14 +68,12 @@ export default function GuideSelector() {
   const categoryCounts = useMemo(
     () => guideCategories.map((category) => ({
       category,
-      count: (category === "Nachrüstungen" || category === "Umbauten"
-        ? researchEntries.filter((entry) => entry.category === category).length
-        : codings.filter((coding) => guideCategory(coding) === category).length
-      ) + sourceIdeas.filter((idea) => idea.category === category).length,
+      count: codings.filter((coding) => guideCategory(coding) === category).length
+        + researchEntries.filter((entry) => entry.category === category).length
+        + sourceIdeas.filter((idea) => idea.category === category).length,
     })),
     [codings, researchEntries, sourceIdeas]
   );
-  const researchCategory = activeCategory === "Nachrüstungen" || activeCategory === "Umbauten";
   const visibleResearch = researchEntries.filter((entry) =>
     entry.category === activeCategory &&
     [entry.title, entry.note].join(" ").toLocaleLowerCase("de")
@@ -91,6 +89,38 @@ export default function GuideSelector() {
     [coding.name, coding.uiGroup ?? ""].join(" ").toLocaleLowerCase("de")
       .includes(codingSearch.trim().toLocaleLowerCase("de"))
   );
+
+  const visibleGuideRows: GuideTableRow[] = [
+    ...visibleCodings.map((coding) => {
+      const step = guideDifficultyStep(coding);
+      return {
+        id: "coding-" + coding.id,
+        title: coding.name,
+        hardware: guideHardware(coding.requirements, coding.hardware),
+        description: [coding.requirements, coding.interfaceInfo].filter(Boolean).join(" · ")
+          || "PDF-Anleitung in Vorbereitung.",
+        estimate: { step, level: guideDifficultyLevel(step), price: guidePrice(coding) }
+      };
+    }),
+    ...visibleResearch.map((item) => ({
+      id: "research-" + item.id,
+      title: item.title,
+      hardware: guideHardware(item.note),
+      description: [item.note,
+        activeCategory === "Nachrüstungen" && retrofitFocusFor(item)
+          ? "Codierung/Inbetriebnahme: " + retrofitFocusFor(item)?.activation
+          : ""
+      ].filter(Boolean).join(" · "),
+      estimate: researchGuideEstimate(item)
+    })),
+    ...visibleSourceIdeas.map((idea) => ({
+      id: "reference-" + idea.id,
+      title: idea.title,
+      hardware: guideHardware(idea.note),
+      description: idea.note,
+      estimate: referenceIdeaEstimate(idea)
+    }))
+  ];
 
   function chooseManufacturer(next: Manufacturer) {
     setManufacturer(next);
@@ -211,88 +241,12 @@ export default function GuideSelector() {
             ))}
           </div>
 
-          {!researchCategory && codings.length > 0 && (
-            <div className="mt-3 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
-              {visibleCodings.map((coding) => {
-                const difficultyStep = guideDifficultyStep(coding);
-                return (
-                  <div key={coding.id} className="flex items-center justify-between gap-3 px-3 py-2.5 sm:px-4">
-                    <div className="min-w-0">
-                      <p className="text-sm font-bold leading-5 text-slate-950">{coding.name}</p>
-                      <p className="mt-0.5 text-xs text-slate-500">PDF-Anleitung in Vorbereitung</p>
-                    </div>
-                    <div className="shrink-0 text-right">
-                      <p className="text-sm font-black tabular-nums text-blue-700">{formatGuidePrice(guidePrice(coding))}</p>
-                      <GuideDifficultyBar level={guideDifficultyLevel(difficultyStep)} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-          {!researchCategory && visibleSourceIdeas.length > 0 && (
-            <div className="mt-3 overflow-hidden rounded-xl border border-amber-200 bg-white">
-              <div className="divide-y divide-slate-100">
-                {visibleSourceIdeas.map((idea: ReferenceIdea) => (
-                  <div key={idea.id} className="px-3 py-3 sm:px-4">
-                    <div className="mb-1 flex flex-wrap items-start justify-between gap-2">
-                      <p className="min-w-0 flex-1 text-sm font-bold leading-5 text-slate-900">{idea.title}</p>
-                      <GuidePriceIndicator estimate={referenceIdeaEstimate(idea)} />
-                    </div>
-                    <p className="mt-1 text-xs leading-5 text-slate-600">{idea.note}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {researchCategory && (
-            <>
-              {visibleResearch.length > 0 && (
-                <div className="mt-2 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
-                  {visibleResearch.map((item) => (
-                    <div key={item.id} className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 px-3 py-3 sm:px-4">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-bold leading-5 text-slate-900">{item.title}</p>
-                        <p className="mt-1 text-xs leading-5 text-slate-600">{item.note}</p>
-                        {activeCategory === "Nachrüstungen" && retrofitFocusFor(item) && (
-                          <p className="mt-1 text-xs font-medium text-slate-700">
-                            Codierung/Inbetriebnahme: {retrofitFocusFor(item)?.activation}
-                          </p>
-                        )}
-                      </div>
-                      <GuidePriceIndicator estimate={researchGuideEstimate(item)} />
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {visibleSourceIdeas.length > 0 && (
-                <div className="mt-3 overflow-hidden rounded-xl border border-amber-200 bg-white">
-                  <div className="divide-y divide-slate-100">
-                    {visibleSourceIdeas.map((idea: ReferenceIdea) => (
-                      <div key={idea.id} className="px-3 py-3 sm:px-4">
-                        <div className="mb-1 flex flex-wrap items-start justify-between gap-2">
-                          <p className="min-w-0 flex-1 text-sm font-bold leading-5 text-slate-900">{idea.title}</p>
-                          <GuidePriceIndicator estimate={referenceIdeaEstimate(idea)} />
-                        </div>
-                        <p className="mt-1 text-xs leading-5 text-slate-600">{idea.note}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {visibleResearch.length === 0 && visibleSourceIdeas.length === 0 && (
-                <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
-                  {codingSearch.trim() ? "Kein passender Rechercheeintrag gefunden." : "Für dieses Fahrzeug sind noch keine recherchierten Anleitungen in diesem Bereich erfasst."}
-                </p>
-              )}
-            </>
-          )}
-          {!researchCategory && visibleCodings.length === 0 && visibleSourceIdeas.length === 0 && (codings.length > 0 || sourceIdeas.length > 0) && (
+          <GuideTable rows={visibleGuideRows} />
+          {visibleGuideRows.length === 0 && (codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
-              {codingSearch.trim() ? "Keine passenden Anleitungen gefunden." : "Für dieses Fahrzeug sind in diesem Bereich noch keine Anleitungen zugeordnet."}
+              {codingSearch.trim()
+                ? "Keine passenden Anleitungen gefunden."
+                : "Für dieses Fahrzeug sind in diesem Bereich noch keine Anleitungen zugeordnet."}
             </p>
           )}
           {codings.length === 0 && researchEntries.length === 0 && sourceIdeas.length === 0 && (
