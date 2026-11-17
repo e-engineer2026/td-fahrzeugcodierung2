@@ -37,8 +37,8 @@ export function codingEffortStep(
   }
 
   // Neu-Inbetriebnahme von ACC/ADAS: typischerweise mehrere Steuergeräte.
-  if (/acc|pacc|prädiktives acc|travel assist|traffic jam|stauassistent|parklenkassistent|park assist|pla\b|blind.?spot|side assist|spurwechselassistent|kreuzungsassistent|nachtsichtassistent|night vision|360.?(?:area view|umgebungsansicht)|area.view|front.und.heckkamera/.test(title)) {
-    if (/nur kabelsatz|verkabelung|adapter/.test(title)) return 3;
+  if (/\bacc\b|\bpacc\b|prädiktives acc|travel assist|traffic jam|stauassistent|parklenkassistent|park assist|pla\b|blind.?spot|side assist|spurwechselassistent|kreuzungsassistent|nachtsichtassistent|night vision|360.?(?:area view|umgebungsansicht)|area.view|front.und.heckkamera/.test(title)) {
+    if (/kabelsatz|verkabelung|adapter/.test(title) && /nur (?:acc.)?(?:verkabelung|kabelsatz)|kein komplettset|nur kabelsatz/.test(note)) return 1;
     if (/geschwindigkeitsbereich|160 auf 210/.test(title)) return 5;
     return /kalibrier|grundeinstellung|remote.erstinbetriebnahme|radar.kalibrier|ge[kc]o/i.test(note) ? 6 : 5;
   }
