@@ -115,7 +115,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     /ambientebeleuchtung|ambientelicht|qq2|konturbeleuchtung/.test(title);
   const expandedAmbient = /qq2|mehrfarb|rgb|kontur|ambientebeleuchtung.*(?:nachrüst|freischalt)/.test(combined);
   if (audiAmbient && expandedAmbient) {
-    return withSfd("VCP (QQ2-Parametrierung) + VCDS / VCP",
+    return withSfd("VCP",
       "Bei erstmaliger mehrfarbiger QQ2-Ambientebeleuchtung ist ein passender BCM-ZDC-Datensatz mit VCP erforderlich. Anschließende Codierung von BCM/5F mit VCDS oder VCP möglich. Bereits korrekt parametrierte Fahrzeuge brauchen ggf. nur die Menücodierung; Steuergerät und Softwarestand abgleichen.");
   }
 
@@ -156,7 +156,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // optionaler Menüschritt. Seine Parametrierung benötigt VCP.
   if (!modern && /rückfahrkamera|rear.view/.test(title) &&
       /(?:datensatz|zdc|parameterdatei).{0,55}(?:parametrier|aufspiel|einspiel|laden)|(?:parametrier|aufspiel|einspiel).{0,55}(?:datensatz|zdc|parameterdatei)/.test(note)) {
-    return withSfd("VCP (Kamera-Parametrierung) + VCDS / VCP",
+    return withSfd("VCP",
       "Ein ausdrücklich benötigter Kamera-Datensatz wird mit VCP parametriert. Zusätzliche Codierung mit VCDS oder VCP; bei High-Systemen gegebenenfalls eine Kalibrierung.");
   }
   // Ab Werk installierte Rückfahrkamera Low oder FLA kann eine reine
