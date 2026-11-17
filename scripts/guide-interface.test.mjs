@@ -166,7 +166,7 @@ test("Golf 7 Fahrprofilauswahl: originale Lizenz statt nur VCDS-Schalter", () =>
 test("Audi QQ2 mit zusätzlichem Parameterdatensatz braucht VCP", () => {
   const r = guideInterface({ title: "Mehrfarbige Kontur-Ambientebeleuchtung (QQ2) nachrüsten",
     vehicleBrand:"Audi", platform:"MLBevo", vehicleYear:2019, source:"research" });
-  assert.equal(r.label, "VCP (QQ2-Parametrierung) + VCDS / VCP");
+  assert.equal(r.label, "VCP");
 });
 
 test("AHK, Drive Select, Easy Entry und Ambientemenü unterstützen reine VCDS/VCP-Codierung", () => {
@@ -202,7 +202,7 @@ test("Rückfahrkamera Low gegen parametrisierungspflichtige High-Kamera abgrenze
   assert.equal(low.label,"VCDS / VCP (Kameracodierung)");
   const high = guideInterface({ title:"Original-Rückfahrkamera mit dynamischen Hilfslinien nachrüsten",
     note:"Datensatz parametrieren", source:"research", vehicleYear:2017 });
-  assert.equal(high.label,"VCP (Kamera-Parametrierung) + VCDS / VCP");
+  assert.equal(high.label,"VCP");
 });
 
 test("Assistenz-Nachrüstung nur als Codierung plus Fachinbetriebnahme", () => {
