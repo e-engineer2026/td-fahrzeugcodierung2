@@ -5,7 +5,7 @@ import { guideVehicleRequirements } from "../app/lib/guideVehicleRequirements.ts
 
 test("VCDS nur bei belegtem reinen Anpassungsschritt", () => {
   assert.equal(guideInterface({ title: "Lane Assist letzte Einstellung speichern", interfaceInfo: "VCDS", vehicleYear: 2018 }).label, "VCDS");
-  assert.equal(guideInterface({ title: "Coming Home anpassen", interfaceInfo: "VCDS; ggf. VCP oder ODIS", vehicleYear: 2016 }).label, "Nicht festgelegt");
+  assert.equal(guideInterface({ title: "Coming Home anpassen", interfaceInfo: "VCDS; ggf. VCP oder ODIS", vehicleYear: 2016 }).label, "Interfaceprüfung erforderlich");
 });
 
 test("VZE wegen FEC, Kamera und Navigation nicht pauschal für VCDS freigeben", () => {
@@ -79,4 +79,37 @@ test("2024er Modelle trotz SFD1 nicht pauschal als VCDS-kompatibel behaupten", (
     vehicleYear: 2024, vehicleEndYear: 2026, platform: "MQBevo", sfd1From: 2024 });
   assert.equal(recent.label, "Herstellerverfahren prüfen");
   assert.match(recent.sfdNotice, /Baujahr 2024/);
+});
+
+
+test("Eigene Standardcodierungen erhalten eine funktionsbezogene Interfacezuordnung", () => {
+  assert.equal(guideInterface({
+    title: "Komfortblinken Anzahl Blinkzyklen ändern",
+    interfaceInfo: "VCDS; je nach Steuergerät ggf. VCP oder ODIS",
+    category: "Codierungen", source: "catalog", vehicleYear: 2015
+  }).label, "VCDS");
+  assert.equal(guideInterface({
+    title: "Reifendruckkontrolle über ABS aktivieren",
+    category: "Codierungen", source: "catalog", vehicleYear: 2015
+  }).label, "VCDS");
+  assert.equal(guideInterface({
+    title: "Lane Assist Warnverzögerung anpassen",
+    category: "Assistenzsysteme", source: "catalog", vehicleYear: 2021, sfd1From: 2021
+  }).label, "VCDS");
+});
+
+test("Komplexe Arbeiten ohne nachgewiesenes Verfahren bekommen keine pauschale VCDS-Freigabe", () => {
+  assert.equal(guideInterface({
+    title: "Wireless CarPlay aktivieren",
+    interfaceInfo: "VCDS; ggf. VCP oder ODIS",
+    category: "Codierungen", source: "catalog", vehicleYear: 2018
+  }).label, "Interfaceprüfung erforderlich");
+  assert.equal(guideInterface({
+    title: "AHK nachrüsten und codieren",
+    category: "Nachrüstungen", source: "research", vehicleYear: 2018
+  }).label, "Interfaceprüfung erforderlich");
+  assert.equal(guideInterface({
+    title: "Ambientebeleuchtung nachrüsten",
+    category: "Nachrüstungen", source: "reference", vehicleYear: 2020
+  }).label, "Interfaceprüfung erforderlich");
 });
