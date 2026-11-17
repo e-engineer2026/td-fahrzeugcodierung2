@@ -110,6 +110,7 @@ export default function GuideSelector() {
         vehicleYear: vehicle?.startYear,
         vehicleEndYear: vehicle?.endYear,
         sfd1From: vehicle?.sfd1From,
+        vehicleBrand: vehicle?.brand,
         platform: vehicle?.platform
       });
       return {
@@ -138,6 +139,7 @@ export default function GuideSelector() {
         vehicleYear: vehicle?.startYear,
         vehicleEndYear: vehicle?.endYear,
         sfd1From: vehicle?.sfd1From,
+        vehicleBrand: vehicle?.brand,
         platform: vehicle?.platform
       });
       return {
@@ -160,6 +162,7 @@ export default function GuideSelector() {
         vehicleYear: vehicle?.startYear,
         vehicleEndYear: vehicle?.endYear,
         sfd1From: vehicle?.sfd1From,
+        vehicleBrand: vehicle?.brand,
         platform: vehicle?.platform
       });
       return {

@@ -19,6 +19,7 @@ type InterfaceInput = {
   interfaceInfo?: string;
   activation?: string;
   platform?: string;
+  vehicleBrand?: string;
   vehicleYear?: number;
   vehicleEndYear?: number;
   sfd1From?: number;
@@ -73,6 +74,19 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     return withSfd("Herstellerfreigabe prüfen", "SFD2/UNECE kann signierte Herstellermaßnahmen erfordern. VCDS/VCP allein sind für die vollständige Aktivierung nicht freigegeben.");
   }
 
+  // Beim Audi auf MLB-/MLB-evo-Basis ist für eine erstmalige VZE-
+  // Aktivierung häufig ein VCP-Kameradatensatz erforderlich. Eine
+  // vorhandene Parametrierung kann reine VCDS-/VCP-Codierung erlauben.
+  // SFD2 und ausdrücklich herstellergebundene Online-Freigaben bleiben separat.
+  const audiVzeActivation = input.vehicleBrand === "Audi" &&
+    /^(?:MLB|MLBevo)$/.test(input.platform ?? "") &&
+    /verkehrszeichenerkennung|verkehrszeichen.*(?:aktivier|freischalt|erkenn|anzeig)|\bvze\b|sign.assist/.test(title) &&
+    !/(?:nur|lediglich).*(?:einstell|anzeig|anpass)|(?:warn|anzeige).*anpassen/.test(title);
+  if (audiVzeActivation && !/\bsvm\b|herstellerseitige.online.freigabe|online.inbetriebnahme/.test(note)) {
+    return withSfd("VCP (meist erforderlich)",
+      "Bei der erstmaligen Aktivierung wird die Frontkamera häufig mit VCP und einem passenden Datensatz parametriert. VCDS allein kann diesen Schritt nicht ersetzen. Bereits passend parametrierte Kameras können eine reine VCDS-/VCP-Codierung zulassen. Kamera, Navigation, Softwarestand sowie gegebenenfalls FEC-/SWaP-Freigaben prüfen.");
+  }
+
   if (/\b(svm|fec|swap)\b|fod.shop|lizenz.*freischalt|offizielle.*freigabe|freischaltdokument|sicherheitsfreigabe/.test(combined)) {
     return withSfd("Lizenz/Freigabe prüfen", "Eine erforderliche FEC-/SWaP-/SVM-Freigabe lässt sich nicht durch reine VCDS-Codierung ersetzen. Das autorisierte Verfahren muss feststehen.");
   }
@@ -82,15 +96,18 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   if (/vcp[- /]parametrier|zdc.*\bvcp\b/.test(combined)) {
     return withSfd("VCP (Parametrierung)", "VCP-spezifischer Parameter-/ZDC-Schritt mit passendem Datensatz und unterstütztem Steuergerät; reine VCDS-Codierung genügt hierfür nicht. Zusätzliche Freigaben separat prüfen.");
   }
-  if (/\bzdc\b|parameterdatei|datensatz.*(?:flash|einspiel|aufspiel|upload)|gateway.parametrier|softwaredatensatz/.test(combined)) {
-    return withSfd("Parametrierung prüfen", "Datensatz/Steuergerät muss vorab abgeglichen werden; das geeignete Parametrierinterface ist nicht nachgewiesen.");
+  // TD-Anleitungsbereich: Parameter-/ZDC-Dateien nur als VCP-Arbeit
+  // ausweisen. Online-SVM und herstellergesteuerte Maßnahmen sind ein
+  // anderes Verfahren und wurden bereits oben abgefangen.
+  const parameterStep = /parametrier|\bzdc\b|parameterdatei|gateway.parametrier|softwaredatensatz|datensatz.*(?:einspiel|aufspiel|upload)/.test(combined);
+  if (parameterStep && !/nur ausstattung|datensatz unterscheiden/.test(note)) {
+    return withSfd("VCP (Parametrierung)",
+      "Für das Einspielen eines kompatiblen Parameter-/ZDC-Datensatzes wird VCP benötigt; VCDS allein kann diese Parametrierung nicht durchführen. Teilenummer, Softwarestand, passende Datensatzdatei sowie VCP-Unterstützung und Freigaben sind Voraussetzung.");
   }
-  if (/parametrier|(?:steuergerät|firmware|flash).*flash|softwareupdate|mib1.*mib2|mmi.*upgrade|kalibrierung.*online/.test(title)) {
-    return withSfd("Parametrierung prüfen", "Codierung allein genügt nicht. Datensatz, Flashverfahren und mögliche Herstellerfreigabe müssen konkret feststehen.");
-  }
-  if (/parametrier|(?:datensatz|software).*(?:laden|spielen)|remote.erstinbetriebnahme/.test(note) &&
-      !/nur ausstattung|datensatz unterscheiden/.test(note)) {
-    return withSfd("Parametrierung prüfen", "Die Quelle nennt zusätzliche Parametrierung/Inbetriebnahme. Ein reines VCDS-Verfahren ist nicht als vollständig bestätigt.");
+  if (/(?:steuergerät|firmware|flash).*flash|softwareupdate|mib1.*mib2|mmi.*upgrade|kalibrierung.*online/.test(title) ||
+      /(?:datensatz|software).*(?:laden|spielen)|remote.erstinbetriebnahme/.test(note)) {
+    return withSfd("Hersteller-/Flashverfahren prüfen",
+      "Flash- oder Inbetriebnahmeverfahren sind nicht automatisch eine VCP-Parametrierung. Benötigter Softwarestand, Lizenz, Datensatz und gegebenenfalls ODIS/SVM müssen getrennt geprüft werden.");
   }
 
   // Bei umfassenden Assistenz-Nachrüstungen zusätzliche Schritte nicht
