@@ -14,10 +14,11 @@ export default function HomeMenu() {
   return <div className="td-mobile-navigation">
     <button type="button" aria-label={open ? "Menü schließen" : "Menü öffnen"} aria-expanded={open} aria-controls="home-mobile-menu" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
     {open && <nav id="home-mobile-menu" aria-label="Mobile Navigation" onClick={() => setOpen(false)}>
+      <Link href="/">Startseite</Link>
+      <Link href="/codieranleitungen">PDF-Anleitungen</Link>
       <a href="#fahrzeugauswahl">Fahrzeug auswählen</a>
       <a href="#ablauf">So funktioniert’s</a>
       <Link href="/fahrzeuge">Fahrzeuge &amp; Preise</Link>
-      <Link href="/codieranleitungen">PDF-Codieranleitungen</Link>
       <a href="#kontakt">Kontakt</a>
       <Link href="/sign-in?redirect_url=%2Fkonto">Mein Konto / Anmelden</Link>
     </nav>}
