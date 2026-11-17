@@ -40,6 +40,17 @@ function addUnique(list: string[], value: string): void {
 /** Nur eine kurze Funktionsbeschreibung, kein zweites Mal die Voraussetzung. */
 function explanationFromTitle(title: string): string | null {
   const name = title.toLocaleLowerCase("de");
+  if (/auto.?unlock|automatische entriegel/.test(name)) return "Die Fahrzeugtüren werden bei der vorgesehenen Entriegelungsbedingung automatisch freigegeben.";
+  if (/auto.?lock|automatische türverriegel/.test(name)) return "Die Zentralverriegelung kann beim Anfahren automatisch schließen.";
+  if (/zeigertest|needle.?sweep|staging/.test(name)) return "Die Zeiger des Kombiinstruments führen beim Start eine kurze Anzeigeanimation aus.";
+  if (/coming.?home|leaving.?home/.test(name)) return "Die Außenbeleuchtung wird beim Verlassen oder Annähern an das Fahrzeug zeitgesteuert aktiviert.";
+  if (/komfortblinken/.test(name)) return "Die Anzahl der Blinkimpulse beim Antippen des Hebels wird angepasst.";
+  if (/regenschließ|regenschliess/.test(name)) return "Die Komfortschließfunktion kann bei erkannten Niederschlägen angestoßen werden.";
+  if (/gurtwarn/.test(name)) return "Die optische oder akustische Gurtwarnung wird im vorgesehenen Rahmen angepasst.";
+  if (/start.stopp/.test(name)) return "Das Verhalten der Start-Stopp-Funktion wird in den verfügbaren Einstellungen angepasst.";
+  if (/öltemperatur|oeltemperatur|nachtankmenge|ganganzeige|laptimer/.test(name)) return "Zusätzliche Fahrzeugwerte können im unterstützten Kombiinstrument angezeigt werden.";
+  if (/tagfahrlicht|\btfl\b/.test(name)) return "Die Schaltung vorhandener Tagfahrlicht- und Außenlichtfunktionen wird angepasst.";
+  if (/fenster.*komfort|komfortöffnung|komfortschließung/.test(name)) return "Vorhandene Fensterfunktionen lassen sich über die vorgesehenen Komfortbedienelemente steuern.";
   if (/stauassistent|traffic.?jam/.test(name)) return "Die Funktion kombiniert unterstützte Abstands- und Spurhaltefunktionen im zähfließenden Verkehr.";
   if (/acc.*(?:tempo|schritt|intervall|abstandseinstell)/.test(name)) return "Die vorhandene Abstandsregelung wird in ihrem Bedien- oder Regelverhalten angepasst.";
   if (/(?:reifendruck|rdk).*\bhigh\b|direkte reifendruckkontrolle/.test(name)) return "Die direkte Reifendrucküberwachung kann fahrzeugseitige Druckwerte je Rad anzeigen.";
@@ -96,6 +107,8 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
     cleaned = cleaned
       .replace(/Einbauanleitung inklusive anschließender Codierung mit\s+(VCDS|VCP|ODIS)/gi, "Codierung mit $1")
       .replace(/(?:\s+und\s+|,\s*)?(?:(?:deutschsprachige|bebilderte|vollständige|öffentliche|freie)\s+)?(?:Einbauanleitung|Einbauvorschau|Anleitungsvorschau|Anschlussanleitung(?:s-Vorschau)?|Montageanleitung)\b[^,;]*/gi, "")
+      .replace(/,?\s*(?:vollständige|öffentliche|freie|deutschsprachige|bebilderte)\s+(?:Einbau|Codier)?anleitung\b[^,;]*/gi, "")
+      .replace(/,?\s*Anleitung nach Kauf\b[^,;]*/gi, "")
       .replace(/\b(?:bei|vom) Anbieter vor Ort\b/gi, "")
       .replace(/\b(?:laut Anbieter|laut Hersteller|laut Quelle)\s*/gi, "")
       .replace(/^Anbieter (?:nennt|verlangt|bietet|weist aus)\s*(?:für [^,;]+)?[,;:]?\s*/i, "")
@@ -113,6 +126,7 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
       .replace(/,?\s*Anbieterleistung\b/gi, "")
       .trim()
       .replace(/(?:\s+(?:mit|und)|,|:)+$/i, "")
+      .replace(/^(?:,|;)+\s*/, "")
       .trim();
     if (!cleaned || /^(?:werkstatteinbau|keine anleitung verfügbar)/i.test(cleaned)) continue;
     if (/^(?:keine|ohne) (?:zusätzliche )?codierung(?: erforderlich)?$/i.test(cleaned)) continue;
