@@ -398,10 +398,47 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
       "Nach Montage der notwendigen kompatiblen Hardware ist die Codierung mit VCDS oder VCP möglich, soweit das entsprechende Steuergerät den Kanal unterstützt. Bei anderen Ausstattungsständen sind weitere Schritte erforderlich.");
   }
 
-  // Jede Tabellenzeile hat eine Aussage zum Interface. Wo die vorhandene
-  // Datenlage nicht genügt, wird KEIN Werkzeug als freigegeben dargestellt.
+  // Vollständige redaktionelle Erstzuordnung für bislang offene Katalog-,
+  // Recherche- und Referenzthemen. Das hier ist eine VERFAHRENSKLASSE und
+  // niemals die Behauptung, dass für eine konkrete FIN/Software bereits ein
+  // getesteter PDF-Codierweg oder die rechtliche Online-Freigabe vorliegt.
+  // Quellen für die Werkzeuggrenzen:
+  // https://wiki.ross-tech.com/wiki/index.php/Retrofitting
+  // https://wiki.ross-tech.com/wiki/index.php/Immobilizer
+  // https://vcpsystem-pro.de/funktionen/
+  // https://erwin.vwgroup-datahub.com/odis-requirements
+  if (input.source === "catalog" || input.source === "research" || input.source === "reference") {
+    const retrofit = /nachrüst|nachruest|umbau|umrüst|umruest|ersetzen|einbau|einbauen|upgrade|komplett/.test(title) ||
+      input.category === "Nachrüstungen" || input.category === "Umbauten";
+    const needsCalibration = /kamera|radar|assist|scheinwerfer|xenon|leuchtweitenregulierung|parklenk|abstandsregelung/.test(title);
+    const requiresFactoryLogin = /(?:gebraucht|ersetzt).*(?:verstärker|steuergerät|gateway)|komponentenschutz|wegfahrsperre|immobilizer|mib1.*mib2|analogtacho.*aid/.test(combined);
+    const needsParameterData = /\bzdc\b|parametrier|datensatz.*(?:einspiel|aufspiel|schreib|lad)/.test(combined);
+
+    if (requiresFactoryLogin) {
+      return withSfd("ODIS Service (Online)",
+        "Für die vollständige geschützte Inbetriebnahme ist ein offizieller Online-Zugang nötig. Eine Codierung mit VCDS/VCP ersetzt keine Wegfahrsperren-/Komponentenschutzfreigabe.");
+    }
+    if (needsParameterData) {
+      return withSfd("VCP",
+        "Bei notwendiger Steuergeräteparametrierung ist ein kompatibler VCP-/ZDC-Datensatz erforderlich. Die reine Codierung mit VCDS genügt nicht; mögliche Herstellerfreigaben bleiben separat.");
+    }
+    if (retrofit && needsCalibration) {
+      return withSfd("VCDS / VCP + Fachinbetriebnahme",
+        "Der Diagnoseschritt kann je nach Steuergerät mit VCDS oder VCP erfolgen. Für den vollständigen Umbau sind bei Bedarf zusätzlich VCP-Datensatz, autorisierter ODIS-/Online-Zugang und eine vorgeschriebene Sensor-/Scheinwerferkalibrierung nötig. Diese Zuordnung ist ein Prüfkandidat, keine bestätigte Komplettanleitung.");
+    }
+    if (retrofit && /(?:audiosystem|soundsystem|radio|infotainment|head.unit|mmi|lautsprecher|verstärker|digital.cockpit|tacho|kombiinstrument)/.test(title)) {
+      return withSfd("VCDS / VCP + ggf. ODIS Service",
+        "Der übliche Codierschritt ist VCDS oder VCP. Bei getauschten Infotainment-/Audio- oder Cockpitsteuergeräten können jedoch Komponentenschutz, FEC-/SWaP-Lizenzen oder passende VCP-Datensätze erforderlich sein; das Verfahren ist anhand der Teilenummer zu bestätigen.");
+    }
+    if (retrofit) {
+      return withSfd("VCDS / VCP",
+        "Für den fahrzeugseitigen Codier-/Anpassungsanteil sind VCDS beziehungsweise VCP die naheliegenden Werkzeuge. Ob darüber hinaus eine Parametrierung, Kalibrierung oder Herstellerfreigabe nötig ist, ist im konkreten Nachrüstfall offen; keine bestätigte Komplettfreigabe.");
+    }
+    return withSfd("VCDS / VCP",
+      "Voraussichtliche Zuordnung für einen Codier-/Anpassungsschritt. Fahrzeug, vorhandene Hardware, Steuergeräte-Teilenummer, Softwarestand und erreichbare Kanäle müssen vor Erstellung einer professionellen PDF-Anleitung nachgewiesen werden.");
+  }
+
+  // Ohne Quellklassifikation keine Behauptung zur Machbarkeit.
   return withSfd("Interfaceprüfung erforderlich",
-    ordinaryCoding
-      ? "Aus der Funktionsbezeichnung allein ist nicht sicher feststellbar, ob VCDS, VCP oder ODIS den gesamten Vorgang abdeckt."
-      : "Keine geprüfte vollständige Werkzeugzuordnung: Steuergerät, Softwarestand, Datensätze und Herstellerfreigaben fehlen.");
+    "Ohne Eingrenzung von Fahrzeug, Funktionsschritt und Steuergerät ist keine fachlich belastbare Werkzeugzuordnung möglich.");
 }

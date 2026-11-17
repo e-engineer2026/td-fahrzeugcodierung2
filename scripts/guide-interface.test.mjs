@@ -273,3 +273,41 @@ test("SFD-Anzeige nur mit kurzen Typ- und Baujahrangaben", () => {
     vehicleBrand:"Audi", vehicleModel:"A3 / S3 8Y", vehicleYear:2020, sfd1From:2020});
   assert.equal(withoutCoding.sfdNotice, undefined);
 });
+
+test("Quellenlisten haben für jedes Thema eine vorläufige Werkzeugzuordnung, keine leere Standardanzeige", async () => {
+  const { researchedGuides } = await import("../app/data/guideResearch.ts");
+  const { referenceIdeas } = await import("../app/data/referenceIdeas.ts");
+  assert.ok(researchedGuides.length >= 120);
+  assert.ok(referenceIdeas.length >= 100);
+  const missing = [];
+  const tested = [];
+  for (const item of researchedGuides) {
+    const r = guideInterface({ id:item.id, title:item.title, note:item.note, source:"research",
+      category:item.category, vehicleYear:2018, platform:"MQB" });
+    tested.push(r);
+    if (!r.label || r.label === "Interfaceprüfung erforderlich") missing.push(item.id);
+  }
+  for (const idea of referenceIdeas) {
+    const r = guideInterface({ id:idea.id, title:idea.title, note:idea.note, source:"reference",
+      category:idea.category, vehicleYear:2018, platform:"MQB" });
+    tested.push(r);
+    if (!r.label || r.label === "Interfaceprüfung erforderlich") missing.push(idea.id);
+  }
+  assert.deepEqual(missing, []);
+  assert.ok(tested.some(r => r.label === "VCP"));
+  assert.ok(tested.some(r => r.label.includes("VCDS / VCP")));
+});
+
+test("Bisher offene Sonderfälle bekommen nur plausible und entsprechend eingeschränkte Interfaces", () => {
+  const tools = [
+    { title:"HomeLink-Garagentoröffnung mit Bedienfeld nachrüsten", source:"research", category:"Nachrüstungen", label:"VCDS / VCP" },
+    { title:"Elektrisch anklappbare Spiegel mit Umfeldbeleuchtung nachrüsten", source:"research", category:"Nachrüstungen", label:"VCDS / VCP" },
+    { title:"Garagentoröffner im Fahrzeug mit passender Hardware nachrüsten", source:"reference", category:"Nachrüstungen", label:"VCDS / VCP" },
+    { title:"Nachträgliche Klimaeinstellung konfigurieren", source:"reference", category:"Codierungen", label:"VCDS / VCP" },
+  ];
+  for (const t of tools) {
+    const r=guideInterface({title:t.title,source:t.source,category:t.category,vehicleYear:2017});
+    assert.equal(r.label,t.label,t.title);
+    assert.match(r.qualification,/je nach|voraussicht|konkreten|fahrzeugseitigen/i);
+  }
+});
