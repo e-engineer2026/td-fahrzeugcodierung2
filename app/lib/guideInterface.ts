@@ -19,6 +19,7 @@ type InterfaceInput = {
   activation?: string;
   platform?: string;
   vehicleYear?: number;
+  vehicleEndYear?: number;
   id?: string;
   category?: string;
 };
@@ -31,7 +32,8 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   const note = [input.note ?? "", input.activation ?? ""].join(" ").toLocaleLowerCase("de");
   const hint = (input.interfaceInfo ?? "").toLocaleLowerCase("de");
   const combined = title + " " + note;
-  const modern = (input.vehicleYear ?? 0) >= 2024;
+  const modern = (input.vehicleYear ?? 0) >= 2024 ||
+    ((input.vehicleEndYear ?? 0) >= 2024 && /^(?:MQBevo|PPE|PPC|MEB)$/i.test(input.platform ?? ""));
   const sfd2 = /sfd2|unece|r155|r156|fod.shop|digital signier|kryptograf/i.test(combined);
 
   // Ein codierfreier Umbau erfordert kein Diagnoseinterface.
@@ -41,9 +43,14 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   }
 
   // FAZIT/GeKo ist kein Ersatz für ein klassisches VCDS-Login.
-  if (/wegfahrsperre|komponentenschutz|\bfazit\b|\bgeko\b|(^|[^a-z])immo[345]?\b|schlüssel.*anlernen|(?:aid|virtual cockpit|kombiinstrument|tacho).*tausch/.test(combined) &&
+  if (/wegfahrsperre|komponentenschutz|(^|[^a-z])immo[345]?\b|schlüssel.*anlernen|(?:aid|virtual cockpit|kombiinstrument|tacho).*tausch/.test(combined) &&
       !/nur.*(?:anpassung|einstellung).*komponentenschutz/.test(combined)) {
     return result("ODIS Service (Online)", "Für Komponentenschutz/Wegfahrsperre ist die passende FAZIT-/GeKo-Berechtigung erforderlich. VCDS/VCP allein reichen nicht.");
+  }
+  if (/ge[kc]o|\bfazit\b/.test(combined)) {
+    return /freischalten|freigeben|online anlernen|berechtigtem ge[kc]o|ge[kc]o.zugang nötig|ge[kc]o erforderlich/.test(note)
+      ? result("ODIS Service (Online)", "Herstellerseitige Online-Berechtigung für die genannte Inbetriebnahme erforderlich.")
+      : result("Herstellerfreigabe prüfen", "GeKo-/SFD-Status ist nur als Prüfthema genannt. Das tatsächlich benötigte Verfahren ist noch nicht bestätigt.");
   }
 
   if (sfd2) {
@@ -51,13 +58,16 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   }
 
   if (/\b(svm|fec|swap)\b|fod.shop|lizenz.*freischalt|offizielle.*freigabe|freischaltdokument|sicherheitsfreigabe/.test(combined)) {
-    return result("ODIS / Online-Freigabe prüfen", "Lizenz-/Funktionsfreigabe bzw. SVM ist kein gewöhnlicher VCDS-Codierschritt. Die autorisierte Methode ist fahrzeugspezifisch zu prüfen.");
+    return result("Lizenz/Freigabe prüfen", "Eine erforderliche FEC-/SWaP-/SVM-Freigabe lässt sich nicht durch reine VCDS-Codierung ersetzen. Das autorisierte Verfahren muss feststehen.");
   }
 
   // Bei mehreren Prozessschritten wird nicht nur das fürs Codieren
   // geeignete Interface als vollständiges Werkzeug ausgegeben.
-  if (/zdc|vcp.parametrier|parameterdatei|datensatz.*(?:flash|einspiel|aufspiel|upload)|gateway.parametrier|softwaredatensatz/.test(combined)) {
+  if (/vcp[- /]parametrier|zdc.*\bvcp\b/.test(combined)) {
     return result("VCP (Parametrierung)", "Nur bei nachgewiesener Unterstützung des Steuergeräts und passendem Datensatz; zusätzliche Online-Freigaben separat prüfen.");
+  }
+  if (/\bzdc\b|parameterdatei|datensatz.*(?:flash|einspiel|aufspiel|upload)|gateway.parametrier|softwaredatensatz/.test(combined)) {
+    return result("Parametrierung prüfen", "Datensatz/Steuergerät muss vorab abgeglichen werden; das geeignete Parametrierinterface ist nicht nachgewiesen.");
   }
   if (/parametrier|(?:steuergerät|firmware|flash).*flash|softwareupdate|mib1.*mib2|mmi.*upgrade|kalibrierung.*online/.test(title)) {
     return result("Parametrierung prüfen", "Codierung allein genügt nicht. Datensatz, Flashverfahren und mögliche Herstellerfreigabe müssen konkret feststehen.");
