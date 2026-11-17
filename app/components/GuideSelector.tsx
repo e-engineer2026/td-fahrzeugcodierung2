@@ -48,7 +48,6 @@ export default function GuideSelector() {
   const [manufacturer, setManufacturer] = useState<Manufacturer | "">("");
   const [model, setModel] = useState("");
   const [showModels, setShowModels] = useState(true);
-  const [modelSearch, setModelSearch] = useState("");
   const [codingSearch, setCodingSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
 
@@ -56,10 +55,6 @@ export default function GuideSelector() {
     () => vehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
       .sort((a, b) => a.model.localeCompare(b.model, "de", { numeric: true, sensitivity: "base" })),
     [manufacturer]
-  );
-  const visibleModels = models.filter((vehicle) =>
-    [vehicle.model, vehicle.modelNote ?? "", vehicle.platform].join(" ").toLocaleLowerCase("de")
-      .includes(modelSearch.trim().toLocaleLowerCase("de"))
   );
   const vehicle = models.find((item) => item.model === model);
   const codings = useMemo(() => vehicle ? availableModelCodings(vehicle) : [], [vehicle]);
@@ -101,7 +96,6 @@ export default function GuideSelector() {
     setManufacturer(next);
     setModel("");
     setShowModels(true);
-    setModelSearch("");
     setCodingSearch("");
     setActiveCategory("Codierungen");
   }
@@ -173,14 +167,8 @@ export default function GuideSelector() {
 
           {showModels && (
             <>
-              <label className="relative mt-3 block">
-                <span className="sr-only">Fahrzeug suchen</span>
-                <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
-                <input type="search" value={modelSearch} onChange={(e) => setModelSearch(e.target.value)}
-                  placeholder="Modell suchen" className="w-full rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100" />
-              </label>
               <div className="mt-2 grid max-h-72 gap-1.5 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3" role="group" aria-label="Fahrzeugmodelle">
-                {visibleModels.map((item) => (
+                {models.map((item) => (
                   <button key={item.model} type="button" aria-pressed={model === item.model} onClick={() => chooseModel(item)}
                     className={"flex min-h-12 items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left hover:border-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 " +
                       (model === item.model ? "border-blue-600 bg-blue-50" : "border-slate-200 bg-white")}>
@@ -192,7 +180,6 @@ export default function GuideSelector() {
                   </button>
                 ))}
               </div>
-              {!visibleModels.length && <p className="mt-3 text-sm text-slate-500">Kein passendes Fahrzeug gefunden.</p>}
             </>
           )}
         </section>
