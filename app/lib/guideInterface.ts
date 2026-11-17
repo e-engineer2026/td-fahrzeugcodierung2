@@ -120,7 +120,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   }
 
   if (!modern && /anhänger(?:kupplung|vorrichtung)|\bahk\b/.test(title) &&
-      /codier|aktivier|nachrüst/.test(title)) {
+      /codier|aktivier|nachrüst|integrier/.test(title)) {
     return withSfd("VCDS / VCP (AHK-Codierung)",
       "Die Anmeldung des Anhängersteuergeräts (je nach Plattform STG 69/Gateway) und Anpassung weiterer beteiligter Steuergeräte ist mit VCDS, bei passenden Kanälen auch VCP möglich. Das ersetzt keine eventuell erforderliche Parametrierung, Online-Inbetriebnahme oder SFD-Freigabe.");
   }
@@ -156,7 +156,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // Codierung sein. Kamera High mit fehlendem Datensatz nicht.
   if (!modern && /rückfahrkamera|rear.view/.test(title) &&
       /high|dynamische hilfslinien|dynamische linien|datensatz/.test(combined)) {
-    return withSfd("VCP (Kamera-Datensatz) + VCDS / VCP",
+    return withSfd("VCDS / VCP (Codierung) · ggf. VCP (Datensatz)",
       "Für Kamera High kann ein passend parametriertes Steuergerät 6C nötig sein. Fehlende Datensätze mit VCP, die unterstützte Fahrzeug- und Infotainment-Codierung mit VCDS oder VCP; ggf. Kalibrierung erforderlich.");
   }
   if (!modern && /^(?:rückfahrkamera|rear.view)/.test(title) &&
@@ -276,6 +276,27 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   }
   if (/\bodis\b/.test(hint) && !/\bvcds\b|\bvcp\b/.test(hint) && !complexStep) {
     return withSfd("ODIS", "Herstellerverfahren und erforderliche Online-Berechtigung prüfen.");
+  }
+
+  // Redaktionelle Referenzthemen sind Prüfkandidaten und keine getesteten PDFs.
+  // Bei eindeutig benannten einfachen Anpassungen lässt sich der übliche
+  // Diagnose-Codieranteil benennen, ohne die konkrete Machbarkeit zu versprechen.
+  const referenceAdjustment = input.source === "reference" &&
+    !/nachrüst|umbau|umrüst|fahrzeugansicht.*prüfen|aktivierungsberechtigung|traffic.jam.assist|garagentoröffner|anhänger.rangierassistent/.test(title) &&
+    /einstell|anpass|konfigurier|anzeigen|einblend|veränder|beibehalt|speicher|aktivier|deaktivier|freigeb|start|ausw[äa]hl|belegen|verriegel|entriegel|komfort|lichtautomatik|fernlichtassistent.*(?:merke|aktivierungsverhalten|stadterkennung)|lenkrad.*favoriten|instrumentenansicht|digital.cockpit|klimaanlage|sitzheizung|einparkhilfe|abblendlicht|fahrprofil|dsg.*(?:tür|gang)|acc.*(?:tempo|abstand)|adblue|front.assist.*(?:warn|vorwarn)/.test(title);
+  if (!modern && referenceAdjustment) {
+    return withSfd("VCDS / VCP (Anpassung, modellabhängig)",
+      "Die Tätigkeit entspricht einer Codierung/Anpassung an bereits vorhandener Hardware. Werkzeugweg plausibel, aber als Recherchekandidat nicht am konkreten Fahrzeug geprüft. Unterstützten Anpassungskanal und eventuelle Freischaltungen vor einer PDF-Anleitung belegen.");
+  }
+  if (!modern && input.source === "reference" &&
+      /^(?:originale )?anhänger(?:kupplung|vorrichtung)/.test(title)) {
+    return withSfd("VCDS / VCP (Codieranteil)",
+      "Die Einbindung kompatibler Anhängersteuergeräte ist grundsätzlich codierbar. Ob der konkrete Nachrüstsatz weitere Datensätze oder Herstellerfreigaben benötigt, bleibt anhand der Teilenummer zu klären.");
+  }
+  if (!modern && input.source === "reference" &&
+      /rückfahrkamera.low|nebelscheinwerfer.*(?:nachrüst|umrüst)|reifendruckkontrolle.*abs.*nachrüst|licht.*regensensor.*nachrüst|fußraumbeleuchtung.*nachrüst|fussraumbeleuchtung.*nachrüst/.test(title)) {
+    return withSfd("VCDS / VCP (Codieranteil)",
+      "Nach Montage der notwendigen kompatiblen Hardware ist die Codierung mit VCDS oder VCP möglich, soweit das entsprechende Steuergerät den Kanal unterstützt. Bei anderen Ausstattungsständen sind weitere Schritte erforderlich.");
   }
 
   // Jede Tabellenzeile hat eine Aussage zum Interface. Wo die vorhandene
