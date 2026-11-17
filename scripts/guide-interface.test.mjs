@@ -64,12 +64,11 @@ test("SFD1-Online-Freischaltung und konkretes Baujahr anzeigen", () => {
   const golf = guideInterface({ title: "Zeigertest aktivieren", interfaceInfo: "VCDS",
     vehicleYear: 2019, vehicleEndYear: 2026, platform: "MQBevo", sfd1From: 2019 });
   assert.equal(golf.label, "VCDS / VCP");
-  assert.match(golf.sfdNotice, /Baujahr 2019/);
-  assert.match(golf.sfdNotice, /VCDS-Online-Freischaltung/);
+  assert.equal(golf.sfdNotice, "SFD (1) ab Bj. 2019");
   const born = guideInterface({ title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS \/ OBD11",
     vehicleYear: 2021, vehicleEndYear: 2026, platform: "MEB", sfd1From: 2021 });
   assert.equal(born.label, "VCDS / VCP");
-  assert.match(born.sfdNotice, /Baujahr 2021/);
+  assert.equal(born.sfdNotice, "SFD (1) ab Bj. 2021");
   const oldCar = guideInterface({ title: "Komfortblinken anpassen", interfaceInfo: "VCDS", vehicleYear: 2015 });
   assert.equal(oldCar.sfdNotice, undefined);
 });
@@ -78,7 +77,7 @@ test("2024er Modelle trotz SFD1 nicht pauschal als VCDS-kompatibel behaupten", (
   const recent = guideInterface({ title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS",
     vehicleYear: 2024, vehicleEndYear: 2026, platform: "MQBevo", sfd1From: 2024 });
   assert.equal(recent.label, "Herstellerverfahren prüfen");
-  assert.match(recent.sfdNotice, /Baujahr 2024/);
+  assert.equal(recent.sfdNotice, "SFD (1) ab Bj. 2024");
 });
 
 
@@ -152,4 +151,22 @@ test("VCP für Parameterdateien, ODIS bei SVM, Flash nicht als VCP-only ausgeben
   assert.equal(flash.label, "Hersteller-/Flashverfahren prüfen");
   const sfd2 = guideInterface({ title: "Kamera parametrieren", note: "SFD2 erforderlich", vehicleYear: 2024 });
   assert.equal(sfd2.label, "Herstellerfreigabe prüfen");
+});
+
+test("SFD-Anzeige nur mit kurzen Typ- und Baujahrangaben", () => {
+  const a3 = guideInterface({title:"Spiegelabsenkung anpassen", vehicleBrand:"Audi",
+    vehicleModel:"A3 / S3 8Y", vehicleYear:2020, sfd1From:2020, platform:"MQBevo"});
+  assert.equal(a3.sfdNotice, "SFD (1) ab Bj. 2020 · SFD (2) ab Bj. 2025");
+  const born = guideInterface({title:"Spiegelabsenkung anpassen", vehicleBrand:"SEAT / CUPRA",
+    vehicleModel:"CUPRA Born K11", vehicleYear:2021, sfd1From:2021, platform:"MEB"});
+  assert.equal(born.sfdNotice, "SFD (1) ab Bj. 2021 · SFD (2) ab Bj. 2025");
+  const a4 = guideInterface({title:"Verkehrszeichenerkennung aktivieren", vehicleBrand:"Audi",
+    vehicleModel:"A4 / S4 B9", vehicleYear:2015, platform:"MLBevo"});
+  assert.equal(a4.sfdNotice, "SFD (2) ab Bj. 2024");
+  const unknown = guideInterface({title:"Zeigertest", vehicleBrand:"Volkswagen",
+    vehicleModel:"Golf 7 (5G)", vehicleYear:2012, platform:"MQB"});
+  assert.equal(unknown.sfdNotice, undefined);
+  const withoutCoding = guideInterface({title:"45 Watt USB Ladeanschlüsse", note:"Keine Codierung erforderlich",
+    vehicleBrand:"Audi", vehicleModel:"A3 / S3 8Y", vehicleYear:2020, sfd1From:2020});
+  assert.equal(withoutCoding.sfdNotice, undefined);
 });

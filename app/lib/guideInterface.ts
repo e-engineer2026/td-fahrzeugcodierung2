@@ -20,6 +20,7 @@ type InterfaceInput = {
   activation?: string;
   platform?: string;
   vehicleBrand?: string;
+  vehicleModel?: string;
   vehicleYear?: number;
   vehicleEndYear?: number;
   sfd1From?: number;
@@ -27,6 +28,36 @@ type InterfaceInput = {
   category?: string;
   /** Herkunft bestimmt, ob vorhandene Codierdaten oder ungeprüfte Recherche vorliegen. */
   source?: "catalog" | "research" | "reference";
+};
+
+// Nach Modell/Baureihe belegte früheste SFD2-Einführung; zusätzliche PR-
+// Einschränkungen ohne eindeutige Jahreszuordnung werden nicht behauptet.
+// Quellen: KUFATEC SFD2 Fahrzeugliste (ab MJ = angezeigtes Bj.).
+const SFD2_START_BY_MODEL: Record<string, number> = {
+  "Audi|A3 / S3 8Y": 2025,
+  "Audi|A4 / S4 B9": 2024,
+  "Audi|A5 / S5 F5": 2024,
+  "Audi|A6 / S6 C8": 2024,
+  "Audi|A7 / S7 4K": 2024,
+  "Audi|A8 D5 (4N)": 2024,
+  "Audi|Q3 F3": 2024,
+  "Audi|Q4 e-tron (FZ)": 2023,
+  "Audi|Q5 FY": 2024,
+  "Audi|Q7 4M": 2023,
+  "Audi|Q8 4M": 2023,
+  "Volkswagen|Golf 8 (CD)": 2024,
+  "Volkswagen|Arteon 3H": 2024,
+  "Volkswagen|Touran 5T": 2024,
+  "Volkswagen|Taigo CS": 2024,
+  "Volkswagen|ID.4 (E21)": 2024,
+  "Volkswagen|ID.5 (E39)": 2024,
+  "Volkswagen|Caddy V (SB)": 2025,
+  "Škoda|Karoq NU": 2024,
+  "Škoda|Scala NW": 2024,
+  "SEAT / CUPRA|SEAT Leon KL": 2025,
+  "SEAT / CUPRA|CUPRA Leon KL": 2025,
+  "SEAT / CUPRA|CUPRA Formentor KM": 2025,
+  "SEAT / CUPRA|CUPRA Born K11": 2025,
 };
 
 const result = (label: string, qualification: string, requiresCheck = true): GuideInterfaceResult =>
@@ -40,15 +71,19 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // Gemischte Baureihen nicht allein wegen ihres Endjahres als SFD2 einstufen.
   const modern = (input.vehicleYear ?? 0) >= 2024;
   const sfd2 = /sfd2|unece|r155|r156|fod.shop|digital signier|kryptograf/i.test(combined);
-  // Nur die im Modellkatalog dokumentierten Einstiegsjahre verwenden.
-  // Das Vorhandensein von SFD1 heißt nicht, dass jedes Steuergerät gesperrt ist.
-  const sfdStart = input.sfd1From;
-  const sfdNotice = typeof sfdStart === "number" && sfdStart >= 2019
-    ? `SFD1 nur bei geschützten Steuergeräten ab Baujahr ${sfdStart}${sfdStart === 2019 ? " (Golf 8: Modelljahr 2020)" : ""}; VCDS-Online-Freischaltung ab Version 26.9 mit registriertem HEX-V2/HEX-NET und Ross-Tech-SFD-Service. Ab Modelljahr 2024 ggf. zusätzlich SFD2.`
+  // Anzeige bewusst nur als kurze Bezeichnung mit Startjahr.
+  // Nicht jedes Steuergerät einer Baureihe ist dadurch geschützt.
+  const sfd1Start = input.sfd1From;
+  const sfd2Start = input.vehicleBrand && input.vehicleModel
+    ? SFD2_START_BY_MODEL[`${input.vehicleBrand}|${input.vehicleModel}`]
     : undefined;
+  const sfdNotice = [
+    typeof sfd1Start === "number" ? `SFD (1) ab Bj. ${sfd1Start}` : null,
+    typeof sfd2Start === "number" ? `SFD (2) ab Bj. ${sfd2Start}` : null,
+  ].filter(Boolean).join(" · ") || undefined;
   const withSfd = (label: string, qualification: string, requiresCheck = true): GuideInterfaceResult => {
     const entry = result(label, qualification, requiresCheck);
-    return sfdNotice && label !== "Nicht erforderlich" && !sfd2
+    return sfdNotice && label !== "Nicht erforderlich"
       ? { ...entry, sfdNotice }
       : entry;
   };
