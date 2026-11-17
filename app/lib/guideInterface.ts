@@ -10,6 +10,7 @@ export type GuideInterfaceResult = {
   label: string;
   qualification: string;
   requiresCheck: boolean;
+  sfdNotice?: string;
 };
 
 type InterfaceInput = {
@@ -20,6 +21,7 @@ type InterfaceInput = {
   platform?: string;
   vehicleYear?: number;
   vehicleEndYear?: number;
+  sfd1From?: number;
   id?: string;
   category?: string;
 };
@@ -32,20 +34,32 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   const note = [input.note ?? "", input.activation ?? ""].join(" ").toLocaleLowerCase("de");
   const hint = (input.interfaceInfo ?? "").toLocaleLowerCase("de");
   const combined = title + " " + note;
-  const modern = (input.vehicleYear ?? 0) >= 2024 ||
-    ((input.vehicleEndYear ?? 0) >= 2024 && /^(?:MQBevo|PPE|PPC|MEB)$/i.test(input.platform ?? ""));
+  // Gemischte Baureihen nicht allein wegen ihres Endjahres als SFD2 einstufen.
+  const modern = (input.vehicleYear ?? 0) >= 2024;
   const sfd2 = /sfd2|unece|r155|r156|fod.shop|digital signier|kryptograf/i.test(combined);
+  // Nur die im Modellkatalog dokumentierten Einstiegsjahre verwenden.
+  // Das Vorhandensein von SFD1 heißt nicht, dass jedes Steuergerät gesperrt ist.
+  const sfdStart = input.sfd1From;
+  const sfdNotice = typeof sfdStart === "number" && sfdStart >= 2019
+    ? `SFD1 nur bei geschützten Steuergeräten ab Baujahr ${sfdStart}${sfdStart === 2019 ? " (Golf 8: Modelljahr 2020)" : ""}; VCDS-Online-Freischaltung ab Version 26.9 mit registriertem HEX-V2/HEX-NET und Ross-Tech-SFD-Service. Ab Modelljahr 2024 ggf. zusätzlich SFD2.`
+    : undefined;
+  const withSfd = (label: string, qualification: string, requiresCheck = true): GuideInterfaceResult => {
+    const entry = result(label, qualification, requiresCheck);
+    return sfdNotice && label !== "Nicht erforderlich" && !sfd2
+      ? { ...entry, sfdNotice }
+      : entry;
+  };
 
   // Ein codierfreier Umbau erfordert kein Diagnoseinterface.
   if (/(?:keine|ohne) (?:zusätzliche )?codierung(?: erforderlich)?\b|laut (?:quelle|anbieter) ohne codierung/.test(note) ||
       /subwoofergehäuse modifizieren|45.watt.usb.ladeanschlüsse/.test(title)) {
-    return result("Nicht erforderlich", "Für den beschriebenen Arbeitsschritt ist keine Codierung angegeben.", false);
+    return withSfd("Nicht erforderlich", "Für den beschriebenen Arbeitsschritt ist keine Codierung angegeben.", false);
   }
 
   // FAZIT/GeKo ist kein Ersatz für ein klassisches VCDS-Login.
   if (/wegfahrsperre|komponentenschutz|(^|[^a-z])immo[345]?\b|schlüssel.*anlernen|(?:aid|virtual cockpit|kombiinstrument|tacho).*tausch/.test(combined) &&
       !/nur.*(?:anpassung|einstellung).*komponentenschutz/.test(combined)) {
-    return result("ODIS Service (Online)", "Für Komponentenschutz/Wegfahrsperre ist die passende FAZIT-/GeKo-Berechtigung erforderlich. VCDS/VCP allein reichen nicht.");
+    return withSfd("ODIS Service (Online)", "Für Komponentenschutz/Wegfahrsperre ist die passende FAZIT-/GeKo-Berechtigung erforderlich. VCDS/VCP allein reichen nicht.");
   }
   if (/ge[kc]o|\bfazit\b/.test(combined)) {
     return /freischalten|freigeben|online anlernen|berechtigtem ge[kc]o|ge[kc]o.zugang nötig|ge[kc]o erforderlich/.test(note)
@@ -54,57 +68,57 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   }
 
   if (sfd2) {
-    return result("Herstellerfreigabe prüfen", "SFD2/UNECE kann signierte Herstellermaßnahmen erfordern. VCDS/VCP allein sind für die vollständige Aktivierung nicht freigegeben.");
+    return withSfd("Herstellerfreigabe prüfen", "SFD2/UNECE kann signierte Herstellermaßnahmen erfordern. VCDS/VCP allein sind für die vollständige Aktivierung nicht freigegeben.");
   }
 
   if (/\b(svm|fec|swap)\b|fod.shop|lizenz.*freischalt|offizielle.*freigabe|freischaltdokument|sicherheitsfreigabe/.test(combined)) {
-    return result("Lizenz/Freigabe prüfen", "Eine erforderliche FEC-/SWaP-/SVM-Freigabe lässt sich nicht durch reine VCDS-Codierung ersetzen. Das autorisierte Verfahren muss feststehen.");
+    return withSfd("Lizenz/Freigabe prüfen", "Eine erforderliche FEC-/SWaP-/SVM-Freigabe lässt sich nicht durch reine VCDS-Codierung ersetzen. Das autorisierte Verfahren muss feststehen.");
   }
 
   // Bei mehreren Prozessschritten wird nicht nur das fürs Codieren
   // geeignete Interface als vollständiges Werkzeug ausgegeben.
   if (/vcp[- /]parametrier|zdc.*\bvcp\b/.test(combined)) {
-    return result("VCP (Parametrierung)", "Nur bei nachgewiesener Unterstützung des Steuergeräts und passendem Datensatz; zusätzliche Online-Freigaben separat prüfen.");
+    return withSfd("VCP (Parametrierung)", "Nur bei nachgewiesener Unterstützung des Steuergeräts und passendem Datensatz; zusätzliche Online-Freigaben separat prüfen.");
   }
   if (/\bzdc\b|parameterdatei|datensatz.*(?:flash|einspiel|aufspiel|upload)|gateway.parametrier|softwaredatensatz/.test(combined)) {
-    return result("Parametrierung prüfen", "Datensatz/Steuergerät muss vorab abgeglichen werden; das geeignete Parametrierinterface ist nicht nachgewiesen.");
+    return withSfd("Parametrierung prüfen", "Datensatz/Steuergerät muss vorab abgeglichen werden; das geeignete Parametrierinterface ist nicht nachgewiesen.");
   }
   if (/parametrier|(?:steuergerät|firmware|flash).*flash|softwareupdate|mib1.*mib2|mmi.*upgrade|kalibrierung.*online/.test(title)) {
-    return result("Parametrierung prüfen", "Codierung allein genügt nicht. Datensatz, Flashverfahren und mögliche Herstellerfreigabe müssen konkret feststehen.");
+    return withSfd("Parametrierung prüfen", "Codierung allein genügt nicht. Datensatz, Flashverfahren und mögliche Herstellerfreigabe müssen konkret feststehen.");
   }
   if (/parametrier|(?:datensatz|software).*(?:laden|spielen)|remote.erstinbetriebnahme/.test(note) &&
       !/nur ausstattung|datensatz unterscheiden/.test(note)) {
-    return result("Parametrierung prüfen", "Die Quelle nennt zusätzliche Parametrierung/Inbetriebnahme. Ein reines VCDS-Verfahren ist nicht als vollständig bestätigt.");
+    return withSfd("Parametrierung prüfen", "Die Quelle nennt zusätzliche Parametrierung/Inbetriebnahme. Ein reines VCDS-Verfahren ist nicht als vollständig bestätigt.");
   }
 
   // Bei umfassenden Assistenz-Nachrüstungen zusätzliche Schritte nicht
   // auf eine einzige Diagnose-Codierung reduzieren.
   if (/^(?:.*)(?:\bacc\b|pacc|travel assist|stauassistent|side assist|blind spot|parklenkassistent|night vision|area view|360.)/.test(title) &&
       /nachrüst|umbau|umrüst|vollständig|komplett|radar.*einb|front.*heckkamera/.test(title)) {
-    return result("Inbetriebnahme prüfen", "Codierung, mögliche Datensätze und Kalibrierung müssen anhand der realen Steuergeräte geprüft werden.");
+    return withSfd("Inbetriebnahme prüfen", "Codierung, mögliche Datensätze und Kalibrierung müssen anhand der realen Steuergeräte geprüft werden.");
   }
   if (/verkehrszeichenerkennung|verkehrszeichen.*aktivier|\bvze\b/.test(title)) {
-    return result("Interface prüfen", "VCDS nur bei belegter reiner Codierbarkeit und vorhandener FEC/SWaP-Freigabe; Navigation, Kamera und Softwarestand prüfen.");
+    return withSfd(/\bvcds\b/.test(hint) && !modern ? "VCDS (Codierung)" : "Freigabe abhängig", "VCDS nur für den belegten Codierschritt; vorhandene FEC-/SWaP-Freigabe, kompatible Navigation, Kamera und Softwarestand sind Voraussetzung.");
   }
 
   // Eindeutig als VCDS-Einstellungsanleitung erfasste Funktionen, sofern
   // keine zusätzlichen Freischalt- oder Parametrierschritte erforderlich.
   const adjustment = /anpass|einstell|speicher|memory|warnintensität|start.stopp|zeigertest|gurtwarn|komfortblink|coming.home|leaving.home|auto.lock|auto.unlock|regenschließ|fenster|tfl|tagfahrlicht|heckleuchten|spiegelabsenk|spiegelanklapp/.test(title);
-  const vcdsDocumented = (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b|\bobd11\b/.test(hint)) ||
-    (/\bvcds\b/.test(note) && !/\bvcp\b|\bodis\b|\bobd11\b/.test(note));
+  const vcdsDocumented = (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b/.test(hint)) ||
+    (/\bvcds\b/.test(note) && !/\bvcp\b|\bodis\b/.test(note));
   if (vcdsDocumented && adjustment && !modern) {
-    return result("VCDS", "Für die reine Anpassung vorgesehen, sofern Steuergerät und Kanal die Funktion unterstützen; SFD1 erfordert gegebenenfalls Freigabe.", false);
+    return withSfd("VCDS", "Für die reine Anpassung vorgesehen, sofern Steuergerät und Kanal die Funktion unterstützen; SFD1 erfordert gegebenenfalls Freigabe.", false);
   }
 
   // Eindeutig in vorhandenen Codierdaten als VCDS hinterlegte Aktivierung,
   // nur wenn keine weitere Inbetriebnahme in den Daten erkennbar ist.
-  if (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b|\bobd11\b/.test(hint) && !modern &&
+  if (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b/.test(hint) && !modern &&
       !/nachrüst|umbau|umrüst|aktivieren \/ anpassen|freischalt|kalibrier|grundstellung|lizenz/.test(title) &&
       !/parametrier|kalibrier|grundeinstellung|online|ge[kc]o|sfd2/.test(note)) {
-    return result("VCDS", "Nur für den dokumentierten Codier-/Anpassungsschritt, abhängig von Steuergerät und Softwarestand.", false);
+    return withSfd("VCDS", "Nur für den dokumentierten Codier-/Anpassungsschritt, abhängig von Steuergerät und Softwarestand.", false);
   }
 
-  if (modern) return result("Herstellerverfahren prüfen", "Bei neueren Plattformen sind SFD2/UNECE und signierte Herstellermaßnahmen möglich; keine VCDS-/VCP-Zusage.");
+  if (modern) return withSfd("Herstellerverfahren prüfen", "Bei neueren Plattformen sind SFD2/UNECE und signierte Herstellermaßnahmen möglich; keine VCDS-/VCP-Zusage.");
 
-  return result("Interface prüfen", "Vollständige Bearbeitbarkeit erst nach Auto-Scan, Teilenummern, Softwarestand und Funktionsfreigaben bestimmbar.");
+  return withSfd("Nicht festgelegt", "Kein verlässlich belegtes Interface für den vollständigen Arbeitsschritt; Steuergerät, Softwarestand und Funktionsfreigaben fehlen.");
 }
