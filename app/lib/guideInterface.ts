@@ -24,6 +24,8 @@ type InterfaceInput = {
   sfd1From?: number;
   id?: string;
   category?: string;
+  /** Herkunft bestimmt, ob vorhandene Codierdaten oder ungeprüfte Recherche vorliegen. */
+  source?: "catalog" | "research" | "reference";
 };
 
 const result = (label: string, qualification: string, requiresCheck = true): GuideInterfaceResult =>
@@ -120,5 +122,32 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
 
   if (modern) return withSfd("Herstellerverfahren prüfen", "Bei neueren Plattformen sind SFD2/UNECE und signierte Herstellermaßnahmen möglich; keine VCDS-/VCP-Zusage.");
 
-  return withSfd("Nicht festgelegt", "Kein verlässlich belegtes Interface für den vollständigen Arbeitsschritt; Steuergerät, Softwarestand und Funktionsfreigaben fehlen.");
+  // Ausschließlich bei bekannten, einfachen Codier- oder Anpassungsarbeiten:
+  // Der allgemeine Katalog-Hinweis "VCDS; ggf. VCP oder ODIS" alleine ist KEIN
+  // Nachweis, dass VCDS auch eine mehrstufige Freischaltung vollständig erledigt.
+  const ordinaryCoding = input.source === "catalog" &&
+    (input.category === "Codierungen" || input.category === "Assistenzsysteme");
+  const typicalVcdsCoding =
+    /gurtwarn|zeigertest|needle.sweep|staging|komfortblink|coming.home|leaving.home|auto.lock|auto.unlock|spiegelabsenk|spiegelanklapp|regenschließ|regenschliess|fenster|tagfahrlicht|heckleuchten|rückleuchten|rueckleuchten|nebelscheinwerfer|abbiegelicht|heckwischer|tr[äa]nenwisch|wischer|nachtankmenge|öltemperatur|oeltemperatur|laptimer|rundenzähler|geschwindigkeitsanzeige|verbrauchsanzeige|sitzheizung.*(?:speicher|einstell)|climatronic.*anzeig|berg[a-zä]*anfahrassistent.*anpass|bremsscheibentrocknung.*anpass|lenkungskennlinie.*anpass|komfortöff|komfortschlie|akustische.quittier|einparkhilfe.*(?:anzeig|ton|einstell|aktivier)|reifendruckkontrolle.*(?:abs|infotainment)|xds.*(?:stärke|anpass)|ganganzeige|start.stopp.*(?:deaktivier|anpass)|ambientebeleuchtung.*(?:farbe|anpass)|fussraumbeleuchtung|fußraumbeleuchtung|hidden.menu|green.menu|developer.mode|fahrschulmodus|offroad.anzeige|soundaktor.*(?:lautstärke|anpass)|fahrprofil.*(?:anzeig|menü|lenkhilfe)|esc.sport.*menü|asr.off.*menü|warnsignal.*deaktivier|warnton.*deaktivier|wählhebel.*(?:anpass|entriegel)|ladeanzeige|batterieanzeige|ölstandanzeige|oelstandanzeige|mmi.startlogo|welcome.sound|skin.der.multifunktionsanzeige|standlicht|parklicht|umfeldbeleuchtung|schiebedach.*komfort|acc.*(?:abstandseinstellung|fahrprofilauswahl).*infotainment|(?:light|lane) assist.*(?:speicher|einstell|warn|anpass)|spurhalteassistent.*(?:einstell|warn|anpass)|elektrisch.anklappbare.spiegel|geb[läa]sestufe.*auto|scheinwerferreinigungsanlage.*anpass|batterie.*(?:batteriewechsel|anlernen)|bordsteinautomatik|rückfahrwisch|rueckfahrwisch|fu[ßs]raumleuchten.*led|reifendruckkontrolle.*aktivier|einparkhilfe.*abschaltgeschwindigkeit|hornquittier|elektrische.heckklappe.*(?:fernbedienung|öffnungsverzögerung)|easy.entry.*mmi|fahrzeug.*eingeschalteter.zündung.verriegel|innenlichtverhalten|reichweitenbegrenzung.*funk|automatisches.entriegeln|umluft.memory|heckklappe.*(?:fernbedienung|innentaster)|virtual.cockpit.startscreen|lenkungskennlinie|audi.drive.select.*(?:menü|lenkhilfe)|acc.grundeinstellung.*mmi/i.test(title);
+  const complexStep =
+    /nachrüst|nachruest|retrofit|umbau|umrüst|umruest|tausch|flash|update|parametrier|kalibrier|grundstellung|komponentenschutz|wegfahrsperre|schl[üu]ssel.*anlern|carplay|android.auto|mirrorlink|app.connect|mib.*upgrade|mmi.*upgrade|\bacc\b.*aktivier|pacc|travel.assist.*aktivier|360.|area.view.*aktivier|virtual.cockpit.*nachrüst/i.test(title);
+  if (ordinaryCoding && typicalVcdsCoding && !complexStep) {
+    return withSfd("VCDS", "Für die genannte reine Codierung/Anpassung üblich. Konkretes Steuergerät, Softwarestand, unterstützte Kanäle und ggf. SFD1-Freischaltung müssen passen.");
+  }
+
+  // Nur explizit dokumentierte, allein benötigte Werkzeuge ausweisen.
+  // Bei einer ungeprüften Fremdreferenz keine vermeintliche Freigabe erfinden.
+  if (/\bvcp\b/.test(hint) && !/\bvcds\b|\bodis\b/.test(hint) && !complexStep) {
+    return withSfd("VCP", "Nur bei nachweislich passender Steuergeräte- und Softwareunterstützung.");
+  }
+  if (/\bodis\b/.test(hint) && !/\bvcds\b|\bvcp\b/.test(hint) && !complexStep) {
+    return withSfd("ODIS", "Herstellerverfahren und erforderliche Online-Berechtigung prüfen.");
+  }
+
+  // Jede Tabellenzeile hat eine Aussage zum Interface. Wo die vorhandene
+  // Datenlage nicht genügt, wird KEIN Werkzeug als freigegeben dargestellt.
+  return withSfd("Interfaceprüfung erforderlich",
+    ordinaryCoding
+      ? "Aus der Funktionsbezeichnung allein ist nicht sicher feststellbar, ob VCDS, VCP oder ODIS den gesamten Vorgang abdeckt."
+      : "Keine geprüfte vollständige Werkzeugzuordnung: Steuergerät, Softwarestand, Datensätze und Herstellerfreigaben fehlen.");
 }
