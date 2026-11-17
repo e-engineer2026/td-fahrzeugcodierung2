@@ -5,8 +5,8 @@ import { ArrowLeft, LockKeyhole, UserRound } from "lucide-react";
 import GuideSelector from "../components/GuideSelector";
 
 export const metadata: Metadata = {
-  title: "VCDS- und VCP-PDF-Anleitungen | TD Fahrzeugcodierung",
-  description: "Fahrzeugbezogene VCDS-/VCP-Codierungen, Nachrüstungen, Umbauten und Assistenzsysteme nach Schwierigkeit und geplantem TD-PDF-Preis sortieren. Alle Beträge unverbindlich, noch kein Download.",
+  title: "Professionelle Codier-PDF-Anleitungen | TD Fahrzeugcodierung",
+  description: "Professionelle VAG-Codieranleitungen mit Angaben zu geeignetem Interface und Hardwarevoraussetzungen. Für qualifizierte Fachkräfte, derzeit noch keine kaufbaren PDFs.",
   alternates: { canonical: "/codieranleitungen" },
   // Erst indexieren, wenn die ersten tatsächlich kaufbaren PDFs bereitstehen.
   robots: { index: false, follow: true },
@@ -32,8 +32,14 @@ export default function CodieranleitungenPage() {
         <div className="container-x py-6 sm:py-8">
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-blue-700 hover:underline"><ArrowLeft size={16} aria-hidden="true" />Zur Startseite</Link>
           <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700"><LockKeyhole size={15} aria-hidden="true" />PDF-Anleitungen</div>
-          <h1 className="mt-3 max-w-3xl text-2xl font-black tracking-tight sm:text-3xl">VCDS- &amp; VCP-Codieranleitungen</h1>
+          <h1 className="mt-3 max-w-3xl text-2xl font-black tracking-tight sm:text-3xl">Professionelle Codieranleitungen</h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">Download PDF-Anleitungen</p>
+          <div className="mt-5 max-w-4xl rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700" role="note" aria-label="Fachanwender und Haftungsausschluss">
+            <p className="font-black text-slate-900">Ausschließlich für professionelle Anwender</p>
+            <p className="mt-1">Diese technischen Informationen richten sich ausschließlich an qualifizierte Fachkräfte und Fachbetriebe mit Erfahrung in Fahrzeugdiagnose, Codierung und Steuergeräteprogrammierung. Vor jeder Änderung sind der Fahrzeugzustand, die Teilenummern, der Softwarestand, die Freigaben und eine Sicherung der Originaldaten zu prüfen. Sicherheits- und zulassungsrelevante Arbeiten dürfen nur berechtigt und nach Herstellervorgaben durchgeführt werden.</p>
+            <p className="mt-3 font-bold text-slate-900">Haftungsausschluss und Sicherheitshinweis</p>
+            <p className="mt-1">Die Angaben sind allgemeine technische Orientierung und keine Garantie für Funktion, Zulässigkeit oder Eignung im konkreten Fahrzeug. Umsetzung und Prüfung erfolgen in eigener fachlicher Verantwortung. Soweit gesetzlich zulässig, übernimmt TD Fahrzeugcodierung keine Haftung für Schäden aus unsachgemäßer, unberechtigter oder fehlerhafter Anwendung. Unberührt bleiben zwingende gesetzliche Haftungsansprüche, insbesondere bei Vorsatz, grober Fahrlässigkeit sowie Verletzung von Leben, Körper oder Gesundheit.</p>
+          </div>
         </div>
       </section>
 

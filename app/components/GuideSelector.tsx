@@ -6,6 +6,8 @@ import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle }
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import GuideTable, { type GuideTableRow } from "./GuideTable";
 import { guideDetails } from "../lib/guideDetails";
+import { guideInterface } from "../lib/guideInterface";
+import { guideVehicleRequirements } from "../lib/guideVehicleRequirements";
 import { researchGuideEstimate, referenceIdeaEstimate } from "../lib/researchGuidePricing";
 import { retrofitFocusFor } from "../lib/retrofitFocus";
 import { referenceIdeasForVehicle } from "../data/referenceIdeas";
@@ -96,37 +98,69 @@ export default function GuideSelector() {
       const details = guideDetails({
         title: coding.name,
         note: coding.requirements,
-        explicitHardware: coding.hardware,
-        interfaceInfo: coding.interfaceInfo
+        explicitHardware: coding.hardware
+      });
+      const diagnosticInterface = guideInterface({
+        id: coding.id,
+        title: coding.name,
+        category: guideCategory(coding),
+        note: coding.requirements,
+        interfaceInfo: coding.interfaceInfo,
+        vehicleYear: vehicle?.startYear,
+        vehicleEndYear: vehicle?.endYear,
+        platform: vehicle?.platform
       });
       return {
         id: "coding-" + coding.id,
         title: coding.name,
-        requirements: details.prerequisites,
+        requirements: guideVehicleRequirements({
+          title: coding.name,
+          original: details.prerequisites,
+          note: coding.requirements
+        }),
+        diagnosticInterface,
         description: details.description,
         estimate: { step, level: guideDifficultyLevel(step), price: guidePrice(coding) }
       };
     }),
     ...visibleResearch.map((item) => {
-      const details = guideDetails({
+      const focus = activeCategory === "Nachrüstungen" ? retrofitFocusFor(item)?.activation : undefined;
+      const details = guideDetails({ title: item.title, note: item.note, activation: focus });
+      const diagnosticInterface = guideInterface({
+        id: item.id,
         title: item.title,
         note: item.note,
-        activation: activeCategory === "Nachrüstungen" ? retrofitFocusFor(item)?.activation : undefined
+        activation: focus,
+        category: item.category,
+        vehicleYear: vehicle?.startYear,
+        vehicleEndYear: vehicle?.endYear,
+        platform: vehicle?.platform
       });
       return {
         id: "research-" + item.id,
         title: item.title,
-        requirements: details.prerequisites,
+        requirements: guideVehicleRequirements({ title: item.title, original: details.prerequisites, note: item.note }),
+        diagnosticInterface,
         description: details.description,
         estimate: researchGuideEstimate(item)
       };
     }),
     ...visibleSourceIdeas.map((idea) => {
       const details = guideDetails({ title: idea.title, note: idea.note });
+      const diagnosticInterface = guideInterface({
+        id: idea.id,
+        title: idea.title,
+        note: idea.note,
+        category: idea.category,
+        vehicleYear: vehicle?.startYear,
+        vehicleEndYear: vehicle?.endYear,
+        platform: vehicle?.platform
+      });
       return {
         id: "reference-" + idea.id,
         title: idea.title,
-        requirements: details.prerequisites,
+        requirements: guideVehicleRequirements({ title: idea.title, original: details.prerequisites, note: idea.note }),
+        diagnosticInterface,
         description: details.description,
         estimate: referenceIdeaEstimate(idea)
       };
