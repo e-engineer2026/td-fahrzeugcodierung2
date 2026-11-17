@@ -156,9 +156,11 @@ export default function GuideSelector() {
               <h2 id="guide-model-title" className="text-base font-black">
                 {vehicle ? vehicle.model : "Fahrzeug wählen"}
               </h2>
-              <p className="text-xs text-slate-500">
-                {vehicle ? String(vehicle.startYear) + "–" + String(vehicle.endYear >= 2026 ? "heute" : vehicle.endYear) : String(models.length) + " Modelle · alphabetisch"}
-              </p>
+              {vehicle && (
+                <p className="text-xs text-slate-500">
+                  {String(vehicle.startYear) + "–" + String(vehicle.endYear >= 2026 ? "heute" : vehicle.endYear)}
+                </p>
+              )}
             </div>
             {vehicle && (
               <button type="button" onClick={() => setShowModels((value) => !value)}
