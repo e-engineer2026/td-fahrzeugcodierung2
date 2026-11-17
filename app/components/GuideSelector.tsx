@@ -219,7 +219,7 @@ export default function GuideSelector() {
 
       <section aria-labelledby="guide-manufacturer-title">
         <h2 id="guide-manufacturer-title" className="text-lg font-black sm:text-xl">Hersteller wählen</h2>
-        <div className="mt-2 grid grid-cols-2 gap-1.5 sm:grid-cols-4" role="group" aria-label="Hersteller">
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Hersteller">
           {manufacturers.map((item) => (
             <button key={item} type="button" aria-pressed={manufacturer === item} onClick={() => chooseManufacturer(item)}
               className={"flex min-h-11 items-center justify-center rounded-lg border px-2 py-2 text-sm font-bold transition hover:border-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 " +
@@ -254,14 +254,14 @@ export default function GuideSelector() {
 
           {showModels && (
             <>
-              <div className="mt-2 grid max-h-[36rem] gap-1 overflow-y-auto sm:max-h-[42rem] sm:grid-cols-2 lg:grid-cols-3" role="group" aria-label="Fahrzeugmodelle">
+              <div className="mt-2 grid max-h-[36rem] gap-1.5 overflow-y-auto sm:max-h-[42rem] sm:grid-cols-2 lg:grid-cols-3" role="group" aria-label="Fahrzeugmodelle">
                 {models.map((item) => (
                   <button key={item.model} type="button" aria-pressed={model === item.model} onClick={() => chooseModel(item)}
-                    className={"flex min-h-11 items-center justify-between gap-2 rounded-md border px-2.5 py-1.5 text-left hover:border-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 " +
+                    className={"flex min-h-12 items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left hover:border-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 " +
                       (model === item.model ? "border-blue-600 bg-blue-50" : "border-slate-200 bg-white")}>
-                    <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                      <span className="text-[13px] font-bold leading-4 text-slate-900">{item.model}</span>
-                      <span className="text-[11px] leading-4 text-slate-500">{item.startYear}–{item.endYear >= 2026 ? "heute" : item.endYear}</span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-bold leading-5 text-slate-900">{item.model}</span>
+                      <span className="block text-xs text-slate-500">{item.startYear}–{item.endYear >= 2026 ? "heute" : item.endYear}</span>
                     </span>
                     {model === item.model && <Check size={17} className="shrink-0 text-blue-700" aria-hidden="true" />}
                   </button>
@@ -286,11 +286,11 @@ export default function GuideSelector() {
             )}
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
             {categoryCounts.map(({ category, count }) => (
               <button key={category} type="button" aria-pressed={activeCategory === category}
                 onClick={() => setActiveCategory(category)}
-                className={"flex min-h-11 items-center justify-between gap-2 rounded-lg border px-2.5 py-1.5 text-left text-sm font-bold transition hover:border-blue-400 " +
+                className={"flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-sm font-bold transition hover:border-blue-400 " +
                   (activeCategory === category ? "border-blue-600 bg-blue-600 text-white" : "border-slate-200 bg-white text-slate-700")}>
                 <span>{category}</span>
                 <span className={activeCategory === category ? "rounded-full bg-white/20 px-2 py-0.5 text-xs" : "rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600"}>{count}</span>

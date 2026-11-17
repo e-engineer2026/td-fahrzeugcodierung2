@@ -56,16 +56,16 @@ export default function CodieranleitungenPage() {
             </summary>
             <div className="border-t border-slate-200 px-4 pb-4 pt-3">
               <h2 className="font-bold text-slate-900">Steuergeräte mit möglichem SFD (1)</h2>
-              <ul className="mt-2 grid grid-cols-2 gap-x-3 gap-y-0.5 text-[11px] leading-4 text-slate-600 sm:grid-cols-3">
+              <ul className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1 text-xs leading-5 text-slate-600 sm:grid-cols-2 lg:grid-cols-3">
                 {SFD1_CONTROL_UNITS.map((unit) => (
                   <li key={unit.address}><strong className="text-slate-900">{unit.address}</strong> – {unit.name}</li>
                 ))}
               </ul>
               <p className="mt-2 text-xs leading-5 text-slate-600">{SFD1_ENGINE_EXCEPTION}</p>
               <h2 className="mt-5 font-bold text-slate-900">Fahrzeugmodelle und Beginn des SFD-Schutzes</h2>
-              <div className="mt-2 grid gap-1 sm:grid-cols-2">
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
                 {SFD_VEHICLES.map((entry) => (
-                  <div key={entry.catalogKey} className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-0.5 rounded-md border border-slate-100 bg-slate-50 px-2 py-1.5 text-[11px] leading-4">
+                  <div key={entry.catalogKey} className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs leading-5">
                     <p className="font-semibold text-slate-900">{entry.brand} {entry.name}</p>
                     <p className="text-slate-600">
                       {[
