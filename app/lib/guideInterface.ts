@@ -290,7 +290,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   // auf eine einzige Diagnose-Codierung reduzieren.
   if (/^(?:.*)(?:\bacc\b|pacc|travel assist|stauassistent|side assist|blind spot|parklenkassistent|night vision|area view|360.)/.test(title) &&
       /nachrüst|umbau|umrüst|vollständig|komplett|radar.*einb|front.*heckkamera/.test(title)) {
-    return withSfd("Inbetriebnahme prüfen", "Codierung, mögliche Datensätze und Kalibrierung müssen anhand der realen Steuergeräte geprüft werden.");
+    return withSfd("VCDS / VCP (Codierung) + Fachinbetriebnahme", "Bei unterstützten Steuergeräten können VCDS/VCP den Codieranteil übernehmen. Der komplette Assistenz-Umbau kann zusätzlich VCP-Datensätze, ODIS-/Komponentenschutz-/Online-Freigaben und zwingend fachgerechte Radar-/Kamerakalibrierung erfordern.");
   }
   if (!modern && /(?:blind.spot|side.assist|spurwechselassistent|parklenkassistent|park.assist|einparkhilfe|pla|traffic.jam.assist|stauassistent)/.test(title) &&
       /nachrüst|umbau|erweitern|komplett|aktivierungsberechtigung/.test(title)) {
@@ -298,7 +298,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
       "Für unterstützte Steuergeräte sind Codierungen mit VCDS/VCP möglich. Radar- und Parkassistenten benötigen abhängig vom Modell passende Datensätze (VCP), Kalibrierung und ggf. ODIS/Online-Freigaben. Die Codierung allein bedeutet keine vollständige Freischaltung.");
   }
   if (/verkehrszeichenerkennung|verkehrszeichen.*aktivier|\bvze\b/.test(title)) {
-    return withSfd(/\bvcds\b/.test(hint) && !modern ? "VCDS / VCP" : "Freigabe abhängig", "VCDS nur für den belegten Codierschritt; vorhandene FEC-/SWaP-Freigabe, kompatible Navigation, Kamera und Softwarestand sind Voraussetzung.");
+    return withSfd(/\bvcds\b/.test(hint) && !modern ? "VCDS / VCP" : "VCDS / VCP (Codieranteil, modellabhängig)", "VCDS nur für den belegten Codierschritt; vorhandene FEC-/SWaP-Freigabe, kompatible Navigation, Kamera und Softwarestand sind Voraussetzung.");
   }
 
   // Eindeutig als VCDS-Einstellungsanleitung erfasste Funktionen, sofern
