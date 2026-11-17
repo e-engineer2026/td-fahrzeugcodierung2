@@ -52,6 +52,11 @@ export function codingEffortStep(
   if (/verkehrszeichenerkennung|fernlichtassistent|spurhalteassistent|lane assist/.test(title) &&
       /aktivier|nachrüst|freischalt/.test(title)) return 4;
 
+  // Nur eine vorhandene Lichtanimation oder Scheinwerferoption anpassen:
+  // kein Aufpreis für teure IQ.LIGHT-/Matrix-Hardware.
+  if (/startanimation|lichtanimation|lichtinszenierung.*einstell|scheinwerfer.*menü/.test(title) &&
+      /iq.light|matrix|scheinwerfer|licht/.test(title)) return 2;
+
   // Lichtsteuerungen mit zusätzlicher Grundeinstellung.
   if (/matrix|xenon|iq.light|leuchtweitenregulier|\balwr\b|led.scheinwerfer|lichtverteilung|kurvenlicht|voll.led/.test(title)) {
     return /grundeinstellung|softwarekonfig|parametrier/.test(note) ? 5 : 4;
@@ -61,6 +66,10 @@ export function codingEffortStep(
   if (/anhänger|anhängerkupplung|\bahk\b|trailer assist|rückfahrkamera|rueckfahrkamera|frontkamera.*rückfahrkamera|reifendruckkontrolle.*(?:high|direkte)|rdk high/.test(title)) {
     return /nur kabelsatz|kabelsatz.*separat|rein mechanisch/.test(note) && !/codier|dongle|inbetriebnahme/.test(note) ? 1 : 3;
   }
+
+  // Indirekte Reifendruckanzeige über ABS / Infotainment ist eine
+  // wesentlich einfachere Codierung als die Inbetriebnahme von RDK High.
+  if (/reifendruckkontrolle|\brdk\b|\brdks\b/.test(title)) return 2;
 
   // Komplexere, aber meist an wenigen Modulen erledigte Freischaltungen.
   if (/sitzmemory|memory.?sitz|fahrersitz.*memory|kessy|keyless|parkhilfe|einparkhilfe|\bpdc\b|standheizung|elektrische heckklappe|heckklappe.*elektrisch|\bqq2\b|ambientebeleuchtung.*mehrfarbig|multicolor|rgb/.test(title)) return 3;
