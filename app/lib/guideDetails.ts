@@ -90,7 +90,7 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
     cleaned = cleaned.replace(/^Anleitung (?:und|mit)\s+(?=(?:Software|Hardware|Steuergerät|Freischaltung))/i, "");
     // Produkt-/Fremdanleitungs-Metadaten entfernen, ohne konkrete
     // Software-, PR- oder Hardwareinformationen zu verlieren.
-    if (/^(?:anbieter|hersteller) sucht (?:aktuell |derzeit )?(?:probeverbau|testfahrzeug)|^derzeit probeverbau|^keine allgemeine (?:komplettanleitung|verfügbarkeit)|^anbieterleistung|^die ausgewählte Produktseite|^einbau nur beim anbieter|^werkstatteinbau, keine frei verfügbare/i.test(cleaned)) continue;
+    if (/^(?:anbieter|hersteller) sucht (?:aktuell |derzeit )?(?:probeverbau|testfahrzeug)|^derzeit probeverbau|^keine allgemeine (?:komplettanleitung|verfügbarkeit)|^anbieterleistung|^die ausgewählte Produktseite|^einbau nur beim anbieter|^werkstatteinbau, keine frei verfügbare|^KUFATEC weist ausdrücklich aus/i.test(cleaned)) continue;
     cleaned = cleaned
       .replace(/Einbauanleitung inklusive anschließender Codierung mit\s+(VCDS|VCP|ODIS)/gi, "Codierung mit $1")
       .replace(/(?:\s+und\s+|,\s*)?(?:(?:deutschsprachige|bebilderte|vollständige|öffentliche|freie)\s+)?(?:Einbauanleitung|Einbauvorschau|Anleitungsvorschau|Anschlussanleitung(?:s-Vorschau)?|Montageanleitung)\b[^,;]*/gi, "")
@@ -98,7 +98,13 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
       .replace(/\b(?:laut Anbieter|laut Hersteller|laut Quelle)\s*/gi, "")
       .replace(/^Anbieter (?:nennt|verlangt|bietet|weist aus)\s*(?:für [^,;]+)?[,;:]?\s*/i, "")
       .replace(/\bKUFATEC nennt ausdrücklich den\s*/gi, "")
+      .replace(/\bKUFATEC-Mehrmodellfreigabe\b/gi, "Mehrmodellfreigabe")
+      .replace(/^KUFATEC weist ausdrücklich aus,?\s*/i, "")
+      .replace(/^Keine allgemeine VCDS-Anleitung,?\s*/i, "")
+      .replace(/,?\s*keine allgemeine VCDS-Anleitung\b/gi, "")
+      .replace(/^Werkstatteinbau,?\s*keine frei verfügbare Komplettanleitung\b/gi, "")
       .replace(/\bAnbieter-Einschränkung\b/gi, "Einschränkung")
+      .replace(/\bNICHT den Polo AW\b/g, "nicht Polo AW")
       .replace(/,?\s*keine (?:öffentliche|frei verfügbare|allgemeine) (?:Codier)?anleitung(?:en)?(?: verfügbar)?/gi, "")
       .replace(/,?\s*keine allgemeine Komplettanleitung/gi, "")
       .replace(/,?\s*keine regulär freigegebene Komplettlösung/gi, "")
@@ -106,7 +112,7 @@ export function guideDetails(input: GuideDetailsInput): GuideDetails {
       .trim()
       .replace(/(?:\s+(?:mit|und)|,|:)+$/i, "")
       .trim();
-    if (!cleaned) continue;
+    if (!cleaned || /^(?:werkstatteinbau|keine anleitung verfügbar)/i.test(cleaned)) continue;
     if (/^(?:keine|ohne) (?:zusätzliche )?codierung(?: erforderlich)?$/i.test(cleaned)) continue;
     if (NON_REQUIREMENT_META.test(cleaned) && /^(?:anleitung|einbauanleitung|anschlussanleitung|vollversion|produkt|praxisbericht|testfahrzeug)/i.test(cleaned)) continue;
 
