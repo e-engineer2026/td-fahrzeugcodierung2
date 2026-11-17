@@ -44,3 +44,8 @@ test("Wegfahrsperre und Datensatzparametrierung sind aufwendig", () => {
 test("einzelne Komfortcodierung erhält die niedrigste Stufe", () => {
   assert.equal(codingEffortStep("Zeigertest / Needle Sweep aktivieren"), 0);
 });
+
+test("IQ.LIGHT-Animation und indirekte RDK werden nach Codierung, nicht nach Hardware bewertet", () => {
+  assert.equal(codingEffortStep("Scheinwerfer-Startanimation bei IQ.LIGHT konfigurieren"), 2);
+  assert.equal(codingEffortStep("Reifendruckkontrolle über ABS aktivieren"), 2);
+});
