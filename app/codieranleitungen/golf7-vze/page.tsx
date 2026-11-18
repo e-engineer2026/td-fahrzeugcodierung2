@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FileCheck2, ShieldAlert } from "lucide-react";
 import Golf7VzeCheckout from "../../components/Golf7VzeCheckout";
+import ManualPaypalGuideCheckout from "../../components/ManualPaypalGuideCheckout";
 import { GOLF7_VZE } from "../../lib/guideShopShared";
 import { configuredShopMode } from "../../lib/guidePaypal";
 export const dynamic = "force-dynamic";
@@ -54,12 +55,18 @@ export default function Golf7VzePage() {
               Fachkräfte bestimmt. Fehlende Lizenzen oder Kalibrierungen können
               nicht durch Codierung ersetzt werden.</p>
           </div>
-          <div className="mt-6"><Golf7VzeCheckout mode={mode} /></div>
-          <p className="mt-4 text-xs leading-5 text-slate-500">
-            Zahlungen ausschließlich über PayPal nach freigeschaltetem Checkout.
+          <div className="mt-6">{mode === "off"
+            ? <ManualPaypalGuideCheckout />
+            : <Golf7VzeCheckout mode={mode} />}</div>
+          {mode === "off" ? <p className="mt-4 text-xs leading-5 text-slate-500">
+            Die Zahlung über den vorhandenen PayPal.Me-Link wird nicht automatisch
+            mit dem PDF-Shop abgeglichen. Der Versand der Anleitung erfolgt erst nach
+            persönlicher Prüfung des Zahlungseingangs und Kontaktaufnahme per E-Mail.
+          </p> : <p className="mt-4 text-xs leading-5 text-slate-500">
+            Zahlungen ausschließlich über den technisch freigegebenen PayPal-Checkout.
             PDF-Downloads werden erst nach einer serverseitig verifizierten Bezahlung
             für die zugeordnete Gastbestellung bereitgestellt. Eine Registrierung ist nicht nötig.
-          </p>
+          </p>}
         </div>
       </div>
     </main>
