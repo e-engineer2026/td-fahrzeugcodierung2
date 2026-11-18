@@ -48,7 +48,8 @@ export default function Golf7VzePage() {
 
           <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
             <div className="flex items-center gap-2 font-bold"><ShieldAlert size={18} />{mode === "live" ? "Technisch freigegebenes Dokument" : "Technischer Freigabestatus: Prüfentwurf"}</div>
-            <p>Die vorliegenden Referenzwerte wurden noch nicht an jeder Kamera- und
+            <p>Die VZE-Codierwege wurden anhand älterer Golf-7-Fachreferenzen abgeglichen,
+              aber noch nicht am konkreten Prüffahrzeug validiert. Sie wurden daher nicht an jeder Kamera- und
               Infotainmentvariante des Golf 7 nachgewiesen. Die Anleitung ist nur für
               qualifizierte Fachkräfte bestimmt. Fehlende Lizenzen oder Kalibrierungen
               können nicht durch Codierung ersetzt werden.</p>

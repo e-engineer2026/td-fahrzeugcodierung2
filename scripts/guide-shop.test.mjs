@@ -3,6 +3,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import { resolveShopMode, validateCompletedCapture, GOLF7_VZE } from "../app/lib/guideShopShared.ts";
 
+test("Golf 7 VZE Prüfdokument Rev 1.2 nur mit fester Prüfsumme", () => {
+  assert.equal(GOLF7_VZE.revision, "1.2");
+  assert.match(GOLF7_VZE.expectedSha256, /^[a-f0-9]{64}$/);
+  assert.equal(GOLF7_VZE.pages, 3);
+});
 const merchant = { PAYPAL_CLIENT_ID:"sandbox-demo", PAYPAL_CLIENT_SECRET:"test-only", PAYPAL_WEBHOOK_ID:"WH-SANDBOX" };
 test("PDF-Shop ist ohne PayPal und explizite Freigabe geschlossen", () => {
   assert.equal(resolveShopMode({}),"off");
