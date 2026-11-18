@@ -21,7 +21,7 @@ export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
         <div role="row" className="hidden grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_128px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-700 sm:grid">
           <div role="columnheader">Funktion</div>
           <div role="columnheader">Interface</div>
-          <div role="columnheader" className="text-right">PDF-Preis</div>
+          <div role="columnheader" className="text-right">PDF-Dokument</div>
         </div>
         {rows.map((row) => (
           <div key={row.id} role="row"
