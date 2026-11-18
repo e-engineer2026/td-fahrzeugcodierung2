@@ -8,7 +8,7 @@ export const GOLF7_VZE = Object.freeze({
   title: "Verkehrszeichenerkennung (VZE / Sign Assist)",
   model: "VW Golf 7 / 7.5 (5G / AU)",
   revision: "1.3",
-  expectedSha256: "9b5accb096bbcd990a13ce68b542dcff1aace9085a43872d3533bf43f2cdcdd0",
+  expectedSha256: "12a210529950df7dd0b5bc5c89c231de39854b2850dc4515ac8db4cc2c950ac6",
   priceCents: 1399,
   currency: "EUR",
   pages: 3,

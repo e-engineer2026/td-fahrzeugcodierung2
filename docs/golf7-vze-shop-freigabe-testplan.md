@@ -53,7 +53,7 @@ Neon-Dokumenten- und Bestelltabellen werden serverseitig angelegt.
 Der neue private Admin-Upload ist unter /konto/pdf-verwaltung erreichbar, nach Anmeldung
 mit einem freigegebenen und verifizierten Clerk-Administratorkonto.
 Zugelassen ist nur die zugeordnete Prüffassung TD_Golf7_03_Verkehrszeichenerkennung_Rev13_Fachfreigabe_optimiert.pdf
-(SHA256 9b5accb096bbcd990a13ce68b542dcff1aace9085a43872d3533bf43f2cdcdd0).
+(SHA256 12a210529950df7dd0b5bc5c89c231de39854b2850dc4515ac8db4cc2c950ac6).
 Der Server verifiziert die PDF-Datei und den Hash, speichert den Inhalt privat in Neon
 und stellt ihn nur nach gültiger Zahlung für das angemeldete Käuferkonto bereit.
 Der ältere interne PUT-/api/guide-shop/admin/document-Endpunkt erfordert weiterhin
