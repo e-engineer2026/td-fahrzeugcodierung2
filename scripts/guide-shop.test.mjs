@@ -71,5 +71,10 @@ test("Sperren im Quellcode: kein öffentlicher PDF-Link und keine Freigabe ohne 
   assert.match(order,/immediateDeliveryConsent/);
   assert.match(order,/withdrawalAcknowledged/);
   assert.match(admin,/timingSafeEqual/);
+  assert.match(admin,/expectedSha256/);
+  const upload = fs.readFileSync("app/api/guide-shop/admin/upload/route.ts","utf8");
+  assert.match(upload,/await isGuideAdmin\(\)/);
+  assert.match(upload,/expectedSha256/);
+  assert.match(upload,/Cache-Control/);
   assert.equal(fs.existsSync("public/TD_Golf7_03_Verkehrszeichenerkennung.pdf"),false);
 });

@@ -1,6 +1,6 @@
 # Golf 7 Verkehrszeichenerkennung - Freigabe und Shop-Testplan
 
-Stand: 18.11.2026. Artikel TD-G7-AS-003, Produkt-ID golf7-vze, Revision 1.1, 3 Seiten, 13,99 EUR.
+Stand: 18.11.2026. Artikel TD-G7-AS-003, Produkt-ID golf7-vze, Revision 1.2, 3 Seiten, 13,99 EUR.
 Status: Prüfentwurf; keine Fahrzeugvalidierung und kein Live-Verkauf.
 
 ## 1 Technische Freigabe, bevor die PDF verkauft wird
@@ -43,10 +43,21 @@ PAYPAL_ENV=sandbox
 PAYPAL_CLIENT_ID=(Sandbox ID)
 PAYPAL_CLIENT_SECRET=(Sandbox Secret)
 PAYPAL_WEBHOOK_ID=(Sandbox Webhook ID)
+TD_GUIDE_SHOP_RETURN_ORIGIN=https://td-fahrzeugcodierung-git-main-e-engineer2026s-projects.vercel.app
+Diese Variablen wurden ausschließlich für Preview (ohne die drei PayPal-Zugangsdaten)
+vorkonfiguriert; die Produktion erhält keine Sandbox-Zahlungsfreigabe.
+Sandbox-Webhook URL: https://td-fahrzeugcodierung-git-main-e-engineer2026s-projects.vercel.app/api/webhooks/paypal
+Events: PAYMENT.CAPTURE.REFUNDED, PAYMENT.CAPTURE.REVERSED und ggf. CUSTOMER.DISPUTE.CREATED.
+Neon-Dokumenten- und Bestelltabellen werden serverseitig angelegt.
 
-Interner PDF-Upload mit PUT /api/guide-shop/admin/document als application/pdf
-und Header x-td-guide-storage-key (TD_GUIDE_STORAGE_KEY aus Vercel).
-Die Datei bleibt privat in Neon und wird ohne berechtigten Kauf nicht ausgeliefert.
+Der neue private Admin-Upload ist unter /konto/pdf-verwaltung erreichbar, nach Anmeldung
+mit einem freigegebenen und verifizierten Clerk-Administratorkonto.
+Zugelassen ist nur die zugeordnete Prüffassung TD_Golf7_03_Verkehrszeichenerkennung_Rev12_Pruefentwurf.pdf
+(SHA256 c02f065f4d80414b7a7cedc7c01d291c94488ad0e08a380a9d0ef903772dc805).
+Der Server verifiziert die PDF-Datei und den Hash, speichert den Inhalt privat in Neon
+und stellt ihn nur nach gültiger Zahlung für das angemeldete Käuferkonto bereit.
+Der ältere interne PUT-/api/guide-shop/admin/document-Endpunkt erfordert weiterhin
+den geheimen Header x-td-guide-storage-key und akzeptiert denselben Hash.
 
 ## 4 Tests vor der Freigabe
 

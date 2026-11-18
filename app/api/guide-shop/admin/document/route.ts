@@ -26,6 +26,9 @@ export async function PUT(request: Request) {
     const sql = await ensureGuideShopSchema();
     const encoded = pdf.toString("base64");
     const sha256 = createHash("sha256").update(pdf).digest("hex");
+    if (sha256 !== GOLF7_VZE.expectedSha256) {
+      return NextResponse.json({ error: "Es ist ausschließlich die geprüfte TD-G7-AS-003-Revision 1.2 zulässig." }, { status: 422, headers });
+    }
     await sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data)
       VALUES (${GOLF7_VZE.id}, ${GOLF7_VZE.revision}, ${sha256}, decode(${encoded},'base64'))
       ON CONFLICT(product_id) DO UPDATE
