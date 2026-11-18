@@ -121,10 +121,11 @@ export default function Golf7VzeCheckout({ mode }: { mode: Mode }) {
   );
 
   if (mode === "off") return (
-    <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-      <p className="font-bold">PayPal-Verkauf noch nicht freigeschaltet.</p>
-      <p>Die Golf-7-VZE-Anleitung muss vor echten Verkäufen fachlich geprüft werden.
-        Die spätere Zahlung und der Download funktionieren ohne Registrierung.</p>
+    <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-700" role="status">
+      <p className="font-bold text-slate-900">PDF fachlich freigegeben. Online-Kauf noch nicht verfügbar.</p>
+      <p className="mt-1">Die Golf-7-VZE-Anleitung wurde nach bestätigten Fahrzeugtests freigegeben.
+        Der PayPal-Verkauf bleibt bis zum erfolgreichen Zahlungs- und Downloadtest deaktiviert.
+        Nach der Freischaltung funktioniert der Kauf ohne Kundenkonto.</p>
     </div>
   );
 
