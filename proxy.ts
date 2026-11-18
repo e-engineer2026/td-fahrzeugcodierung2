@@ -14,5 +14,7 @@ export const config = {
     "/sign-up/:path*",
     "/api/account/:path*",
     "/api/saved-vehicles/:path*",
+    "/api/guide-shop/:path*",
+    "/codieranleitungen/golf7-vze/:path*",
   ],
 };
