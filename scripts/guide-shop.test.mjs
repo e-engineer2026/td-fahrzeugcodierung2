@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import { resolveShopMode, guideShopReturnOrigin, validateCompletedCapture, GOLF7_VZE } from "../app/lib/guideShopShared.ts";
+import { newGuestToken, hashGuestToken } from "../app/lib/guideGuestToken.ts";
 
 test("Golf 7 VZE Prüfdokument Rev 1.2 nur mit fester Prüfsumme", () => {
   assert.equal(GOLF7_VZE.revision, "1.2");
@@ -86,4 +87,59 @@ test("Adminbereich zeigt nur Status und Links, niemals PayPal-Zugangsdaten", () 
   assert.match(page,/preview/);
   assert.match(page,/Automation Bypass/);
   assert.ok(!page.includes("process.env.PAYPAL_CLIENT_SECRET}"));
+});
+
+test("Gastbestellungen verwenden zufällige, nur gehashte 256-Bit-Tokens", () => {
+  const first = newGuestToken();
+  const second = newGuestToken();
+  assert.match(first, /^[0-9a-f]{64}$/);
+  assert.match(second, /^[0-9a-f]{64}$/);
+  assert.notEqual(first, second);
+  assert.match(hashGuestToken(first), /^[0-9a-f]{64}$/);
+  assert.notEqual(hashGuestToken(first), first);
+  assert.notEqual(hashGuestToken(first), hashGuestToken(second));
+  assert.equal(hashGuestToken("not-a-token"), null);
+  assert.equal(hashGuestToken(first.slice(0, -1)), null);
+});
+
+test("Gast-Checkout benötigt keinerlei Clerk-Konto, aber PayPal-Bestätigung und Browser-Token", () => {
+  const order = fs.readFileSync("app/api/guide-shop/orders/route.ts", "utf8");
+  const capture = fs.readFileSync("app/api/guide-shop/orders/capture/route.ts", "utf8");
+  const guest = fs.readFileSync("app/lib/guideGuest.ts", "utf8");
+  const schema = fs.readFileSync("app/lib/guideShopDb.ts", "utf8");
+  assert.doesNotMatch(order, /await auth\(\)/);
+  assert.doesNotMatch(capture, /await auth\(\)/);
+  assert.match(order, /setGuestCookie\(response, guestToken\)/);
+  assert.match(order, /GOLF7_VZE\.expectedSha256/);
+  assert.match(order, /requestOrigin !== redirectOrigin/);
+  assert.match(capture, /guestTokenHashFromCookie\(\)/);
+  assert.match(capture, /validateCompletedCapture\(response, localId, paypalId\)/);
+  assert.match(capture, /guest_token_hash=\$\{guestHash\}/);
+  assert.match(guest, /httpOnly: true/);
+  assert.match(guest, /sameSite: "lax"/);
+  assert.match(guest, /maxAge/);
+  assert.match(schema, /CREATE TABLE IF NOT EXISTS td_guide_guest_orders/);
+  assert.match(schema, /guest_token_hash text NOT NULL UNIQUE/);
+});
+
+test("Gästedownload bleibt an eine bezahlte, nicht widerrufene Bestellung und den Browser gebunden", () => {
+  const download = fs.readFileSync("app/api/guide-shop/download/golf7-vze/route.ts", "utf8");
+  const status = fs.readFileSync("app/api/guide-shop/guest/status/route.ts", "utf8");
+  const receipt = fs.readFileSync("app/api/guide-shop/guest/confirmation/route.ts", "utf8");
+  const webhook = fs.readFileSync("app/api/webhooks/paypal/route.ts", "utf8");
+  const page = fs.readFileSync("app/codieranleitungen/golf7-vze/page.tsx", "utf8");
+  const checkout = fs.readFileSync("app/components/Golf7VzeCheckout.tsx", "utf8");
+  assert.match(download, /guestTokenHashFromCookie\(\)/);
+  assert.match(download, /status='paid' AND paid_at > now\(\) - interval '30 days'/);
+  assert.match(download, /!permitted/);
+  assert.match(download, /GOLF7_VZE\.expectedSha256/);
+  assert.match(status, /guestTokenHashFromCookie\(\)/);
+  assert.match(status, /status='paid'/);
+  assert.match(receipt, /guestTokenHashFromCookie\(\)/);
+  assert.match(webhook, /UPDATE td_guide_guest_orders SET status/);
+  assert.doesNotMatch(page, /<Show when="signed-out">/);
+  assert.match(page, /<Golf7VzeCheckout mode=\{mode\} \/>/);
+  assert.match(checkout, /api\/guide-shop\/guest\/status/);
+  assert.match(checkout, /api\/guide-shop\/guest\/confirmation/);
+  assert.match(checkout, /ohne Kundenkonto/);
 });
