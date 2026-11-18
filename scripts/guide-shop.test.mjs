@@ -78,3 +78,12 @@ test("Sperren im Quellcode: kein öffentlicher PDF-Link und keine Freigabe ohne 
   assert.match(upload,/Cache-Control/);
   assert.equal(fs.existsSync("public/TD_Golf7_03_Verkehrszeichenerkennung.pdf"),false);
 });
+
+test("Adminbereich zeigt nur Status und Links, niemals PayPal-Zugangsdaten", () => {
+  const page = fs.readFileSync("app/konto/pdf-verwaltung/page.tsx","utf8");
+  assert.match(page,/await isGuideAdmin\(\)/);
+  assert.match(page,/!!process\.env\.PAYPAL_CLIENT_SECRET/);
+  assert.match(page,/preview/);
+  assert.match(page,/Automation Bypass/);
+  assert.ok(!page.includes("process.env.PAYPAL_CLIENT_SECRET}"));
+});
