@@ -1,5 +1,5 @@
 import "server-only";
-import { GOLF7_VZE, resolveShopMode } from "./guideShopShared";
+import { GOLF7_VZE, resolveShopMode, guideShopReturnOrigin } from "./guideShopShared";
 
 export function configuredShopMode() {
   return resolveShopMode(process.env);
@@ -57,8 +57,9 @@ export type PaypalOrder = {
 };
 
 export async function createPaypalGuideOrder(orderId: string) {
-  const returnUrl = "https://td-fahrzeugcodierung.de/codieranleitungen/golf7-vze?payment=approved";
-  const cancelUrl = "https://td-fahrzeugcodierung.de/codieranleitungen/golf7-vze?payment=cancelled";
+  const origin = guideShopReturnOrigin(process.env);
+  const returnUrl = origin + "/codieranleitungen/golf7-vze?payment=approved";
+  const cancelUrl = origin + "/codieranleitungen/golf7-vze?payment=cancelled";
   const order = await paypalApi<PaypalOrder>("/v2/checkout/orders", "POST", {
     intent: "CAPTURE",
     purchase_units: [{

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { resolveShopMode, validateCompletedCapture, GOLF7_VZE } from "../app/lib/guideShopShared.ts";
+import { resolveShopMode, guideShopReturnOrigin, validateCompletedCapture, GOLF7_VZE } from "../app/lib/guideShopShared.ts";
 
 test("Golf 7 VZE Prüfdokument Rev 1.2 nur mit fester Prüfsumme", () => {
   assert.equal(GOLF7_VZE.revision, "1.2");
@@ -16,6 +16,15 @@ test("PDF-Shop ist ohne PayPal und explizite Freigabe geschlossen", () => {
   assert.equal(resolveShopMode({ TD_GUIDE_SHOP_MODE:"live", PAYPAL_ENV:"live" }),"off");
   assert.equal(resolveShopMode({ ...merchant, TD_GUIDE_SHOP_MODE:"live", PAYPAL_ENV:"sandbox" }),"off");
   assert.equal(resolveShopMode({ ...merchant, TD_GUIDE_SHOP_MODE:"sandbox", PAYPAL_ENV:"sandbox" }),"sandbox");
+});
+test("Sandbox-Checkout kehrt ausschließlich zur konfigurierten HTTPS-Preview zurück", () => {
+  const base = { ...merchant, TD_GUIDE_SHOP_MODE:"sandbox", PAYPAL_ENV:"sandbox" };
+  const correct="https://td-fahrzeugcodierung-git-main-e-engineer2026s-projects.vercel.app";
+  assert.equal(guideShopReturnOrigin({...base,TD_GUIDE_SHOP_RETURN_ORIGIN:correct}),correct);
+  assert.throws(()=>guideShopReturnOrigin(base),/nicht konfiguriert/);
+  assert.throws(()=>guideShopReturnOrigin({...base,TD_GUIDE_SHOP_RETURN_ORIGIN:"https://evil.example"}));
+  assert.throws(()=>guideShopReturnOrigin({...base,TD_GUIDE_SHOP_RETURN_ORIGIN:"http://td-test.vercel.app"}));
+  assert.equal(guideShopReturnOrigin({}),"https://td-fahrzeugcodierung.de");
 });
 test("Live-Shop erst mit PayPal-Webhook, Technikfreigabe und rechtlicher Freigabe", () => {
   const base={...merchant,TD_GUIDE_SHOP_MODE:"live",PAYPAL_ENV:"live",PAYPAL_WEBHOOK_ID:"WH-123"};

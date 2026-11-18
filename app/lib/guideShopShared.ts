@@ -32,6 +32,20 @@ export function resolveShopMode(env: ShopEnv): ShopMode {
   return "off";
 }
 
+/** Vercel-Preview ist die einzige zulässige Sandbox-Rückleitungsadresse. */
+export function guideShopReturnOrigin(env: ShopEnv): string {
+  if (resolveShopMode(env) !== "sandbox") return "https://td-fahrzeugcodierung.de";
+  const raw = env.TD_GUIDE_SHOP_RETURN_ORIGIN;
+  if (!raw) throw new Error("Sandbox-Rückleitungsadresse nicht konfiguriert.");
+  const url = new URL(raw);
+  if (url.protocol !== "https:" ||
+      !url.hostname.endsWith(".vercel.app") ||
+      url.username || url.password || url.pathname !== "/" || url.search || url.hash) {
+    throw new Error("Sandbox-Rückleitungsadresse muss eine HTTPS-Vercel-Preview-Domain sein.");
+  }
+  return url.origin;
+}
+
 /** Erforderlich, bevor ein PayPal-Capture zu einem Downloadanspruch wird. */
 export function validateCompletedCapture(
   body: unknown,
