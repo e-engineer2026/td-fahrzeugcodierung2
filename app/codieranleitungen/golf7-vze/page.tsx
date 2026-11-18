@@ -60,8 +60,9 @@ export default function Golf7VzePage() {
             : <Golf7VzeCheckout mode={mode} />}</div>
           {mode === "off" ? <p className="mt-4 text-xs leading-5 text-slate-500">
             Die Zahlung über den vorhandenen PayPal.Me-Link wird nicht automatisch
-            mit dem PDF-Shop abgeglichen. Der Versand der Anleitung erfolgt erst nach
-            persönlicher Prüfung des Zahlungseingangs und Kontaktaufnahme per E-Mail.
+            mit dem PDF-Shop abgeglichen. Nach Prüfung des Zahlungseingangs sendet
+            TD Fahrzeugcodierung einen persönlichen Freigabelink per E-Mail.
+            Erst nach Aktivierung dieses Links steht der geschützte PDF-Download bereit.
           </p> : <p className="mt-4 text-xs leading-5 text-slate-500">
             Zahlungen ausschließlich über den technisch freigegebenen PayPal-Checkout.
             PDF-Downloads werden erst nach einer serverseitig verifizierten Bezahlung
