@@ -144,3 +144,14 @@ test("Gästedownload bleibt an eine bezahlte, nicht widerrufene Bestellung und d
   assert.match(checkout, /api\/guide-shop\/guest\/confirmation/);
   assert.match(checkout, /ohne Kundenkonto/);
 });
+
+
+test("Sandbox-Diagnose prüft PayPal OAuth und PDF-Hash ohne geheime Schlüssel auszugeben", () => {
+  const route = fs.readFileSync("app/api/guide-shop/sandbox/check/route.ts","utf8");
+  assert.match(route,/process\.env\.VERCEL_ENV !== "preview"/);
+  assert.match(route,/testPaypalSandboxConnection\(\)/);
+  assert.match(route,/GOLF7_VZE\.expectedSha256/);
+  assert.match(route,/pdfStored/);
+  assert.match(route,/realPaymentEnabled: false/);
+  assert.doesNotMatch(route, /PAYPAL_CLIENT_SECRET|paypal_capture_id|clerk_user_id/);
+});

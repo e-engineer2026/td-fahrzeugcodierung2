@@ -29,6 +29,15 @@ async function accessToken(): Promise<string> {
   return data.access_token;
 }
 
+/** Sandbox-only OAuth check; returns no credentials or token contents. */
+export async function testPaypalSandboxConnection(): Promise<boolean> {
+  if (process.env.VERCEL_ENV !== "preview" || configuredShopMode() !== "sandbox") return false;
+  try {
+    const token = await accessToken();
+    return token.length > 16;
+  } catch { return false; }
+}
+
 export async function paypalApi<T>(
   path: string,
   method: "POST" | "GET",
