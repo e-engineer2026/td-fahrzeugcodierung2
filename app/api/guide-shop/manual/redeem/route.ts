@@ -29,23 +29,22 @@ export async function POST(request: Request) {
     if (!guestHash) throw new Error("Gastkennung nicht generierbar.");
     // Atomare Freigabe: Einmal-Token nur ein einziges Mal verwertbar.
     // Schlaegt die Anlage des Gastanspruchs fehl, wird das Token nicht verbrannt.
-    const [claimed] = await sql`WITH redeemed AS (
-      UPDATE td_guide_manual_grants
-      SET status='redeemed', redeemed_at=now()
+    const [claimed] = await sql`WITH available AS (
+      SELECT id, product_id FROM td_guide_manual_grants
       WHERE claim_token_hash=${claimHash} AND product_id=${GOLF7_VZE.id}
         AND status='issued' AND expires_at > now()
-      RETURNING id, product_id
+      FOR UPDATE
     ), entitlement AS (
       INSERT INTO td_guide_guest_orders
         (guest_token_hash, product_id, amount_cents, currency, status, paid_at)
       SELECT ${guestHash}, product_id, ${GOLF7_VZE.priceCents}, ${GOLF7_VZE.currency}, 'paid', now()
-      FROM redeemed RETURNING id
+      FROM available RETURNING id
     )
-    UPDATE td_guide_manual_grants AS grant
-    SET guest_order_id=ent.id
-    FROM entitlement AS ent, redeemed AS rec
-    WHERE grant.id=rec.id
-    RETURNING grant.id`;
+    UPDATE td_guide_manual_grants AS g
+    SET guest_order_id=ent.id, status='redeemed', redeemed_at=now()
+    FROM entitlement AS ent, available AS rec
+    WHERE g.id=rec.id AND g.status='issued'
+    RETURNING g.id`;
 
     if (!claimed) return NextResponse.json({
       error: "Dieser Freigabelink ist abgelaufen, bereits verwendet oder gesperrt. Falls bereits eingeloest, nutze den urspruenglichen Browser.",
