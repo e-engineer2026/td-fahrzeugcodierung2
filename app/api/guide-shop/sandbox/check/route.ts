@@ -15,7 +15,8 @@ export async function GET() {
     return NextResponse.json({ mode: "off", paypalAuthVerified: false,
       pdfStored: false, readyForSandboxCheckout: false }, { status: 503, headers });
   }
-  const paypalAuthVerified = await testPaypalSandboxConnection();
+  const paypal = await testPaypalSandboxConnection();
+  const paypalAuthVerified = paypal.ok;
   let pdfStored = false, storageReachable = false;
   try {
     const sql = await ensureGuideShopSchema();
@@ -28,6 +29,8 @@ export async function GET() {
   return NextResponse.json({
     environment: "sandbox",
     paypalAuthVerified,
+    paypalHttpStatus: paypal.httpStatus,
+    paypalDiagnostic: paypal.diagnostic,
     storageReachable,
     pdfStored,
     documentRevision: GOLF7_VZE.revision,

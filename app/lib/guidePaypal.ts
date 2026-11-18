@@ -29,13 +29,36 @@ async function accessToken(): Promise<string> {
   return data.access_token;
 }
 
-/** Sandbox-only OAuth check; returns no credentials or token contents. */
-export async function testPaypalSandboxConnection(): Promise<boolean> {
-  if (process.env.VERCEL_ENV !== "preview" || configuredShopMode() !== "sandbox") return false;
+/** Sandbox-only OAuth diagnostics; never return tokens or credential values. */
+export async function testPaypalSandboxConnection(): Promise<{
+  ok: boolean; httpStatus: number | null; diagnostic: string;
+}> {
+  if (process.env.VERCEL_ENV !== "preview" || configuredShopMode() !== "sandbox")
+    return { ok: false, httpStatus: null, diagnostic: "sandbox_not_configured" };
+  const id = process.env.PAYPAL_CLIENT_ID;
+  const secret = process.env.PAYPAL_CLIENT_SECRET;
+  if (!id || !secret) return { ok: false, httpStatus: null, diagnostic: "missing_credentials" };
   try {
-    const token = await accessToken();
-    return token.length > 16;
-  } catch { return false; }
+    const res = await fetch("https://api-m.sandbox.paypal.com/v1/oauth2/token", {
+      method: "POST", headers: {
+        Authorization: "Basic " + Buffer.from(id + ":" + secret).toString("base64"),
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "grant_type=client_credentials", cache: "no-store",
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) return {
+      ok: false, httpStatus: res.status,
+      diagnostic: res.status === 401 ? "credentials_rejected"
+        : res.status === 403 ? "not_authorized" : "paypal_http_error",
+    };
+    const data = await res.json() as { access_token?: string };
+    return data.access_token ?
+      { ok: true, httpStatus: 200, diagnostic: "connected" } :
+      { ok: false, httpStatus: 200, diagnostic: "missing_token" };
+  } catch {
+    return { ok: false, httpStatus: null, diagnostic: "network_or_timeout" };
+  }
 }
 
 export async function paypalApi<T>(
