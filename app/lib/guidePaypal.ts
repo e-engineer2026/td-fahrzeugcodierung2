@@ -84,8 +84,12 @@ export async function createPaypalGuideOrder(orderId: string) {
 }
 
 export async function capturePaypalGuideOrder(orderId: string, localId: string) {
-  return paypalApi<unknown>("/v2/checkout/orders/" + encodeURIComponent(orderId) + "/capture",
-    "POST", {}, "td-capture-" + localId);
+  // Bei Browser-Neuladen oder einer DB-Unterbrechung nie erneut abbuchen,
+  // sondern zuerst den tatsächlichen Status der PayPal-Bestellung prüfen.
+  const path = "/v2/checkout/orders/" + encodeURIComponent(orderId);
+  const current = await paypalApi<{status?: string}>(path, "GET");
+  if (current.status === "COMPLETED") return current;
+  return paypalApi<unknown>(path + "/capture", "POST", {}, "td-capture-" + localId);
 }
 
 export async function verifyPayPalWebhook(

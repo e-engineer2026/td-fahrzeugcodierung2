@@ -46,7 +46,12 @@ export default function Page() {
           <section><h2 className="text-xl font-bold text-slate-900">10. Verbraucherstreitbeilegung</h2>
           <p className="mt-2">Wir sind nicht verpflichtet und derzeit nicht bereit, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">11. Schlussbestimmungen</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">11. Digitale PDF-Dokumente (nach Freischaltung)</h2>
+          <p className="mt-2">Für ausdrücklich zum Kauf freigegebene PDF-Anleitungen gilt der in der Produktansicht angezeigte Einzelpreis. Anders als bei Remote-Dienstleistungen wird der PDF-Kauf vollständig im Bestellvorgang per PayPal bezahlt. Ein Kaufvertrag für das digitale Dokument wird erst im freigeschalteten Checkout geschlossen. Die Anleitung wird ausschließlich dem angemeldeten Kundenkonto nach serverseitiger Zahlungsbestätigung bereitgestellt.</p>
+          <p className="mt-2">Digitale Anleitungen sind für die eigene fachliche Nutzung bestimmt. Weitergabe, Weiterverkauf, öffentliche Bereitstellung und Vervielfältigung außerhalb gesetzlich erlaubter Nutzungen sind nicht gestattet. Die technischen Angaben müssen vor Anwendung anhand des konkreten Fahrzeugs, der Softwarestände und der Herstellerfreigaben überprüft werden. Zwingende Verbraucher- und Gewährleistungsrechte bleiben unberührt.</p>
+          <p className="mt-2">Bei ausdrücklich verlangter sofortiger Bereitstellung digitaler Inhalte und der gesetzlichen Bestätigung zum Widerrufsrecht gelten die besonderen Vorschriften für digitale Inhalte. Details stehen in der Widerrufsbelehrung. Bis zur technischen und rechtlichen Freigabe ist der PDF-Checkout deaktiviert.</p></section>
+
+          <section><h2 className="text-xl font-bold text-slate-900">12. Schlussbestimmungen</h2>
           <p className="mt-2">Es gilt deutsches Recht unter Beachtung zwingender Verbraucherschutzvorschriften. Gesetzliche Gerichtsstände bleiben unberührt. Stand: August 2026.</p></section>
 
         </div>

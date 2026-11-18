@@ -56,16 +56,19 @@ export default function Page() {
           <section><h2 className="text-xl font-bold text-slate-900">12. Zahlung über PayPal</h2>
           <p className="mt-2">Bei Nutzung der PayPal-Zahlungslinks werden Sie zu PayPal weitergeleitet. PayPal verarbeitet die für die Zahlung erforderlichen Daten in eigener Verantwortung. Für diese Verarbeitung gelten ergänzend die Datenschutzbestimmungen von PayPal.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">13. Remote-Zugriff</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">13. Digitale PDF-Bestellungen</h2>
+          <p className="mt-2">Wenn digitale PDF-Produkte zum Kauf freigeschaltet werden, speichern wir im Zusammenhang mit dem Kundenkonto die Artikelnummer, den Preis, den Zeitpunkt der Bestellung, die PayPal-Bestell- und Zahlungsreferenz, den Zahlungsstatus sowie die im Bestellprozess abgegebenen Einwilligungen zur sofortigen Bereitstellung und Kenntnisnahme des Widerrufsrechts in unserer Neon-Datenbank. Zweck sind Kaufabwicklung, Berechtigungsprüfung, Bereitstellung des geschützten Downloads und gesetzliche Nachweispflichten (Art. 6 Abs. 1 lit. b und c DSGVO). Die Inhalte werden nicht über öffentliche Download-URLs bereitgestellt. Bestell- und Abrechnungsnachweise werden im Rahmen gesetzlicher Aufbewahrungspflichten gespeichert.</p></section>
+
+          <section><h2 className="text-xl font-bold text-slate-900">14. Remote-Zugriff</h2>
           <p className="mt-2">Bei Remote-Dienstleistungen kann nach Vereinbarung Fernwartungssoftware eingesetzt werden. Der Zugriff erfolgt nur zur Durchführung des vereinbarten Auftrags. Der Kunde muss die Remote-Verbindung aktiv freigeben und kann sie beenden. Zugangsdaten sollten nicht dauerhaft gespeichert oder weitergegeben werden.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">14. Speicherdauer</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">15. Speicherdauer</h2>
           <p className="mt-2">Daten werden nur so lange gespeichert, wie dies für den jeweiligen Zweck erforderlich ist. Gesetzliche handels- und steuerrechtliche Aufbewahrungspflichten bleiben unberührt.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">15. Ihre Rechte</h2>
+          <section><h2 className="text-xl font-bold text-slate-900">16. Ihre Rechte</h2>
           <p className="mt-2">Sie haben nach Maßgabe der DSGVO insbesondere Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Zudem besteht ein Beschwerderecht bei einer zuständigen Datenschutzaufsichtsbehörde.</p></section>
 
-          <section><h2 className="text-xl font-bold text-slate-900">16. Stand</h2><p className="mt-2">Stand: September 2026.</p></section>
+          <section><h2 className="text-xl font-bold text-slate-900">17. Stand</h2><p className="mt-2">Stand: September 2026.</p></section>
 
         </div>
       </div>

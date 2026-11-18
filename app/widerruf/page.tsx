@@ -42,6 +42,10 @@ export default function Page() {
             <p>Unterschrift (nur bei Mitteilung auf Papier): ____________________</p>
           </div></section>
 
+          <section><h2 className="text-xl font-bold text-slate-900">Besonderheiten bei digitalen PDF-Inhalten</h2>
+          <p className="mt-2">Für kostenpflichtige digitale Inhalte, die nicht auf einem körperlichen Datenträger bereitgestellt werden, kann das Widerrufsrecht bei Beginn der Vertragserfüllung unter den Voraussetzungen des § 356 BGB erlöschen. Dazu gehören insbesondere die ausdrückliche vorherige Zustimmung zum Leistungsbeginn vor Ablauf der Widerrufsfrist, die Kenntnisbestätigung über den Verlust des Widerrufsrechts sowie die gesetzlich erforderliche Vertragsbestätigung. Eine PDF-Bestellung führt nicht allein durch das Bezahlen zum Verlust des Widerrufsrechts.</p>
+          <p className="mt-2">Vor einem freigeschalteten PDF-Kauf werden die erforderlichen Erklärungen gesondert abgefragt. Die technischen und rechtlichen Voraussetzungen der sofortigen Bereitstellung sind vor dem Live-Verkauf abschließend zu prüfen.</p></section>
+
           <section><h2 className="text-xl font-bold text-slate-900">Stand</h2><p className="mt-2">August 2026.</p></section>
 
         </div>

@@ -124,7 +124,7 @@ export default function Golf7VzeCheckout({ mode }: { mode: Mode }) {
       </fieldset>
       <button type="button" onClick={() => void beginPayment()} disabled={busy || !accepted || !immediate || !understood}
         className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-3 font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-40">
-        <LockKeyhole size={17} /> {busy ? "Bitte warten …" : "Jetzt kostenpflichtig bestellen (13,99 €) · PayPal"}
+        <LockKeyhole size={17} /> {busy ? "Bitte warten …" : mode === "sandbox" ? "PayPal-Sandbox testen (0,00 € echte Zahlung)" : "Zahlungspflichtig bestellen · 13,99 € (PayPal)"}
       </button>
       {message && <p role="alert" className="mt-3 text-sm text-red-700">{message}</p>}
     </div>
