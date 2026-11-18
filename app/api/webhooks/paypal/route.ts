@@ -25,6 +25,8 @@ export async function POST(request: Request) {
       const status = event.event_type === "CUSTOMER.DISPUTE.CREATED" ? "disputed" : "refunded";
       await sql`UPDATE td_guide_orders SET status=${status}
         WHERE paypal_capture_id=${captureId} AND status='paid'`;
+      await sql`UPDATE td_guide_guest_orders SET status=${status}
+        WHERE paypal_capture_id=${captureId} AND status='paid'`;
     }
     return NextResponse.json({ received: true });
   } catch {
