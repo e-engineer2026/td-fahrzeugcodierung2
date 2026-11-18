@@ -188,6 +188,7 @@ test("PayPal.Me-Freigaben nur nach manueller Adminpruefung und mit einmaligem PD
 
 test("Doppelte Codierungen und 0-Euro-Angebote aus Fahrzeug- und PDF-Listen entfernen", () => {
   assert.equal(codingNameKey("Außenspiegel automatisch anklappen"), codingNameKey("aussenspiegel  automatisch  anklappen"));
+  assert.equal(codingNameKey("Rückleuchten aktivieren"), codingNameKey("Rueckleuchten aktivieren"));
   assert.equal(codingNameKey("Auto-Lock / Auto-Unlock aktivieren"), codingNameKey("auto lock auto unlock aktivieren"));
   assert.notEqual(codingNameKey("Lane Assist freischalten"), codingNameKey("Lane Assist anpassen"));
   assert.equal(hasDisplayPrice(0), false);
