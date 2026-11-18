@@ -19,6 +19,10 @@ export async function POST(request: Request) {
     const sql = await ensureGuideShopSchema();
     const [doc] = await sql`SELECT product_id FROM td_guide_documents WHERE product_id = ${GOLF7_VZE.id}`;
     if (!doc) return NextResponse.json({ error: "PDF noch nicht bereitgestellt." }, { status: 503, headers });
+    const [rate] = await sql`SELECT count(*)::int AS attempts FROM td_guide_orders
+      WHERE clerk_user_id = ${userId} AND created_at > now() - interval '1 hour'`;
+    if (Number(rate?.attempts ?? 0) >= 5)
+      return NextResponse.json({ error: "Zu viele Bestellversuche. Bitte später erneut versuchen." }, { status: 429, headers });
     const [paid] = await sql`SELECT id FROM td_guide_orders WHERE clerk_user_id = ${userId}
       AND product_id = ${GOLF7_VZE.id} AND status = 'paid' LIMIT 1`;
     if (paid) return NextResponse.json({ error: "Schon gekauft; im Konto herunterladen." }, { status: 409, headers });

@@ -3,9 +3,11 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import { resolveShopMode, validateCompletedCapture, GOLF7_VZE } from "../app/lib/guideShopShared.ts";
 
-const merchant = { PAYPAL_CLIENT_ID:"sandbox-demo", PAYPAL_CLIENT_SECRET:"test-only" };
+const merchant = { PAYPAL_CLIENT_ID:"sandbox-demo", PAYPAL_CLIENT_SECRET:"test-only", PAYPAL_WEBHOOK_ID:"WH-SANDBOX" };
 test("PDF-Shop ist ohne PayPal und explizite Freigabe geschlossen", () => {
   assert.equal(resolveShopMode({}),"off");
+  assert.equal(resolveShopMode({PAYPAL_CLIENT_ID:"x",PAYPAL_CLIENT_SECRET:"y",
+    TD_GUIDE_SHOP_MODE:"sandbox",PAYPAL_ENV:"sandbox"}),"off");
   assert.equal(resolveShopMode({ TD_GUIDE_SHOP_MODE:"live", PAYPAL_ENV:"live" }),"off");
   assert.equal(resolveShopMode({ ...merchant, TD_GUIDE_SHOP_MODE:"live", PAYPAL_ENV:"sandbox" }),"off");
   assert.equal(resolveShopMode({ ...merchant, TD_GUIDE_SHOP_MODE:"sandbox", PAYPAL_ENV:"sandbox" }),"sandbox");
@@ -15,7 +17,8 @@ test("Live-Shop erst mit PayPal-Webhook, Technikfreigabe und rechtlicher Freigab
   assert.equal(resolveShopMode(base),"off");
   assert.equal(resolveShopMode({...base,TD_G7_VZE_TECH_APPROVED:"true"}),"off");
   assert.equal(resolveShopMode({...base,TD_GUIDE_LEGAL_APPROVED:"true"}),"off");
-  assert.equal(resolveShopMode({...base,TD_G7_VZE_TECH_APPROVED:"true",TD_GUIDE_LEGAL_APPROVED:"true"}),"live");
+  assert.equal(resolveShopMode({...base,TD_G7_VZE_TECH_APPROVED:"true",TD_GUIDE_LEGAL_APPROVED:"true"}),"off");
+  assert.equal(resolveShopMode({...base,TD_G7_VZE_TECH_APPROVED:"true",TD_GUIDE_LEGAL_APPROVED:"true",TD_GUIDE_CONFIRMATION_EMAIL_READY:"true"}),"live");
 });
 const local="d0ddc41b-89ab-4ec2-9859-2b3dacc08592";
 const paypal="9S876543AB123456C";

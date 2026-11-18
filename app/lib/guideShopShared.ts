@@ -19,14 +19,15 @@ export type ShopMode = "off" | "sandbox" | "live";
 
 /** Ohne explizite Freigaben niemals einen Live-Kauf ermöglichen. */
 export function resolveShopMode(env: ShopEnv): ShopMode {
-  const credentialsReady = !!env.PAYPAL_CLIENT_ID && !!env.PAYPAL_CLIENT_SECRET;
+  const credentialsReady = !!env.PAYPAL_CLIENT_ID && !!env.PAYPAL_CLIENT_SECRET && !!env.PAYPAL_WEBHOOK_ID;
   if (!credentialsReady) return "off";
   if (env.TD_GUIDE_SHOP_MODE === "sandbox" && env.PAYPAL_ENV === "sandbox") return "sandbox";
   if (env.TD_GUIDE_SHOP_MODE === "live" &&
       env.PAYPAL_ENV === "live" &&
       !!env.PAYPAL_WEBHOOK_ID &&
       env.TD_G7_VZE_TECH_APPROVED === "true" &&
-      env.TD_GUIDE_LEGAL_APPROVED === "true") return "live";
+      env.TD_GUIDE_LEGAL_APPROVED === "true" &&
+      env.TD_GUIDE_CONFIRMATION_EMAIL_READY === "true") return "live";
   return "off";
 }
 
