@@ -49,6 +49,22 @@ export async function ensureGuideShopSchema() {
   await sql`CREATE INDEX IF NOT EXISTS td_guide_guest_orders_visitor_idx
     ON td_guide_guest_orders (visitor_hash, created_at)`;
 
+  // Manuell verifizierte Zahlungen ueber PayPal.Me:
+  // Die Freigabe wird erst nach Admin-Kontrolle des Zahlungseingangs erstellt.
+  // Der einmalige Freigabeschluessel wird ausschliesslich als SHA256-Hash gespeichert.
+  await sql`CREATE TABLE IF NOT EXISTS td_guide_manual_grants (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    product_id text NOT NULL,
+    recipient_email text NOT NULL,
+    paypal_transaction_id text NOT NULL UNIQUE,
+    claim_token_hash text NOT NULL UNIQUE,
+    status text NOT NULL CHECK (status IN ('issued', 'redeemed', 'revoked')),
+    guest_order_id uuid UNIQUE REFERENCES td_guide_guest_orders(id),
+    created_at timestamptz NOT NULL DEFAULT now(),
+    expires_at timestamptz NOT NULL,
+    redeemed_at timestamptz
+  )`;
+
   await sql`CREATE TABLE IF NOT EXISTS td_guide_documents (
     product_id text PRIMARY KEY,
     version text NOT NULL,
