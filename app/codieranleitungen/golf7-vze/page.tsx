@@ -51,10 +51,7 @@ export default async function Golf7VzePage() {
           <div className="mt-6">{mode === "off"
             ? <AccountPaypalGuideCheckout signedIn={!!userId} />
             : <Golf7VzeCheckout mode={mode} />}</div>
-          {mode === "off" ? <p className="mt-4 text-xs leading-5 text-slate-500">
-            Die Zahlung über PayPal.Me wird manuell geprüft. Danach erscheint die PDF
-            im angemeldeten Kundenkonto zum Download.
-          </p> : <p className="mt-4 text-xs leading-5 text-slate-500">
+          {mode === "off" ? null : <p className="mt-4 text-xs leading-5 text-slate-500">
             Zahlungen ausschließlich über den technisch freigegebenen PayPal-Checkout.
             PDF-Downloads werden erst nach einer serverseitig verifizierten Bezahlung
             für die zugeordnete Gastbestellung bereitgestellt. Eine Registrierung ist nicht nötig.
