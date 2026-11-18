@@ -44,6 +44,9 @@ export async function POST(request: Request) {
     const existing = await sql`SELECT id FROM td_guide_manual_grants
       WHERE paypal_transaction_id=${reference} LIMIT 1`;
     if (existing.length) return NextResponse.json({ error: "Diese PayPal-Transaktion wurde bereits bearbeitet." }, { status: 409, headers });
+    const [accountOrder] = await sql`SELECT id FROM td_guide_orders
+      WHERE paypal_transaction_id=${reference} LIMIT 1`;
+    if (accountOrder) return NextResponse.json({ error: "Diese PayPal-Transaktion wurde bereits einem Kundenkonto zugeordnet." }, { status: 409, headers });
     await sql`INSERT INTO td_guide_manual_grants
       (product_id, recipient_email, paypal_transaction_id, claim_token_hash, status, expires_at)
       VALUES (${GOLF7_VZE.id}, ${email}, ${reference}, ${claimHash}, 'issued',
