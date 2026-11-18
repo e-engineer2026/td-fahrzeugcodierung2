@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import { resolveShopMode, guideShopReturnOrigin, validateCompletedCapture, GOLF7_VZE } from "../app/lib/guideShopShared.ts";
 import { newGuestToken, hashGuestToken } from "../app/lib/guideGuestToken.ts";
+import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../app/lib/codingListCleanup.ts";
 
 test("Golf 7 VZE Fachfreigabe Rev 1.3 nur mit fester Prüfsumme", () => {
   assert.equal(GOLF7_VZE.revision, "1.3");
@@ -183,4 +184,33 @@ test("PayPal.Me-Freigaben nur nach manueller Adminpruefung und mit einmaligem PD
   assert.match(manualCheckout, /api\/guide-shop\/download\/golf7-vze/);
   assert.doesNotMatch(adminRoute, /process\.env\.PAYPAL_CLIENT_SECRET/);
   assert.doesNotMatch(claimRoute, /PAYPAL_CLIENT_SECRET/);
+});
+
+test("Doppelte Codierungen und 0-Euro-Angebote aus Fahrzeug- und PDF-Listen entfernen", () => {
+  assert.equal(codingNameKey("Außenspiegel automatisch anklappen"), codingNameKey("aussenspiegel  automatisch  anklappen"));
+  assert.equal(codingNameKey("Rückleuchten aktivieren"), codingNameKey("Rueckleuchten aktivieren"));
+  assert.equal(codingNameKey("Auto-Lock / Auto-Unlock aktivieren"), codingNameKey("auto lock auto unlock aktivieren"));
+  assert.notEqual(codingNameKey("Lane Assist freischalten"), codingNameKey("Lane Assist anpassen"));
+  assert.equal(hasDisplayPrice(0), false);
+  assert.equal(hasDisplayPrice(-1), false);
+  assert.equal(hasDisplayPrice(Number.NaN), false);
+  assert.equal(hasDisplayPrice(13.99), true);
+  const entries = [
+    { name:"Auto-Lock / Auto-Unlock aktivieren", price:25 },
+    { name:"auto lock auto unlock aktivieren", price:25 },
+    { name:"Auto-Lock / Auto-Unlock anpassen", price:20 },
+    { name:"Spiegel absenken", price:0 },
+  ].filter((entry) => hasDisplayPrice(entry.price));
+  assert.deepEqual(uniqueByCodingName(entries).map((entry) => entry.name), [
+    "Auto-Lock / Auto-Unlock aktivieren",
+    "Auto-Lock / Auto-Unlock anpassen",
+  ]);
+
+  const display = fs.readFileSync("app/lib/codingDisplay.ts","utf8");
+  const pdfCatalog = fs.readFileSync("app/components/GuideSelector.tsx","utf8");
+  assert.match(display, /entries = entries.filter\(\(entry\) => hasDisplayPrice\(entry.price\)\)/);
+  assert.match(display, /return dedupePricedDisplayEntries\(displayed\)/);
+  assert.match(pdfCatalog, /uniqueByCodingName\(codingCatalog/);
+  assert.match(pdfCatalog, /hasDisplayPrice\(researchGuideEstimate\(entry\).price\)/);
+  assert.match(pdfCatalog, /hasDisplayPrice\(referenceIdeaEstimate\(idea\).price\)/);
 });

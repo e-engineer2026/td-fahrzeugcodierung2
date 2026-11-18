@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
+import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
 import GuideTable, { type GuideTableRow } from "./GuideTable";
 import { guideDetails } from "../lib/guideDetails";
 import { guideInterface } from "../lib/guideInterface";
@@ -34,15 +35,11 @@ function guideCategory(coding: Coding): GuideCategory {
 function availableModelCodings(vehicle: Vehicle): Coding[] {
   if (vehicle.diagnosticsOnly || vehicle.startYear >= 2024) return [];
   const ids = new Set(codingsForVehicle(vehicle));
-  const seen = new Set<string>();
-  return codingCatalog
+  // Keine 0-Euro-Codierungen in der Anleitungsliste; Duplikate nicht durch
+  // Gross-/Kleinschreibung, Umlaute, Satzzeichen oder Leerzeichen mehrfach anzeigen.
+  return uniqueByCodingName(codingCatalog
     .filter((coding) => ids.has(coding.id) && coding.id !== "diagnose" && coding.uiGroup !== "Diagnose")
-    .filter((coding) => {
-      const normalized = coding.name.toLocaleLowerCase("de").trim();
-      if (seen.has(normalized)) return false;
-      seen.add(normalized);
-      return true;
-    })
+    .filter((coding) => hasDisplayPrice(coding.price)))
     .sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
@@ -60,13 +57,34 @@ export default function GuideSelector() {
   );
   const vehicle = models.find((item) => item.model === model);
   const codings = useMemo(() => vehicle ? availableModelCodings(vehicle) : [], [vehicle]);
-  const researchEntries = useMemo(
-    () => vehicle
-      ? (["Nachrüstungen", "Umbauten"] as ResearchCategory[]).flatMap((category) => researchedGuidesForModel(vehicle.model, category)).filter((entry) => entry.access !== "Anbieterleistung")
-      : [],
-    [vehicle]
-  );
-  const sourceIdeas = useMemo(() => vehicle ? referenceIdeasForVehicle(vehicle) : [], [vehicle]);
+  const researchEntries = useMemo(() => {
+    if (!vehicle) return [];
+    const seen = new Set(codings.map((coding) => guideCategory(coding) + ":" + codingNameKey(coding.name)));
+    return (["Nachrüstungen", "Umbauten"] as ResearchCategory[])
+      .flatMap((category) => researchedGuidesForModel(vehicle.model, category))
+      .filter((entry) => entry.access !== "Anbieterleistung" && hasDisplayPrice(researchGuideEstimate(entry).price))
+      .filter((entry) => {
+        const key = entry.category + ":" + codingNameKey(entry.title);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+  }, [vehicle, codings]);
+  const sourceIdeas = useMemo(() => {
+    if (!vehicle) return [];
+    const seen = new Set([
+      ...codings.map((coding) => guideCategory(coding) + ":" + codingNameKey(coding.name)),
+      ...researchEntries.map((entry) => entry.category + ":" + codingNameKey(entry.title)),
+    ]);
+    return referenceIdeasForVehicle(vehicle)
+      .filter((idea) => hasDisplayPrice(referenceIdeaEstimate(idea).price))
+      .filter((idea) => {
+        const key = idea.category + ":" + codingNameKey(idea.title);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+  }, [vehicle, codings, researchEntries]);
   const categoryCounts = useMemo(
     () => guideCategories.map((category) => ({
       category,
