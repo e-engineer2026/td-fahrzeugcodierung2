@@ -126,3 +126,28 @@ Hinweis: Eine bestehende PayPal-Freigabe wird durch HTTP 401 **nicht** bestätig
 - [ ] Serverseitige Belege für den konkreten Sandbox-Capture, Download nach Zahlung, Rückleitung und Webhook-Event fehlen weiterhin; im überprüften Vercel-Preview-Laufzeitprotokoll waren nur Sandbox-Diagnoseaufrufe ersichtlich. Nicht als vollständig abgenommen markieren.
 - [ ] E-Mail-Bestellbestätigung, rechtliche Prüfung und signierte Webhook-Abläufe bleiben Freigabevoraussetzungen für Live.
 - [x] PayPal-Zugangsdaten auf `preview` begrenzt; kein Live-Checkout aktiviert.
+
+
+## Manueller PayPal.Me-Verkauf mit geschuetztem PDF-Freigabelink (18.11.2026)
+
+- Statt der unvollstaendigen Live-PayPal-API nutzt die Produktions-Artikelseite den bereits bestehenden Link `https://paypal.me/TiDrechsler/13.99EUR`. Empfaengerkonto muss durch TD selbst anhand der PayPal-Anzeige geprueft werden; die Website kann die hinterlegte Kontoadresse nicht nachweisen.
+- Kaeufer akzeptiert AGB und Hinweis auf manuelle Lieferung, zahlt ueber PayPal.Me, meldet die PayPal-Transaktionsnummer und seine E-Mail-Adresse per Nachricht an `info@td-fahrzeugcodierung.de`.
+- TD kontrolliert im tatsaechlichen PayPal-Empfaengerkonto **Betrag (13,99 EUR), Geldeingang, Verwendungszweck und Transaktionsnummer**. Screenshot und Rueckleitung sind kein sicherer Beweis.
+- Nach verifiziertem Zahlungseingang und Clerk-Adminanmeldung im geschuetzten Bereich `/konto/pdf-verwaltung`: Kunden-E-Mail und PayPal-Transaktion eingeben, Zahlungspruefung aktiv bestaetigen und Freigabelink erstellen.
+- Transaktionsnummer wird in `td_guide_manual_grants` nur einmal zugelassen; Freigabe-Token mit 256 Bit Entropie liegt in Neon nur als SHA256-Hash vor. Die geheime URL benutzt ein Hash-Fragment statt eines serverseitig protokollierten Query-Parameters.
+- TD verschickt den persoenlichen Freigabelink manuell per E-Mail. **Die Anwendung versendet keine E-Mail automatisch.**
+- Der Kunde oeffnet die URL innerhalb von 7 Tagen und klickt auf `PDF-Zugriff aktivieren`; ein **POST** loest atomar den Einmallink ein und legt die berechtigte Gastbestellung an. E-Mail-Vorschau-Bots koennen den Schluessel nicht per GET verbrauchen.
+- Die bereits bestehende 30-Tage-HttpOnly-Cookie-Abfrage zeigt dann dem berechtigten Kunden im selben Browser den PDF-Download und die Bestellbestaetigung. Der unberechtigte GET-Download bleibt HTTP 403.
+- Bei Erstattung, Storno oder Streitfall sperrt der Admin die jeweilige Transaktionsnummer. Bereits eingelöste Bestellungen wechseln auf `refunded` und der Abruf wird deaktiviert. Bereits lokal gespeicherte PDFs koennen nicht zurueckgerufen werden.
+- Die Gastbestellbestaetigung zeigt bei PayPal.Me den manuell geprueften Zahlungsweg und die Transaktionsnummer, ohne einen elektronisch erfassten Widerrufsverzicht vorzutäuschen.
+- **Wichtig:** Es gibt ohne PayPal-Live-API/geeigneten Webhook keine automatische unmittelbare PDF-Freigabe nach einer PayPal.Me-Zahlung. Keine Freigabe aus Redirects oder vom Kunden eingegebenen Transaktionsnummern. Kein PayPal-Live-Checkout aktiviert.
+
+### Technische Pruefung im Vercel-Preview
+
+- [x] Next.js/TypeScript-Preview-Build erfolgreich, 12 automatisierte Tests bestanden.
+- [x] Sandbox-Diagnose HTTP 200, PDF Rev 1.3 in privatem Speicher vorhanden.
+- [x] Freigabeseite HTTP 200, als noindex gekennzeichnet.
+- [x] Download ohne gueltige Gastberechtigung HTTP 403.
+- [ ] Eine echte manuell verifizierte PayPal.Me-Transaktion muss im Adminbereich eingetragen, der Einmallink vom Testkaeufer eingelöst und der anschliessende PDF-Download/Bestellbestaetigung im Browser abgenommen werden.
+- [ ] Erstattungssperre mit einem Testdatensatz durchspielen.
+- [ ] Versand der Kunden-E-Mail und rechtliche Gestaltung des manuellen Verkaufsprozesses abschliessend abnehmen.
