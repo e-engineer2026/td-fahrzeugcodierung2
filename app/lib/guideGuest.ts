@@ -1,5 +1,7 @@
 import "server-only";
-import { createHash, createHmac, randomBytes } from "node:crypto";
+import { createHmac } from "node:crypto";
+import { hashGuestToken } from "./guideGuestToken";
+export { newGuestToken, hashGuestToken } from "./guideGuestToken";
 import { cookies } from "next/headers";
 import type { NextResponse } from "next/server";
 
@@ -7,13 +9,6 @@ export const GUEST_COOKIE_NAME = "td_g7_vze_guest";
 export const GUEST_ACCESS_DAYS = 30;
 const maxAge = GUEST_ACCESS_DAYS * 24 * 60 * 60;
 
-export function newGuestToken() {
-  return randomBytes(32).toString("hex");
-}
-export function hashGuestToken(token: string): string | null {
-  if (!/^[a-f0-9]{64}$/.test(token)) return null;
-  return createHash("sha256").update(token, "utf8").digest("hex");
-}
 export async function guestTokenHashFromCookie(): Promise<string | null> {
   const jar = await cookies();
   return hashGuestToken(jar.get(GUEST_COOKIE_NAME)?.value ?? "");
