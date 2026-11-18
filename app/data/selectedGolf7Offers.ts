@@ -6,6 +6,16 @@ const sourceBase = "https://www.vag-coding.net/vw/golf-7-5g/";
 
 export const selectedGolf7Offers: Coding[] = [
   {
+    id: "golf7-vze-pdf",
+    name: "Verkehrszeichenerkennung (VZE / Sign Assist) aktivieren",
+    price: 49,
+    category: "Assistenzsysteme",
+    uiGroup: "Assistenz",
+    hardware: "VZE-fähige Frontkamera (A5), kompatibles Kombiinstrument (17) und Infotainment (5F). Passende Navigationsdaten sowie gegebenenfalls gültige FEC-/SWaP-Freigabe erforderlich.",
+    requirements: "Technischer Prüfentwurf TD-G7-AS-003: Codierung abhängig von A5-/5F-Softwarestand; reine Menüfreischaltung ist keine Funktionsbestätigung. Keine Umgehung fehlender Lizenzen.",
+    interfaceInfo: "VCDS / VCP für unterstützte Codier-/Anpassungsschritte; zusätzliche Freigaben oder Parametrierung nicht enthalten.",
+  },
+  {
     id: "golf7-selected-second-phone",
     name: "Zweites Telefon per Bluetooth aktivieren",
     price: 25,

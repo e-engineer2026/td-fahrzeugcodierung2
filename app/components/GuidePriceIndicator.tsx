@@ -1,10 +1,11 @@
 import { Download } from "lucide-react";
+import Link from "next/link";
 import GuideDifficultyBar from "./GuideDifficultyBar";
 import { formatGuidePrice } from "../lib/guidePricing";
 import type { GuideEstimate } from "../lib/researchGuidePricing";
 
 /** PDF-Dokumentanzeige: Download bleibt bis zur Veröffentlichung und Zahlungsfreigabe deaktiviert. */
-export default function GuidePriceIndicator({ estimate }: { estimate: GuideEstimate }) {
+export default function GuidePriceIndicator({ estimate, productHref }: { estimate: GuideEstimate; productHref?: string }) {
   const noCoding = estimate.step === null;
   return (
     <div className="shrink-0 text-right" aria-label={noCoding
@@ -18,16 +19,16 @@ export default function GuidePriceIndicator({ estimate }: { estimate: GuideEstim
             <GuideDifficultyBar level={estimate.level!} />
           </>
       }
-      <button
-        type="button"
-        disabled
-        title="PDF-Dokument noch nicht zum Download verfügbar"
-        aria-label="Download noch nicht verfügbar"
-        className="mt-1.5 inline-flex min-h-8 w-full cursor-not-allowed items-center justify-center gap-1 rounded-md border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-500 opacity-75"
-      >
-        <Download size={13} aria-hidden="true" />
-        Download
-      </button>
+      {productHref
+        ? <Link href={productHref}
+            className="mt-1.5 inline-flex min-h-8 w-full items-center justify-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700 hover:bg-blue-100">
+            <Download size={13} aria-hidden="true" /> PDF ansehen
+          </Link>
+        : <button type="button" disabled title="PDF-Dokument noch nicht zum Download verfügbar"
+            aria-label="Download noch nicht verfügbar"
+            className="mt-1.5 inline-flex min-h-8 w-full cursor-not-allowed items-center justify-center gap-1 rounded-md border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-500 opacity-75">
+            <Download size={13} aria-hidden="true" /> Download
+          </button>}
     </div>
   );
 }

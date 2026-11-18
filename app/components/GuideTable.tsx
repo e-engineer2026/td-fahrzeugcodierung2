@@ -10,6 +10,7 @@ export type GuideTableRow = {
   requirements: string | null;
   description: string | null;
   estimate: GuideEstimate;
+  productHref?: string;
 };
 
 /** Einheitliche Darstellung; Werkzeuge nur mit ausgewiesener Eignung nennen. */
@@ -48,7 +49,7 @@ export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
               {row.diagnosticInterface.sfdNotice && <p className="mt-1 text-[11px] leading-4 text-amber-800">{row.diagnosticInterface.sfdNotice}</p>}
             </div>
             <div role="cell" className="col-start-2 row-start-1 flex justify-end sm:col-start-3">
-              <GuidePriceIndicator estimate={row.estimate} />
+              <GuidePriceIndicator estimate={row.estimate} productHref={row.productHref} />
             </div>
           </div>
         ))}

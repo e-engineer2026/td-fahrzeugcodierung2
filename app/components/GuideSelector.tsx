@@ -116,6 +116,7 @@ export default function GuideSelector() {
       });
       return {
         id: "coding-" + coding.id,
+        productHref: coding.id === "golf7-vze-pdf" ? "/codieranleitungen/golf7-vze" : undefined,
         title: coding.name,
         requirements: guideVehicleRequirements({
           title: coding.name,
