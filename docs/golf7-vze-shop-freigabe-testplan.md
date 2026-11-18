@@ -85,3 +85,14 @@ TD_GUIDE_CONFIRMATION_EMAIL_READY=true
 
 Keine echte PayPal-Zahlung, kein öffentlicher PDF-Verkauf und keine pauschale technische
 Freigabe, bevor die offenen Prüfungen abgeschlossen sind.
+
+
+## Import und Abnahme 18.11.2026
+- [x] TD-G7-AS-003, freigegebene PDF Rev 1.3 mit 143340 Bytes in privater Neon-Datenbank hinterlegt.
+- [x] Hash geprüft: 12a210529950df7dd0b5bc5c89c231de39854b2850dc4515ac8db4cc2c950ac6.
+- [x] Vercel Preview: geschützter Import via temporärem Token, HTTP 200, Ergebnis stored=true.
+- [x] Temporären Import-Zugang nach Übertragung aus dem Programm entfernt.
+- [ ] PayPal-Sandbox-OAuth noch nicht bestätigt; Diagnosestatus und Credentials prüfen.
+- [ ] Sandbox-Testkauf mit virtuellem Geld, Zahlungsbestätigung und Download tatsächlich durchspielen.
+- [ ] Rechtskonforme dauerhafte Kaufbestätigung (automatischer E-Mail-Versand) vor Live-Verkauf einrichten.
+- [ ] Live-PayPal-Zugangsdaten und Webhook erst nach vollständig erfolgreicher Abnahme in Production hinterlegen.
