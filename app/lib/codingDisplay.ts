@@ -1,4 +1,5 @@
 import { servicePrice } from "./servicePrice";
+import { codingNameKey, hasDisplayPrice } from "./codingListCleanup";
 import type { PlatformCodingGroup } from "../data/platformCodingPricing";
 import { hardwareForName } from "../data/hardware";
 import { isSmartphoneAidId } from "../data/smartphoneAid";
@@ -319,8 +320,43 @@ function separateSpecificOffers(entries: UnifiedCodingEntry[]) {
   return { offers, remaining: entries.filter((entry) => !matched.has(entry)) };
 }
 
+/**
+ * Identische Anzeige-Funktionen aus mehreren fahrzeug- und plattformweiten Quellen
+ * nur einmal anbieten. Freischaltung und Anpassung bleiben eigene Funktionen.
+ * Hinweise und SFD-Schutz des doppelten Eintrags gehen nicht verloren.
+ */
+function dedupePricedDisplayEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  const byName = new Map<string, UnifiedCodingEntry>();
+  for (const entry of entries) {
+    if (!hasDisplayPrice(entry.price)) continue;
+    const key = codingNameKey(entry.name);
+    if (!key) continue;
+    const previous = byName.get(key);
+    if (!previous) {
+      byName.set(key, entry);
+      continue;
+    }
+    const preferred = previous.source === "vehicle" ? previous :
+      entry.source === "vehicle" ? entry : previous;
+    const sfd = previous.sfd === "Ja" || entry.sfd === "Ja" ? "Ja" :
+      previous.sfd === "Unklar" || entry.sfd === "Unklar" ? "Unklar" :
+        previous.sfd === "Nein" || entry.sfd === "Nein" ? "Nein" : undefined;
+    byName.set(key, {
+      ...preferred,
+      sfd,
+      reviewOnly: Boolean(previous.reviewOnly || entry.reviewOnly),
+      hardware: mergePrerequisites(previous.hardware, entry.hardware),
+      interfaceInfo: mergePrerequisites(previous.interfaceInfo, entry.interfaceInfo),
+      requirements: mergePrerequisites(previous.requirements, entry.requirements),
+    });
+  }
+  return Array.from(byName.values());
+}
+
 // Shared by the configurator and every vehicle price page.
 export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodingEntry[] {
+  // Eintraege mit 0 Euro duerfen auch durch Sammelregeln keinen Preis erhalten.
+  entries = entries.filter((entry) => hasDisplayPrice(entry.price));
   entries = entries.flatMap((entry) => /(?=.*wireless)(?=.*carplay)(?=.*android auto)/i.test(entry.name)
     ? [{ ...entry, id: entry.id + "-carplay", name: "Apple CarPlay Wireless aktivieren" }, { ...entry, id: entry.id + "-android", name: "Android Auto Wireless aktivieren" }]
     : [entry]);
@@ -341,7 +377,7 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
       uiGroup: "Licht" as const,
     };
   });
-  return [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => {
+  const displayed = [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => {
     const smartphoneActivation = /(carplay|android auto|app-connect)/i.test(entry.name) && /(freischalt|aktivier)/i.test(entry.name);
     const startStopDeactivation = /start[- /]?stopp?/i.test(entry.name) && /deaktivier/i.test(entry.name);
     // Assistenzsysteme zeigen ihre Preise direkt und bleiben mit vorhandener Hardware buchbar.
@@ -359,4 +395,5 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
       requirements: mergePrerequisites(entry.requirements, reviewOnly ? "Vor Auftrag sind Teilenummern, Ausstattung, Softwarestand und gegebenenfalls vorhandene Funktionslizenzen zu prüfen. Erst nach Bestätigung buchbar." : undefined),
     };
   });
+  return dedupePricedDisplayEntries(displayed);
 }
