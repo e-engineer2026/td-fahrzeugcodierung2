@@ -17,7 +17,7 @@ export default function GuideAdminPdfUpload() {
       const response = await resp.json() as { stored?: boolean; error?: string; sha256?: string };
       if (!resp.ok || !response.stored) throw Error(response.error ?? "Upload fehlgeschlagen.");
       setComplete(true);
-      setMessage("Das Rev.-1.2-Dokument wurde verschlüsselt über HTTPS in der privaten Neon-Datenbank abgelegt. Die fachliche Freigabe und PayPal bleiben gesperrt.");
+      setMessage("Das geprüfte PDF-Dokument wurde über HTTPS in der privaten Datenbank gespeichert. Der Upload allein schaltet noch keinen Download für Käufer frei.");
       form.reset();
     } catch (e) {
       setMessage(e instanceof Error ? e.message : "Upload fehlgeschlagen.");
@@ -28,7 +28,7 @@ export default function GuideAdminPdfUpload() {
       className="mt-6 rounded-xl border border-blue-100 bg-white p-5">
       <h2 className="flex items-center gap-2 text-lg font-black"><FileUp size={20}/> Prüf-PDF intern hochladen</h2>
       <p className="mt-2 text-sm leading-6 text-slate-600">
-        Artikel TD-G7-AS-003 · Revision 1.2. Nur die zugeordnete PDF mit exakt geprüfter SHA-256-Prüfsumme wird angenommen.
+        Artikel TD-G7-AS-003 · Revision 1.3. Nur die zugeordnete PDF mit exakt geprüfter SHA-256-Prüfsumme wird angenommen.
         Kein öffentliches GitHub-Verzeichnis und kein öffentlicher PDF-Link.
       </p>
       <label className="mt-4 block text-sm font-semibold" htmlFor="guide-pdf">PDF-Dokument auswählen</label>
@@ -39,7 +39,7 @@ export default function GuideAdminPdfUpload() {
         <LockKeyhole size={17}/> {uploading ? "Speichern läuft …" : "PDF privat hinterlegen"}
       </button>
       {message && <p role="status" className={"mt-3 text-sm " + (complete ? "text-green-700" : "text-red-700")}>{message}</p>}
-      <p className="mt-3 text-xs text-slate-500">Auch nach erfolgreichem Upload bleibt der Artikel ein Prüfentwurf. Live-Verkauf ist weiterhin gesperrt.</p>
+      <p className="mt-3 text-xs text-slate-500">Ein privater PDF-Upload begründet noch keinen Zahlungsanspruch. PayPal.Me-Käufer erhalten erst nach überprüftem Zahlungseingang einen persönlichen Freigabelink.</p>
     </form>
   );
 }

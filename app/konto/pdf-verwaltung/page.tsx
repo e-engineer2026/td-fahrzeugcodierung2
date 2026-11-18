@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { isGuideAdmin } from "../../lib/guideAdmin";
 import GuideAdminPdfUpload from "../../components/GuideAdminPdfUpload";
+import GuideAdminManualRelease from "../../components/GuideAdminManualRelease";
 import { resolveShopMode } from "../../lib/guideShopShared";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Interne PDF-Verwaltung | TD Fahrzeugcodierung",
@@ -33,6 +34,7 @@ export default async function GuideAdminPage() {
     <h1 className="mt-5 text-2xl font-black">Interne PDF-Verwaltung</h1>
     {admin ? <>
       <GuideAdminPdfUpload />
+      {production && <GuideAdminManualRelease />}
       {preview && <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-sm">
         <h2 className="text-lg font-bold text-slate-900">PayPal-Sandbox-Konfiguration</h2>
         <p className="mt-2 text-slate-600">Status der aktuellen Vercel-Umgebung:

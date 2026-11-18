@@ -155,3 +155,32 @@ test("Sandbox-Diagnose prüft PayPal OAuth und PDF-Hash ohne geheime Schlüssel 
   assert.match(route,/realPaymentEnabled: false/);
   assert.doesNotMatch(route, /PAYPAL_CLIENT_SECRET|paypal_capture_id|clerk_user_id/);
 });
+
+
+test("PayPal.Me-Freigaben nur nach manueller Adminpruefung und mit einmaligem PDF-Link", () => {
+  const schema = fs.readFileSync("app/lib/guideShopDb.ts", "utf8");
+  const adminRoute = fs.readFileSync("app/api/guide-shop/admin/manual-grants/route.ts", "utf8");
+  const claimRoute = fs.readFileSync("app/api/guide-shop/manual/redeem/route.ts", "utf8");
+  const buyerPage = fs.readFileSync("app/codieranleitungen/golf7-vze/freigabe/page.tsx", "utf8");
+  const activation = fs.readFileSync("app/components/ManualPdfActivation.tsx", "utf8");
+  const manualCheckout = fs.readFileSync("app/components/ManualPaypalGuideCheckout.tsx", "utf8");
+  assert.match(schema, /CREATE TABLE IF NOT EXISTS td_guide_manual_grants/);
+  assert.match(schema, /paypal_transaction_id text NOT NULL UNIQUE/);
+  assert.match(schema, /claim_token_hash text NOT NULL UNIQUE/);
+  assert.match(adminRoute, /await isGuideAdmin\(\)/);
+  assert.match(adminRoute, /paymentVerified !== true/);
+  assert.match(adminRoute, /claim_token_hash/);
+  assert.match(adminRoute, /status='revoked'/);
+  assert.match(claimRoute, /hashGuestToken/);
+  assert.match(claimRoute, /FOR UPDATE/);
+  assert.match(claimRoute, /status='issued'/);
+  assert.match(claimRoute, /setGuestCookie\(response, guestToken\)/);
+  assert.match(claimRoute, /now\(\) - interval '30 days'|accessDays: 30/);
+  assert.match(buyerPage, /robots: \{ index: false/);
+  assert.match(activation, /method: "POST"/);
+  assert.match(activation, /window.location.hash/);
+  assert.match(manualCheckout, /api\/guide-shop\/guest\/status/);
+  assert.match(manualCheckout, /api\/guide-shop\/download\/golf7-vze/);
+  assert.doesNotMatch(adminRoute, /process\.env\.PAYPAL_CLIENT_SECRET/);
+  assert.doesNotMatch(claimRoute, /PAYPAL_CLIENT_SECRET/);
+});
