@@ -95,7 +95,7 @@ Freigabe, bevor die offenen Prüfungen abgeschlossen sind.
 - [x] Hash geprüft: 12a210529950df7dd0b5bc5c89c231de39854b2850dc4515ac8db4cc2c950ac6.
 - [x] Vercel Preview: geschützter Import via temporärem Token, HTTP 200, Ergebnis stored=true.
 - [x] Temporären Import-Zugang nach Übertragung aus dem Programm entfernt.
-- [ ] PayPal-Sandbox-OAuth noch nicht bestätigt; Diagnosestatus und Credentials prüfen.
+- [x] PayPal-Sandbox-OAuth erfolgreich: neuer Preview-Build mit `paypalAuthVerified=true`, HTTP 200, `readyForSandboxCheckout=true` (18.11.2026, 14:28 Uhr Europe/Berlin).
 - [ ] Sandbox-Testkauf mit virtuellem Geld, Zahlungsbestätigung und Download tatsächlich durchspielen.
 - [ ] Rechtskonforme dauerhafte Kaufbestätigung (automatischer E-Mail-Versand) vor Live-Verkauf einrichten.
 - [ ] Live-PayPal-Zugangsdaten und Webhook erst nach vollständig erfolgreicher Abnahme in Production hinterlegen.
@@ -116,3 +116,13 @@ Freigabe, bevor die offenen Prüfungen abgeschlossen sind.
 - [x] Sichere öffentliche Aktualisierung `bd90ff549aeef494275e37830385f06160eb9520`: irreführenden Hinweis auf fehlende technische Prüfung entfernt, Checkout weiter gesperrt.
 
 Hinweis: Eine bestehende PayPal-Freigabe wird durch HTTP 401 **nicht** bestätigt. Ein Vercel-Build mit Status READY ersetzt keinen echten Zahlungstest. Die Sandbox-Rückleitungsdomain muss auf eine tatsächliche Preview zeigen, nicht auf eine Production-Alias-Domain.
+
+
+## Status nach Sandbox-Test 18.11.2026 (14:35 Uhr, Europe/Berlin)
+
+- [x] Technisch validierte Sandbox-Bereitschaft: OAuth HTTP 200, PDF Rev. 1.3 vorhanden, `readyForSandboxCheckout=true`.
+- [x] Nutzer meldet nach manuell begonnenem PayPal-Sandbox-Test: **„test ok“**. Dies ist eine Nutzerrückmeldung, **keine** serverseitige Bestätigung einer kompletten Capture-/Download-/Webhook-Kette.
+- [x] Unberechtigter PDF-Zugriff ohne Gast-Cookie bleibt HTTP 403.
+- [ ] Serverseitige Belege für den konkreten Sandbox-Capture, Download nach Zahlung, Rückleitung und Webhook-Event fehlen weiterhin; im überprüften Vercel-Preview-Laufzeitprotokoll waren nur Sandbox-Diagnoseaufrufe ersichtlich. Nicht als vollständig abgenommen markieren.
+- [ ] E-Mail-Bestellbestätigung, rechtliche Prüfung und signierte Webhook-Abläufe bleiben Freigabevoraussetzungen für Live.
+- [x] PayPal-Zugangsdaten auf `preview` begrenzt; kein Live-Checkout aktiviert.
