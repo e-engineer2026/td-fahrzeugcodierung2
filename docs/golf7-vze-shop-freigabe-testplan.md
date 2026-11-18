@@ -62,8 +62,11 @@ den geheimen Header x-td-guide-storage-key und akzeptiert denselben Hash.
 ## 4 Tests vor der Freigabe
 
 - [ ] PDF-Upload erfolgreich; SHA256 und Revisionsstand stimmen
-- [ ] Ohne Anmeldung: Käufe, Bestellbestätigung, Download = HTTP 401
-- [ ] Angemeldet ohne Kauf: Download = HTTP 403
+- [ ] Gast ohne Kundenkonto: Bestellung nach drei Einwilligungen möglich (nur Sandbox)
+- [x] Ohne Gast-Cookie / ohne Zahlung: Download = HTTP 403 (Live-Abruf 18.11.)
+- [x] Ohne Gast-Cookie: Bestellbestätigung = HTTP 403 (Live-Abruf 18.11.)
+- [x] Ohne Gast-Cookie: Kaufstatus = HTTP 200, paid=false (Live-Abruf 18.11.)
+- [ ] Nach Testkauf: Download = HTTP 200 ausschließlich im berechtigten Browser
 - [ ] Ohne Einwilligungen: Bestellung = HTTP 400
 - [ ] Sandbox-PayPal: richtige Testsumme, keine echte Abbuchung
 - [ ] PayPal-Abbruch: kein Download
@@ -96,3 +99,20 @@ Freigabe, bevor die offenen Prüfungen abgeschlossen sind.
 - [ ] Sandbox-Testkauf mit virtuellem Geld, Zahlungsbestätigung und Download tatsächlich durchspielen.
 - [ ] Rechtskonforme dauerhafte Kaufbestätigung (automatischer E-Mail-Versand) vor Live-Verkauf einrichten.
 - [ ] Live-PayPal-Zugangsdaten und Webhook erst nach vollständig erfolgreicher Abnahme in Production hinterlegen.
+
+
+## Nachprüfung der Veröffentlichung am 18.11.2026 (13:40 Uhr, Europe/Berlin)
+
+- [x] `/codieranleitungen`: HTTP 200 auf der offiziellen Domain.
+- [x] `/codieranleitungen/golf7-vze`: HTTP 200 auf der offiziellen Domain; Artikel TD-G7-AS-003, Rev 1.3, 13,99 EUR öffentlich angezeigt.
+- [x] `/api/guide-shop/download/golf7-vze`: ohne Zahlung HTTP 403, PDF nicht offen zugänglich.
+- [x] `/api/guide-shop/guest/status`: ohne Kauf HTTP 200, `paid=false`.
+- [x] `/api/guide-shop/guest/confirmation`: ohne Kauf HTTP 403.
+- [x] Produktionspfad `/api/guide-shop/sandbox/check`: HTTP 404; Sandbox-Diagnose nicht öffentlich in Production verfügbar.
+- [x] Separate geschützte Vercel-Preview: Neon erreichbar, `pdfStored=true`, Dokumentrevision 1.3.
+- [!] PayPal-Sandbox in der Preview: OAuth-HTTP 401, `paypalDiagnostic=credentials_rejected`. Sandbox Client-ID/Secret im PayPal-Developer-Dashboard neu kontrollieren und nur in Vercel Preview korrigieren. Keine Schlüssel in GitHub oder Support-Chats kopieren.
+- [ ] End-to-End-Sandbox-Testkauf mit virtuellem Geld, Capture-Prüfung, Webhook, PDF und Bestellbestätigung nach gültigen Zugangsdaten noch ausstehend.
+- [ ] Vor Live-Verkauf: E-Mail-Bestellbestätigung auf dauerhaftem Datenträger, Rechtsfreigabe, PayPal-Live-Konfiguration und Webhook testen.
+- [x] Sichere öffentliche Aktualisierung `bd90ff549aeef494275e37830385f06160eb9520`: irreführenden Hinweis auf fehlende technische Prüfung entfernt, Checkout weiter gesperrt.
+
+Hinweis: Eine bestehende PayPal-Freigabe wird durch HTTP 401 **nicht** bestätigt. Ein Vercel-Build mit Status READY ersetzt keinen echten Zahlungstest. Die Sandbox-Rückleitungsdomain muss auf eine tatsächliche Preview zeigen, nicht auf eine Production-Alias-Domain.
