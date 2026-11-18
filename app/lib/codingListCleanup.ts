@@ -5,6 +5,7 @@
  */
 export function codingNameKey(name: string): string {
   return name.toLocaleLowerCase("de")
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue")
     .replace(/ß/g, "ss")
     .normalize("NFKD")
     .replace(/\p{M}/gu, "")
