@@ -13,8 +13,15 @@ export default function ManualPaypalGuideCheckout() {
   const [paymentOpened, setPaymentOpened] = useState(false);
   const [paid, setPaid] = useState(false);
   const [documentAvailable, setDocumentAvailable] = useState(false);
+  const [orderRef, setOrderRef] = useState(productRef);
 
   useEffect(() => {
+    let reference = window.sessionStorage.getItem("td_g7_pdf_order_ref");
+    if (!reference) {
+      reference = `${productRef}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+      window.sessionStorage.setItem("td_g7_pdf_order_ref", reference);
+    }
+    setOrderRef(reference);
     let active = true;
     void fetch("/api/guide-shop/guest/status", {
       cache: "no-store", credentials: "same-origin",
@@ -31,7 +38,7 @@ export default function ManualPaypalGuideCheckout() {
     return () => { active = false; };
   }, []);
 
-  const contactSubject = encodeURIComponent("PDF-Bestellung Golf 7 VZE – " + productRef);
+  const contactSubject = encodeURIComponent("PDF-Bestellung Golf 7 VZE – " + orderRef);
   const contactBody = encodeURIComponent([
     "Guten Tag,",
     "",
@@ -39,6 +46,7 @@ export default function ManualPaypalGuideCheckout() {
     "Bitte prüfen Sie den Zahlungseingang und senden Sie mir einen persönlichen PDF-Freigabelink.",
     "",
     "PayPal-Transaktionsnummer: ",
+    `Bestellnummer / Verwendungszweck: ${orderRef}`,
     "Name bei PayPal: ",
     "E-Mail-Adresse für den PDF-Versand: ",
     "",
@@ -81,6 +89,11 @@ export default function ManualPaypalGuideCheckout() {
         danach einen <strong>persönlichen Freigabelink per E-Mail</strong>.
         Mit diesem Link lässt sich der geschützte PDF-Download einmalig aktivieren.
         Die Freigabe erfolgt nicht automatisch mit der PayPal-Zahlung.
+      </p>
+      <p className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 text-blue-950">
+        <strong>Deine Bestellnummer: {orderRef}</strong><br />
+        Trage sie bei PayPal als Nachricht oder Verwendungszweck ein. PayPal.Me überträgt sie
+        nicht automatisch. Nenne sie zusammen mit der Transaktionsnummer in deiner E-Mail.
       </p>
       <div className="mt-4 space-y-3 text-slate-700">
         <label className="flex cursor-pointer items-start gap-3">
