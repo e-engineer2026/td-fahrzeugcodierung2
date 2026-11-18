@@ -1,7 +1,7 @@
 # Golf 7 Verkehrszeichenerkennung - Freigabe und Shop-Testplan
 
-Stand: 18.11.2026. Artikel TD-G7-AS-003, Produkt-ID golf7-vze, Revision 1.2, 3 Seiten, 13,99 EUR.
-Status: Prüfentwurf; keine Fahrzeugvalidierung und kein Live-Verkauf.
+Stand: 18.11.2026. Artikel TD-G7-AS-003, Produkt-ID golf7-vze, Revision 1.3, 3 Seiten, 13,99 EUR.
+Status: TD Fahrzeugcodierung hat am 18.11.2026 mehrfach erfolgreiche Fahrzeugtests bestätigt. Fachfreigabe der Anleitung dokumentiert; Shop-Live-Verkauf bleibt bis zum Ende-zu-Ende-Test und zur rechtlichen Abnahme gesperrt.
 
 ## 1 Technische Freigabe, bevor die PDF verkauft wird
 
@@ -52,8 +52,8 @@ Neon-Dokumenten- und Bestelltabellen werden serverseitig angelegt.
 
 Der neue private Admin-Upload ist unter /konto/pdf-verwaltung erreichbar, nach Anmeldung
 mit einem freigegebenen und verifizierten Clerk-Administratorkonto.
-Zugelassen ist nur die zugeordnete Prüffassung TD_Golf7_03_Verkehrszeichenerkennung_Rev12_Pruefentwurf.pdf
-(SHA256 c02f065f4d80414b7a7cedc7c01d291c94488ad0e08a380a9d0ef903772dc805).
+Zugelassen ist nur die zugeordnete Prüffassung TD_Golf7_03_Verkehrszeichenerkennung_Rev13_Fachfreigabe_optimiert.pdf
+(SHA256 9b5accb096bbcd990a13ce68b542dcff1aace9085a43872d3533bf43f2cdcdd0).
 Der Server verifiziert die PDF-Datei und den Hash, speichert den Inhalt privat in Neon
 und stellt ihn nur nach gültiger Zahlung für das angemeldete Käuferkonto bereit.
 Der ältere interne PUT-/api/guide-shop/admin/document-Endpunkt erfordert weiterhin

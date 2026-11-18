@@ -4,8 +4,9 @@ import fs from "node:fs";
 import { resolveShopMode, guideShopReturnOrigin, validateCompletedCapture, GOLF7_VZE } from "../app/lib/guideShopShared.ts";
 import { newGuestToken, hashGuestToken } from "../app/lib/guideGuestToken.ts";
 
-test("Golf 7 VZE Prüfdokument Rev 1.2 nur mit fester Prüfsumme", () => {
-  assert.equal(GOLF7_VZE.revision, "1.2");
+test("Golf 7 VZE Fachfreigabe Rev 1.3 nur mit fester Prüfsumme", () => {
+  assert.equal(GOLF7_VZE.revision, "1.3");
+  assert.equal(GOLF7_VZE.expectedSha256, "9b5accb096bbcd990a13ce68b542dcff1aace9085a43872d3533bf43f2cdcdd0");
   assert.match(GOLF7_VZE.expectedSha256, /^[a-f0-9]{64}$/);
   assert.equal(GOLF7_VZE.pages, 3);
 });

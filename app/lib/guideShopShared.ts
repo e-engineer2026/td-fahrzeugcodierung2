@@ -7,12 +7,12 @@ export const GOLF7_VZE = Object.freeze({
   sku: "TD-G7-AS-003",
   title: "Verkehrszeichenerkennung (VZE / Sign Assist)",
   model: "VW Golf 7 / 7.5 (5G / AU)",
-  revision: "1.2",
-  expectedSha256: "c02f065f4d80414b7a7cedc7c01d291c94488ad0e08a380a9d0ef903772dc805",
+  revision: "1.3",
+  expectedSha256: "9b5accb096bbcd990a13ce68b542dcff1aace9085a43872d3533bf43f2cdcdd0",
   priceCents: 1399,
   currency: "EUR",
   pages: 3,
-  technicalStatus: "Prüfentwurf: fahrzeugspezifische Validierung ausstehend",
+  technicalStatus: "Fachlich freigegeben nach bestätigten Fahrzeugtests durch TD Fahrzeugcodierung am 18.11.2026; Prüfung der konkreten Fahrzeugvariante bleibt erforderlich",
 });
 
 type ShopEnv = Record<string, string | undefined>;

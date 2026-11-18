@@ -46,12 +46,13 @@ export default function Golf7VzePage() {
           </section>
 
           <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-            <div className="flex items-center gap-2 font-bold"><ShieldAlert size={18} />{mode === "live" ? "Technisch freigegebenes Dokument" : "Technischer Freigabestatus: Prüfentwurf"}</div>
-            <p>Die VZE-Codierwege wurden anhand älterer Golf-7-Fachreferenzen abgeglichen,
-              aber noch nicht am konkreten Prüffahrzeug validiert. Sie wurden daher nicht an jeder Kamera- und
-              Infotainmentvariante des Golf 7 nachgewiesen. Die Anleitung ist nur für
-              qualifizierte Fachkräfte bestimmt. Fehlende Lizenzen oder Kalibrierungen
-              können nicht durch Codierung ersetzt werden.</p>
+            <div className="flex items-center gap-2 font-bold"><ShieldAlert size={18} />Fachfreigabe durch TD Fahrzeugcodierung bestätigt</div>
+            <p>TD Fahrzeugcodierung hat am 18.11.2026 bestätigt, dass die VZE-Codierung
+              mehrfach erfolgreich am Fahrzeug getestet wurde. Die Freigabe gilt für die
+              dokumentierten Voraussetzungen und nicht pauschal für sämtliche A5-Kamera-,
+              Kombiinstrument- und MIB-Varianten. Die Anleitung ist nur für qualifizierte
+              Fachkräfte bestimmt. Fehlende Lizenzen oder Kalibrierungen können
+              nicht durch Codierung ersetzt werden.</p>
           </div>
           <div className="mt-6"><Golf7VzeCheckout mode={mode} /></div>
           <p className="mt-4 text-xs leading-5 text-slate-500">
