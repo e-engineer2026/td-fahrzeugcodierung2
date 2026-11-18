@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FileCheck2, ShieldAlert } from "lucide-react";
+import { FileCheck2 } from "lucide-react";
 import Golf7VzeCheckout from "../../components/Golf7VzeCheckout";
 import AccountPaypalGuideCheckout from "../../components/AccountPaypalGuideCheckout";
 import { auth } from "@clerk/nextjs/server";
@@ -48,15 +48,6 @@ export default async function Golf7VzePage() {
               Sicherheitskontrollen, Backup, Funktionsprüfung, Rückbau und Dokumentationsprotokoll</p>
           </section>
 
-          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-            <div className="flex items-center gap-2 font-bold"><ShieldAlert size={18} />Fachfreigabe durch TD Fahrzeugcodierung bestätigt</div>
-            <p>TD Fahrzeugcodierung hat am 18.11.2026 bestätigt, dass die VZE-Codierung
-              mehrfach erfolgreich am Fahrzeug getestet wurde. Die Freigabe gilt für die
-              dokumentierten Voraussetzungen und nicht pauschal für sämtliche A5-Kamera-,
-              Kombiinstrument- und MIB-Varianten. Die Anleitung ist nur für qualifizierte
-              Fachkräfte bestimmt. Fehlende Lizenzen oder Kalibrierungen können
-              nicht durch Codierung ersetzt werden.</p>
-          </div>
           <div className="mt-6">{mode === "off"
             ? <AccountPaypalGuideCheckout signedIn={!!userId} />
             : <Golf7VzeCheckout mode={mode} />}</div>
