@@ -60,10 +60,12 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
     <p className="mt-2">Die Bezahlung erfolgt über PayPal.Me/TiDrechsler. Nach Prüfung des Zahlungseingangs
       schaltet TD Fahrzeugcodierung die PDF in deinem Konto frei. Eine automatische Freigabe gibt es dabei nicht.</p>
     {!order ? <div className="mt-4 space-y-3">
-      <label className="flex gap-2"><input type="checkbox" checked={terms} onChange={e => setTerms(e.target.checked)} />
+      <label className="flex items-start gap-3"><input type="checkbox" checked={terms} onChange={e => setTerms(e.target.checked)}
+        className="mt-1 h-5 w-5 min-w-5 shrink-0 rounded border-slate-300 p-0 accent-blue-700" />
         <span>Ich habe die <Link href="/agb" className="underline">AGB</Link> und
           die <Link href="/widerruf" className="underline">Widerrufsbelehrung</Link> gelesen.</span></label>
-      <label className="flex gap-2"><input type="checkbox" checked={manual} onChange={e => setManual(e.target.checked)} />
+      <label className="flex items-start gap-3"><input type="checkbox" checked={manual} onChange={e => setManual(e.target.checked)}
+        className="mt-1 h-5 w-5 min-w-5 shrink-0 rounded border-slate-300 p-0 accent-blue-700" />
         <span>Mir ist bekannt, dass die PDF erst nach manueller Prüfung der Zahlung in meinem Konto verfügbar wird.</span></label>
       <button type="button" disabled={!terms || !manual || busy} onClick={() => void prepare()}
         className="min-h-11 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white disabled:opacity-50">
