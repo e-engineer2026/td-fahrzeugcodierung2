@@ -4,8 +4,6 @@ import { useState, type FormEvent } from "react";
 import { Copy, LockKeyhole, Mail, ShieldCheck, ShieldX } from "lucide-react";
 
 type ReleaseResult = { link?: string; recipientEmail?: string; error?: string };
-type Payment = { id: string; date: string; amount: string; status: string;
-  note: string; payerEmail: string; productMatch: boolean; released: boolean };
 
 export default function GuideAdminManualRelease() {
   const [email, setEmail] = useState("");
@@ -17,32 +15,6 @@ export default function GuideAdminManualRelease() {
   const [notice, setNotice] = useState("");
   const [revocation, setRevocation] = useState("");
   const [revoking, setRevoking] = useState(false);
-  const [payments, setPayments] = useState<Payment[]>([]);
-  const [paymentStatus, setPaymentStatus] = useState("");
-  const [loadingPayments, setLoadingPayments] = useState(false);
-
-  async function refreshPayments() {
-    setLoadingPayments(true); setPaymentStatus("");
-    try {
-      const response = await fetch("/api/guide-shop/admin/payments", { cache: "no-store", credentials: "same-origin" });
-      const data = await response.json() as { payments?: Payment[]; error?: string };
-      if (!response.ok) {
-        const messages: Record<string, string> = {
-          not_configured: "PayPal-Umsatzsuche ist noch nicht mit dem Empfängerkonto verbunden.",
-          credentials_rejected: "PayPal hat die Zugangsdaten abgelehnt.",
-          reporting_scope_missing: "Der PayPal-App fehlt die Berechtigung „Transaction Search“.",
-          reporting_permission_denied: "PayPal hat den Zugriff auf die Umsatzsuche verweigert.",
-          too_many_results: "Mehr als 100 Treffer. Bitte direkt im PayPal-Konto prüfen.",
-        };
-        throw new Error(messages[data.error ?? ""] ?? "PayPal-Umsätze derzeit nicht abrufbar.");
-      }
-      setPayments(data.payments ?? []);
-      setPaymentStatus(`${data.payments?.length ?? 0} Zahlungen über 13,99 € aus den letzten 14 Tagen gefunden. Neue Zahlungen können bei PayPal verzögert erscheinen.`);
-    } catch (error) {
-      setPayments([]);
-      setPaymentStatus(error instanceof Error ? error.message : "Umsatzsuche fehlgeschlagen.");
-    } finally { setLoadingPayments(false); }
-  }
 
   async function issue(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -60,7 +32,6 @@ export default function GuideAdminManualRelease() {
       setReleasedEmail(data.recipientEmail ?? email);
       setNotice("Freigabelink erstellt. Er wird NICHT automatisch verschickt. Bitte jetzt per E-Mail zustellen.");
       setPaymentVerified(false);
-      void refreshPayments();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Freigabe fehlgeschlagen.");
     } finally { setProcessing(false); }
@@ -122,31 +93,6 @@ export default function GuideAdminManualRelease() {
         eingegangen ist, genau 13,99 EUR beträgt und zur Golf-7-VZE-Anleitung gehört.
         Eine Kundenmeldung oder ein Screenshot genügt nicht als Zahlungsnachweis.
       </p>
-
-      <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h3 className="font-bold">PayPal-Zahlungen im Empfängerkonto</h3>
-          <button type="button" onClick={() => void refreshPayments()} disabled={loadingPayments}
-            className="min-h-10 rounded-lg border border-blue-300 bg-white px-3 font-bold text-blue-800 disabled:opacity-50">
-            {loadingPayments ? "Lade …" : "Zahlungen abrufen"}
-          </button>
-        </div>
-        {paymentStatus && <p role="status" className="mt-2 text-xs text-slate-700">{paymentStatus}</p>}
-        {payments.length > 0 && <ul className="mt-3 space-y-2">
-          {payments.map(payment => <li key={payment.id} className="rounded-lg border border-slate-200 bg-white p-3">
-            <div className="font-semibold">{payment.amount} € · {payment.date ? new Date(payment.date).toLocaleString("de-DE") : "Datum unbekannt"}</div>
-            <p className="break-all text-xs">{payment.id} · {payment.payerEmail || "E-Mail unbekannt"}</p>
-            <p className="text-xs">{payment.status === "S" ? "Abgeschlossen" : "Nicht abgeschlossen"} · {payment.productMatch ? "Artikelnummer gefunden" : "Artikel nicht eindeutig zugeordnet"}{payment.released ? " · Bereits freigegeben" : ""}</p>
-            {payment.note && <p className="text-xs">Verwendungszweck: {payment.note}</p>}
-            <button type="button" disabled={payment.status !== "S" || payment.released || !payment.productMatch}
-              onClick={() => { setTransaction(payment.id); setEmail(payment.payerEmail); setPaymentVerified(false);
-                setNotice("Zahlung ausgewählt. Empfänger und Artikel prüfen und unten bestätigen."); }}
-              className="mt-2 rounded-lg border border-blue-300 px-3 py-2 font-bold text-blue-800 disabled:opacity-50">
-              Für PDF-Freigabe übernehmen
-            </button>
-          </li>)}
-        </ul>}
-      </div>
 
       <form onSubmit={(event) => void issue(event)} className="mt-4 space-y-3">
         <div>

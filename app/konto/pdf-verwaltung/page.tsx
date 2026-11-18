@@ -35,20 +35,6 @@ export default async function GuideAdminPage() {
     {admin ? <>
       <GuideAdminPdfUpload />
       {production && <GuideAdminManualRelease />}
-      {production && <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-sm leading-6">
-        <h2 className="text-lg font-bold">PayPal-Umsatzsuche verbinden</h2>
-        <p className="mt-2">Für die Zahlungsübersicht werden eine Live Client-ID und ein Live Secret
-          einer PayPal-Developer-App des Kontos benötigt, das <strong>paypal.me/TiDrechsler</strong> empfängt.
-          In der App muss „Transaction Search“ aktiviert sein. Die Zugangsdaten gehören als geheime
-          Variablen <strong>PAYPAL_REPORTING_CLIENT_ID</strong> und
-          <strong> PAYPAL_REPORTING_CLIENT_SECRET</strong> in die Produktionsumgebung von Vercel.
-          Danach ist ein neuer Produktions-Build nötig. Es werden keine Zugangsdaten im Browser angezeigt.</p>
-        <p className="mt-2">Die Umsatzsuche kann neue Zahlungen verzögert anzeigen. Bis der Zugriff funktioniert,
-          bleibt die Prüfung direkt im PayPal-Konto und die manuelle Freigabe nutzbar.</p>
-        <a href="https://developer.paypal.com/dashboard/applications/live" target="_blank"
-          rel="noopener noreferrer" className="mt-2 inline-block font-bold text-blue-700 underline">
-          PayPal-Live-App öffnen</a>
-      </section>}
       {preview && <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-sm">
         <h2 className="text-lg font-bold text-slate-900">PayPal-Sandbox-Konfiguration</h2>
         <p className="mt-2 text-slate-600">Status der aktuellen Vercel-Umgebung:
