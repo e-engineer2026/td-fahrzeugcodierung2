@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FileCheck2, LockKeyhole, ShieldAlert } from "lucide-react";
-import { Show } from "@clerk/nextjs";
+import { FileCheck2, ShieldAlert } from "lucide-react";
 import Golf7VzeCheckout from "../../components/Golf7VzeCheckout";
 import { GOLF7_VZE } from "../../lib/guideShopShared";
 import { configuredShopMode } from "../../lib/guidePaypal";
@@ -54,22 +53,11 @@ export default function Golf7VzePage() {
               qualifizierte Fachkräfte bestimmt. Fehlende Lizenzen oder Kalibrierungen
               können nicht durch Codierung ersetzt werden.</p>
           </div>
-          <div className="mt-6">
-            <Show when="signed-in"><Golf7VzeCheckout mode={mode} /></Show>
-            <Show when="signed-out">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm">
-                <p className="font-semibold">Für geschützte Dokumente ist ein Kundenkonto erforderlich.</p>
-                <Link href="/sign-in?redirect_url=%2Fcodieranleitungen%2Fgolf7-vze"
-                  className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white">
-                  <LockKeyhole size={17} /> Anmelden
-                </Link>
-              </div>
-            </Show>
-          </div>
+          <div className="mt-6"><Golf7VzeCheckout mode={mode} /></div>
           <p className="mt-4 text-xs leading-5 text-slate-500">
             Zahlungen ausschließlich über PayPal nach freigeschaltetem Checkout.
             PDF-Downloads werden erst nach einer serverseitig verifizierten Bezahlung
-            für das angemeldete Konto bereitgestellt.
+            für die zugeordnete Gastbestellung bereitgestellt. Eine Registrierung ist nicht nötig.
           </p>
         </div>
       </div>
