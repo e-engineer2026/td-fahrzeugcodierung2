@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FileCheck2, ShieldAlert } from "lucide-react";
 import Golf7VzeCheckout from "../../components/Golf7VzeCheckout";
-import ManualPaypalGuideCheckout from "../../components/ManualPaypalGuideCheckout";
+import AccountPaypalGuideCheckout from "../../components/AccountPaypalGuideCheckout";
+import { auth } from "@clerk/nextjs/server";
 import { GOLF7_VZE } from "../../lib/guideShopShared";
 import { configuredShopMode } from "../../lib/guidePaypal";
 export const dynamic = "force-dynamic";
@@ -11,8 +12,9 @@ export const metadata: Metadata = {
   description: "Technische Prüfunterlagen für Verkehrszeichenerkennung (VZE) am VW Golf 7 / 7.5.",
   robots: { index: false, follow: true },
 };
-export default function Golf7VzePage() {
+export default async function Golf7VzePage() {
   const mode = configuredShopMode();
+  const { userId } = await auth();
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <div className="container-x max-w-4xl py-8 sm:py-12">
@@ -56,13 +58,11 @@ export default function Golf7VzePage() {
               nicht durch Codierung ersetzt werden.</p>
           </div>
           <div className="mt-6">{mode === "off"
-            ? <ManualPaypalGuideCheckout />
+            ? <AccountPaypalGuideCheckout signedIn={!!userId} />
             : <Golf7VzeCheckout mode={mode} />}</div>
           {mode === "off" ? <p className="mt-4 text-xs leading-5 text-slate-500">
-            Die Zahlung über den vorhandenen PayPal.Me-Link wird nicht automatisch
-            mit dem PDF-Shop abgeglichen. Nach Prüfung des Zahlungseingangs sendet
-            TD Fahrzeugcodierung einen persönlichen Freigabelink per E-Mail.
-            Erst nach Aktivierung dieses Links steht der geschützte PDF-Download bereit.
+            Die Zahlung über PayPal.Me wird manuell geprüft. Danach erscheint die PDF
+            im angemeldeten Kundenkonto zum Download.
           </p> : <p className="mt-4 text-xs leading-5 text-slate-500">
             Zahlungen ausschließlich über den technisch freigegebenen PayPal-Checkout.
             PDF-Downloads werden erst nach einer serverseitig verifizierten Bezahlung

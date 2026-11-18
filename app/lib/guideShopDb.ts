@@ -26,6 +26,10 @@ export async function ensureGuideShopSchema() {
   )`;
   await sql`CREATE INDEX IF NOT EXISTS td_guide_orders_user_idx
     ON td_guide_orders (clerk_user_id, product_id, status)`;
+  await sql`ALTER TABLE td_guide_orders ADD COLUMN IF NOT EXISTS buyer_email text`;
+  await sql`ALTER TABLE td_guide_orders ADD COLUMN IF NOT EXISTS paypal_transaction_id text`;
+  await sql`CREATE UNIQUE INDEX IF NOT EXISTS td_guide_orders_manual_transaction_idx
+    ON td_guide_orders (paypal_transaction_id)`;
 
   // Gastbestellungen sind ausdrücklich OHNE Clerk-ID angelegt.
   // Ausschließlich der SHA256-Hash eines kryptografisch zufälligen Browser-Tokens

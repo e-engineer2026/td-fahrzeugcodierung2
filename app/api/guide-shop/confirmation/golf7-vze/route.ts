@@ -12,8 +12,8 @@ export async function GET() {
     const sql = await ensureGuideShopSchema();
     const [order] = await sql`SELECT id, paid_at, amount_cents, currency,
       terms_accepted, withdrawal_acknowledged, immediate_delivery_consent,
-      paypal_order_id FROM td_guide_orders
-      WHERE clerk_user_id=@{userId} AND product_id=@{GOLF7_VZE.id} AND status='paid'
+      paypal_order_id, paypal_transaction_id FROM td_guide_orders
+      WHERE clerk_user_id=${userId} AND product_id=${GOLF7_VZE.id} AND status='paid'
       ORDER BY paid_at DESC LIMIT 1`;
     if (!order) return NextResponse.json({ error: "Keine Bestellbestätigung vorhanden." },
       { status: 403, headers });
@@ -22,7 +22,7 @@ export async function GET() {
       "-------------------------------------------------------",
       "Bestellnummer: " + order.id,
       "Bestelldatum/Zahlung: " + new Date(String(order.paid_at)).toLocaleString("de-DE", {timeZone:"Europe/Berlin"}),
-      "PayPal-Bestell-ID: " + order.paypal_order_id,
+      "PayPal-Referenz: " + (order.paypal_order_id ?? order.paypal_transaction_id),
       "Produkt: " + GOLF7_VZE.title + " - Golf 7 / 7.5",
       "Artikelnummer: " + GOLF7_VZE.sku,
       "Digitales PDF-Dokument, Revision " + GOLF7_VZE.revision,
