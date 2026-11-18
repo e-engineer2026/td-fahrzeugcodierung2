@@ -12,7 +12,14 @@ function authorized(token: string | null): boolean {
 /** Interne PDF-Übergabe. Niemals eine Kundendatei öffentlich in GitHub oder public/ ablegen. */
 export async function PUT(request: Request) {
   const headers = { "Cache-Control": "private, no-store" };
-  if (!authorized(request.headers.get("x-td-guide-storage-key")))
+  // Kurzlebiger Import für die PayPal-Sandbox. Nur Preview, exakt freigegebener PDF-Hash.
+  const importKey = request.headers.get("x-td-guide-import-token");
+  const importSecret = process.env.TD_GUIDE_IMPORT_TOKEN;
+  const importAuthorized = process.env.VERCEL_ENV === "preview" &&
+    !!importKey && !!importSecret && importSecret.length >= 48 &&
+    Buffer.byteLength(importKey) === Buffer.byteLength(importSecret) &&
+    timingSafeEqual(Buffer.from(importKey), Buffer.from(importSecret));
+  if (!authorized(request.headers.get("x-td-guide-storage-key")) && !importAuthorized)
     return NextResponse.json({ error: "Nicht berechtigt." }, { status: 403, headers });
   if (Number(request.headers.get("content-length") || 0) > 2_000_000)
     return NextResponse.json({ error: "Datei zu groß." }, { status: 413, headers });
