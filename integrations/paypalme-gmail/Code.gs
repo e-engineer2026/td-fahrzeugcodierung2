@@ -14,34 +14,60 @@ const TD_REFERENCE_RE = /\bTDG7-[A-F0-9]{8}\b/gi;
 const TD_TRANSACTION_RE = /\b(?:Transaktionscode|Transaction ID|Transaktionsnummer)\s*[:#]?\s*([A-Z0-9]{17})\b/i;
 
 function authenticatedPaypalNotification(message) {
-  const from = String(message.getFrom() || "").match(/(?:<)?(service@paypal\.(?:de|com))(?:>)?/i);
-  if (!from) return false;
-  // Fail closed if Gmail's authenticating results are absent.
-  // Not equivalent to payment verification: the backend checks PayPal itself.
-  const raw = message.getRawContent();
-  const hdr = String(raw).split(/\r?\n\r?\n/)[0].replace(/\r?\n[ \t]+/g, " ");
-  const results = [...hdr.matchAll(/^Authentication-Results:\s*([^\r\n]+)/gim)]
+  const from = String(message.getFrom() || "");
+  const address = from.match(/(?:^|[\s<])(service@paypal\.(?:de|com))(?:>|$)/i);
+  if (!address) return false;
+  // Only receipts delivered directly to the PayPal account's own Gmail inbox.
+  if (!/(?:^|[,<\s])timo\.drechsler@gmail\.com(?:[>,\s]|$)/i.test(String(message.getTo() || "")))
+    return false;
+  const raw = String(message.getRawContent() || "");
+  const header = raw.split(/\r?\n\r?\n/)[0].replace(/\r?\n[ \t]+/g, " ");
+  const results = [...header.matchAll(/^Authentication-Results:\s*([^\r\n]+)/gim)]
     .map(match => match[1]);
+  // Gmail's real PayPal emails use "header.i=@paypal.de", not "header.d=paypal.de".
+  // The DMARC check must be aligned with the PayPal From domain.
   return results.some(value =>
-    /\bmx\.google\.com\b/i.test(value) &&
-    /\bdkim=pass\b[^;\n]*\bheader\.d=paypal\.(?:com|de)\b/i.test(value) &&
+    /^mx\.google\.com\s*;/i.test(value) &&
+    /\bdkim=pass\b[^;\n]*\bheader\.(?:i|d)=@?paypal\.(?:com|de)\b/i.test(value) &&
     /\bdmarc=pass\b[^;\n]*\bheader\.from=paypal\.(?:com|de)\b/i.test(value)
   );
 }
 
+function eurCents(number) {
+  if (!/^\d{1,6}(?:\.\d{3})*,\d{2}$/.test(number)) return null;
+  const parts = number.replace(/\./g, "").split(",");
+  return Number(parts[0]) * 100 + Number(parts[1]);
+}
+
 function extractPayment(message) {
   if (!authenticatedPaypalNotification(message)) return null;
-  const subject = message.getSubject();
-  if (!/Du hast eine Zahlung erhalten|you(?:'|’)ve (?:received|got) (?:money|a payment)/i.test(subject))
+  if (!/Du hast eine Zahlung erhalten|you(?:'|’)ve (?:received|got) (?:money|a payment)/i
+    .test(message.getSubject())) return null;
+  const body = String(message.getPlainBody() || "");
+  const detailsAt = body.indexOf("Transaktionsdetails");
+  if (detailsAt < 0) return null;
+
+  // Check TWO official receipt fields, not customer-entered free text. Reject
+  // a different amount, wrong currency, or an unrecognised email template.
+  const introduction = body.slice(0, detailsAt);
+  const sent = introduction.match(/\bhat dir\s+([\d.,]+)\s*€\s*EUR\s+gesendet\b/i);
+  const details = body.slice(detailsAt, detailsAt + 1600);
+  const received = details.match(/\bErhaltener Betrag\s+([\d.,]+)\s*€\s*EUR\b/i);
+  if (!sent || !received || eurCents(sent[1]) !== 1399 || eurCents(received[1]) !== 1399)
     return null;
-  const body = message.getPlainBody();
+
   const references = [...new Set((body.match(TD_REFERENCE_RE) || []).map(item => item.toUpperCase()))];
-  const txn = body.match(TD_TRANSACTION_RE);
+  const txn = details.match(TD_TRANSACTION_RE);
   if (references.length !== 1 || !txn) return null;
+  const at = message.getDate();
+  if (!(at instanceof Date) || Number.isNaN(at.getTime())) return null;
   return {
     orderReference: references[0],
     paypalTransactionId: txn[1].toUpperCase(),
     gmailMessageId: message.getId(),
+    amountCents: 1399,
+    currency: "EUR",
+    receivedAt: at.toISOString()
   };
 }
 
@@ -89,7 +115,7 @@ function checkPayPalMessages() {
             props.setProperty(key, String(Date.now()));
             console.log("PDF freigegeben: " + payment.orderReference);
           } else {
-            // Keep unprocessed for the next run; PayPal reporting may lag.
+            // Keep unmatched, ambiguous or not-yet-active receipts pending for retry.
             console.log("Freigabe noch offen: " + payment.orderReference + ", HTTP " + status);
           }
         } catch (error) {
