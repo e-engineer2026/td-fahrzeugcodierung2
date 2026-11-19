@@ -9,7 +9,7 @@ import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 const vehicles = [
   { src: "/td-hero-a6-c8-silber-td.webp", brand: "Audi", label: "Audi A6 C8", alt: "Silberner Audi A6 C8 Avant mit TD-Schriftzug und eingeschalteten Scheinwerfern" },
   { src: "/td-hero-s6-c8-blau-td.webp", brand: "Audi", label: "Audi S6 C8", alt: "Blauer Audi S6 C8 Avant mit S6-Emblem, TD-Schriftzug und eingeschalteten Scheinwerfern" },
-  { src: "/td-hero-rs6-c8-gta-style.webp", brand: "Audi", label: "Audi RS6 C8", alt: "Dunkler Audi RS6 C8 Avant vor einer farbigen Küstenstadt bei Sonnenuntergang" },
+  { src: "/td-hero-golf-4-r32-gta-style.webp", brand: "Volkswagen", label: "VW Golf 4 R32", alt: "Tiefblauer VW Golf 4 R32 mit TD-Schriftzug auf einem Steinplatz bei Sonnenuntergang" },
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
