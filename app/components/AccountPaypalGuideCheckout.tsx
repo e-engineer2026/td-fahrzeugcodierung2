@@ -61,8 +61,7 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
   const email = order ? `mailto:info@td-fahrzeugcodierung.de?subject=${encodeURIComponent(`PDF-Zahlung ${order.reference}`)}&body=${encodeURIComponent(`Guten Tag,\n\nich habe die Golf-7-VZE-PDF (13,99 EUR) per PayPal.Me bezahlt.\nBestellnummer: ${order.reference}\nPayPal-Transaktionsnummer: \n\nBitte die Zahlung prüfen und die PDF in meinem Kundenkonto freischalten.`)}` : "";
   return <section className="rounded-xl border border-blue-200 bg-white p-5 text-sm leading-6">
     <h2 className="text-lg font-bold">Golf 7 VZE · PDF für 13,99 €</h2>
-    <p className="mt-2">Die Bezahlung erfolgt über PayPal.Me/TiDrechsler. Nach Prüfung des Zahlungseingangs
-      schaltet TD Fahrzeugcodierung die PDF in deinem Konto frei.</p>
+    <p className="mt-2">Nach Zahlungseingang wird die PDF in deinem Konto freigeschaltet.</p>
     {!order ? <div className="mt-4 space-y-3">
       <label className="flex items-start gap-3"><input type="checkbox" checked={terms} onChange={e => setTerms(e.target.checked)}
         className="mt-1 h-5 w-5 min-w-5 shrink-0 rounded border-slate-300 p-0 accent-blue-700" />
