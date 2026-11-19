@@ -12,6 +12,8 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [paid, setPaid] = useState(false);
+  const [paypalOpened, setPaypalOpened] = useState(false);
+  const [paymentCompletedByCustomer, setPaymentCompletedByCustomer] = useState(false);
   async function checkAccess() {
     try {
       const response = await fetch("/api/guide-shop/purchases", { cache: "no-store" });
@@ -38,6 +40,8 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
       const data = await response.json() as Order & { error?: string };
       if (!response.ok || !data.orderId) throw new Error(data.error ?? "Bestellung nicht erreichbar.");
       setOrder(data);
+      setPaypalOpened(false);
+      setPaymentCompletedByCustomer(false);
     } catch (error) { setMessage(error instanceof Error ? error.message : "Bestellung fehlgeschlagen."); }
     finally { setBusy(false); }
   }
@@ -74,15 +78,25 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
       <p><strong>Deine Bestellnummer: {order.reference}</strong></p>
       <p>Bitte diese Nummer bei PayPal als Nachricht eintragen. PayPal.Me überträgt sie nicht automatisch.</p>
       <a href={order.paypalUrl} target="_blank" rel="noopener noreferrer"
+        onClick={() => setPaypalOpened(true)}
         className="mt-3 inline-flex min-h-11 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white">
         Zahlungspflichtig per PayPal bezahlen · 13,99 €</a>
       <p className="mt-2 text-xs">Vor der Zahlung Empfänger und Betrag bei PayPal prüfen.</p>
-      <p className="mt-2">Nach der Zahlung ist nichts Weiteres nötig, wenn du die Bestellnummer bei PayPal angegeben hast.
-        TD prüft den Zahlungseingang und schaltet die PDF in deinem Konto frei.</p>
-      <button type="button" onClick={() => void checkAccess()}
-        className="mt-3 rounded-lg border border-blue-300 bg-white px-4 py-2 font-bold text-blue-800">Freigabe prüfen</button>
-      <a href={email} className="mt-3 inline-flex rounded-lg border border-blue-300 bg-white px-4 py-2 font-bold text-blue-800">
-        Bestellnummer vergessen? Zahlung melden</a>
+      <p className="mt-2">Nach der Zahlung ist nichts Weiteres nötig, wenn du die Bestellnummer bei PayPal angegeben hast.</p>
+      {paypalOpened && !paymentCompletedByCustomer && (
+        <button type="button" onClick={() => setPaymentCompletedByCustomer(true)}
+          className="mt-3 block rounded-lg border border-blue-300 bg-white px-4 py-2 font-bold text-blue-800">
+          Ich habe die PayPal-Zahlung abgeschlossen
+        </button>
+      )}
+      {paymentCompletedByCustomer && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button type="button" onClick={() => void checkAccess()}
+            className="rounded-lg border border-blue-300 bg-white px-4 py-2 font-bold text-blue-800">Freigabe prüfen</button>
+          <a href={email} className="inline-flex rounded-lg border border-blue-300 bg-white px-4 py-2 font-bold text-blue-800">
+            Bestellnummer vergessen? Zahlung melden</a>
+        </div>
+      )}
       <p className="mt-2 text-xs">Du kannst diese Seite erneut öffnen und deine offene Bestellung im selben Konto wieder aufrufen.</p>
     </div>}
     {message && <p role="status" className="mt-3 text-red-700">{message}</p>}
