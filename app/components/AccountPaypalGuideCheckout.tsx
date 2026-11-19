@@ -55,7 +55,7 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
 
   if (paid) return <section className="rounded-xl border border-green-200 bg-green-50 p-5 text-sm">
     <h2 className="font-bold text-green-900">PDF in deinem Konto freigeschaltet</h2>
-    <p className="mt-2 text-green-900">Die PDF-Datei ist im Konto zum Download freigeschaltet.</p>
+    <p className="mt-2 text-green-900">Nach der Zahlung ist nichts Weiteres nötig. Die PDF-Datei ist im Konto zum Download freigeschaltet.</p>
     <Link href="/konto" className="mt-3 inline-flex rounded-lg bg-blue-700 px-4 py-3 font-bold text-white">PDF in Mein Konto öffnen</Link>
   </section>;
 
