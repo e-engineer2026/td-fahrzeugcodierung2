@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import fs from "node:fs";
 import { resolveHomeVehicleSelection, vehicleBookingHref } from "../app/lib/homeVehicleSelection.ts";
 import { matchesCodingSearch } from "../app/lib/codingSearch.ts";
 import { smartphoneAidForVehicle } from "../app/data/smartphoneAid.ts";
@@ -58,4 +59,30 @@ test("coding search accepts umlauts, transliterations, punctuation, and reordere
   assert.equal(matchesCodingSearch("Komfortschließen – Außenspiegel", "komfortschliessen aussenspiegel"), true);
   assert.equal(matchesCodingSearch("Spiegel anklappen", ""), true);
   assert.equal(matchesCodingSearch("Spiegel anklappen", "spiegel kamera"), false);
+});
+
+test("Golf-7-VZE-PDF ersetzt den generischen VZE-Eintrag in der Anleitungsliste", () => {
+  const guide = fs.readFileSync("app/components/GuideSelector.tsx", "utf8");
+  assert.match(guide, /coding\.id !== "vcds-vze" \|\| !ids\.has\("golf7-vze-pdf"\)/);
+  assert.match(guide, /coding\.id === "golf7-vze-pdf"/);
+  assert.equal(matchesCodingSearch("Verkehrszeichenerkennung (VZE / Sign Assist) aktivieren", "VZE"), true);
+  assert.equal(matchesCodingSearch("Verkehrszeichenerkennung (VZE / Sign Assist) aktivieren", "verkehrszeichen"), true);
+});
+
+test("PDF-Suche durchsucht alle Kategorien, kann geleert werden und findet Umlaute", () => {
+  const guide = fs.readFileSync("app/components/GuideSelector.tsx", "utf8");
+  assert.match(guide, /searching \|\| entry\.category === activeCategory/);
+  assert.match(guide, /searching \|\| idea\.category === activeCategory/);
+  assert.match(guide, /searching \|\| guideCategory\(coding\) === activeCategory/);
+  assert.match(guide, /matchesCodingSearch\(/);
+  assert.match(guide, /setCodingSearch\(" "\)|setCodingSearch\(""\)/);
+  for (const query of ["Rueckleuchten", "rückleuchten", "RÜCKLEUCHTEN"]) {
+    assert.equal(matchesCodingSearch("Rückleuchten aktivieren", query), true);
+  }
+});
+
+test("Entfernter VZE-PayPal-Hinweis erscheint nicht mehr in der PDF-Übersicht", () => {
+  const page = fs.readFileSync("app/codieranleitungen/page.tsx", "utf8");
+  assert.doesNotMatch(page, /Golf 7 VZE: 13,99 €/);
+  assert.doesNotMatch(page, /Weitere Anleitungen sind noch nicht kaufbar/);
 });

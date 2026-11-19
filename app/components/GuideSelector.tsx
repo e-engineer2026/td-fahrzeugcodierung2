@@ -5,6 +5,7 @@ import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
+import { matchesCodingSearch } from "../lib/codingSearch";
 import GuideTable, { type GuideTableRow } from "./GuideTable";
 import { guideDetails } from "../lib/guideDetails";
 import { guideInterface } from "../lib/guideInterface";
@@ -39,7 +40,9 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
   // Gross-/Kleinschreibung, Umlaute, Satzzeichen oder Leerzeichen mehrfach anzeigen.
   return uniqueByCodingName(codingCatalog
     .filter((coding) => ids.has(coding.id) && coding.id !== "diagnose" && coding.uiGroup !== "Diagnose")
-    .filter((coding) => hasDisplayPrice(coding.price)))
+    .filter((coding) => hasDisplayPrice(coding.price))
+    // Die freigegebene Golf-7-VZE-PDF ersetzt den generischen VZE-Katalogeintrag.
+    .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf")))
     .sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
@@ -48,6 +51,7 @@ export default function GuideSelector() {
   const [model, setModel] = useState("");
   const [showModels, setShowModels] = useState(true);
   const [codingSearch, setCodingSearch] = useState("");
+  const searching = codingSearch.trim().length > 0;
   const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
 
   const models = useMemo(
@@ -94,20 +98,19 @@ export default function GuideSelector() {
     })),
     [codings, researchEntries, sourceIdeas]
   );
+  // Eine Suche durchsucht alle vier Kategorien. Ohne Suchbegriff bleibt der
+  // gewählte Kategorienfilter aktiv.
   const visibleResearch = researchEntries.filter((entry) =>
-    entry.category === activeCategory &&
-    [entry.title, entry.note].join(" ").toLocaleLowerCase("de")
-      .includes(codingSearch.trim().toLocaleLowerCase("de"))
+    (searching || entry.category === activeCategory) &&
+    matchesCodingSearch([entry.title, entry.note].join(" "), codingSearch)
   );
   const visibleSourceIdeas = sourceIdeas.filter((idea) =>
-    idea.category === activeCategory &&
-    [idea.title, idea.note].join(" ").toLocaleLowerCase("de")
-      .includes(codingSearch.trim().toLocaleLowerCase("de"))
+    (searching || idea.category === activeCategory) &&
+    matchesCodingSearch([idea.title, idea.note].join(" "), codingSearch)
   );
   const visibleCodings = codings.filter((coding) =>
-    guideCategory(coding) === activeCategory &&
-    [coding.name, coding.uiGroup ?? ""].join(" ").toLocaleLowerCase("de")
-      .includes(codingSearch.trim().toLocaleLowerCase("de"))
+    (searching || guideCategory(coding) === activeCategory) &&
+    matchesCodingSearch([coding.name, coding.uiGroup ?? "", coding.requirements ?? ""].join(" "), codingSearch)
   );
 
   const visibleGuideRows: GuideTableRow[] = [
@@ -305,7 +308,13 @@ export default function GuideSelector() {
             )}
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
+          {searching ? <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm" role="status">
+            <span className="font-semibold text-slate-700">{visibleGuideRows.length} Treffer in allen Kategorien</span>
+            <button type="button" onClick={() => setCodingSearch("")}
+              className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-bold text-blue-700 hover:bg-blue-50">
+              Suche zurücksetzen
+            </button>
+          </div> : <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
             {categoryCounts.map(({ category, count }) => (
               <button key={category} type="button" aria-pressed={activeCategory === category}
                 onClick={() => setActiveCategory(category)}
@@ -315,7 +324,7 @@ export default function GuideSelector() {
                 <span className={activeCategory === category ? "rounded-full bg-white/20 px-2 py-0.5 text-xs" : "rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600"}>{count}</span>
               </button>
             ))}
-          </div>
+          </div>}
 
           <GuideTable rows={visibleGuideRows} />
           {visibleGuideRows.length === 0 && (codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
@@ -336,7 +345,7 @@ export default function GuideSelector() {
           </p>}
           {<p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
             <LockKeyhole size={15} className="mt-1 shrink-0" aria-hidden="true" />
-            Noch keine PDFs kaufbar. Downloads erst nach fertiggestellter Anleitung und serverseitig bestätigter PayPal-Zahlung.
+            Downloads sind nur für freigegebene PDF-Dokumente nach bestätigter Zahlung möglich.
           </p>}
         </section>
       )}
