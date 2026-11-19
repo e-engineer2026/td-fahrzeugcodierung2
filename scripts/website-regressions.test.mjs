@@ -100,3 +100,17 @@ test("Golf 7 VZE: Freigabeaktionen erst nach PayPal und Kundenbestätigung sicht
   assert.match(hiddenActions, /Bestellnummer vergessen\? Zahlung melden/);
   assert.match(component, /setPaymentCompletedByCustomer\(false\)/);
 });
+
+test("Golf-7-VZE-Bestellung ohne zweite manuelle Zahlungs-Checkbox", () => {
+  const checkout = fs.readFileSync("app/components/AccountPaypalGuideCheckout.tsx", "utf8");
+  const orderApi = fs.readFileSync("app/api/guide-shop/account-orders/route.ts", "utf8");
+  assert.doesNotMatch(checkout, /Mir ist bekannt, dass die PDF erst nach manueller Prüfung der Zahlung/);
+  assert.doesNotMatch(checkout, /setManual\(/);
+  assert.doesNotMatch(checkout, /manualDeliveryAccepted/);
+  assert.match(checkout, /disabled=\{!terms \|\| busy\}/);
+  assert.match(checkout, /termsAccepted: terms/);
+  assert.match(orderApi, /body\.termsAccepted !== true/);
+  assert.doesNotMatch(orderApi, /manualDeliveryAccepted/);
+  assert.match(orderApi, /immediate_delivery_consent, withdrawal_acknowledged/);
+  assert.match(orderApi, /'pending', true, false, false/);
+});
