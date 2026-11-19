@@ -86,3 +86,17 @@ test("Entfernter VZE-PayPal-Hinweis erscheint nicht mehr in der PDF-Übersicht",
   assert.doesNotMatch(page, /Golf 7 VZE: 13,99 €/);
   assert.doesNotMatch(page, /Weitere Anleitungen sind noch nicht kaufbar/);
 });
+
+test("Golf 7 VZE: Freigabeaktionen erst nach PayPal und Kundenbestätigung sichtbar", () => {
+  const component = fs.readFileSync("app/components/AccountPaypalGuideCheckout.tsx", "utf8");
+  assert.doesNotMatch(component, /TD prüft den Zahlungseingang und schaltet die PDF in deinem Konto frei\./);
+  assert.match(component, /onClick=\{\(\) => setPaypalOpened\(true\)\}/);
+  assert.match(component, /paypalOpened && !paymentCompletedByCustomer/);
+  assert.match(component, /Ich habe die PayPal-Zahlung abgeschlossen/);
+  assert.match(component, /paymentCompletedByCustomer && \(/);
+  const hiddenActions = component.split("paymentCompletedByCustomer && (")[1];
+  assert.ok(hiddenActions);
+  assert.match(hiddenActions, /Freigabe prüfen/);
+  assert.match(hiddenActions, /Bestellnummer vergessen\? Zahlung melden/);
+  assert.match(component, /setPaymentCompletedByCustomer\(false\)/);
+});
