@@ -30,7 +30,7 @@ function authentic(request: Request, raw: string): boolean {
   const secret = process.env.TD_PAYPALME_GMAIL_SECRET;
   const timestamp = request.headers.get("x-td-timestamp");
   const signature = request.headers.get("x-td-signature");
-  if (!secret || secret.length < 32 || !timestamp || !/^\\d{10}$/.test(timestamp) ||
+  if (!secret || secret.length < 32 || !timestamp || !/^\d{10}$/.test(timestamp) ||
       Math.abs(Math.floor(Date.now() / 1000) - Number(timestamp)) > 300 ||
       !signature || !/^sha256=[a-f0-9]{64}$/i.test(signature)) return false;
   const expected = createHmac("sha256", secret).update(timestamp + "." + raw, "utf8").digest();
