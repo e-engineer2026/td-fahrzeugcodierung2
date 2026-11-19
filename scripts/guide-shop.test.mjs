@@ -214,3 +214,14 @@ test("Doppelte Codierungen und 0-Euro-Angebote aus Fahrzeug- und PDF-Listen entf
   assert.match(pdfCatalog, /hasDisplayPrice\(researchGuideEstimate\(entry\).price\)/);
   assert.match(pdfCatalog, /hasDisplayPrice\(referenceIdeaEstimate\(idea\).price\)/);
 });
+
+test("Golf-7-VZE-Bestellung ohne zusaetzliche Zahlungspruefungs-Checkbox", () => {
+  const checkout = fs.readFileSync("app/components/AccountPaypalGuideCheckout.tsx", "utf8");
+  const route = fs.readFileSync("app/api/guide-shop/account-orders/route.ts", "utf8");
+  assert.doesNotMatch(checkout, /Mir ist bekannt, dass die PDF erst nach manueller Prüfung/);
+  assert.doesNotMatch(checkout, /setManual|manualDeliveryAccepted|!manual/);
+  assert.doesNotMatch(route, /manualDeliveryAccepted/);
+  assert.match(checkout, /termsAccepted: terms/);
+  assert.match(checkout, /disabled=\{!terms \|\| busy\}/);
+  assert.match(route, /body\.termsAccepted !== true/);
+});
