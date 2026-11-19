@@ -35,7 +35,6 @@ export default function CodieranleitungenPage() {
           <div className="mt-4 ml-3 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-700 sm:ml-4"><LockKeyhole size={15} aria-hidden="true" />PDF-Anleitungen</div>
           <h1 className="mt-3 max-w-3xl text-2xl font-black tracking-tight sm:text-3xl">Download PDF-Anleitungen</h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">Professionelle Codieranleitungen für qualifizierte Fachkräfte.</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600"><strong className="text-slate-800">Golf 7 VZE: 13,99 € über PayPal.Me.</strong> Nach Prüfung des Zahlungseingangs steht die PDF im angemeldeten Kundenkonto zum Download bereit. Weitere Anleitungen sind noch nicht kaufbar.</p>
           <details className="group mt-5 max-w-4xl overflow-hidden rounded-xl border-2 border-amber-400 bg-amber-50 text-sm leading-6 text-amber-950" role="note" aria-label="Sicherheitshinweise und Haftungsausschluss">
             <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 font-bold marker:hidden hover:bg-amber-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-amber-700 [&::-webkit-details-marker]:hidden">
               <AlertTriangle size={23} className="shrink-0 text-amber-700" aria-hidden="true" />
