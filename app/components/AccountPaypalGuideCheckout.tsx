@@ -7,7 +7,7 @@ type Order = { orderId: string; reference: string; paypalUrl: string };
 
 export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boolean }) {
   const [terms, setTerms] = useState(false);
-  const [manual, setManual] = useState(false);
+
   const [order, setOrder] = useState<Order | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -35,7 +35,7 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
     try {
       const response = await fetch("/api/guide-shop/account-orders", {
         method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ termsAccepted: terms, manualDeliveryAccepted: manual }),
+        body: JSON.stringify({ termsAccepted: terms }),
       });
       const data = await response.json() as Order & { error?: string };
       if (!response.ok || !data.orderId) throw new Error(data.error ?? "Bestellung nicht erreichbar.");
@@ -68,10 +68,8 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
         className="mt-1 h-5 w-5 min-w-5 shrink-0 rounded border-slate-300 p-0 accent-blue-700" />
         <span>Ich habe die <Link href="/agb" className="underline">AGB</Link> und
           die <Link href="/widerruf" className="underline">Widerrufsbelehrung</Link> gelesen.</span></label>
-      <label className="flex items-start gap-3"><input type="checkbox" checked={manual} onChange={e => setManual(e.target.checked)}
-        className="mt-1 h-5 w-5 min-w-5 shrink-0 rounded border-slate-300 p-0 accent-blue-700" />
-        <span>Mir ist bekannt, dass die PDF erst nach manueller Prüfung der Zahlung in meinem Konto verfügbar wird.</span></label>
-      <button type="button" disabled={!terms || !manual || busy} onClick={() => void prepare()}
+
+      <button type="button" disabled={!terms || busy} onClick={() => void prepare()}
         className="min-h-11 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white disabled:opacity-50">
         {busy ? "Bestellung wird erstellt …" : "Bestellung"}</button>
     </div> : <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
