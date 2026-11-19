@@ -11,10 +11,10 @@ export async function POST(request: Request) {
   if (!userId) return NextResponse.json({ error: "Bitte zuerst anmelden." }, { status: 401, headers });
   if (request.headers.get("origin") !== new URL(request.url).origin)
     return NextResponse.json({ error: "Ungültige Herkunft." }, { status: 403, headers });
-  let body: { termsAccepted?: boolean; manualDeliveryAccepted?: boolean };
+  let body: { termsAccepted?: boolean };
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Ungültige Angaben." }, { status: 400, headers }); }
-  if (body.termsAccepted !== true || body.manualDeliveryAccepted !== true)
-    return NextResponse.json({ error: "Bitte Hinweise und AGB bestätigen." }, { status: 400, headers });
+  if (body.termsAccepted !== true)
+    return NextResponse.json({ error: "Bitte AGB und Widerrufsbelehrung bestätigen." }, { status: 400, headers });
   try {
     const client = await clerkClient();
     const user = await client.users.getUser(userId);
