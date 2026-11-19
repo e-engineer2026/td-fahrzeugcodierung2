@@ -1,81 +1,85 @@
-# PayPal.Me → Gmail → automatische Golf-7-VZE-PDF-Freigabe
+# TD Fahrzeugcodierung: PayPal.Me → Gmail → PDF-Freigabe (ohne PayPal-Live-API)
 
-## Zweck
+## Ablauf
+Der angemeldete Kunde erhält die Bestellnummer `TDG7-XXXXXXXX` und trägt
+sie als **Nachricht zur Zahlung** bei PayPal.Me/TiDrechsler ein. Die Zahlung
+bleibt unverändert bei PayPal.Me. Ein Google Apps Script kontrolliert im
+Gmail-Konto **timo.drechsler@gmail.com** alle 15 Minuten neue
+PayPal-Zahlungseingangsbestätigungen.
 
-Die Zahlung bleibt bei **PayPal.Me/TiDrechsler**. Der Kunde trägt die auf der
-Website angezeigte Bestellnummer `TDG7-XXXXXXXX` als PayPal-Nachricht ein.
-Eine echte PayPal-Eingangs-E-Mail im Gmail-Postfach liefert die Bestellnummer
-und die PayPal-Transaktionsnummer. Ein Google Apps Script kontrolliert diese
-E-Mail und sendet **signiert** eine Freigabeanfrage an die Website.
+Nur wenn die Nachricht eine einzige gültige TDG7-Referenz, eine
+Transaktionsnummer und **13,99 EUR als tatsächlich erhaltenen Betrag**
+ausweist, meldet das Skript sie über eine mit HMAC signierte Anfrage an die
+Website. Die Website ordnet sie einer einzigen offenen Clerk-Bestellung zu
+und schaltet genau diese Golf-7-VZE-PDF frei. Derselbe PayPal-Code ist für
+Kundenkonto-Freigaben einmalig nutzbar. Bei fehlenden Angaben bleibt die
+Bestellung offen.
 
-**Wichtig:** Nur eine E-Mail genügt nicht für die Freigabe. Der Server fragt
-PayPals Transaction Search API nach einer tatsächlich **erfolgreichen
-Eingangszahlung über genau 13,99 EUR** ab und gibt ausschließlich die eine
-passende offene Clerk-Kundenbestellung frei. Dieselbe Transaktionsnummer
-kann nicht mehrfach für Kundenkonten freigegeben werden.
+**Keine PayPal-REST-API / kein PayPal-Live-Checkout erforderlich.**
+Eine authentifizierte PayPal-E-Mail ist aber kein gleichwertiger Beweis für
+einen endgültig gebuchten, nicht zurückgezahlten Zahlungseingang.
+**Restgefahr:** verzögerte Zahlungen, Rückerstattungen, Streitfälle,
+manipulierte Benutzer-Nachrichten und Veränderungen der PayPal-Mailvorlage.
+Der E-Mail-basierte Weg ist ausdrücklich weniger sicher. Das System führt
+keine automatische Rückerstattungsprüfung aus.
 
-## Einmalige Einrichtung (noch NICHT ausgeführt)
+## Einmalige Einrichtung (noch ausstehend)
 
-1. In der [PayPal-Developer-Konsole](https://developer.paypal.com/dashboard/applications/live)
-   Live-REST-Zugangsdaten **des empfangenden PayPal-Kontos** einrichten. Für
-   die Prüfung der bestehenden PayPal.Me-Zahlungen muss Transaction Search
-   für dieses Konto verfügbar und berechtigt sein. Der automatische PayPal-
-   Checkout der Website bleibt ausgeschaltet.
-2. Auf Vercel in **Production** setzen:
-   - `PAYPAL_ENV=live`
-   - `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` mit PayPal Live-Zugangsdaten
-   - `TD_PAYPALME_GMAIL_SECRET` auf einen zufälligen geheimen Wert mit mindestens
-     32 Zeichen (nicht im Repository speichern).
-   - **Nicht** `TD_GUIDE_SHOP_MODE=live` aktivieren. Der normale
-     PayPal.Me-Kauf bleibt unverändert.
-3. In **timo.drechsler@gmail.com** unter [script.google.com](https://script.google.com)
-   ein neues Google Apps Script erstellen. Inhalt von
-   `integrations/paypalme-gmail/Code.gs` einfügen.
-4. Bei **Projekteinstellungen → Skripteigenschaften** setzen:
+1. Bei Vercel im Projekt **td-fahrzeugcodierung → Environment Variables**
+   nur für **Production** einrichten:
+   - `TD_PAYPALME_GMAIL_SECRET` = langes, zufällig generiertes Geheimnis
+     (mindestens 32 Zeichen, nur in sicheren Einstellungen speichern).
+   - `TD_PAYPALME_EMAIL_AUTO_RELEASE=enabled`
+   - **Keine PayPal-Live-Variablen** erforderlich. `TD_GUIDE_SHOP_MODE`
+     bleibt unverändert/off, damit weiter PayPal.Me verwendet wird.
+2. Unter [script.google.com](https://script.google.com) im Google-Konto
+   **timo.drechsler@gmail.com** neues Apps-Script-Projekt erstellen.
+   Datei `integrations/paypalme-gmail/Code.gs` einfügen.
+3. Unter **Projekteinstellungen → Skripteigenschaften** hinzufügen:
    - `RELEASE_URL=https://td-fahrzeugcodierung.de/api/guide-shop/automations/paypalme-email`
-   - `RELEASE_SECRET` auf denselben Geheimwert wie bei Vercel.
-5. Einmal `installTrigger()` ausführen, Google-Berechtigungen für Gmail und
-   externe HTTP-Aufrufe bestätigen. Der Trigger prüft anschließend alle
-   **15 Minuten**, ohne dass ChatGPT geöffnet sein muss.
-6. Nach Veröffentlichung mit einem **echten vollständigen Testkauf** den
-   gesamten Ablauf prüfen. Vorher nicht auf automatische Freigaben verlassen.
-   Die Bestellnummer muss **tatsächlich im lesbaren E-Mail-Text** auftauchen.
-   Authentifizierungsheader müssen DKIM- und DMARC-Prüfungen bestehen.
-7. Falls das aktuelle stündliche ChatGPT-Zahlungsmonitoring parallel läuft,
-   nach erfolgreichem Live-Test deaktivieren, um doppelte Meldungen zu vermeiden.
+   - `RELEASE_SECRET` = **genau dasselbe Geheimnis** wie in Vercel.
+4. Im Apps Script die Funktion `installTrigger` einmal ausführen und
+   die Berechtigungen für **Gmail und UrlFetch** erteilen. Das ist
+   eine Benutzeraktion im Google-Konto, die ChatGPT nicht stellvertretend
+   abschließen kann.
+5. Die Pull-Request-Änderung veröffentlichen, ohne den bestehenden
+   Kaufablauf zu ändern. Eine neue Produktionsbereitstellung ist nötig,
+   damit die Environment Variables aktiv werden.
+6. **Vor dem echten Betrieb:** mit einer vollständigen echten PayPal.Me-
+   Zahlung über 13,99 EUR samt TDG7-Referenz prüfen, dass Gmail die
+   Referenz und Transaktions-ID in der Nachricht ausweist, der Google-
+   Empfangskopf DKIM und DMARC `pass` meldet und anschließend nur das
+   korrekte Kundenkonto die PDF erhält. Bei fehlendem Test weiterhin
+   manuell freigeben.
+7. Nach nachgewiesener Funktionsfähigkeit das separate stündliche
+   ChatGPT-Zahlungsmonitoring prüfen/deaktivieren, damit keine doppelte
+   Bearbeitung entsteht.
 
-## Technisches Verhalten
+## Sicherheitsregeln
 
-- Gmail-Nachrichten werden nur verarbeitet, wenn Absender und Gmail-
-  Authentifizierung zu PayPal passen und **genau eine** TDG7-Referenz sowie
-  eine plausibel formatierte PayPal-Transaktions-ID enthalten sind.
-- Apps Script signiert die Anfrage per HMAC-SHA256. Die Website akzeptiert
-  sie nur mit gültiger Signatur und frischem Zeitstempel.
-- PayPal Transaction Search muss die identische ID, erfolgreichen
-  Eingangsstatus, positiven Betrag, die richtige Währung und eine zur
-  Bestellung zeitlich passende Zahlung melden. Verzögerte Meldungen werden
-  beim nächsten Lauf erneut geprüft. Bei fehlender API-Berechtigung wird
-  **keine** Freigabe vorgenommen.
-- Die bestehende manuelle Freigabe bleibt als Rückfallebene verfügbar.
-  Für Rückzahlungen oder Konfliktfälle ist die bestehende Sperrfunktion
-  in der PDF-Verwaltung zu verwenden, bis eine automatische
-  Rückzahlungsüberwachung separat implementiert ist.
-- Es werden **keine** Passwörter, Live-Geheimnisse, PayPal-Token oder
-  PDFs an Google Apps Script übermittelt.
-- Das Ergebnis ist eine Freigabe im **registrierten Kundenkonto**, keine
-  Versand-E-Mail. Die bisherige Bestellbestätigung per E-Mail wird
-  durch diese Integration nicht nachgerüstet.
+- Nur im **authentifizierten Gmail-Konto** direkt empfangene PayPal-Mails,
+  Absender `service@paypal.de` oder `service@paypal.com`; Gmail-
+  Authentifizierungsheader müssen DKIM und DMARC `pass` für PayPal
+  enthalten. Die Prüfung wurde am Format einer echten PayPal-Mail
+  abgeglichen; eine TDG7-Mail liegt bislang nicht als Muster vor.
+- Nur deutscher bekannter PayPal-Empfangsbeleg mit **zwei** passenden
+  Betragsfeldern (»hat dir … gesendet« und »Erhaltener Betrag«),
+  beide genau 13,99 EUR. Andere Sprachen oder Belegvorlagen
+  werden vorsichtshalber nicht automatisch freigegeben.
+- HMAC-SHA256 über Zeitstempel und Nachrichteninhalt schützt die
+  Freigabe-Schnittstelle; das Geheimnis bleibt außerhalb von GitHub.
+- Die Website prüft Produktionsumgebung, Einmaligkeit, Alter der
+  E-Mail, Zeitbezug zur Bestellung, Artikel, Preis, Währung und
+  vorhandenes PDF vor der Statusänderung.
+- Bei einem Betrag ungleich 13,99 EUR, fehlender/mehrdeutiger
+  Bestellnummer, unbekannter Transaktionsnummer oder einem
+  unsicheren Beleg erfolgt **keine** Freigabe.
+- Keine Automatik für Rückerstattungen oder Streitfälle:
+  Freigabe in der vorhandenen Admin-Verwaltung bei Bedarf sperren.
+  Bereits heruntergeladene PDFs sind nicht rückrufbar.
 
-## Grenzen
-
-Bei älteren PayPal-Zahlungen (älter als 29 Tage), fehlender
-Bestellnummer, nicht verifizierbarer E-Mail, nicht verfügbaren PayPal-
-Reporting-APIs oder mehrdeutigen Bestellungen erfolgt niemals eine
-automatische Freigabe. PayPal.Me erhält **keine automatische
-Bestellnummer aus der Website**; der Kunde muss sie wie bisher als
-Nachricht eintippen.
-
-Diese Änderung ist zur technischen Prüfung vorbereitet und **nicht**
-vollständig eingerichtet, solange die oben genannten Google- und
-Vercel-Schritte nicht abgeschlossen und mit einer realen Zahlung
-verifiziert wurden.
+## Status
+Der GitHub-Entwurf ist noch **nicht live**. Ohne einmalige Google-
+Autorisierung, Schlüsselkonfiguration, Veröffentlichung und einen
+echten End-to-End-Test wird **keine** automatische Freigabe ausgeführt.
+Der bestehende manuelle Ablauf bleibt bis dahin unverändert.
