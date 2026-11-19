@@ -345,7 +345,7 @@ export default function GuideSelector() {
           </p>}
           {<p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
             <LockKeyhole size={15} className="mt-1 shrink-0" aria-hidden="true" />
-            Noch keine PDFs kaufbar. Downloads erst nach fertiggestellter Anleitung und serverseitig bestätigter PayPal-Zahlung.
+            Downloads sind nur für freigegebene PDF-Dokumente nach bestätigter Zahlung möglich.
           </p>}
         </section>
       )}
