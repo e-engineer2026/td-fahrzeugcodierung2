@@ -214,3 +214,15 @@ test("Doppelte Codierungen und 0-Euro-Angebote aus Fahrzeug- und PDF-Listen entf
   assert.match(pdfCatalog, /hasDisplayPrice\(researchGuideEstimate\(entry\).price\)/);
   assert.match(pdfCatalog, /hasDisplayPrice\(referenceIdeaEstimate\(idea\).price\)/);
 });
+
+test("Golf-7-VZE-Kaufhinweise und bestaetigte Freigabe korrekt anzeigen", () => {
+  const component = fs.readFileSync("app/components/AccountPaypalGuideCheckout.tsx", "utf8");
+  assert.doesNotMatch(component, /PayPal.Me überträgt sie nicht automatisch/);
+  assert.doesNotMatch(component, /Vor der Zahlung Empfänger und Betrag bei PayPal prüfen/);
+  assert.match(component, /Nach der Zahlung ist nichts Weiteres nötig\./);
+  assert.match(component, /if \(paid\) return <section/);
+  const releasedBlock = component.split("if (paid) return <section")[1].split("const email")[0];
+  assert.match(releasedBlock, /Die PDF-Datei ist im Konto zum Download freigeschaltet\./);
+  const paymentBlock = component.split("const email")[1];
+  assert.doesNotMatch(paymentBlock, /Die PDF-Datei ist im Konto zum Download freigeschaltet\./);
+});

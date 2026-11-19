@@ -55,6 +55,7 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
 
   if (paid) return <section className="rounded-xl border border-green-200 bg-green-50 p-5 text-sm">
     <h2 className="font-bold text-green-900">PDF in deinem Konto freigeschaltet</h2>
+    <p className="mt-2 text-green-900">Nach der Zahlung ist nichts Weiteres nötig. Die PDF-Datei ist im Konto zum Download freigeschaltet.</p>
     <Link href="/konto" className="mt-3 inline-flex rounded-lg bg-blue-700 px-4 py-3 font-bold text-white">PDF in Mein Konto öffnen</Link>
   </section>;
 
@@ -73,13 +74,12 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
         {busy ? "Bestellung wird erstellt …" : "Bestellung"}</button>
     </div> : <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
       <p><strong>Deine Bestellnummer: {order.reference}</strong></p>
-      <p>Bitte diese Nummer bei PayPal als Nachricht eintragen. PayPal.Me überträgt sie nicht automatisch.</p>
+      <p>Bitte diese Nummer bei PayPal als Nachricht eintragen.</p>
       <a href={order.paypalUrl} target="_blank" rel="noopener noreferrer"
         onClick={() => setPaypalOpened(true)}
         className="mt-3 inline-flex min-h-11 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white">
         Zahlungspflichtig per PayPal bezahlen · 13,99 €</a>
-      <p className="mt-2 text-xs">Vor der Zahlung Empfänger und Betrag bei PayPal prüfen.</p>
-      <p className="mt-2">Nach der Zahlung ist nichts Weiteres nötig, wenn du die Bestellnummer bei PayPal angegeben hast.</p>
+      <p className="mt-2">Nach der Zahlung ist nichts Weiteres nötig.</p>
       {paypalOpened && !paymentCompletedByCustomer && (
         <button type="button" onClick={() => setPaymentCompletedByCustomer(true)}
           className="mt-3 block rounded-lg border border-blue-300 bg-white px-4 py-2 font-bold text-blue-800">
