@@ -284,3 +284,30 @@ test("PayPal-Zeitstempel nur aus angemeldeter eigener Bestellung; Admin gibt nic
   assert.match(checkout, /account-orders\/payment-start/);
   assert.doesNotMatch(start, /SET status='paid'/);
 });
+
+test("Gmail-Import: nur geschuetzte Zahlungshinweise, niemals automatische PDF-Freigabe", () => {
+  const ingest = fs.readFileSync("app/api/guide-shop/gmail-receipts/route.ts", "utf8");
+  const admin = fs.readFileSync("app/api/guide-shop/admin/gmail-connection/route.ts", "utf8");
+  const schema = fs.readFileSync("app/lib/guideShopDb.ts", "utf8");
+  const view = fs.readFileSync("app/components/GuideAdminGmailConnection.tsx", "utf8");
+  const orderView = fs.readFileSync("app/components/GuideAdminAccountOrders.tsx", "utf8");
+  const script = fs.readFileSync("public/td-paypal-gmail-import.gs.txt", "utf8");
+  assert.ok(ingest.includes("timingSafeEqual"));
+  assert.ok(ingest.includes("authorization"));
+  assert.ok(ingest.includes("function isPayPalSender"));
+  assert.ok(ingest.includes("ON CONFLICT (message_id) DO NOTHING"));
+  assert.ok(!ingest.includes("SET status='paid'"));
+  assert.ok(!ingest.includes("td_guide_orders"));
+  assert.ok(ingest.includes("niemals der Mailtext"));
+  assert.ok(admin.includes("await isGuideAdmin()"));
+  assert.ok(admin.includes("randomBytes(32)"));
+  assert.ok(admin.includes('createHash("sha256")'));
+  assert.ok(schema.includes("td_guide_gmail_config"));
+  assert.ok(schema.includes("td_guide_gmail_receipts"));
+  assert.ok(view.includes("Ungeprüfte Gmail-Meldung, keine bestätigte PayPal-Zahlung"));
+  assert.ok(orderView.includes("Gmail-Daten übernommen"));
+  assert.ok(script.includes("PropertiesService.getScriptProperties"));
+  assert.ok(script.includes("tdInstallTrigger"));
+  assert.ok(script.includes("everyMinutes(15)"));
+  assert.ok(script.includes("TD_PDF_WEBHOOK_KEY"));
+});

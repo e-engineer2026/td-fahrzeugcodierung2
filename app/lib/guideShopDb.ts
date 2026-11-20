@@ -70,6 +70,26 @@ export async function ensureGuideShopSchema() {
     redeemed_at timestamptz
   )`;
 
+  // Gmail-Abgleich: Nur gehashter Verbindungsschluessel, niemals OAuth-Tokens oder Mail-Inhalte speichern.
+  await sql`CREATE TABLE IF NOT EXISTS td_guide_gmail_config (
+    id text PRIMARY KEY CHECK (id = 'primary'),
+    secret_hash text NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT now(),
+    last_received_at timestamptz
+  )`;
+  await sql`CREATE TABLE IF NOT EXISTS td_guide_gmail_receipts (
+    message_id text PRIMARY KEY,
+    sender text NOT NULL,
+    subject text NOT NULL,
+    message_at timestamptz NOT NULL,
+    transaction_id text,
+    amount_cents integer,
+    currency text,
+    imported_at timestamptz NOT NULL DEFAULT now()
+  )`;
+  await sql`CREATE INDEX IF NOT EXISTS td_guide_gmail_receipts_time_idx
+    ON td_guide_gmail_receipts (message_at DESC)`;
+
   await sql`CREATE TABLE IF NOT EXISTS td_guide_documents (
     product_id text PRIMARY KEY,
     version text NOT NULL,

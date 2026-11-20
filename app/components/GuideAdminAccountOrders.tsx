@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { suggestPayPalOrderByTime } from "../lib/paypalTimeMatching";
+import GuideAdminGmailConnection, { type GmailReceipt } from "./GuideAdminGmailConnection";
 
 type Order = { id: string; email: string; createdAt: string; paypalStartedAt?: string | null; reference: string };
 
@@ -52,6 +53,16 @@ export default function GuideAdminAccountOrders() {
     } catch (error) { setNotice(error instanceof Error ? error.message : "Sperrung fehlgeschlagen."); }
     finally { setBusy(false); }
   }
+  function useGmailReceipt(receipt: GmailReceipt) {
+    if (receipt.amountCents !== 1399 || !receipt.transactionId) return;
+    // Gmail-Nachrichtendatum ist nicht der Zeitpunkt einer verifizierten PayPal-Zahlung.
+    const date = new Date(receipt.messageAt);
+    const localTime = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    setPaymentTransaction(receipt.transactionId);
+    setPaymentTime(localTime);
+    setNotice("Gmail-Daten übernommen. Die angezeigte Uhrzeit ist das E-Mail-Datum, nicht zwingend die PayPal-Zahlungszeit. Betrag, Empfänger, Transaktions-ID und Zahlungseingang direkt bei PayPal prüfen.");
+  }
+
   const suggestion = suggestPayPalOrderByTime(orders,
     paymentTime ? new Date(paymentTime).getTime() : Number.NaN);
   const suggestedOrder = suggestion.status === "single"
@@ -70,8 +81,9 @@ export default function GuideAdminAccountOrders() {
       <h2 className="text-lg font-bold">Offene PDF-Bestellungen mit Kundenkonto</h2>
       <button type="button" onClick={() => void refresh()} className="rounded-lg border border-blue-300 px-3 py-2 font-bold text-blue-800">Aktualisieren</button>
     </div>
-    <p className="mt-2">Prüfe Betrag 13,99 €, Empfängerkonto, Bestellnummer und endgültigen Eingang direkt bei PayPal.
+    <p className="mt-2">Prüfe Betrag 13,99 €, Empfängerkonto, Zahlungszeit und endgültigen Eingang direkt bei PayPal.
       Eine Kundenmeldung allein reicht nicht. Die Freigabe benötigt die PayPal-Transaktionsnummer.</p>
+    <GuideAdminGmailConnection onUseReceipt={useGmailReceipt} />
     <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
       <h3 className="font-bold text-slate-900">PayPal.Me-Zahlung nach Uhrzeit zuordnen</h3>
       <p className="mt-1 text-xs leading-5 text-slate-700">Übertrage aus der bestätigten PayPal-Transaktion die Transaktionsnummer und die Zahlungszeit.
