@@ -284,3 +284,30 @@ test("PayPal-Zeitstempel nur aus angemeldeter eigener Bestellung; Admin gibt nic
   assert.match(checkout, /account-orders\/payment-start/);
   assert.doesNotMatch(start, /SET status='paid'/);
 });
+
+test("Gmail-Import: nur sichere ungepruefte Zahlungshinweise, keine automatische Freigabe", () => {
+  const ingest = fs.readFileSync("app/api/guide-shop/gmail-receipts/route.ts", "utf8");
+  const admin = fs.readFileSync("app/api/guide-shop/admin/gmail-connection/route.ts", "utf8");
+  const schema = fs.readFileSync("app/lib/guideShopDb.ts", "utf8");
+  const view = fs.readFileSync("app/components/GuideAdminGmailConnection.tsx", "utf8");
+  const orderView = fs.readFileSync("app/components/GuideAdminAccountOrders.tsx", "utf8");
+  const script = fs.readFileSync("public/td-paypal-gmail-import.gs.txt", "utf8");
+  assert.match(ingest, /timingSafeEqual/);
+  assert.match(ingest, /authorization/);
+  assert.match(ingest, /paypal\\.\\(\\?:com\\|de\\)/);
+  assert.match(ingest, /ON CONFLICT \\(message_id\\) DO NOTHING/);
+  assert.doesNotMatch(ingest, /SET status='paid'|SET status="paid"/);
+  assert.doesNotMatch(ingest, /td_guide_orders/);
+  assert.match(ingest, /Mailtext|Mailtext/);
+  assert.match(admin, /await isGuideAdmin\\(\\)/);
+  assert.match(admin, /randomBytes\\(32\\)/);
+  assert.match(admin, /createHash\\("sha256"\\)/);
+  assert.match(schema, /td_guide_gmail_config/);
+  assert.match(schema, /td_guide_gmail_receipts/);
+  assert.match(view, /Ungeprüfte Gmail-Meldung, keine bestätigte PayPal-Zahlung/);
+  assert.match(orderView, /Gmail-Daten übernommen/);
+  assert.match(script, /PropertiesService.getScriptProperties/);
+  assert.match(script, /tdInstallTrigger/);
+  assert.match(script, /everyMinutes\\(15\\)/);
+  assert.match(script, /TD_PDF_WEBHOOK_KEY/);
+});
