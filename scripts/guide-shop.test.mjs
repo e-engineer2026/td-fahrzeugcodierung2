@@ -294,7 +294,7 @@ test("Gmail-Import: nur sichere ungepruefte Zahlungshinweise, keine automatische
   const script = fs.readFileSync("public/td-paypal-gmail-import.gs.txt", "utf8");
   assert.match(ingest, /timingSafeEqual/);
   assert.match(ingest, /authorization/);
-  assert.match(ingest, /paypal\\.\\(\\?:com\\|de\\)/);
+  assert.match(ingest, /function isPayPalSender/);
   assert.match(ingest, /ON CONFLICT \\(message_id\\) DO NOTHING/);
   assert.doesNotMatch(ingest, /SET status='paid'|SET status="paid"/);
   assert.doesNotMatch(ingest, /td_guide_orders/);
