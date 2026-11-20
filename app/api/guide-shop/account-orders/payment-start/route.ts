@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { ensureGuideShopSchema } from "../../../../lib/guideShopDb";
-import { GOLF7_VZE } from "../../../../lib/guideShopShared";
 
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store" };
@@ -20,7 +19,7 @@ export async function POST(request: Request) {
   try {
     const sql = await ensureGuideShopSchema();
     const [updated] = await sql`UPDATE td_guide_orders SET paypal_started_at=now()
-      WHERE id=${id}::uuid AND clerk_user_id=${userId} AND product_id=${GOLF7_VZE.id}
+      WHERE id=${id}::uuid AND clerk_user_id=${userId}
       AND status='pending' RETURNING paypal_started_at`;
     if (!updated) return NextResponse.json({ error: "Offene Bestellung nicht gefunden." }, { status: 404, headers });
     return NextResponse.json({ recorded: true }, { headers });
