@@ -5,10 +5,17 @@ import Link from "next/link";
 
 type Order = { orderId: string; reference: string; paypalUrl: string };
 
+function paypalOpenedForOrder(orderId: string): boolean {
+  try { return sessionStorage.getItem("td-vze-paypal-opened:" + orderId) === "1"; }
+  catch { return false; }
+}
+
 export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boolean }) {
   const [terms, setTerms] = useState(false);
 
   const [order, setOrder] = useState<Order | null>(null);
+  const [restoringOrder, setRestoringOrder] = useState(signedIn);
+  const [referenceCopied, setReferenceCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [paid, setPaid] = useState(false);
@@ -28,7 +35,33 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
     void fetch("/api/guide-shop/purchases", { cache: "no-store" })
       .then(r => r.ok ? r.json() : null)
       .then(data => setPaid(data?.golf7Vze?.paid === true)).catch(() => {});
+    void fetch("/api/guide-shop/account-orders", { cache: "no-store", credentials: "same-origin" })
+      .then(r => r.ok ? r.json() : null)
+      .then((data: { order?: Order | null } | null) => {
+        if (!data?.order) return;
+        setOrder(data.order);
+        setPaypalOpened(paypalOpenedForOrder(data.order.orderId));
+      })
+      .catch(() => { /* Das manuelle Bestellformular bleibt nutzbar. */ })
+      .finally(() => setRestoringOrder(false));
   }, [signedIn]);
+
+  useEffect(() => {
+    if (!order || !paypalOpened) return;
+    try { sessionStorage.setItem("td-vze-paypal-opened:" + order.orderId, "1"); }
+    catch { /* Wiederherstellung ist Komfort, keine Zahlungsfreigabe. */ }
+  }, [order, paypalOpened]);
+
+  async function copyOrderReference() {
+    if (!order) return;
+    try {
+      await navigator.clipboard.writeText(order.reference);
+      setReferenceCopied(true);
+      setMessage("");
+    } catch {
+      setMessage("Die Bestellnummer konnte nicht kopiert werden. Bitte manuell markieren und kopieren.");
+    }
+  }
 
   async function prepare() {
     setBusy(true); setMessage("");
@@ -40,7 +73,8 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
       const data = await response.json() as Order & { error?: string };
       if (!response.ok || !data.orderId) throw new Error(data.error ?? "Bestellung nicht erreichbar.");
       setOrder(data);
-      setPaypalOpened(false);
+      setReferenceCopied(false);
+      setPaypalOpened(paypalOpenedForOrder(data.orderId));
       setPaymentCompletedByCustomer(false);
     } catch (error) { setMessage(error instanceof Error ? error.message : "Bestellung fehlgeschlagen."); }
     finally { setBusy(false); }
@@ -63,7 +97,8 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
   return <section className="rounded-xl border border-blue-200 bg-white p-5 text-sm leading-6">
     <h2 className="text-lg font-bold">Golf 7 VZE · PDF für 13,99 €</h2>
     <p className="mt-2">Nach Zahlungseingang wird die PDF in deinem Konto freigeschaltet.</p>
-    {!order ? <div className="mt-4 space-y-3">
+    {restoringOrder ? <p className="mt-4 text-slate-600" role="status">Deine Bestellung wird geladen …</p>
+    : !order ? <div className="mt-4 space-y-3">
       <label className="flex items-start gap-3"><input type="checkbox" checked={terms} onChange={e => setTerms(e.target.checked)}
         className="mt-1 h-5 w-5 min-w-5 shrink-0 rounded border-slate-300 p-0 accent-blue-700" />
         <span>Ich habe die <Link href="/agb" className="underline">AGB</Link> und
@@ -73,8 +108,14 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
         className="min-h-11 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white disabled:opacity-50">
         {busy ? "Bestellung wird erstellt …" : "Bestellung"}</button>
     </div> : <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
-      <p><strong>Deine Bestellnummer: {order.reference}</strong></p>
-      <p>Bitte diese Nummer bei PayPal als Nachricht eintragen.</p>
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="min-w-0 break-all"><strong>Deine Bestellnummer: {order.reference}</strong></p>
+        <button type="button" onClick={() => void copyOrderReference()}
+          className="min-h-10 rounded-lg border border-blue-300 bg-white px-3 py-2 font-bold text-blue-800">
+          {referenceCopied ? "Nummer kopiert" : "Bestellnummer kopieren"}
+        </button>
+      </div>
+      <p>Die Bestellnummer bei PayPal als Zahlungsnotiz eintragen, sofern das Nachrichtenfeld angeboten wird.</p>
       <a href={order.paypalUrl} target="_blank" rel="noopener noreferrer"
         onClick={() => setPaypalOpened(true)}
         className="mt-3 inline-flex min-h-11 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white">
@@ -94,7 +135,7 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
             Bestellnummer vergessen? Zahlung melden</a>
         </div>
       )}
-      <p className="mt-2 text-xs">Du kannst diese Seite erneut öffnen und deine offene Bestellung im selben Konto wieder aufrufen.</p>
+      <p className="mt-2 text-xs">Die offene Bestellung bleibt in deinem Konto gespeichert. Nach deiner Zahlung erfolgt die Freigabe nach Prüfung des tatsächlichen Zahlungseingangs.</p>
     </div>}
     {message && <p role="status" className="mt-3 text-red-700">{message}</p>}
   </section>;

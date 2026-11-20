@@ -6,6 +6,28 @@ import { GOLF7_VZE } from "../../../lib/guideShopShared";
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store" };
 
+/**
+ * Offene Bestellung fuer das angemeldete Kundenkonto wiederherstellen.
+ * Keine PayPal-Zahlung oder PDF-Freigabe wird durch diesen Endpunkt behauptet.
+ */
+export async function GET() {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "Bitte zuerst anmelden." }, { status: 401, headers });
+  try {
+    const sql = await ensureGuideShopSchema();
+    const [pending] = await sql`SELECT id FROM td_guide_orders
+      WHERE clerk_user_id=${userId} AND product_id=${GOLF7_VZE.id} AND status='pending'
+      ORDER BY created_at DESC LIMIT 1`;
+    return NextResponse.json({ order: pending ? {
+      orderId: pending.id,
+      reference: `TDG7-${String(pending.id).slice(0, 8).toUpperCase()}`,
+      paypalUrl: "https://paypal.me/TiDrechsler/13.99EUR"
+    } : null }, { headers });
+  } catch {
+    return NextResponse.json({ error: "Offene Bestellung konnte nicht geladen werden." }, { status: 500, headers });
+  }
+}
+
 export async function POST(request: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Bitte zuerst anmelden." }, { status: 401, headers });
