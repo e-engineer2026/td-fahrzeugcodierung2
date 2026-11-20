@@ -16,5 +16,6 @@ export const config = {
     "/api/saved-vehicles/:path*",
     "/api/guide-shop/:path*",
     "/codieranleitungen/golf7-vze/:path*",
+    "/codieranleitungen/vze-modelle/:path*",
   ],
 };
