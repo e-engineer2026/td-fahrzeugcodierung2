@@ -390,3 +390,16 @@ test("Fahrzeugauswahl verlinkt VZE-Fachfassungen nur bei passenden MQB-Modellen"
   assert.ok(chooser.includes('"/codieranleitungen/vze-modelle/" + vzePdfSlug'));
   assert.ok(catalog.includes('"Golf Sportsvan AM1"'));
 });
+
+test("VZE-Tabelle: nur passende freigegebene Modell-PDF hat aktiven Produktlink", () => {
+  const selector = fs.readFileSync("app/components/GuideSelector.tsx", "utf8");
+  const indicator = fs.readFileSync("app/components/GuidePriceIndicator.tsx", "utf8");
+  const mapping = fs.readFileSync("app/lib/vzePdfVehicleLinks.ts", "utf8");
+  assert.ok(selector.includes("vzeProductHref(coding.name, vzePdfSlug)"));
+  assert.ok(selector.includes("if (!slug || !/"));
+  assert.ok(selector.includes('"/codieranleitungen/vze-modelle/" + slug'));
+  assert.ok(mapping.includes('"Octavia 3 5E": "skoda-octavia-iii-5e"'));
+  assert.ok(!mapping.includes('"Golf 8 (CD)"'));
+  assert.ok(indicator.includes("In Vorbereitung"));
+  assert.ok(indicator.includes("PDF ansehen"));
+});

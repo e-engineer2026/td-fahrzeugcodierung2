@@ -24,10 +24,10 @@ export default function GuidePriceIndicator({ estimate, productHref }: { estimat
             className="mt-1.5 inline-flex min-h-8 w-full items-center justify-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700 hover:bg-blue-100">
             <Download size={13} aria-hidden="true" /> PDF ansehen
           </Link>
-        : <button type="button" disabled title="PDF-Dokument noch nicht zum Download verfügbar"
-            aria-label="Download noch nicht verfügbar"
+        : <button type="button" disabled title="Für diese Funktion ist noch keine kaufbare PDF hinterlegt."
+            aria-label="PDF noch nicht verfügbar"
             className="mt-1.5 inline-flex min-h-8 w-full cursor-not-allowed items-center justify-center gap-1 rounded-md border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-500 opacity-75">
-            <Download size={13} aria-hidden="true" /> Download
+            <Download size={13} aria-hidden="true" /> In Vorbereitung
           </button>}
     </div>
   );
