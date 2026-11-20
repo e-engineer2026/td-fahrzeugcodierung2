@@ -20,6 +20,13 @@ import { researchedGuidesForModel, type ResearchCategory } from "../data/guideRe
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
 const guideCategories = ["Codierungen", "Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
+
+/** Link only to an actual, model-specific VZE release. The download itself remains paywalled. */
+function vzeProductHref(title: string, slug?: string): string | undefined {
+  if (!slug || !/\bverkehrszeichenerkennung\s+(?:aktivieren|freischalten)\b|\bvze\s+(?:aktivieren|freischalten)\b/i.test(title)) return undefined;
+  return "/codieranleitungen/vze-modelle/" + slug;
+}
+
 type GuideCategory = (typeof guideCategories)[number];
 
 function manufacturerOf(vehicle: Vehicle): Manufacturer {
@@ -140,7 +147,7 @@ export default function GuideSelector() {
       });
       return {
         id: "coding-" + coding.id,
-        productHref: coding.id === "golf7-vze-pdf" ? "/codieranleitungen/golf7-vze" : undefined,
+        productHref: coding.id === "golf7-vze-pdf" ? "/codieranleitungen/golf7-vze" : vzeProductHref(coding.name, vzePdfSlug),
         title: coding.name,
         requirements: guideVehicleRequirements({
           title: coding.name,
