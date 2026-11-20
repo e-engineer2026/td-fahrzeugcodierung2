@@ -43,12 +43,41 @@ export default function GuideAdminVzeVariants() {
     finally { setUploading(false); }
   }
 
+  async function bulkUpload(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setUploading(true); setMessage("");
+    const form = event.currentTarget;
+    try {
+      const response = await fetch("/api/guide-shop/admin/vze-variants/bulk", {
+        method: "POST", credentials: "same-origin", body: new FormData(form),
+      });
+      const data = await response.json() as { stored?: boolean; count?: number; error?: string };
+      if (!response.ok || !data.stored) throw new Error(data.error ?? "Sammelupload fehlgeschlagen.");
+      setMessage(data.count + " VZE-Modell-Prüffassungen privat gespeichert. Keine Kundenfreigabe aktiviert.");
+      form.reset();
+      await refresh();
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Sammelupload fehlgeschlagen."); }
+    finally { setUploading(false); }
+  }
+
   return <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-sm">
     <h2 className="text-lg font-black">VZE-Modell-PDFs · interne Prüffassungen</h2>
     <p className="mt-2 leading-6 text-slate-600">12 dreiseitige modellbezogene Arbeitsfassungen. Nur für
       qualifizierte Fachkräfte; noch keine technische Modellfreigabe und kein Kundenverkauf.
       Die PDFs bleiben in der privaten Datenbank und werden vor dem Speichern per SHA-256 auf
       exakt die vorbereiteten Versionen geprüft.</p>
+    <form onSubmit={event => void bulkUpload(event)} className="mt-4 space-y-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
+      <p className="font-bold text-slate-900">Alle PDFs auf einmal privat speichern</p>
+      <p className="text-xs leading-5 text-slate-600">ZIP-Datei zuerst entpacken, anschließend
+        mehrere oder alle zwölf PDFs gleichzeitig auswählen. Die Datei- und Hash-Prüfung ordnet jedes Modell automatisch zu.</p>
+      <input type="file" multiple required name="pdfs" accept=".pdf,application/pdf"
+        className="block w-full rounded-lg border border-blue-200 bg-white p-2"/>
+      <button disabled={uploading} type="submit"
+        className="min-h-10 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white disabled:opacity-50">
+        {uploading ? "Sammelupload läuft …" : "Ausgewählte PDFs privat hinterlegen"}
+      </button>
+    </form>
+    <p className="mt-4 text-xs font-semibold text-slate-600">Alternativ einzelne Prüffassung hochladen:</p>
     <form onSubmit={event => void upload(event)} className="mt-4 grid gap-3">
       <label className="font-semibold">Modell wählen
         <select required name="slug" value={chosen} onChange={event => setChosen(event.target.value)}
