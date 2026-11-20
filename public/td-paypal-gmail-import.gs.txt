@@ -9,14 +9,33 @@
  * 2. In Google Apps Script > Projekteinstellungen > Skripteigenschaften:
  *      TD_PDF_WEBHOOK_KEY = <einmaliger Schluessel aus der PDF-Verwaltung>
  * 3. Diese Datei als Code.gs einsetzen und tdInstallTrigger einmal ausfuehren.
- * 4. Gmail-Berechtigung bestaetigen. Der Trigger laeuft danach alle 15 Minuten.
+ * 4. Gmail-Berechtigung bestaetigen. Erst wird die Verbindung getestet, danach\n *    laeuft der Trigger alle 15 Minuten.
  */
 
 const TD_PDF_ENDPOINT = 'https://td-fahrzeugcodierung.de/api/guide-shop/gmail-receipts';
 const TD_PDF_QUERY = '(from:paypal.com OR from:paypal.de) newer_than:7d -in:sent -in:spam -in:trash';
 const TD_PDF_RECEIPT = /(zahlung erhalten|zahlung von|hat ihnen .{0,60}gesendet|geld erhalten|received a payment|payment received|you(?:'|’)ve received|sent you money|has sent you money)/i;
 
+function tdTestConnection() {
+  const key = PropertiesService.getScriptProperties().getProperty('TD_PDF_WEBHOOK_KEY');
+  if (!key || !/^[A-Za-z0-9_-]{43}$/.test(key)) {
+    throw new Error('TD_PDF_WEBHOOK_KEY fehlt oder ist ungueltig.');
+  }
+  const response = UrlFetchApp.fetch(TD_PDF_ENDPOINT, {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { Authorization: 'Bearer ' + key },
+    payload: JSON.stringify({ messages: [] }),
+    muteHttpExceptions: true,
+  });
+  if (response.getResponseCode() !== 200) {
+    throw new Error('TD Gmail-Verbindungstest fehlgeschlagen: HTTP ' + response.getResponseCode());
+  }
+  console.log('TD PDF: Verbindungstest erfolgreich. Keine Zahlungsfreigabe vorgenommen.');
+}
+
 function tdInstallTrigger() {
+  tdTestConnection();
   const existing = ScriptApp.getProjectTriggers().filter(
     trigger => trigger.getHandlerFunction() === 'tdForwardPayPalMessages');
   existing.forEach(trigger => ScriptApp.deleteTrigger(trigger));
