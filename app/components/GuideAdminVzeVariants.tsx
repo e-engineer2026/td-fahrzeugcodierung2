@@ -35,7 +35,7 @@ export default function GuideAdminVzeVariants() {
       });
       const payload = await response.json() as { error?: string; stored?: boolean; model?: string };
       if (!response.ok || !payload.stored) throw new Error(payload.error ?? "Upload fehlgeschlagen.");
-      setMessage("Prüffassung für " + payload.model + " privat gespeichert. Kein Kauf oder Kundendownload aktiviert.");
+      setMessage("Fachfassung für " + payload.model + " privat gespeichert. Kundendownload erst nach bestätigter PayPal-Zahlung.");
       form.reset();
       setChosen("");
       await refresh();
@@ -53,7 +53,7 @@ export default function GuideAdminVzeVariants() {
       });
       const data = await response.json() as { stored?: boolean; count?: number; error?: string };
       if (!response.ok || !data.stored) throw new Error(data.error ?? "Sammelupload fehlgeschlagen.");
-      setMessage(data.count + " VZE-Modell-Prüffassungen privat gespeichert. Keine Kundenfreigabe aktiviert.");
+      setMessage(data.count + " VZE-Modell-Fachfassungen privat gespeichert. Kunden erhalten den Download erst nach überprüftem Zahlungseingang.");
       form.reset();
       await refresh();
     } catch (error) { setMessage(error instanceof Error ? error.message : "Sammelupload fehlgeschlagen."); }
@@ -61,13 +61,13 @@ export default function GuideAdminVzeVariants() {
   }
 
   return <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-sm">
-    <h2 className="text-lg font-black">VZE-Modell-PDFs · interne Prüffassungen</h2>
-    <p className="mt-2 leading-6 text-slate-600">12 dreiseitige modellbezogene Arbeitsfassungen. Nur für
-      qualifizierte Fachkräfte; noch keine technische Modellfreigabe und kein Kundenverkauf.
+    <h2 className="text-lg font-black">VZE-Modell-PDFs · vom Anbieter freigegebene Fachfassungen</h2>
+    <p className="mt-2 leading-6 text-slate-600">12 dreiseitige modellbezogene Fachanleitungen. Zur Veröffentlichung von TD freigegeben;
+      die Freigabe gilt nicht pauschal für jedes Fahrzeug und ersetzt keinen Auto-Scan, fehlende Lizenzen oder eine Kalibrierung.
       Die PDFs bleiben in der privaten Datenbank und werden vor dem Speichern per SHA-256 auf
       exakt die vorbereiteten Versionen geprüft.</p>
     <form onSubmit={event => void bulkUpload(event)} className="mt-4 space-y-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
-      <p className="font-bold text-slate-900">Alle PDFs auf einmal privat speichern</p>
+      <p className="font-bold text-slate-900">Alle freigegebenen PDFs privat hinterlegen</p>
       <p className="text-xs leading-5 text-slate-600">ZIP-Datei zuerst entpacken, anschließend
         mehrere oder alle zwölf PDFs gleichzeitig auswählen. Die Datei- und Hash-Prüfung ordnet jedes Modell automatisch zu.</p>
       <input type="file" multiple required name="pdfs" accept=".pdf,application/pdf"
@@ -77,7 +77,7 @@ export default function GuideAdminVzeVariants() {
         {uploading ? "Sammelupload läuft …" : "Ausgewählte PDFs privat hinterlegen"}
       </button>
     </form>
-    <p className="mt-4 text-xs font-semibold text-slate-600">Alternativ einzelne Prüffassung hochladen:</p>
+    <p className="mt-4 text-xs font-semibold text-slate-600">Alternativ einzelne Fachfassung hochladen:</p>
     <form onSubmit={event => void upload(event)} className="mt-4 grid gap-3">
       <label className="font-semibold">Modell wählen
         <select required name="slug" value={chosen} onChange={event => setChosen(event.target.value)}
@@ -86,7 +86,7 @@ export default function GuideAdminVzeVariants() {
           {drafts.map(draft => <option key={draft.slug} value={draft.slug}>{draft.name} ({draft.code})</option>)}
         </select>
       </label>
-      <label className="font-semibold">Passende PDF aus dem bereitgestellten ZIP auswählen
+      <label className="font-semibold">Passende Fachfassung aus dem neuen Rev.-1.0-ZIP auswählen
         <input type="file" required name="pdf" accept=".pdf,application/pdf"
           className="mt-1 block w-full rounded-lg border border-slate-300 p-2" />
       </label>
@@ -106,7 +106,7 @@ export default function GuideAdminVzeVariants() {
               className="rounded-lg border border-blue-200 px-3 py-2 font-bold text-blue-800">
               PDF herunterladen
             </a>
-          : <span className="text-xs text-slate-500">Prüffassung aus ZIP hochladen</span>}
+          : <span className="text-xs text-slate-500">Fachfassung aus ZIP hochladen</span>}
       </div>)}
     </div>
   </section>;
