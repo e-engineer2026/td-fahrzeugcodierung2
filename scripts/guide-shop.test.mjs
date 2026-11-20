@@ -369,3 +369,11 @@ test("12 VZE-Fachfassungen: Bestellung und Downloads sind nur produktgebunden na
   assert.ok(checkout.includes("account-orders/payment-start"));
   assert.ok(purchases.includes("vzeModels"));
 });
+
+test("Neue VZE-Modellseiten aktivieren Clerk Middleware vor auth()", () => {
+  const middleware = fs.readFileSync("proxy.ts", "utf8");
+  const model = fs.readFileSync("app/codieranleitungen/vze-modelle/[slug]/page.tsx", "utf8");
+  assert.ok(model.includes("await auth()"));
+  assert.ok(middleware.includes('"/codieranleitungen/vze-modelle/:path*"'));
+  assert.ok(middleware.includes('"/api/guide-shop/:path*"'));
+});
