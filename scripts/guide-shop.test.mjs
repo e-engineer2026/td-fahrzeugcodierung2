@@ -226,3 +226,21 @@ test("Golf-7-VZE-Kaufhinweise und bestaetigte Freigabe korrekt anzeigen", () => 
   const paymentBlock = component.split("const email")[1];
   assert.doesNotMatch(paymentBlock, /Die PDF-Datei ist im Konto zum Download freigeschaltet\./);
 });
+
+test("PayPal.Me-Bestellung nach Neuladen wiederherstellen, ohne eine Zahlung vorzutäuschen", () => {
+  const checkout = fs.readFileSync("app/components/AccountPaypalGuideCheckout.tsx", "utf8");
+  const route = fs.readFileSync("app/api/guide-shop/account-orders/route.ts", "utf8");
+  assert.match(route, /export async function GET\(\)/);
+  assert.match(route, /const \{ userId \} = await auth\(\)/);
+  assert.match(route, /clerk_user_id=\$\{userId\} AND product_id=\$\{GOLF7_VZE.id\} AND status='pending'/);
+  assert.match(route, /Cache-Control/);
+  assert.match(checkout, /fetch\("\/api\/guide-shop\/account-orders", \{ cache: "no-store", credentials: "same-origin" \}\)/);
+  assert.match(checkout, /setOrder\(data.order\)/);
+  assert.match(checkout, /Bestellnummer kopieren/);
+  assert.match(checkout, /navigator.clipboard.writeText\(order.reference\)/);
+  assert.match(checkout, /paypalOpenedForOrder\(data.order.orderId\)/);
+  assert.match(checkout, /sessionStorage.setItem\("td-vze-paypal-opened:"/);
+  assert.match(checkout, /Nach deiner Zahlung erfolgt die Freigabe nach Prüfung des tatsächlichen Zahlungseingangs/);
+  assert.match(checkout, /if \(paid\) return <section/);
+  assert.doesNotMatch(route, /UPDATE td_guide_orders SET status='paid'/);
+});
