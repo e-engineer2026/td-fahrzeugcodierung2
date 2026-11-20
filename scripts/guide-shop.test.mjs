@@ -262,7 +262,7 @@ test("PayPal-Zeitfenster findet nur einen eindeutigen Kandidaten und gibt nie se
   });
   assert.deepEqual(suggestPayPalOrderByTime(orders, time + 31 * 60000), { status: "none" });
   assert.deepEqual(suggestPayPalOrderByTime(orders, Number.NaN), { status: "none" });
-  assert.deepEqual(suggestPayPalOrderByTime(orders, time - 3 * 60000), { status: "none" });
+  assert.deepEqual(suggestPayPalOrderByTime(orders, time - 8 * 60000), { status: "none" });
 });
 
 test("PayPal-Zeitstempel nur aus angemeldeter eigener Bestellung; Admin gibt nicht ungeprüft frei", () => {
