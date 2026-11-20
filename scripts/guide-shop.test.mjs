@@ -4,6 +4,7 @@ import fs from "node:fs";
 import { resolveShopMode, guideShopReturnOrigin, validateCompletedCapture, GOLF7_VZE } from "../app/lib/guideShopShared.ts";
 import { newGuestToken, hashGuestToken } from "../app/lib/guideGuestToken.ts";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../app/lib/codingListCleanup.ts";
+import { suggestPayPalOrderByTime } from "../app/lib/paypalTimeMatching.ts";
 
 test("Golf 7 VZE Fachfreigabe Rev 1.3 nur mit fester Prüfsumme", () => {
   assert.equal(GOLF7_VZE.revision, "1.3");
@@ -236,11 +237,50 @@ test("PayPal.Me-Bestellung nach Neuladen wiederherstellen, ohne eine Zahlung vor
   assert.match(route, /Cache-Control/);
   assert.match(checkout, /fetch\("\/api\/guide-shop\/account-orders", \{ cache: "no-store", credentials: "same-origin" \}\)/);
   assert.match(checkout, /setOrder\(data.order\)/);
-  assert.match(checkout, /Bestellnummer kopieren/);
-  assert.match(checkout, /navigator.clipboard.writeText\(order.reference\)/);
+  assert.doesNotMatch(checkout, /Bestellnummer kopieren/);
+  assert.match(checkout, /Du musst bei PayPal keine Bestellnummer angeben/);
   assert.match(checkout, /paypalOpenedForOrder\(data.order.orderId\)/);
   assert.match(checkout, /sessionStorage.setItem\("td-vze-paypal-opened:"/);
   assert.match(checkout, /Nach deiner Zahlung erfolgt die Freigabe nach Prüfung des tatsächlichen Zahlungseingangs/);
   assert.match(checkout, /if \(paid\) return <section/);
   assert.doesNotMatch(route, /UPDATE td_guide_orders SET status='paid'/);
+});
+
+test("PayPal-Zeitfenster findet nur einen eindeutigen Kandidaten und gibt nie selbst frei", () => {
+  const time = Date.parse("2026-11-20T18:20:00.000Z");
+  const orders = [
+    { id: "a", createdAt: "2026-11-19T10:00:00.000Z", paypalStartedAt: "2026-11-20T18:15:00.000Z" },
+    { id: "b", createdAt: "2026-11-20T18:17:00.000Z", paypalStartedAt: null },
+  ];
+  assert.deepEqual(suggestPayPalOrderByTime(orders, time), {
+    status: "single", orderId: "a", minutesAfterStart: 5,
+  });
+  const close = [...orders, { id: "c", createdAt: "2026-11-20T18:10:00.000Z",
+    paypalStartedAt: "2026-11-20T18:12:00.000Z" }];
+  assert.deepEqual(suggestPayPalOrderByTime(close, time), {
+    status: "ambiguous", orderIds: ["a", "c"],
+  });
+  assert.deepEqual(suggestPayPalOrderByTime(orders, time + 31 * 60000), { status: "none" });
+  assert.deepEqual(suggestPayPalOrderByTime(orders, Number.NaN), { status: "none" });
+  assert.deepEqual(suggestPayPalOrderByTime(orders, time - 8 * 60000), { status: "none" });
+});
+
+test("PayPal-Zeitstempel nur aus angemeldeter eigener Bestellung; Admin gibt nicht ungeprüft frei", () => {
+  const start = fs.readFileSync("app/api/guide-shop/account-orders/payment-start/route.ts", "utf8");
+  const db = fs.readFileSync("app/lib/guideShopDb.ts", "utf8");
+  const adminRoute = fs.readFileSync("app/api/guide-shop/admin/account-orders/route.ts", "utf8");
+  const admin = fs.readFileSync("app/components/GuideAdminAccountOrders.tsx", "utf8");
+  const checkout = fs.readFileSync("app/components/AccountPaypalGuideCheckout.tsx", "utf8");
+  assert.match(start, /await auth\(\)/);
+  assert.match(start, /clerk_user_id=\$\{userId\}/);
+  assert.match(start, /status='pending'/);
+  assert.match(start, /request.headers.get\("origin"\)/);
+  assert.match(db, /ADD COLUMN IF NOT EXISTS paypal_started_at/);
+  assert.match(adminRoute, /await isGuideAdmin\(\)/);
+  assert.match(adminRoute, /paypal_started_at/);
+  assert.match(admin, /suggestPayPalOrderByTime/);
+  assert.match(admin, /Mehrere Bestellungen passen/);
+  assert.match(admin, /setChecked\(\(previous\) => \(\{ \.\.\.previous, \[suggestedOrder.id\]: false \}\)\)/);
+  assert.match(checkout, /account-orders\/payment-start/);
+  assert.doesNotMatch(start, /SET status='paid'/);
 });

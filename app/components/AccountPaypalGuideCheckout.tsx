@@ -15,7 +15,6 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
 
   const [order, setOrder] = useState<Order | null>(null);
   const [restoringOrder, setRestoringOrder] = useState(signedIn);
-  const [referenceCopied, setReferenceCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [paid, setPaid] = useState(false);
@@ -52,17 +51,6 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
     catch { /* Wiederherstellung ist Komfort, keine Zahlungsfreigabe. */ }
   }, [order, paypalOpened]);
 
-  async function copyOrderReference() {
-    if (!order) return;
-    try {
-      await navigator.clipboard.writeText(order.reference);
-      setReferenceCopied(true);
-      setMessage("");
-    } catch {
-      setMessage("Die Bestellnummer konnte nicht kopiert werden. Bitte manuell markieren und kopieren.");
-    }
-  }
-
   async function prepare() {
     setBusy(true); setMessage("");
     try {
@@ -73,7 +61,6 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
       const data = await response.json() as Order & { error?: string };
       if (!response.ok || !data.orderId) throw new Error(data.error ?? "Bestellung nicht erreichbar.");
       setOrder(data);
-      setReferenceCopied(false);
       setPaypalOpened(paypalOpenedForOrder(data.orderId));
       setPaymentCompletedByCustomer(false);
     } catch (error) { setMessage(error instanceof Error ? error.message : "Bestellung fehlgeschlagen."); }
@@ -108,16 +95,21 @@ export default function AccountPaypalGuideCheckout({ signedIn }: { signedIn: boo
         className="min-h-11 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white disabled:opacity-50">
         {busy ? "Bestellung wird erstellt …" : "Bestellung"}</button>
     </div> : <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="min-w-0 break-all"><strong>Deine Bestellnummer: {order.reference}</strong></p>
-        <button type="button" onClick={() => void copyOrderReference()}
-          className="min-h-10 rounded-lg border border-blue-300 bg-white px-3 py-2 font-bold text-blue-800">
-          {referenceCopied ? "Nummer kopiert" : "Bestellnummer kopieren"}
-        </button>
-      </div>
-      <p>Die Bestellnummer bei PayPal als Zahlungsnotiz eintragen, sofern das Nachrichtenfeld angeboten wird.</p>
+      <p><strong>Deine Bestellnummer: {order.reference}</strong></p>
+      <p>Du musst bei PayPal keine Bestellnummer angeben. Wir gleichen die Zahlungszeit mit deiner Bestellung ab.</p>
       <a href={order.paypalUrl} target="_blank" rel="noopener noreferrer"
-        onClick={() => setPaypalOpened(true)}
+        onClick={() => {
+          setPaypalOpened(true);
+          void fetch("/api/guide-shop/account-orders/payment-start", {
+            method: "POST", credentials: "same-origin", keepalive: true,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: order.orderId }),
+          }).then(response => {
+            if (!response.ok) throw new Error("Zeitstempel konnte nicht gespeichert werden.");
+          }).catch(() => {
+            setMessage("Der Zahlungsstart konnte nicht erfasst werden. Bitte die Bestellnummer bei PayPal als Nachricht eintragen, falls möglich.");
+          });
+        }}
         className="mt-3 inline-flex min-h-11 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white">
         Zahlungspflichtig per PayPal bezahlen · 13,99 €</a>
       <p className="mt-2">Nach der Zahlung ist nichts Weiteres nötig.</p>
