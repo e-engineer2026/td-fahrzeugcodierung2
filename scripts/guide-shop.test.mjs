@@ -377,3 +377,16 @@ test("Neue VZE-Modellseiten aktivieren Clerk Middleware vor auth()", () => {
   assert.ok(middleware.includes('"/codieranleitungen/vze-modelle/:path*"'));
   assert.ok(middleware.includes('"/api/guide-shop/:path*"'));
 });
+
+test("Fahrzeugauswahl verlinkt VZE-Fachfassungen nur bei passenden MQB-Modellen", () => {
+  const map = fs.readFileSync("app/lib/vzePdfVehicleLinks.ts","utf8");
+  const chooser = fs.readFileSync("app/components/GuideSelector.tsx","utf8");
+  const catalog = fs.readFileSync("app/data/catalog8Base.ts","utf8");
+  assert.ok(map.includes('"Octavia 3 5E Facelift": "skoda-octavia-iii-5e"'));
+  assert.ok(map.includes('"A3 / S3 8V": "audi-a3-8v"'));
+  assert.ok(!map.includes('"A3 / S3 8Y"'));
+  assert.ok(!map.includes('"Golf 8 (CD)"'));
+  assert.ok(chooser.includes("vzePdfSlugForModel"));
+  assert.ok(chooser.includes('"/codieranleitungen/vze-modelle/" + vzePdfSlug'));
+  assert.ok(catalog.includes('"Golf Sportsvan AM1"'));
+});
