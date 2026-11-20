@@ -10,11 +10,12 @@ export async function GET() {
   if (!await isGuideAdmin()) return NextResponse.json({ error: "Keine Berechtigung." }, { status: 403, headers });
   try {
     const sql = await ensureGuideShopSchema();
-    const rows = await sql`SELECT id, buyer_email, created_at FROM td_guide_orders
+    const rows = await sql`SELECT id, buyer_email, created_at, paypal_started_at FROM td_guide_orders
       WHERE product_id=${GOLF7_VZE.id} AND status='pending' AND buyer_email IS NOT NULL
       ORDER BY created_at DESC LIMIT 100`;
     return NextResponse.json({ orders: rows.map(row => ({ id: row.id,
       email: row.buyer_email, createdAt: row.created_at,
+      paypalStartedAt: row.paypal_started_at ?? null,
       reference: `TDG7-${String(row.id).slice(0, 8).toUpperCase()}` })) }, { headers });
   } catch { return NextResponse.json({ error: "Bestellungen nicht verfügbar." }, { status: 500, headers }); }
 }
