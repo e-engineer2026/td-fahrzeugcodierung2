@@ -308,6 +308,8 @@ test("Gmail-Import: nur geschuetzte Zahlungshinweise, niemals automatische PDF-F
   assert.ok(orderView.includes("Gmail-Daten übernommen"));
   assert.ok(script.includes("PropertiesService.getScriptProperties"));
   assert.ok(script.includes("tdInstallTrigger"));
+  assert.ok(script.includes("function tdTestConnection()"));
+  assert.ok(script.includes("tdTestConnection();"));
   assert.ok(script.includes("everyMinutes(15)"));
   assert.ok(script.includes("TD_PDF_WEBHOOK_KEY"));
 });

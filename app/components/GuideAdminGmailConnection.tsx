@@ -104,7 +104,7 @@ export default function GuideAdminGmailConnection({
         <li>Unter <strong>Projekteinstellungen → Skripteigenschaften</strong> die Eigenschaft
           {" "}<code>TD_PDF_WEBHOOK_KEY</code> mit dem hier erzeugten Schlüssel anlegen.</li>
         <li>Die Funktion <code>tdInstallTrigger</code> einmal ausführen und Gmail-Zugriff erlauben.
-          Danach werden neue passende Nachrichten regelmäßig übertragen.</li>
+          Der Verbindungstest läuft sofort, danach werden neue passende Nachrichten regelmäßig übertragen.</li>
       </ol>
     </div>
     <div className="mt-4 border-t border-slate-200 pt-3">
