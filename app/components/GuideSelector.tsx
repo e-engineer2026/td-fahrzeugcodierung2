@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
+import Link from "next/link";
+import { vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
@@ -60,6 +62,7 @@ export default function GuideSelector() {
     [manufacturer]
   );
   const vehicle = models.find((item) => item.model === model);
+  const vzePdfSlug = vehicle ? vzePdfSlugForModel(vehicle.model) : undefined;
   const codings = useMemo(() => vehicle ? availableModelCodings(vehicle) : [], [vehicle]);
   const researchEntries = useMemo(() => {
     if (!vehicle) return [];
@@ -326,6 +329,18 @@ export default function GuideSelector() {
             ))}
           </div>}
 
+
+          {vzePdfSlug && <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
+            <div>
+              <p className="text-sm font-bold text-slate-900">Verkehrszeichenerkennung (VZE) · PDF-Fachanleitung</p>
+              <p className="mt-1 text-xs leading-5 text-slate-700">Von TD zur fachlichen Veröffentlichung freigegeben.
+                Prüfe A5-Kameravariante, Navigation und erforderliche Software-/Lizenzstände am Fahrzeug.</p>
+            </div>
+            <Link href={"/codieranleitungen/vze-modelle/" + vzePdfSlug}
+              className="inline-flex min-h-10 items-center rounded-lg bg-blue-700 px-4 py-2 text-xs font-bold text-white">
+              Fachfassung ansehen · 13,99 €
+            </Link>
+          </div>}
           <GuideTable rows={visibleGuideRows} />
           {visibleGuideRows.length === 0 && (codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
@@ -334,7 +349,7 @@ export default function GuideSelector() {
                 : "Für dieses Fahrzeug sind in diesem Bereich noch keine Anleitungen zugeordnet."}
             </p>
           )}
-          {codings.length === 0 && researchEntries.length === 0 && sourceIdeas.length === 0 && (
+          {codings.length === 0 && researchEntries.length === 0 && sourceIdeas.length === 0 && !vzePdfSlug && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
               Für dieses Fahrzeug sind derzeit keine ausreichend geprüften Anleitungen hinterlegt.
               {vehicle.startYear >= 2024 ? " Für neuere Modelle ist vor einer Freigabe insbesondere der SFD-/SFD2-Schutz zu prüfen." : ""}
