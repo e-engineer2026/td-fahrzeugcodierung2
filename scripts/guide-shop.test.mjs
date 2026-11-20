@@ -340,7 +340,9 @@ test("12 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfr
   assert.ok(bulk.includes('createHash("sha256")'));
   assert.ok(download.includes('encode(file_data,\'base64\')'));
   assert.ok(adminPage.includes("GuideAdminVzeVariants"));
-  assert.ok(catalogPage.includes("noch nicht kaufbar") || catalogPage.includes("nach Fachabnahme"));
+  assert.ok(catalogPage.includes("zur Veröffentlichung freigegeben"));
+  assert.ok(catalogPage.includes("erst angeboten"));
+  assert.ok(catalogPage.includes("Modellanleitung ansehen"));
 });
 
 test("12 VZE-Fachfassungen: Bestellung und Downloads sind nur produktgebunden nach Zahlung möglich", () => {
