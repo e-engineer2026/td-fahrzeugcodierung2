@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 export default function VzeModelDraftsPage() {
-  const brandOrder = ["VW", "Škoda", "SEAT", "Audi"];
   return <main className="min-h-screen bg-slate-50 py-10 text-slate-900">
     <div className="container-x max-w-5xl">
       <Link className="text-sm font-semibold text-blue-700" href="/codieranleitungen">← Zurück zu PDF-Anleitungen</Link>
