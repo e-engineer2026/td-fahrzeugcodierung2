@@ -313,3 +313,12 @@ test("Gmail-Import: nur geschuetzte Zahlungshinweise, niemals automatische PDF-F
   assert.ok(script.includes("everyMinutes(15)"));
   assert.ok(script.includes("TD_PDF_WEBHOOK_KEY"));
 });
+
+test("PDF-Administrator: eigener Vercel-Admin-Zugang ohne vorhandene Adminliste zu ersetzen", () => {
+  const admin = fs.readFileSync("app/lib/guideAdmin.ts", "utf8");
+  assert.ok(admin.includes("process.env.TD_GUIDE_ADMIN_EMAILS"));
+  assert.ok(admin.includes("process.env.TD_GUIDE_OWNER_ADMIN_EMAIL"));
+  assert.ok(admin.includes('verification?.status === "verified"'));
+  assert.ok(admin.includes("await auth()"));
+  assert.ok(admin.includes("allow.has("));
+});
