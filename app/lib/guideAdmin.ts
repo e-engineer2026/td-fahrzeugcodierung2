@@ -5,7 +5,9 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 export async function isGuideAdmin(): Promise<boolean> {
   const { userId } = await auth();
   if (!userId) return false;
-  const allow = new Set((process.env.TD_GUIDE_ADMIN_EMAILS ?? "")
+  const configuredAdmins = [process.env.TD_GUIDE_ADMIN_EMAILS, process.env.TD_GUIDE_OWNER_ADMIN_EMAIL]
+    .filter((value): value is string => Boolean(value)).join(",");
+  const allow = new Set(configuredAdmins
     .split(",").map(v => v.trim().toLocaleLowerCase("de")).filter(Boolean));
   if (!allow.size) return false;
   try {
