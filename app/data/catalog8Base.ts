@@ -13,6 +13,13 @@ export { codingGroups, brands };
 const additionalVolkswagenVehicles: Vehicle[] = [
   {
     brand: "Volkswagen",
+    model: "Golf Sportsvan AM1",
+    startYear: 2014,
+    endYear: 2020,
+    platform: "MQB",
+  },
+  {
+    brand: "Volkswagen",
     model: "T-Cross C1",
     startYear: 2019,
     endYear: 2026,
