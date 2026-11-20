@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { suggestPayPalOrderByTime } from "../lib/paypalTimeMatching";
 import GuideAdminGmailConnection, { type GmailReceipt } from "./GuideAdminGmailConnection";
 
-type Order = { id: string; email: string; createdAt: string; paypalStartedAt?: string | null; reference: string };
+type Order = { id: string; email: string; productName: string; amountCents: number; currency: string; createdAt: string; paypalStartedAt?: string | null; reference: string };
 
 export default function GuideAdminAccountOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -33,7 +33,7 @@ export default function GuideAdminAccountOrders() {
       });
       const data = await response.json() as { released?: boolean; error?: string };
       if (!response.ok || !data.released) throw new Error(data.error ?? "Freigabe fehlgeschlagen.");
-      setNotice(`PDF für ${order.email} freigegeben. Der Kunde findet sie jetzt in „Mein Konto“. Bitte informiere ihn über die Freigabe.`);
+      setNotice(`${order.productName}: PDF für ${order.email} freigegeben. Der Kunde findet sie jetzt in „Mein Konto“. Bitte informiere ihn über die Freigabe.`);
       await refresh();
     } catch (error) { setNotice(error instanceof Error ? error.message : "Freigabe fehlgeschlagen."); }
     finally { setBusy(false); }
@@ -81,7 +81,7 @@ export default function GuideAdminAccountOrders() {
       <h2 className="text-lg font-bold">Offene PDF-Bestellungen mit Kundenkonto</h2>
       <button type="button" onClick={() => void refresh()} className="rounded-lg border border-blue-300 px-3 py-2 font-bold text-blue-800">Aktualisieren</button>
     </div>
-    <p className="mt-2">Prüfe Betrag 13,99 €, Empfängerkonto, Zahlungszeit und endgültigen Eingang direkt bei PayPal.
+    <p className="mt-2">Prüfe zu jeder Bestellung den korrekten Betrag, das Empfängerkonto, Zahlungszeit und endgültigen Eingang direkt bei PayPal.
       Eine Kundenmeldung allein reicht nicht. Die Freigabe benötigt die PayPal-Transaktionsnummer.</p>
     <GuideAdminGmailConnection onUseReceipt={useGmailReceipt} />
     <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
@@ -103,7 +103,7 @@ export default function GuideAdminAccountOrders() {
       </div>
       {paymentTime && suggestion.status === "single" && suggestedOrder && (
         <div className="mt-3 text-sm">
-          <p className="font-bold text-blue-900">Ein möglicher Treffer: {suggestedOrder.reference}</p>
+          <p className="font-bold text-blue-900">Ein möglicher Treffer: {suggestedOrder.reference} · {suggestedOrder.productName}</p>
           <p className="break-all text-slate-700">{suggestedOrder.email} · PayPal-Aufruf {new Date(suggestedOrder.paypalStartedAt!).toLocaleString("de-DE")} ·
             Abstand {Math.max(0, Math.round(suggestion.minutesAfterStart))} Minuten</p>
           <button type="button" onClick={acceptSuggestion}
@@ -125,7 +125,8 @@ export default function GuideAdminAccountOrders() {
     </div>
     {orders.length === 0 && <p className="mt-3 text-slate-600">Keine offenen Bestellungen.</p>}
     <ul className="mt-3 space-y-3">{orders.map(order => <li key={order.id} className="rounded-lg border border-slate-200 p-3">
-      <p className="font-bold">{order.reference} · {order.email}</p>
+      <p className="font-bold">{order.reference} · {order.productName}</p>
+      <p className="text-xs text-slate-700">{order.email} · {(order.amountCents / 100).toFixed(2).replace(".", ",")} €</p>
       <p className="text-xs text-slate-600">Bestellung: {new Date(order.createdAt).toLocaleString("de-DE")}
         {order.paypalStartedAt ? ` · PayPal geöffnet: ${new Date(order.paypalStartedAt).toLocaleString("de-DE")}` : " · Kein PayPal-Zeitstempel"}</p>
       <label className="mt-2 block font-semibold">PayPal-Transaktionsnummer

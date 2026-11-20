@@ -231,9 +231,9 @@ test("Golf-7-VZE-Kaufhinweise und bestaetigte Freigabe korrekt anzeigen", () => 
 test("PayPal.Me-Bestellung nach Neuladen wiederherstellen, ohne eine Zahlung vorzutäuschen", () => {
   const checkout = fs.readFileSync("app/components/AccountPaypalGuideCheckout.tsx", "utf8");
   const route = fs.readFileSync("app/api/guide-shop/account-orders/route.ts", "utf8");
-  assert.match(route, /export async function GET\(\)/);
+  assert.match(route, /export async function GET\(request: Request\)/);
   assert.match(route, /const \{ userId \} = await auth\(\)/);
-  assert.match(route, /clerk_user_id=\$\{userId\} AND product_id=\$\{GOLF7_VZE.id\} AND status='pending'/);
+  assert.match(route, /clerk_user_id=\$\{userId\} AND product_id=\$\{product.id\} AND status='pending'/);
   assert.match(route, /Cache-Control/);
   assert.match(checkout, /fetch\("\/api\/guide-shop\/account-orders", \{ cache: "no-store", credentials: "same-origin" \}\)/);
   assert.match(checkout, /setOrder\(data.order\)/);
@@ -330,7 +330,7 @@ test("12 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfr
   const download = fs.readFileSync("app/api/guide-shop/admin/vze-variants/download/route.ts", "utf8");
   const adminPage = fs.readFileSync("app/konto/pdf-verwaltung/page.tsx", "utf8");
   const catalogPage = fs.readFileSync("app/codieranleitungen/vze-modelle/page.tsx", "utf8");
-  assert.equal((catalog.match(/productId: "draft-vze-/g) ?? []).length, 12);
+  assert.equal((catalog.match(/productId: "vze-/g) ?? []).length, 12);
   assert.equal((catalog.match(/sha256: "[a-f0-9]{64}"/g) ?? []).length, 12);
   for (const handler of [upload, bulk, download]) {
     assert.ok(handler.includes("await isGuideAdmin()"));
@@ -341,4 +341,29 @@ test("12 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfr
   assert.ok(download.includes('encode(file_data,\'base64\')'));
   assert.ok(adminPage.includes("GuideAdminVzeVariants"));
   assert.ok(catalogPage.includes("noch nicht kaufbar") || catalogPage.includes("nach Fachabnahme"));
+});
+
+test("12 VZE-Fachfassungen: Bestellung und Downloads sind nur produktgebunden nach Zahlung möglich", () => {
+  const products = fs.readFileSync("app/lib/vzeShopProducts.ts","utf8");
+  const orders = fs.readFileSync("app/api/guide-shop/account-orders/route.ts","utf8");
+  const release = fs.readFileSync("app/api/guide-shop/admin/account-orders/route.ts","utf8");
+  const download = fs.readFileSync("app/api/guide-shop/download/vze/[slug]/route.ts","utf8");
+  const model = fs.readFileSync("app/codieranleitungen/vze-modelle/[slug]/page.tsx","utf8");
+  const checkout = fs.readFileSync("app/components/ModelVzeCheckout.tsx","utf8");
+  const purchases = fs.readFileSync("app/api/guide-shop/purchases/route.ts","utf8");
+  assert.ok(products.includes("guideOrderProductFromId"));
+  assert.ok(products.includes("VZE_MODEL_PRICE_CENTS"));
+  assert.ok(orders.includes("productSlug"));
+  assert.ok(orders.includes("termsAccepted !== true"));
+  assert.ok(orders.includes("sha256="));
+  assert.ok(release.includes("paymentVerified !== true"));
+  assert.ok(release.includes("td_guide_manual_grants"));
+  assert.ok(release.includes("sha256="));
+  assert.ok(download.includes("await auth()"));
+  assert.ok(download.includes("status='paid'"));
+  assert.ok(download.includes("sha256="));
+  assert.ok(!download.includes("isGuideAdmin()"));
+  assert.ok(model.includes("ModelVzeCheckout"));
+  assert.ok(checkout.includes("account-orders/payment-start"));
+  assert.ok(purchases.includes("vzeModels"));
 });

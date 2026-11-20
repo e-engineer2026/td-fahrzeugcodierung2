@@ -42,11 +42,11 @@ export async function POST(request: Request) {
     const sql = await ensureGuideShopSchema();
     for (const draft of verified) {
       await sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data)
-        VALUES (${draft.productId}, '0.1-prueffassung', ${draft.sha256}, decode(${draft.encoded},'base64'))
+        VALUES (${draft.productId}, '1.0-fachfassung', ${draft.sha256}, decode(${draft.encoded},'base64'))
         ON CONFLICT (product_id) DO UPDATE SET
           version=EXCLUDED.version, sha256=EXCLUDED.sha256,
           file_data=EXCLUDED.file_data, uploaded_at=now()`;
     }
     return NextResponse.json({ stored: true, count: verified.length }, { status: 201, headers });
-  } catch { return NextResponse.json({ error: "Privater PDF-Sammelupload fehlgeschlagen." }, { status: 500, headers }); }
+  } catch { return NextResponse.json({ error: "Privater Fachfassungs-Sammelupload fehlgeschlagen." }, { status: 500, headers }); }
 }
