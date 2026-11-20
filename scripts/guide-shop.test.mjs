@@ -322,3 +322,23 @@ test("PDF-Administrator: eigener Vercel-Admin-Zugang ohne vorhandene Adminliste 
   assert.ok(admin.includes("await auth()"));
   assert.ok(admin.includes("allow.has("));
 });
+
+test("12 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfreigabe", () => {
+  const catalog = fs.readFileSync("app/lib/vzeVariantDrafts.ts", "utf8");
+  const upload = fs.readFileSync("app/api/guide-shop/admin/vze-variants/route.ts", "utf8");
+  const bulk = fs.readFileSync("app/api/guide-shop/admin/vze-variants/bulk/route.ts", "utf8");
+  const download = fs.readFileSync("app/api/guide-shop/admin/vze-variants/download/route.ts", "utf8");
+  const adminPage = fs.readFileSync("app/konto/pdf-verwaltung/page.tsx", "utf8");
+  const catalogPage = fs.readFileSync("app/codieranleitungen/vze-modelle/page.tsx", "utf8");
+  assert.equal((catalog.match(/productId: "draft-vze-/g) ?? []).length, 12);
+  assert.equal((catalog.match(/sha256: "[a-f0-9]{64}"/g) ?? []).length, 12);
+  for (const handler of [upload, bulk, download]) {
+    assert.ok(handler.includes("await isGuideAdmin()"));
+    assert.ok(!handler.includes("SET status='paid'"));
+  }
+  assert.ok(upload.includes('createHash("sha256")'));
+  assert.ok(bulk.includes('createHash("sha256")'));
+  assert.ok(download.includes('encode(file_data,\'base64\')'));
+  assert.ok(adminPage.includes("GuideAdminVzeVariants"));
+  assert.ok(catalogPage.includes("noch nicht kaufbar") || catalogPage.includes("nach Fachabnahme"));
+});
