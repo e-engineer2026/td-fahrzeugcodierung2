@@ -361,8 +361,17 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
     ? [{ ...entry, id: entry.id + "-carplay", name: "Apple CarPlay Wireless aktivieren" }, { ...entry, id: entry.id + "-android", name: "Android Auto Wireless aktivieren" }]
     : [entry]);
   const selectedGolf7Offers = entries.filter((entry) => isSelectedGolf7OfferId(entry.id));
-  const selectedKeys = new Set(selectedGolf7Offers.map((entry) => selectedGolf7OfferKey(entry.name)));
-  entries = entries.filter((entry) => !isSelectedGolf7OfferId(entry.id) && !selectedKeys.has(selectedGolf7OfferKey(entry.name)));
+  // An undefined key means "unrelated offer", not "duplicate of the Golf 7 PDF".
+  // The VZE special offer has no overlap key, so a Set containing undefined
+  // used to hide every unrelated Golf 7 coding from the configurator.
+  const selectedKeys = new Set(selectedGolf7Offers
+    .map((entry) => selectedGolf7OfferKey(entry.name))
+    .filter((key): key is string => Boolean(key)));
+  entries = entries.filter((entry) => {
+    if (isSelectedGolf7OfferId(entry.id)) return false;
+    const key = selectedGolf7OfferKey(entry.name);
+    return !key || !selectedKeys.has(key);
+  });
   // Preserve the dedicated smartphone navigation offer and its exact device requirements instead
   // of merging it into generic cockpit design or navigation display settings.
   const smartphoneAid = entries.filter((entry) => isSmartphoneAidId(entry.id));
