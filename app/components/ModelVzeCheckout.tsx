@@ -72,7 +72,7 @@ export default function ModelVzeCheckout({ signedIn, slug, name }: {
   return <section className="mt-6 rounded-xl border border-blue-200 bg-white p-5 text-sm">
     <h2 className="text-lg font-black">VZE-Fachfassung {name} · 13,99 €</h2>
     <p className="mt-2 text-slate-600">Einmaliger Kauf einer modellbezogenen PDF. Zahlung über PayPal.Me;
-      Freigabe erfolgt nach tatsächlicher Prüfung des Zahlungseingangs. Das ist kein automatischer PayPal-Checkout.</p>
+      Freigabe erfolgt nach tatsächlicher Prüfung des Zahlungseingangs.</p>
     {restoring ? <p className="mt-3 text-slate-600">Offene Bestellung wird geladen …</p>
       : !order ? <div className="mt-4 space-y-3">
         <label className="flex items-start gap-2">
