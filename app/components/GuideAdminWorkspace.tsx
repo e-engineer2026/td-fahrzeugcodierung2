@@ -84,6 +84,10 @@ export default function GuideAdminWorkspace({ production, preview, liveMode, liv
         <p className="mt-3 text-xs leading-5 text-slate-600">
           Eine grüne Konfiguration ersetzt weder eine echte Testzahlung noch die fachliche und rechtliche Prüfung.
         </p>
+        {preview && <p className="mt-2 text-xs leading-5 text-slate-600">
+          Für PayPal-Webhook-Tests kann ein abgesicherter Vercel Automation Bypass erforderlich sein.
+          Er ersetzt niemals die PayPal-Signaturprüfung.
+        </p>}
         <a href="https://vercel.com/e-engineer2026s-projects/td-fahrzeugcodierung/settings/environment-variables"
           target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-xs font-bold text-blue-700 underline">
           Vercel-Einstellungen
