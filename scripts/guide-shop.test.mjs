@@ -427,3 +427,11 @@ test("PDF-Admin ist mobil in drei Bereiche gegliedert, ohne sichere Aktionen zu 
   assert.ok(files.includes("Alle 13 Dokumente und Downloads anzeigen"));
   assert.ok(files.includes('bulkUpload'));
 });
+
+test("PayPal-Admin: Zahlungspruefungs-Checkbox bleibt auf Mobilgeraeten klein", () => {
+  const css = fs.readFileSync("app/globals.css", "utf8");
+  const orders = fs.readFileSync("app/components/GuideAdminAccountOrders.tsx", "utf8");
+  assert.ok(css.includes('input:not([type="checkbox"]):not([type="radio"]), select, textarea'));
+  assert.ok(orders.includes('type="checkbox" className="mt-1 h-4 w-4 shrink-0'));
+  assert.match(orders, /paymentVerified: checked\[order\.id\]/);
+});
