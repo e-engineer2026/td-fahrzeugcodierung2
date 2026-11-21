@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isGuideAdmin } from "../../../../../lib/guideAdmin";
 import { ensureGuideShopSchema } from "../../../../../lib/guideShopDb";
-import { findVzeDraft } from "../../../../../lib/vzeVariantDrafts";
+import { findVzeAdminDocument } from "../../../../../lib/vzeAdminDocuments";
 
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
@@ -9,7 +9,7 @@ const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options"
 /** Interne Prüffassungen sind keine gekauften Produkte: Downloads nur für verifizierte Admins. */
 export async function GET(request: Request) {
   if (!await isGuideAdmin()) return NextResponse.json({ error: "Keine Berechtigung." }, { status: 403, headers });
-  const draft = findVzeDraft(new URL(request.url).searchParams.get("slug") ?? "");
+  const draft = findVzeAdminDocument(new URL(request.url).searchParams.get("slug") ?? "");
   if (!draft) return NextResponse.json({ error: "Modell nicht gefunden." }, { status: 404, headers });
   try {
     const sql = await ensureGuideShopSchema();
