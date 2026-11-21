@@ -65,8 +65,7 @@ export default function GuideAdminGmailConnection({
         Aktualisieren
       </button>
     </div>
-    <p className="mt-2 text-slate-700">PayPal.Me-Zahlungseingänge aus deinem Gmail-Postfach automatisch
-      als unverifizierte Hinweise in diese Verwaltung übernehmen. Die PDF wird niemals allein durch eine Mail freigeschaltet.</p>
+    <p className="mt-2 text-xs text-slate-600">Importierte PayPal-Mails helfen bei der Zuordnung. Die Zahlung muss weiterhin in PayPal geprüft werden.</p>
     <p className="mt-2 text-xs text-slate-600">
       {state?.configured ? "Verbindungsschlüssel eingerichtet." : "Noch kein Verbindungsschlüssel eingerichtet."}
       {" "}Letzter erfolgreicher Import: {state?.lastReceivedAt
@@ -74,6 +73,8 @@ export default function GuideAdminGmailConnection({
         : "Noch keiner"}
     </p>
 
+    <details className="mt-3 rounded-lg border border-slate-200 p-3">
+      <summary className="cursor-pointer font-semibold text-blue-800">Gmail-Verbindung einrichten oder ändern</summary>
     <div className="mt-3 flex flex-wrap gap-2">
       <button type="button" disabled={busy} onClick={() => void createKey()}
         className="rounded-lg border border-blue-300 bg-blue-50 px-3 py-2 font-bold text-blue-800 disabled:opacity-50">
@@ -107,6 +108,7 @@ export default function GuideAdminGmailConnection({
           Der Verbindungstest läuft sofort, danach werden neue passende Nachrichten regelmäßig übertragen.</li>
       </ol>
     </div>
+    </details>
     <div className="mt-4 border-t border-slate-200 pt-3">
       <h4 className="font-bold">Importierte PayPal-Mailhinweise</h4>
       {state?.receipts.length ? <ul className="mt-2 space-y-2">
