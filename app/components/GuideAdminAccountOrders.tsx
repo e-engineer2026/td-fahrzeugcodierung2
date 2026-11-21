@@ -78,14 +78,15 @@ export default function GuideAdminAccountOrders() {
 
   return <section className="mt-6 rounded-xl border border-blue-200 bg-white p-5 text-sm">
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h2 className="text-lg font-bold">Offene PDF-Bestellungen mit Kundenkonto</h2>
+      <h2 className="text-lg font-bold">Offene Bestellungen</h2>
       <button type="button" onClick={() => void refresh()} className="rounded-lg border border-blue-300 px-3 py-2 font-bold text-blue-800">Aktualisieren</button>
     </div>
-    <p className="mt-2">Prüfe zu jeder Bestellung den korrekten Betrag, das Empfängerkonto, Zahlungszeit und endgültigen Eingang direkt bei PayPal.
-      Eine Kundenmeldung allein reicht nicht. Die Freigabe benötigt die PayPal-Transaktionsnummer.</p>
+    <p className="mt-2 text-xs text-slate-600">Freigabe erst nach Prüfung des tatsächlichen Zahlungseingangs in PayPal.</p>
     <GuideAdminGmailConnection onUseReceipt={useGmailReceipt} />
-    <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
-      <h3 className="font-bold text-slate-900">PayPal.Me-Zahlung nach Uhrzeit zuordnen</h3>
+    <details className="mt-4 rounded-lg border border-slate-200 bg-white p-4">
+      <summary className="cursor-pointer font-bold text-blue-800">Zahlung anhand der Uhrzeit zuordnen</summary>
+      <div className="mt-3">
+      <h3 className="sr-only">PayPal.Me-Zahlung nach Uhrzeit zuordnen</h3>
       <p className="mt-1 text-xs leading-5 text-slate-700">Übertrage aus der bestätigten PayPal-Transaktion die Transaktionsnummer und die Zahlungszeit.
         Eine E-Mail oder die Zeitähnlichkeit allein beweist keine Zahlung. Die Zuordnung ist nur ein Vorschlag.</p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -122,7 +123,8 @@ export default function GuideAdminAccountOrders() {
         <p className="mt-3 text-slate-700" role="status">Kein sicherer Zeitkandidat gefunden.
           Die Zahlung kann weiterhin manuell zugeordnet werden.</p>
       )}
-    </div>
+      </div>
+    </details>
     {orders.length === 0 && <p className="mt-3 text-slate-600">Keine offenen Bestellungen.</p>}
     <ul className="mt-3 space-y-3">{orders.map(order => <li key={order.id} className="rounded-lg border border-slate-200 p-3">
       <p className="font-bold">{order.reference} · {order.productName}</p>
@@ -139,14 +141,16 @@ export default function GuideAdminAccountOrders() {
         onClick={() => void release(order)} className="mt-3 min-h-10 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white disabled:opacity-50">
         PDF im Kundenkonto freigeben</button>
     </li>)}</ul>
-    <div className="mt-5 border-t border-slate-200 pt-4">
-      <h3 className="font-bold">Freigabe bei Rückzahlung sperren</h3>
+    <details className="mt-5 rounded-lg border border-slate-200 p-4">
+      <summary className="cursor-pointer font-bold text-red-800">Freigabe bei Rückzahlung sperren</summary>
+      <div className="mt-3">
       <input aria-label="PayPal-Transaktionsnummer für Sperrung" value={revokeTransaction}
         onChange={e => setRevokeTransaction(e.target.value)} placeholder="PayPal-Transaktionsnummer"
         className="mt-2 w-full rounded-lg border border-slate-300 p-2" />
       <button type="button" disabled={busy || !revokeTransaction} onClick={() => void revoke()}
         className="mt-2 rounded-lg border border-red-300 px-4 py-2 font-bold text-red-700 disabled:opacity-50">Zugriff sperren</button>
-    </div>
+      </div>
+    </details>
     {notice && <p role="status" className="mt-3 font-semibold">{notice}</p>}
   </section>;
 }

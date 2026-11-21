@@ -339,7 +339,9 @@ test("12 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfr
   assert.ok(upload.includes('createHash("sha256")'));
   assert.ok(bulk.includes('createHash("sha256")'));
   assert.ok(download.includes('encode(file_data,\'base64\')'));
-  assert.ok(adminPage.includes("GuideAdminVzeVariants"));
+  assert.ok(adminPage.includes("GuideAdminWorkspace"));
+  const workspace = fs.readFileSync("app/components/GuideAdminWorkspace.tsx", "utf8");
+  assert.ok(workspace.includes("GuideAdminVzeVariants"));
   assert.ok(catalogPage.includes("zur Veröffentlichung freigegeben"));
   assert.ok(catalogPage.includes("erst angeboten"));
   assert.ok(catalogPage.includes("Modellanleitung ansehen"));
@@ -402,4 +404,25 @@ test("VZE-Tabelle: nur passende freigegebene Modell-PDF hat aktiven Produktlink"
   assert.ok(!mapping.includes('"Golf 8 (CD)"'));
   assert.ok(indicator.includes("In Vorbereitung"));
   assert.ok(indicator.includes("PDF ansehen"));
+});
+
+test("PDF-Admin ist mobil in drei Bereiche gegliedert, ohne sichere Aktionen zu verlieren", () => {
+  const page = fs.readFileSync("app/konto/pdf-verwaltung/page.tsx", "utf8");
+  const workspace = fs.readFileSync("app/components/GuideAdminWorkspace.tsx", "utf8");
+  const gmail = fs.readFileSync("app/components/GuideAdminGmailConnection.tsx", "utf8");
+  const orders = fs.readFileSync("app/components/GuideAdminAccountOrders.tsx", "utf8");
+  const files = fs.readFileSync("app/components/GuideAdminVzeVariants.tsx", "utf8");
+  assert.ok(page.includes("await isGuideAdmin()"));
+  for (const tab of ['label: "Zahlungen"', 'label: "PDF-Dateien"', 'label: "Weitere"']) {
+    assert.ok(workspace.includes(tab));
+  }
+  for (const component of ["GuideAdminAccountOrders", "GuideAdminVzeVariants",
+    "GuideAdminPdfUpload", "GuideAdminManualRelease"]) {
+    assert.ok(workspace.includes(component));
+  }
+  assert.ok(gmail.includes("Gmail-Verbindung einrichten oder ändern"));
+  assert.ok(orders.includes("Zahlung anhand der Uhrzeit zuordnen"));
+  assert.ok(orders.includes("paymentVerified"));
+  assert.ok(files.includes("Alle 12 Modelle und Downloads anzeigen"));
+  assert.ok(files.includes('bulkUpload'));
 });
