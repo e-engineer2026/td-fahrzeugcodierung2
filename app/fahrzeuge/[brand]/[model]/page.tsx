@@ -177,7 +177,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
                     <div className="mt-3 grid gap-3 md:grid-cols-2">
                       {list.map((coding) => (
                         <div key={coding.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                          <div className="flex items-start justify-between gap-4"><div className="font-semibold leading-6">{coding.name}</div><div className="shrink-0 font-black">{coding.uiGroup === "Assistenz" || !coding.reviewOnly ? `${coding.price} €` : "Vorprüfung"}</div></div>
+                          <div className="flex items-start justify-between gap-4"><div className="font-semibold leading-6">{coding.name}</div><div className="shrink-0 font-black">{`${coding.price} €`}</div></div>
                           {coding.hardware && <p className="mt-3 border-t border-slate-100 pt-3 text-xs leading-5 text-slate-600"><b>Hardware:</b> {coding.hardware}</p>}
                           {coding.requirements && <p className="mt-2 text-xs leading-5 text-slate-600"><b>Hinweis:</b> {coding.requirements}</p>}
                         </div>
