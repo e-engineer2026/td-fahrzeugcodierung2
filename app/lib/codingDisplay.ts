@@ -382,7 +382,7 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
     const startStopDeactivation = /start[- /]?stopp?/i.test(entry.name) && /deaktivier/i.test(entry.name);
     // Assistenzsysteme zeigen ihre Preise direkt und bleiben mit vorhandener Hardware buchbar.
     // Gesonderte Freigaben für Smartphonefunktionen und Start-Stopp bleiben unverändert.
-    const reviewOnly = entry.uiGroup !== "Assistenz" && Boolean(entry.reviewOnly || smartphoneActivation || startStopDeactivation);
+    const reviewOnly = Boolean(entry.reviewOnly || (entry.uiGroup !== "Assistenz" && (smartphoneActivation || startStopDeactivation)));
     return { ...entry, price: servicePrice(entry.price), reviewOnly,
       // Bereits fahrzeugspezifisch beschriebene Lane-Assist-Hardware nicht mit
       // dem allgemeinen Kamera-/Lenkungs-Hinweis doppelt ausgeben.
