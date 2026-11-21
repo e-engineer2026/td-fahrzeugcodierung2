@@ -223,4 +223,4 @@ export function codingsForVehicle(vehicle:Vehicle):string[] {
 }
 
 export const brands=["Volkswagen","Audi","Škoda","SEAT / CUPRA"];
-export const codingGroups:CodingGroup[]=["Komfort","Licht","Infotainment","Assistenz","Fahrdynamik","Diagnose"];
+export const codingGroups:CodingGroup[]=["Assistenz","Komfort","Licht","Infotainment","Fahrdynamik","Diagnose"];

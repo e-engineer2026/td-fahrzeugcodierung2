@@ -16,10 +16,10 @@ export type PricedPlatformCodingEntry = PlatformCodingEntry & {
 };
 
 export const platformCodingGroups: PlatformCodingGroup[] = [
+  "Assistenz",
   "Komfort",
   "Licht",
   "Infotainment",
-  "Assistenz",
   "Fahrdynamik",
   "Diagnose",
 ];
