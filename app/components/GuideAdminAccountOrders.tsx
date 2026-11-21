@@ -134,7 +134,7 @@ export default function GuideAdminAccountOrders() {
       <label className="mt-2 block font-semibold">PayPal-Transaktionsnummer
         <input value={transactions[order.id] ?? ""} onChange={e => setTransactions({ ...transactions, [order.id]: e.target.value })}
           className="mt-1 block w-full rounded-lg border border-slate-300 p-2" maxLength={64} /></label>
-      <label className="mt-2 flex gap-2"><input type="checkbox" checked={checked[order.id] ?? false}
+      <label className="mt-2 flex items-start gap-2"><input type="checkbox" className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300 accent-blue-600" checked={checked[order.id] ?? false}
         onChange={e => setChecked({ ...checked, [order.id]: e.target.checked })} />
         <span>Zahlung für genau diese Bestellung im PayPal-Konto geprüft.</span></label>
       <button type="button" disabled={busy || !checked[order.id] || !transactions[order.id]}
