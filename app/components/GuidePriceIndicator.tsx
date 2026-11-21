@@ -4,8 +4,25 @@ import GuideDifficultyBar from "./GuideDifficultyBar";
 import { formatGuidePrice } from "../lib/guidePricing";
 import type { GuideEstimate } from "../lib/researchGuidePricing";
 
-/** PDF-Dokumentanzeige: Download bleibt bis zur Veröffentlichung und Zahlungsfreigabe deaktiviert. */
-export default function GuidePriceIndicator({ estimate, productHref }: { estimate: GuideEstimate; productHref?: string }) {
+/** Dokumentstatus und passende Aktion für Prüfunterlagen sowie PDF-Anleitungen. */
+export default function GuidePriceIndicator({ estimate, productHref, proofDownloadHref }: {
+  estimate: GuideEstimate;
+  productHref?: string;
+  proofDownloadHref?: string;
+}) {
+  if (proofDownloadHref) {
+    return (
+      <div className="text-right">
+        <p className="text-sm font-black text-blue-700">Kostenlos</p>
+        <p className="text-[10px] leading-4 text-slate-500">PDF-Prüfunterlage</p>
+        <a href={proofDownloadHref} download
+          className="mt-1.5 inline-flex min-h-8 w-full items-center justify-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700 hover:bg-blue-100">
+          <Download size={13} aria-hidden="true" className="shrink-0" /> PDF herunterladen
+        </a>
+      </div>
+    );
+  }
+
   const noCoding = estimate.step === null;
   return (
     <div className="shrink-0 text-right" aria-label={noCoding

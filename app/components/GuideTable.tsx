@@ -11,6 +11,7 @@ export type GuideTableRow = {
   description: string | null;
   estimate: GuideEstimate;
   productHref?: string;
+  proofDownloadHref?: string;
 };
 
 /** Einheitliche Darstellung; Werkzeuge nur mit ausgewiesener Eignung nennen. */
@@ -37,6 +38,7 @@ export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
                   </summary>
                   <div className="mt-2 space-y-2 text-xs leading-5 text-slate-600">
                     {row.description && <p><strong className="text-slate-800">Funktion:</strong> {row.description}</p>}
+                    {row.proofDownloadHref && <p><strong className="text-slate-800">PDF-Prüfunterlage:</strong> Golf 7/7.5 als Referenz. Die Eignung ist je Fahrzeug zu prüfen.</p>}
                     <p><strong className="text-slate-800">Hardware / Voraussetzungen:</strong> {row.requirements || "Fahrzeugspezifisch prüfen"}</p>
                     <p><strong className="text-slate-800">Interface-Hinweis:</strong> {row.diagnosticInterface.qualification}</p>
                   </div>
@@ -49,7 +51,7 @@ export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
               {row.diagnosticInterface.sfdNotice && <p className="mt-1 text-[11px] leading-4 text-amber-800">{row.diagnosticInterface.sfdNotice}</p>}
             </div>
             <div role="cell" className="col-start-2 row-start-1 flex justify-end sm:col-start-3">
-              <GuidePriceIndicator estimate={row.estimate} productHref={row.productHref} />
+              <GuidePriceIndicator estimate={row.estimate} productHref={row.productHref} proofDownloadHref={row.proofDownloadHref} />
             </div>
           </div>
         ))}

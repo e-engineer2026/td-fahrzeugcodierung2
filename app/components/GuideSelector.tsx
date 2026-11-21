@@ -20,6 +20,14 @@ import { researchedGuidesForModel, type ResearchCategory } from "../data/guideRe
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
 const guideCategories = ["Codierungen", "Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
+const laneAssistProof = "/pruefunterlagen/td-mqb-lane-assist.pdf";
+const lightAssistProof = "/pruefunterlagen/td-mqb-fernlichtassistent.pdf";
+const mqbProofDownloads: Partial<Record<string, string>> = {
+  "vcds-lane-activate": laneAssistProof,
+  "tcross-lane-activate": laneAssistProof,
+  "vcds-fla": lightAssistProof,
+  "tcross-fla": lightAssistProof,
+};
 
 /** Link only to an actual, model-specific VZE release. The download itself remains paywalled. */
 function vzeProductHref(title: string, slug?: string): string | undefined {
@@ -148,6 +156,7 @@ export default function GuideSelector() {
       return {
         id: "coding-" + coding.id,
         productHref: coding.id === "golf7-vze-pdf" ? "/codieranleitungen/golf7-vze" : vzeProductHref(coding.name, vzePdfSlug),
+        proofDownloadHref: vehicle?.platform === "MQB" || vehicle?.platform === "MQB-A0" ? mqbProofDownloads[coding.id] : undefined,
         title: coding.name,
         requirements: guideVehicleRequirements({
           title: coding.name,
@@ -367,7 +376,7 @@ export default function GuideSelector() {
           </p>}
           {<p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">
             <LockKeyhole size={15} className="mt-1 shrink-0" aria-hidden="true" />
-            Downloads sind nur für freigegebene PDF-Dokumente nach bestätigter Zahlung möglich.
+            Kostenpflichtige PDF-Anleitungen können nach bestätigter Zahlung heruntergeladen werden.
           </p>}
         </section>
       )}
