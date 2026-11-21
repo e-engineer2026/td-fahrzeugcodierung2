@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AlertTriangle, ArrowLeft, ChevronDown, LockKeyhole, UserRound } from "lucide-react";
+import { AlertTriangle, ArrowLeft, ChevronDown, Download, LockKeyhole, UserRound } from "lucide-react";
 import GuideSelector from "../components/GuideSelector";
 import { SFD1_CONTROL_UNITS, SFD1_ENGINE_EXCEPTION, SFD_VEHICLES } from "../lib/sfdProtection";
 
@@ -12,6 +12,19 @@ export const metadata: Metadata = {
   // Erst indexieren, wenn die ersten tatsächlich kaufbaren PDFs bereitstehen.
   robots: { index: false, follow: true },
 };
+
+const mqbPruefunterlagen = [
+  {
+    title: "Lane Assist",
+    description: "Frontkamera, Lenkhilfe und Kalibrierstatus prüfen. Mit Protokoll für den Funktionstest.",
+    href: "/pruefunterlagen/td-mqb-lane-assist.pdf",
+  },
+  {
+    title: "Fernlichtassistent (Light Assist)",
+    description: "Kamera und Lichtanlage prüfen. Mit Protokoll für den Funktionstest der Fernlichtumschaltung.",
+    href: "/pruefunterlagen/td-mqb-fernlichtassistent.pdf",
+  },
+];
 
 export default function CodieranleitungenPage() {
   return (
@@ -83,6 +96,24 @@ export default function CodieranleitungenPage() {
 
       <section className="container-x py-5 sm:py-7" aria-label="Anleitung und Fahrzeug auswählen">
         <GuideSelector />
+      </section>
+
+      <section className="container-x pb-7 sm:pb-9" aria-labelledby="mqb-pruefunterlagen">
+        <h2 id="mqb-pruefunterlagen" className="text-xl font-black tracking-tight">MQB-Prüfunterlagen</h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+          Werkstattprotokolle mit dem Golf 7/7.5 als Referenz für die Variantenprüfung. Konkrete Codierwerte und die Funktionsfreigabe werden je Fahrzeug geprüft.
+        </p>
+        <ul className="mt-4 grid max-w-4xl gap-3 sm:grid-cols-2">
+          {mqbPruefunterlagen.map(({ title, description, href }) => (
+            <li key={href} className="flex flex-col items-start rounded-xl border border-slate-200 bg-white p-4">
+              <h3 className="font-bold text-slate-900">{title}</h3>
+              <p className="mb-3 mt-1 flex-1 text-sm leading-6 text-slate-600">{description}</p>
+              <a href={href} download aria-label={`${title} als PDF herunterladen`} className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-bold text-blue-700 hover:bg-blue-50">
+                <Download size={17} aria-hidden="true" /> PDF herunterladen
+              </a>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <footer className="border-t border-slate-200 bg-white">
