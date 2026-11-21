@@ -380,9 +380,11 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
   const displayed = [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => {
     const smartphoneActivation = /(carplay|android auto|app-connect)/i.test(entry.name) && /(freischalt|aktivier)/i.test(entry.name);
     const startStopDeactivation = /start[- /]?stopp?/i.test(entry.name) && /deaktivier/i.test(entry.name);
-    // Assistenzsysteme zeigen ihre Preise direkt und bleiben mit vorhandener Hardware buchbar.
-    // Gesonderte Freigaben für Smartphonefunktionen und Start-Stopp bleiben unverändert.
-    const reviewOnly = Boolean(entry.reviewOnly || (entry.uiGroup !== "Assistenz" && (smartphoneActivation || startStopDeactivation)));
+    // Zusatzfunktionen bleiben sichtbar. Aktivierungen von Assistenzsystemen
+    // dürfen aber erst nach Prüfung von Ausstattung, Softwarestand und Lizenzen buchbar sein.
+    const assistantActivation = entry.uiGroup === "Assistenz" && /(freischalt|aktivier)/i.test(entry.name);
+    const reviewOnly = Boolean(entry.reviewOnly || assistantActivation ||
+      (entry.uiGroup !== "Assistenz" && (smartphoneActivation || startStopDeactivation)));
     return { ...entry, price: servicePrice(entry.price), reviewOnly,
       // Bereits fahrzeugspezifisch beschriebene Lane-Assist-Hardware nicht mit
       // dem allgemeinen Kamera-/Lenkungs-Hinweis doppelt ausgeben.
