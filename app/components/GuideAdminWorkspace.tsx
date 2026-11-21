@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { CreditCard, FileText, Settings2 } from "lucide-react";
-import GuideAdminPdfUpload from "./GuideAdminPdfUpload";
 import GuideAdminManualRelease from "./GuideAdminManualRelease";
 import GuideAdminAccountOrders from "./GuideAdminAccountOrders";
 import GuideAdminVzeVariants from "./GuideAdminVzeVariants";
@@ -47,10 +46,6 @@ export default function GuideAdminWorkspace({ production, preview, liveMode, liv
     {active === "documents" && <section aria-label="PDF-Dateien verwalten">
       <p className="mt-4 text-sm text-slate-600">Fertiggestellte Anleitungen sicher hinterlegen und verwalten.</p>
       {production && <GuideAdminVzeVariants />}
-      <details className="mt-5 rounded-xl border border-slate-200 bg-white p-4">
-        <summary className="cursor-pointer font-bold text-slate-900">Golf 7 VZE · PDF Rev. 1.3 verwalten</summary>
-        <GuideAdminPdfUpload />
-      </details>
     </section>}
 
     {active === "more" && <section aria-label="Weitere Funktionen">

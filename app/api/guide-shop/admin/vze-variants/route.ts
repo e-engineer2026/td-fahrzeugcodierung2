@@ -2,21 +2,22 @@ import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { isGuideAdmin } from "../../../../lib/guideAdmin";
 import { ensureGuideShopSchema } from "../../../../lib/guideShopDb";
-import { VZE_VARIANT_DRAFTS, findVzeDraft } from "../../../../lib/vzeVariantDrafts";
+import { VZE_ADMIN_DOCUMENTS, findVzeAdminDocument, vzeAdminStorageVersion, vzeAdminDisplayRevision } from "../../../../lib/vzeAdminDocuments";
+import { GOLF7_VZE } from "../../../../lib/guideShopShared";
 
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
 
-/** Nur der verifizierte TD-Admin kann die 12 fahrzeuggebundenen Fachfassungen verwalten. */
+/** Alle 13 Fachfassungen, einschließlich des bestehenden Golf-7-Artikels, nur für TD-Admins. */
 export async function GET() {
   if (!await isGuideAdmin()) return NextResponse.json({ error: "Keine Berechtigung." }, { status: 403, headers });
   try {
     const sql = await ensureGuideShopSchema();
     const rows = await sql`SELECT product_id, sha256 FROM td_guide_documents
-      WHERE product_id LIKE 'vze-%' LIMIT 100`;
+      WHERE product_id LIKE 'vze-%' OR product_id = ${GOLF7_VZE.id} LIMIT 100`;
     const matches = new Set(rows.map((row) => String(row.product_id) + ":" + String(row.sha256)));
-    return NextResponse.json({ drafts: VZE_VARIANT_DRAFTS.map((draft) => ({
-      ...draft, stored: matches.has(draft.productId + ":" + draft.sha256),
+    return NextResponse.json({ drafts: VZE_ADMIN_DOCUMENTS.map((draft) => ({
+      ...draft, revision: vzeAdminDisplayRevision(draft.productId), stored: matches.has(draft.productId + ":" + draft.sha256),
     })) }, { headers });
   } catch { return NextResponse.json({ error: "PDF-Liste nicht verfügbar." }, { status: 500, headers }); }
 }
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
   try { data = await request.formData(); }
   catch { return NextResponse.json({ error: "Ungültiges Formular." }, { status: 400, headers }); }
   const slug = data.get("slug");
-  const draft = typeof slug === "string" ? findVzeDraft(slug) : undefined;
+  const draft = typeof slug === "string" ? findVzeAdminDocument(slug) : undefined;
   const file = data.get("pdf");
   if (!draft || !(file instanceof File) || file.size < 2000 || file.size > 1_000_000 ||
       !file.name.toLowerCase().endsWith(".pdf")) {
@@ -48,8 +49,9 @@ export async function POST(request: Request) {
   try {
     const sql = await ensureGuideShopSchema();
     const encoded = bytes.toString("base64");
+    const version = vzeAdminStorageVersion(draft.productId);
     await sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data)
-      VALUES (${draft.productId}, '1.0-fachfassung', ${digest}, decode(${encoded}, 'base64'))
+      VALUES (${draft.productId}, ${version}, ${digest}, decode(${encoded}, 'base64'))
       ON CONFLICT (product_id) DO UPDATE
       SET version=EXCLUDED.version, sha256=EXCLUDED.sha256,
           file_data=EXCLUDED.file_data, uploaded_at=now()`;

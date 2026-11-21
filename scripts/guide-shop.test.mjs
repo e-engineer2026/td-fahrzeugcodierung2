@@ -417,12 +417,13 @@ test("PDF-Admin ist mobil in drei Bereiche gegliedert, ohne sichere Aktionen zu 
     assert.ok(workspace.includes(tab));
   }
   for (const component of ["GuideAdminAccountOrders", "GuideAdminVzeVariants",
-    "GuideAdminPdfUpload", "GuideAdminManualRelease"]) {
+    "GuideAdminManualRelease"]) {
     assert.ok(workspace.includes(component));
   }
+  assert.ok(!workspace.includes("Golf 7 VZE · PDF Rev. 1.3 verwalten"));
   assert.ok(gmail.includes("Gmail-Verbindung einrichten oder ändern"));
   assert.ok(orders.includes("Zahlung anhand der Uhrzeit zuordnen"));
   assert.ok(orders.includes("paymentVerified"));
-  assert.ok(files.includes("Alle 12 Modelle und Downloads anzeigen"));
+  assert.ok(files.includes("Alle 13 Dokumente und Downloads anzeigen"));
   assert.ok(files.includes('bulkUpload'));
 });

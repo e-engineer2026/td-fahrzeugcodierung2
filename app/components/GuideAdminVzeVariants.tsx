@@ -9,6 +9,7 @@ type Draft = {
   sku: string;
   filename: string;
   stored: boolean;
+  revision: string;
 };
 
 export default function GuideAdminVzeVariants() {
@@ -53,7 +54,7 @@ export default function GuideAdminVzeVariants() {
       });
       const data = await response.json() as { stored?: boolean; count?: number; error?: string };
       if (!response.ok || !data.stored) throw new Error(data.error ?? "Sammelupload fehlgeschlagen.");
-      setMessage(data.count + " VZE-Modell-Fachfassungen privat gespeichert. Kunden erhalten den Download erst nach überprüftem Zahlungseingang.");
+      setMessage(data.count + " VZE-PDF-Dokumente privat gespeichert. Kunden erhalten den Download erst nach überprüftem Zahlungseingang.");
       form.reset();
       await refresh();
     } catch (error) { setMessage(error instanceof Error ? error.message : "Sammelupload fehlgeschlagen."); }
@@ -65,7 +66,7 @@ export default function GuideAdminVzeVariants() {
   return <section className="mt-5 rounded-xl border border-slate-200 bg-white p-4 text-sm sm:p-5">
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h2 className="text-lg font-black text-slate-900">VZE-Modell-PDFs</h2>
-      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">{storedCount} / {drafts.length || 12} hinterlegt</span>
+      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">{storedCount} / {drafts.length || 13} hinterlegt</span>
     </div>
     <form onSubmit={event => void bulkUpload(event)} className="mt-4 space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
       <p className="font-bold text-slate-900">Mehrere Modell-PDFs hochladen</p>
@@ -84,10 +85,10 @@ export default function GuideAdminVzeVariants() {
         <select required name="slug" value={chosen} onChange={event => setChosen(event.target.value)}
           className="mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2">
           <option value="">Modell auswählen</option>
-          {drafts.map(draft => <option key={draft.slug} value={draft.slug}>{draft.name} ({draft.code})</option>)}
+          {drafts.map(draft => <option key={draft.slug} value={draft.slug}>{draft.name} ({draft.code}, Rev. {draft.revision})</option>)}
         </select>
       </label>
-      <label className="font-semibold">Passende Fachfassung aus dem neuen Rev.-1.0-ZIP auswählen
+      <label className="font-semibold">Zum Modell passende geprüfte PDF auswählen
         <input type="file" required name="pdf" accept=".pdf,application/pdf"
           className="mt-1 block w-full rounded-lg border border-slate-300 p-2" />
       </label>
@@ -99,11 +100,11 @@ export default function GuideAdminVzeVariants() {
     </details>
     {message && <p className="mt-3 font-semibold" role="status">{message}</p>}
     <details className="mt-4 rounded-lg border border-slate-200 p-3">
-      <summary className="cursor-pointer font-bold text-blue-800">Alle 12 Modelle und Downloads anzeigen</summary>
+      <summary className="cursor-pointer font-bold text-blue-800">Alle 13 Dokumente und Downloads anzeigen</summary>
     <div className="mt-3 overflow-hidden rounded-lg border border-slate-200">
       {drafts.map(draft => <div key={draft.slug}
         className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 p-3 last:border-b-0">
-        <div><p className="font-semibold text-slate-900">{draft.name} ({draft.code})</p>
+        <div><p className="font-semibold text-slate-900">{draft.name} ({draft.code}) · Rev. {draft.revision}</p>
           <p className="text-xs text-slate-500">{draft.sku} · {draft.stored ? "Privat bereitgestellt" : "Upload fehlt"}</p></div>
         {draft.stored
           ? <a href={"/api/guide-shop/admin/vze-variants/download?slug=" + encodeURIComponent(draft.slug)}
