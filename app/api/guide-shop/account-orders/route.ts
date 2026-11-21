@@ -2,6 +2,8 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
 import { guideOrderProduct, orderReference, paypalMeUrl } from "../../../lib/vzeShopProducts";
+import { findMqbGuideProduct } from "../../../lib/mqbGuideProducts";
+import { readMqbGuideDocument } from "../../../lib/mqbGuideDocument";
 
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store" };
@@ -45,8 +47,10 @@ export async function POST(request: Request) {
     const sql = await ensureGuideShopSchema();
     // Do not take money for a PDF that has not actually been uploaded and hash-checked.
     if (product.slug) {
-      const [document] = await sql`SELECT product_id FROM td_guide_documents
-        WHERE product_id=${product.id} AND sha256=${product.sha256}`;
+      const mqb = findMqbGuideProduct(product.slug);
+      const document = mqb ? readMqbGuideDocument(mqb)
+        : (await sql`SELECT product_id FROM td_guide_documents
+          WHERE product_id=${product.id} AND sha256=${product.sha256}`)[0];
       if (!document) return NextResponse.json({ error: "Diese Fachanleitung ist noch nicht bereitgestellt. Noch keine Zahlung ausführen." },
         { status: 503, headers });
     }

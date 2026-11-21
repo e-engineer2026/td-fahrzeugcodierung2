@@ -4,10 +4,12 @@ import { Download, FileText } from "lucide-react";
 type Model = {
   slug: string; name: string; sku: string; paid: boolean;
   pending: boolean; documentAvailable: boolean;
+  downloadHref?: string; label?: string;
 };
 type ApiResponse = {
   golf7Vze?: { paid: boolean; pending?: boolean; documentAvailable: boolean; purchasedAt: string | null };
   vzeModels?: Model[];
+  mqbGuides?: Model[];
 };
 export default function GuidePurchasesPanel() {
   const [paid, setPaid] = useState(false);
@@ -24,7 +26,7 @@ export default function GuidePurchasesPanel() {
         setPaid(data?.golf7Vze?.paid === true);
         setPending(data?.golf7Vze?.pending === true);
         setReady(data?.golf7Vze?.documentAvailable === true);
-        setModels(data?.vzeModels ?? []);
+        setModels([...(data?.vzeModels ?? []), ...(data?.mqbGuides ?? [])]);
       }).catch(() => {}).finally(() => { if (active) setLoaded(true); });
     return () => { active = false; };
   }, []);
@@ -52,10 +54,10 @@ export default function GuidePurchasesPanel() {
     </div>}
     {loaded && selected.map(item => <div key={item.slug}
       className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
-      <p className="font-bold">{item.name} · Verkehrszeichenerkennung (VZE)</p>
-      <p className="text-xs text-slate-600">{item.sku} · Fachfassung Rev. 1.0</p>
+      <p className="font-bold">{item.label ? item.name : item.name + " · Verkehrszeichenerkennung (VZE)"}</p>
+      <p className="text-xs text-slate-600">{item.sku} · {item.label ?? "Fachfassung Rev. 1.0"}</p>
       {item.paid ? item.documentAvailable ?
-        <a href={"/api/guide-shop/download/vze/" + encodeURIComponent(item.slug)}
+        <a href={item.downloadHref ?? "/api/guide-shop/download/vze/" + encodeURIComponent(item.slug)}
           className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-lg bg-blue-700 px-3 py-2 text-sm font-bold text-white">
           <Download size={16}/> PDF herunterladen
         </a>

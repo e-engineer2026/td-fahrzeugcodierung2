@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type Order = { orderId: string; reference: string; paypalUrl: string };
-type Purchases = { vzeModels?: { slug: string; paid: boolean; documentAvailable: boolean }[] };
+type Purchase = { slug: string; paid: boolean; documentAvailable: boolean };
+type Purchases = { vzeModels?: Purchase[]; mqbGuides?: Purchase[] };
 
-export default function ModelVzeCheckout({ signedIn, slug, name }: {
+export default function ModelVzeCheckout({ signedIn, slug, name, mqb = false }: {
   signedIn: boolean; slug: string; name: string;
+  mqb?: boolean;
 }) {
   const [terms, setTerms] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
@@ -21,7 +23,8 @@ export default function ModelVzeCheckout({ signedIn, slug, name }: {
     try {
       const response = await fetch("/api/guide-shop/purchases", { cache: "no-store", credentials: "same-origin" });
       const data = response.ok ? await response.json() as Purchases : null;
-      const released = data?.vzeModels?.some(draft => draft.slug === slug && draft.paid && draft.documentAvailable) ?? false;
+      const released = (mqb ? data?.mqbGuides : data?.vzeModels)
+        ?.some(draft => draft.slug === slug && draft.paid && draft.documentAvailable) ?? false;
       setPaid(released);
       if (!released && showMessage) setMessage("PayPal-Zahlung noch nicht überprüft. Bitte später erneut prüfen.");
     } catch { if (showMessage) setMessage("Freigabestatus nicht erreichbar."); }
@@ -37,7 +40,7 @@ export default function ModelVzeCheckout({ signedIn, slug, name }: {
         if (data?.order) setOrder(data.order);
       }).catch(() => {}).finally(() => setRestoring(false));
     // The product identifier is immutable for this page.
-  }, [signedIn, slug]);
+  }, [signedIn, slug, mqb]);
 
   async function prepare() {
     setBusy(true); setMessage("");
@@ -54,9 +57,9 @@ export default function ModelVzeCheckout({ signedIn, slug, name }: {
     finally { setBusy(false); }
   }
 
-  const here = "/codieranleitungen/vze-modelle/" + slug;
+  const here = (mqb ? "/codieranleitungen/mqb-assistenten/" : "/codieranleitungen/vze-modelle/") + slug;
   if (!signedIn) return <div className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5 text-sm">
-    <p className="font-bold">Anmelden, um diese Modell-PDF zu kaufen</p>
+    <p className="font-bold">Anmelden, um diese PDF zu kaufen</p>
     <p className="mt-1 text-slate-600">Nach überprüftem Zahlungseingang erscheint die Anleitung in deinem Kundenkonto.</p>
     <Link href={"/sign-in?redirect_url=" + encodeURIComponent(here)}
       className="mt-3 inline-flex rounded-lg bg-blue-700 px-4 py-3 font-bold text-white">Anmelden</Link>
@@ -64,14 +67,14 @@ export default function ModelVzeCheckout({ signedIn, slug, name }: {
 
   if (paid) return <section className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5 text-sm">
     <p className="font-bold text-blue-900">{name}: PDF in deinem Kundenkonto freigeschaltet</p>
-    <a href={"/api/guide-shop/download/vze/" + slug}
+    <a href={(mqb ? "/api/guide-shop/download/mqb/" : "/api/guide-shop/download/vze/") + slug}
       className="mt-3 inline-flex rounded-lg bg-blue-700 px-4 py-3 font-bold text-white">PDF jetzt herunterladen</a>
     <Link href="/konto" className="ml-3 text-blue-800 underline">Mein Konto</Link>
   </section>;
 
   return <section className="mt-6 rounded-xl border border-blue-200 bg-white p-5 text-sm">
-    <h2 className="text-lg font-black">VZE-Fachfassung {name} · 13,99 €</h2>
-    <p className="mt-2 text-slate-600">Einmaliger Kauf einer modellbezogenen PDF. Zahlung über PayPal.Me;
+    <h2 className="text-lg font-black">{mqb ? "MQB-Prüfunterlage" : "VZE-Fachfassung"} {name} · 13,99 €</h2>
+    <p className="mt-2 text-slate-600">Einmaliger Kauf der PDF. Zahlung über PayPal.Me.
       Freigabe erfolgt nach tatsächlicher Prüfung des Zahlungseingangs.</p>
     {restoring ? <p className="mt-3 text-slate-600">Offene Bestellung wird geladen …</p>
       : !order ? <div className="mt-4 space-y-3">

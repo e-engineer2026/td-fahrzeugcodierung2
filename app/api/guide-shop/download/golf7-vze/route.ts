@@ -6,7 +6,8 @@ import { guestTokenHashFromCookie } from "../../../../lib/guideGuest";
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
 
-export async function GET() {
+export async function GET(request: Request) {
+  const url = new URL(request.url);
   try {
     const sql = await ensureGuideShopSchema();
     const hash = await guestTokenHashFromCookie();
@@ -29,7 +30,9 @@ export async function GET() {
         permitted = !!accountPaid;
       }
     }
-    if (!permitted) return NextResponse.json({ error: "Kein bezahlter Downloadanspruch für diesen Browser." },
+    if (!permitted) return url.searchParams.get("liste") === "1"
+      ? NextResponse.redirect(new URL("/codieranleitungen/golf7-vze", url), { headers })
+      : NextResponse.json({ error: "Kein bezahlter Downloadanspruch für diesen Browser." },
       { status: 403, headers });
     const [file] = await sql`SELECT encode(file_data,'base64') AS data FROM td_guide_documents
       WHERE product_id=${GOLF7_VZE.id} AND sha256=${GOLF7_VZE.expectedSha256}`;

@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
-import Link from "next/link";
 import { vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
+import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
@@ -20,19 +20,11 @@ import { researchedGuidesForModel, type ResearchCategory } from "../data/guideRe
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
 const guideCategories = ["Codierungen", "Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
-const laneAssistProof = "/pruefunterlagen/td-mqb-lane-assist.pdf";
-const lightAssistProof = "/pruefunterlagen/td-mqb-fernlichtassistent.pdf";
-const mqbProofDownloads: Partial<Record<string, string>> = {
-  "vcds-lane-activate": laneAssistProof,
-  "tcross-lane-activate": laneAssistProof,
-  "vcds-fla": lightAssistProof,
-  "tcross-fla": lightAssistProof,
-};
 
 /** Link only to an actual, model-specific VZE release. The download itself remains paywalled. */
 function vzeProductHref(title: string, slug?: string): string | undefined {
   if (!slug || !/\bverkehrszeichenerkennung\s+(?:aktivieren|freischalten)\b|\bvze\s+(?:aktivieren|freischalten)\b/i.test(title)) return undefined;
-  return "/codieranleitungen/vze-modelle/" + slug;
+  return "/api/guide-shop/download/vze/" + slug + "?liste=1";
 }
 
 type GuideCategory = (typeof guideCategories)[number];
@@ -134,6 +126,9 @@ export default function GuideSelector() {
   const visibleGuideRows: GuideTableRow[] = [
     ...visibleCodings.map((coding) => {
       const step = guideDifficultyStep(coding);
+      const mqbGuide = vehicle?.platform === "MQB" || vehicle?.platform === "MQB-A0"
+        ? MQB_GUIDE_PRODUCTS.find(product => product.codingIds.some(id => id === coding.id))
+        : undefined;
       const details = guideDetails({
         title: coding.name,
         note: coding.requirements,
@@ -155,8 +150,10 @@ export default function GuideSelector() {
       });
       return {
         id: "coding-" + coding.id,
-        productHref: coding.id === "golf7-vze-pdf" ? "/codieranleitungen/golf7-vze" : vzeProductHref(coding.name, vzePdfSlug),
-        proofDownloadHref: vehicle?.platform === "MQB" || vehicle?.platform === "MQB-A0" ? mqbProofDownloads[coding.id] : undefined,
+        productHref: mqbGuide ? "/api/guide-shop/download/mqb/" + mqbGuide.slug + "?liste=1"
+          : coding.id === "golf7-vze-pdf" ? "/api/guide-shop/download/golf7-vze?liste=1"
+          : vzeProductHref(coding.name, vzePdfSlug),
+        isProofDocument: !!mqbGuide,
         title: coding.name,
         requirements: guideVehicleRequirements({
           title: coding.name,
@@ -165,7 +162,7 @@ export default function GuideSelector() {
         }),
         diagnosticInterface,
         description: details.description,
-        estimate: { step, level: guideDifficultyLevel(step), price: guidePrice(coding) }
+        estimate: { step, level: guideDifficultyLevel(step), price: mqbGuide ? mqbGuide.priceCents / 100 : guidePrice(coding) }
       };
     }),
     ...visibleResearch.map((item) => {
@@ -346,17 +343,6 @@ export default function GuideSelector() {
           </div>}
 
 
-          {vzePdfSlug && <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
-            <div>
-              <p className="text-sm font-bold text-slate-900">Verkehrszeichenerkennung (VZE) · PDF-Fachanleitung</p>
-              <p className="mt-1 text-xs leading-5 text-slate-700">Von TD zur fachlichen Veröffentlichung freigegeben.
-                Prüfe A5-Kameravariante, Navigation und erforderliche Software-/Lizenzstände am Fahrzeug.</p>
-            </div>
-            <Link href={"/codieranleitungen/vze-modelle/" + vzePdfSlug}
-              className="inline-flex min-h-10 items-center rounded-lg bg-blue-700 px-4 py-2 text-xs font-bold text-white">
-              Fachfassung ansehen · 13,99 €
-            </Link>
-          </div>}
           <GuideTable rows={visibleGuideRows} />
           {visibleGuideRows.length === 0 && (codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
@@ -365,7 +351,7 @@ export default function GuideSelector() {
                 : "Für dieses Fahrzeug sind in diesem Bereich noch keine Anleitungen zugeordnet."}
             </p>
           )}
-          {codings.length === 0 && researchEntries.length === 0 && sourceIdeas.length === 0 && !vzePdfSlug && (
+          {codings.length === 0 && researchEntries.length === 0 && sourceIdeas.length === 0 && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
               Für dieses Fahrzeug sind derzeit keine ausreichend geprüften Anleitungen hinterlegt.
               {vehicle.startYear >= 2024 ? " Für neuere Modelle ist vor einer Freigabe insbesondere der SFD-/SFD2-Schutz zu prüfen." : ""}

@@ -6,17 +6,21 @@ import { findVzeDraft } from "../../../../../lib/vzeVariantDrafts";
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
 
-export async function GET(_request: Request, context: { params: Promise<{ slug: string }> }) {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Anmeldung erforderlich." }, { status: 401, headers });
+export async function GET(request: Request, context: { params: Promise<{ slug: string }> }) {
   const { slug } = await context.params;
   const draft = findVzeDraft(slug);
   if (!draft) return NextResponse.json({ error: "Modell unbekannt." }, { status: 404, headers });
+  const url = new URL(request.url);
+  const fromCatalog = url.searchParams.get("liste") === "1";
+  const toOrder = () => NextResponse.redirect(new URL("/codieranleitungen/vze-modelle/" + draft.slug, url), { headers });
+  const { userId } = await auth();
+  if (!userId) return fromCatalog ? toOrder() : NextResponse.json({ error: "Anmeldung erforderlich." }, { status: 401, headers });
   try {
     const sql = await ensureGuideShopSchema();
     const [paid] = await sql`SELECT id FROM td_guide_orders
       WHERE clerk_user_id=${userId} AND product_id=${draft.productId} AND status='paid' LIMIT 1`;
-    if (!paid) return NextResponse.json({ error: "Keine bestätigte Zahlung für diese Modellanleitung." }, { status: 403, headers });
+    if (!paid) return fromCatalog ? toOrder()
+      : NextResponse.json({ error: "Keine bestätigte Zahlung für diese Modellanleitung." }, { status: 403, headers });
     const [file] = await sql`SELECT encode(file_data,'base64') AS data FROM td_guide_documents
       WHERE product_id=${draft.productId} AND sha256=${draft.sha256} LIMIT 1`;
     if (!file || typeof file.data !== "string")

@@ -1,28 +1,14 @@
 import { Download } from "lucide-react";
-import Link from "next/link";
 import GuideDifficultyBar from "./GuideDifficultyBar";
 import { formatGuidePrice } from "../lib/guidePricing";
 import type { GuideEstimate } from "../lib/researchGuidePricing";
 
 /** Dokumentstatus und passende Aktion für Prüfunterlagen sowie PDF-Anleitungen. */
-export default function GuidePriceIndicator({ estimate, productHref, proofDownloadHref }: {
+export default function GuidePriceIndicator({ estimate, productHref, isProofDocument }: {
   estimate: GuideEstimate;
   productHref?: string;
-  proofDownloadHref?: string;
+  isProofDocument?: boolean;
 }) {
-  if (proofDownloadHref) {
-    return (
-      <div className="text-right">
-        <p className="text-sm font-black text-blue-700">Kostenlos</p>
-        <p className="text-[10px] leading-4 text-slate-500">PDF-Prüfunterlage</p>
-        <a href={proofDownloadHref} download
-          className="mt-1.5 inline-flex min-h-8 w-full items-center justify-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700 hover:bg-blue-100">
-          <Download size={13} aria-hidden="true" className="shrink-0" /> PDF herunterladen
-        </a>
-      </div>
-    );
-  }
-
   const noCoding = estimate.step === null;
   return (
     <div className="shrink-0 text-right" aria-label={noCoding
@@ -32,15 +18,15 @@ export default function GuidePriceIndicator({ estimate, productHref, proofDownlo
       {noCoding
         ? <p className="text-[11px] font-medium text-slate-600">Keine Codierung</p>
         : <>
-            <p className="text-[10px] leading-4 text-slate-500">PDF-Dokument</p>
+            <p className="text-[10px] leading-4 text-slate-500">{isProofDocument ? "PDF-Prüfunterlage" : "PDF-Dokument"}</p>
             <GuideDifficultyBar level={estimate.level!} />
           </>
       }
       {productHref
-        ? <Link href={productHref}
+        ? <a href={productHref}
             className="mt-1.5 inline-flex min-h-8 w-full items-center justify-center gap-1 rounded-md border border-blue-200 bg-blue-50 px-2 py-1 text-[11px] font-semibold text-blue-700 hover:bg-blue-100">
-            <Download size={13} aria-hidden="true" /> PDF ansehen
-          </Link>
+            <Download size={13} aria-hidden="true" /> PDF-Download
+          </a>
         : <button type="button" disabled title="Für diese Funktion ist noch keine kaufbare PDF hinterlegt."
             aria-label="PDF noch nicht verfügbar"
             className="mt-1.5 inline-flex min-h-8 w-full cursor-not-allowed items-center justify-center gap-1 rounded-md border border-slate-200 bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-500 opacity-75">
