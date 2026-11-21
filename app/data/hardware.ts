@@ -7,7 +7,7 @@ export function hardwareForName(name:string):string|undefined {
   const n=name.toLowerCase();
 
   // Fahrerassistenz
-  if(n.includes("verkehrszeichen")) return "Werksseitige Navigation mit verfügbaren Navigationsdaten erforderlich.";
+  if(n.includes("verkehrszeichen")) return "Werksseitige Navigation mit verfügbaren Navigationsdaten sowie kompatible Frontkamera und Kombiinstrument erforderlich. Gegebenenfalls ist eine gültige SWaP/FEC-Funktionslizenz notwendig.";
   if(n.includes("lane assist")) return "Frontkamera/Fahrerassistenzkamera und kompatible Lenkungs-/Assistenzsteuergeräte erforderlich.";
   if(n.includes("fernlichtassistent")) return "Geeignete Frontkamera bzw. Fernlichtassistenz-Sensorik und kompatible Lichtsteuerung erforderlich.";
   if(n.includes("acc ") || n.startsWith("acc")) return "ACC-Radarsensor und kompatible Fahrerassistenz-/Gateway-Hardware erforderlich.";
