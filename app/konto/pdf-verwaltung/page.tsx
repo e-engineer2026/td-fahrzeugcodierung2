@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { isGuideAdmin } from "../../lib/guideAdmin";
+// Sicherheitshinweis zum Vercel Automation Bypass ist im erweiterten Technikbereich sichtbar.
 import GuideAdminWorkspace from "../../components/GuideAdminWorkspace";
 import { resolveShopMode } from "../../lib/guideShopShared";
 
