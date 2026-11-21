@@ -61,11 +61,6 @@ export default function GuideAdminVzeVariants() {
   }
 
   return <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-sm">
-    <h2 className="text-lg font-black">VZE-Modell-PDFs · vom Anbieter freigegebene Fachfassungen</h2>
-    <p className="mt-2 leading-6 text-slate-600">12 dreiseitige modellbezogene Fachanleitungen. Zur Veröffentlichung von TD freigegeben;
-      die Freigabe gilt nicht pauschal für jedes Fahrzeug und ersetzt keinen Auto-Scan, fehlende Lizenzen oder eine Kalibrierung.
-      Die PDFs bleiben in der privaten Datenbank und werden vor dem Speichern per SHA-256 auf
-      exakt die vorbereiteten Versionen geprüft.</p>
     <form onSubmit={event => void bulkUpload(event)} className="mt-4 space-y-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
       <p className="font-bold text-slate-900">Alle freigegebenen PDFs privat hinterlegen</p>
       <p className="text-xs leading-5 text-slate-600">ZIP-Datei zuerst entpacken, anschließend
