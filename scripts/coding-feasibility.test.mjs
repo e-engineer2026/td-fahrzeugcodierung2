@@ -94,3 +94,22 @@ test('ordinary supported comfort offers remain bookable', () => {
 test('repeated evidence stays readable without dropping specific restrictions', () => {
   assert.equal(mergePrerequisites('Kamera erforderlich. Software X nötig.', 'Kamera erforderlich.'), 'Kamera erforderlich. Software X nötig.');
 });
+
+test('restore matching MQB platform references as visible but unbookable until model check', () => {
+  const entries = entriesFor('Golf 7 (5G)', 2018);
+  // A previous undefined duplicate key reduced this vehicle from dozens of offers to just five.
+  assert.ok(entries.length >= 40, `Golf 7 list unexpectedly reduced to ${entries.length} entries`);
+  const restored = entries.filter((entry) => entry.source === 'platform' && entry.reviewOnly);
+  assert.ok(restored.length >= 1, 'platform references should no longer all disappear');
+  for (const entry of restored) {
+    assert.match(entry.requirements ?? '', /Vor Auftrag|Plattformreferenz|Erst nach Bestätigung|Fahrzeugausstattung/);
+    assert.ok(entry.price > 0, entry.name);
+  }
+  assert.ok(entries.some((entry) => /Komfortblinken/.test(entry.name) && !entry.reviewOnly));
+});
+
+test('restored platform functions cannot bypass protection or year checks', () => {
+  assert.deepEqual(entriesFor('Golf 8 (CD)', 2024), []);
+  assert.ok(!entriesFor('Octavia 3 5E', 2015).some((entry) => /Emergency Assist|Traffic Jam Assist|Trailer Assist/.test(entry.name)));
+  assert.ok(!entriesFor('Polo AW', 2022).some((entry) => /MQB.evo|bis 2023/.test(entry.name)));
+});

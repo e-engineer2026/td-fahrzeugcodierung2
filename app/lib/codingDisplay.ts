@@ -361,8 +361,17 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
     ? [{ ...entry, id: entry.id + "-carplay", name: "Apple CarPlay Wireless aktivieren" }, { ...entry, id: entry.id + "-android", name: "Android Auto Wireless aktivieren" }]
     : [entry]);
   const selectedGolf7Offers = entries.filter((entry) => isSelectedGolf7OfferId(entry.id));
-  const selectedKeys = new Set(selectedGolf7Offers.map((entry) => selectedGolf7OfferKey(entry.name)));
-  entries = entries.filter((entry) => !isSelectedGolf7OfferId(entry.id) && !selectedKeys.has(selectedGolf7OfferKey(entry.name)));
+  // An undefined key means "unrelated offer", not "duplicate of the Golf 7 PDF".
+  // The VZE special offer has no overlap key, so a Set containing undefined
+  // used to hide every unrelated Golf 7 coding from the configurator.
+  const selectedKeys = new Set(selectedGolf7Offers
+    .map((entry) => selectedGolf7OfferKey(entry.name))
+    .filter((key): key is string => Boolean(key)));
+  entries = entries.filter((entry) => {
+    if (isSelectedGolf7OfferId(entry.id)) return false;
+    const key = selectedGolf7OfferKey(entry.name);
+    return !key || !selectedKeys.has(key);
+  });
   // Preserve the dedicated smartphone navigation offer and its exact device requirements instead
   // of merging it into generic cockpit design or navigation display settings.
   const smartphoneAid = entries.filter((entry) => isSmartphoneAidId(entry.id));
@@ -380,9 +389,11 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
   const displayed = [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => {
     const smartphoneActivation = /(carplay|android auto|app-connect)/i.test(entry.name) && /(freischalt|aktivier)/i.test(entry.name);
     const startStopDeactivation = /start[- /]?stopp?/i.test(entry.name) && /deaktivier/i.test(entry.name);
-    // Assistenzsysteme zeigen ihre Preise direkt und bleiben mit vorhandener Hardware buchbar.
-    // Gesonderte Freigaben für Smartphonefunktionen und Start-Stopp bleiben unverändert.
-    const reviewOnly = entry.uiGroup !== "Assistenz" && Boolean(entry.reviewOnly || smartphoneActivation || startStopDeactivation);
+    // Zusatzfunktionen bleiben sichtbar. Aktivierungen von Assistenzsystemen
+    // dürfen aber erst nach Prüfung von Ausstattung, Softwarestand und Lizenzen buchbar sein.
+    const assistantActivation = entry.uiGroup === "Assistenz" && /(freischalt|aktivier)/i.test(entry.name);
+    const reviewOnly = Boolean(entry.reviewOnly || assistantActivation ||
+      (entry.uiGroup !== "Assistenz" && (smartphoneActivation || startStopDeactivation)));
     return { ...entry, price: servicePrice(entry.price), reviewOnly,
       // Bereits fahrzeugspezifisch beschriebene Lane-Assist-Hardware nicht mit
       // dem allgemeinen Kamera-/Lenkungs-Hinweis doppelt ausgeben.
