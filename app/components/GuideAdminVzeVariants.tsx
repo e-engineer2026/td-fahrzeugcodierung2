@@ -60,11 +60,16 @@ export default function GuideAdminVzeVariants() {
     finally { setUploading(false); }
   }
 
-  return <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-sm">
-    <form onSubmit={event => void bulkUpload(event)} className="mt-4 space-y-3 rounded-lg border border-blue-200 bg-blue-50 p-3">
-      <p className="font-bold text-slate-900">Alle freigegebenen PDFs privat hinterlegen</p>
-      <p className="text-xs leading-5 text-slate-600">ZIP-Datei zuerst entpacken, anschließend
-        mehrere oder alle zwölf PDFs gleichzeitig auswählen. Die Datei- und Hash-Prüfung ordnet jedes Modell automatisch zu.</p>
+  const storedCount = drafts.filter(draft => draft.stored).length;
+
+  return <section className="mt-5 rounded-xl border border-slate-200 bg-white p-4 text-sm sm:p-5">
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <h2 className="text-lg font-black text-slate-900">VZE-Modell-PDFs</h2>
+      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">{storedCount} / {drafts.length || 12} hinterlegt</span>
+    </div>
+    <form onSubmit={event => void bulkUpload(event)} className="mt-4 space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+      <p className="font-bold text-slate-900">Mehrere Modell-PDFs hochladen</p>
+      <p className="text-xs leading-5 text-slate-600">ZIP-Datei entpacken und die gewünschten PDFs gemeinsam auswählen. Die Zuordnung erfolgt automatisch.</p>
       <input type="file" multiple required name="pdfs" accept=".pdf,application/pdf"
         className="block w-full rounded-lg border border-blue-200 bg-white p-2"/>
       <button disabled={uploading} type="submit"
@@ -72,7 +77,8 @@ export default function GuideAdminVzeVariants() {
         {uploading ? "Sammelupload läuft …" : "Ausgewählte PDFs privat hinterlegen"}
       </button>
     </form>
-    <p className="mt-4 text-xs font-semibold text-slate-600">Alternativ einzelne Fachfassung hochladen:</p>
+    <details className="mt-4 rounded-lg border border-slate-200 p-3">
+      <summary className="cursor-pointer font-bold text-blue-800">Einzelne PDF hochladen</summary>
     <form onSubmit={event => void upload(event)} className="mt-4 grid gap-3">
       <label className="font-semibold">Modell wählen
         <select required name="slug" value={chosen} onChange={event => setChosen(event.target.value)}
@@ -90,8 +96,11 @@ export default function GuideAdminVzeVariants() {
         {uploading ? "Speichern …" : "PDF privat hochladen"}
       </button>
     </form>
+    </details>
     {message && <p className="mt-3 font-semibold" role="status">{message}</p>}
-    <div className="mt-5 overflow-hidden rounded-lg border border-slate-200">
+    <details className="mt-4 rounded-lg border border-slate-200 p-3">
+      <summary className="cursor-pointer font-bold text-blue-800">Alle 12 Modelle und Downloads anzeigen</summary>
+    <div className="mt-3 overflow-hidden rounded-lg border border-slate-200">
       {drafts.map(draft => <div key={draft.slug}
         className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 p-3 last:border-b-0">
         <div><p className="font-semibold text-slate-900">{draft.name} ({draft.code})</p>
@@ -104,5 +113,6 @@ export default function GuideAdminVzeVariants() {
           : <span className="text-xs text-slate-500">Fachfassung aus ZIP hochladen</span>}
       </div>)}
     </div>
+    </details>
   </section>;
 }
