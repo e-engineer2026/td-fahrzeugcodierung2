@@ -97,6 +97,8 @@ test('repeated evidence stays readable without dropping specific restrictions', 
 
 test('restore matching MQB platform references as visible but unbookable until model check', () => {
   const entries = entriesFor('Golf 7 (5G)', 2018);
+  // A previous undefined duplicate key reduced this vehicle from dozens of offers to just five.
+  assert.ok(entries.length >= 40, `Golf 7 list unexpectedly reduced to ${entries.length} entries`);
   const restored = entries.filter((entry) => entry.source === 'platform' && entry.reviewOnly);
   assert.ok(restored.length >= 1, 'platform references should no longer all disappear');
   for (const entry of restored) {
