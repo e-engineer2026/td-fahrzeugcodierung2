@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GuideSelector from "./GuideSelector";
+import { extractGuidePdfsFromZip } from "../lib/guideZipClient";
 
 type DownloadDocument = {
   slug: string; title: string; sku: string; filename: string | null; available: boolean;
@@ -61,6 +62,26 @@ export default function GuideAdminVzeVariants() {
       return { file, slug: matches.length === 1 ? matches[0].slug : "" };
     }));
   }
+  async function chooseZip(file: File | null) {
+    if (!file) return;
+    setBusy(true); setMessage(""); setMessageSlug(null);
+    try {
+      const files = await extractGuidePdfsFromZip(file);
+      const next = files.map(pdf => {
+        const matches = documents?.filter(doc =>
+          doc.defaultFilename.toLowerCase() === pdf.name.toLowerCase()) ?? [];
+        return { file: pdf, slug: matches.length === 1 ? matches[0].slug : "" };
+      });
+      setCandidates(next);
+      const unassigned = next.filter(item => !item.slug).length;
+      setMessage(`${files.length} PDFs im ZIP erkannt.${unassigned
+        ? ` ${unassigned} Dateien bitte manuell einem Download zuordnen.`
+        : " Alle Dateinamen sind den PDF-Downloads zugeordnet."} Noch nichts veröffentlicht.`);
+    } catch (error) {
+      setCandidates([]);
+      setMessage(error instanceof Error ? error.message : "ZIP konnte nicht geöffnet werden.");
+    } finally { setBusy(false); }
+  }
   async function uploadBatch() {
     setMessageSlug(null);
     if (!candidates.length || candidates.some(item => !item.slug) || new Set(candidates.map(item => item.slug)).size !== candidates.length) {
@@ -69,7 +90,11 @@ export default function GuideAdminVzeVariants() {
     setBusy(true); setMessage("");
     let stored = 0;
     try {
-      for (const candidate of candidates) { await stage(candidate.slug, candidate.file); stored++; }
+      for (const candidate of candidates) {
+        await stage(candidate.slug, candidate.file);
+        stored++;
+        setMessage(`${stored} von ${candidates.length} PDFs als Entwurf gespeichert …`);
+      }
       setCandidates([]); await refresh(); setMessage(`${stored} PDF-Entwürfe gespeichert.`);
     } catch (error) {
       setCandidates(current => current.slice(stored));
@@ -179,6 +204,9 @@ export default function GuideAdminVzeVariants() {
     </div>;
   }
 
+  const draftDocuments = (documents ?? [])
+    .filter(document => document.draftSha256)
+    .sort((a, b) => a.title.localeCompare(b.title, "de"));
   const publishedDocuments = (documents ?? [])
     .filter(document => document.available && document.publishedSha256)
     .sort((a, b) => a.title.localeCompare(b.title, "de"));
@@ -191,7 +219,13 @@ export default function GuideAdminVzeVariants() {
     <div className="mx-auto mb-4 max-w-5xl">
       <details className="rounded-lg border border-slate-200 bg-white p-3 text-sm">
         <summary className="cursor-pointer font-semibold text-blue-800">PDF-Sammelupload</summary>
-        <label className="mt-2 block font-semibold">PDF-Dateien auswählen
+        <p className="mt-2 text-xs leading-5 text-slate-600">Die 28 MQB-VZE-PDFs können gemeinsam als ZIP eingelesen werden. Sie bleiben bis zu deiner ausdrücklichen Freigabe privat als Entwürfe.</p>
+        <label className="mt-3 block font-semibold">PDF-Paket (ZIP) auswählen
+          <input type="file" accept=".zip,application/zip,application/x-zip-compressed" disabled={busy || !documents}
+            onChange={event => { void chooseZip(event.target.files?.[0] ?? null); event.target.value = ""; }}
+            className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2" />
+        </label>
+        <label className="mt-3 block font-semibold">Einzelne PDF-Dateien auswählen
           <input type="file" multiple accept=".pdf,application/pdf" disabled={busy || !documents} onChange={e => { chooseFiles(e.target.files); e.target.value = ""; }}
             className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2" />
         </label>
@@ -209,6 +243,38 @@ export default function GuideAdminVzeVariants() {
             className="mt-2 text-sm font-bold text-blue-800 underline">Erneut laden</button>
         : <p className="mt-2 text-sm text-slate-600" role="status">PDF-Status wird geladen …</p>)}
     </div>
+    <section className="mx-auto mb-6 max-w-5xl overflow-hidden rounded-xl border border-blue-200 bg-white shadow-sm" aria-label="PDF-Entwürfe zur Freigabe">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-blue-100 p-4 sm:px-5">
+        <div>
+          <h2 className="text-lg font-black text-slate-900">PDF-Entwürfe zur Freigabe</h2>
+          <p className="mt-1 text-xs text-slate-600">Vorschau prüfen und jede Anleitung erst danach selbst veröffentlichen.</p>
+        </div>
+        {documents && <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800">{draftDocuments.length} Entwürfe</span>}
+      </div>
+      {!documents ? <p className="p-4 text-sm text-slate-600">Entwürfe werden geladen …</p>
+        : !draftDocuments.length ? <p className="p-4 text-sm text-slate-600">Noch keine PDF-Entwürfe hinterlegt. Verwende oben den Sammelupload.</p>
+        : <ul className="divide-y divide-slate-100">
+          {draftDocuments.map(document => <li key={document.slug}
+            className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <div className="min-w-0">
+              <p className="font-bold text-slate-900">{document.title}</p>
+              <p className="mt-1 break-all text-xs text-slate-500">{document.draftFilename}</p>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-2 text-sm">
+              <a href={endpoint + "/download?draft=1&slug=" + encodeURIComponent(document.slug)}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex min-h-10 items-center rounded-lg border border-blue-200 px-3 font-bold text-blue-800 hover:bg-blue-50">
+                Vorschau<span className="sr-only"> · {document.title}</span>
+              </a>
+              <button type="button" disabled={busy}
+                onClick={() => void publish(document)}
+                className="min-h-10 rounded-lg bg-blue-700 px-3 font-bold text-white hover:bg-blue-800 disabled:opacity-50">
+                Veröffentlichen<span className="sr-only"> · {document.title}</span>
+              </button>
+            </div>
+          </li>)}
+        </ul>}
+    </section>
     <section className="mx-auto mb-6 max-w-5xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" aria-label="Veröffentlichte PDF-Anleitungen">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 p-4 sm:px-5">
         <div>
