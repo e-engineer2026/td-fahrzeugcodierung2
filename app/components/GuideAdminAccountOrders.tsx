@@ -24,6 +24,21 @@ export default function GuideAdminAccountOrders() {
     } catch (error) { setNotice(error instanceof Error ? error.message : "Laden fehlgeschlagen."); }
   }
   useEffect(() => { void refresh(); }, []);
+  async function removeOpenOrder(order: Order) {
+    if (!window.confirm(`Offene Bestellung ${order.reference} aus der Übersicht entfernen? Eine mögliche PayPal-Zahlung wird dadurch nicht zurückerstattet.`)) return;
+    setBusy(true); setNotice("");
+    try {
+      const response = await fetch("/api/guide-shop/admin/account-orders", {
+        method: "PATCH", credentials: "same-origin", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.id }),
+      });
+      const data = await response.json() as { removed?: boolean; error?: string };
+      if (!response.ok || !data.removed) throw new Error(data.error ?? "Entfernen fehlgeschlagen.");
+      setNotice(`Bestellung ${order.reference} aus den offenen Bestellungen entfernt.`);
+      await refresh();
+    } catch (error) { setNotice(error instanceof Error ? error.message : "Entfernen fehlgeschlagen."); }
+    finally { setBusy(false); }
+  }
   async function release(order: Order) {
     setBusy(true); setNotice("");
     try {
@@ -140,6 +155,9 @@ export default function GuideAdminAccountOrders() {
       <button type="button" disabled={busy || !checked[order.id] || !transactions[order.id]}
         onClick={() => void release(order)} className="mt-3 min-h-10 rounded-lg bg-blue-700 px-4 py-2 font-bold text-white disabled:opacity-50">
         PDF im Kundenkonto freigeben</button>
+      <button type="button" disabled={busy} onClick={() => void removeOpenOrder(order)}
+        className="mt-3 ml-2 min-h-10 rounded-lg border border-red-300 px-4 py-2 font-bold text-red-700 disabled:opacity-50">
+        Bestellung entfernen</button>
     </li>)}</ul>
     <details className="mt-5 rounded-lg border border-slate-200 p-4">
       <summary className="cursor-pointer font-bold text-red-800">Freigabe bei Rückzahlung sperren</summary>
