@@ -71,6 +71,27 @@ export async function POST(request: Request) {
   }
 }
 
+/** Remove an open order from the list without erasing payment or customer records. */
+export async function PATCH(request: Request) {
+  if (!await isGuideAdmin()) return NextResponse.json({ error: "Keine Berechtigung." }, { status: 403, headers });
+  if (request.headers.get("origin") !== new URL(request.url).origin)
+    return NextResponse.json({ error: "Ungültige Herkunft." }, { status: 403, headers });
+  let body: { orderId?: unknown };
+  try { body = await request.json(); }
+  catch { return NextResponse.json({ error: "Ungültige Angaben." }, { status: 400, headers }); }
+  const id = typeof body.orderId === "string" && /^[a-f\d]{8}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{4}-[a-f\d]{12}$/i.test(body.orderId) ? body.orderId : "";
+  if (!id) return NextResponse.json({ error: "Ungültige Bestellung." }, { status: 400, headers });
+  try {
+    const sql = await ensureGuideShopSchema();
+    const [order] = await sql`UPDATE td_guide_orders SET status='failed'
+      WHERE id=${id}::uuid AND status='pending' AND buyer_email IS NOT NULL
+        AND paypal_transaction_id IS NULL AND paypal_capture_id IS NULL AND paid_at IS NULL
+      RETURNING id`;
+    return order ? NextResponse.json({ removed: true }, { headers }) :
+      NextResponse.json({ error: "Bestellung ist nicht mehr offen oder wurde bereits verarbeitet. Bitte aktualisieren." }, { status: 409, headers });
+  } catch { return NextResponse.json({ error: "Bestellung konnte nicht entfernt werden." }, { status: 500, headers }); }
+}
+
 export async function DELETE(request: Request) {
   if (!await isGuideAdmin()) return NextResponse.json({ error: "Keine Berechtigung." }, { status: 403, headers });
   if (request.headers.get("origin") !== new URL(request.url).origin)
