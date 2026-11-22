@@ -1,25 +1,43 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { VZE_VARIANT_DRAFTS } from "../../lib/vzeVariantDrafts";
+import { ensureGuideShopSchema } from "../../lib/guideShopDb";
 
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "VZE-Codieranleitungen für 12 MQB-Modelle | TD Fahrzeugcodierung",
-  description: "Fachlich freigegebene, modellbezogene VZE-Codieranleitungen für ausgewählte MQB-Modelle. Kundenkauf nach PDF-Bereitstellung.",
+  title: "VZE-Modellanleitungen für MQB-Fahrzeuge | TD Fahrzeugcodierung",
+  description: "Modellbezogene VZE-Codieranleitungen. Kundenkauf erst nach ausdrücklicher PDF-Veröffentlichung.",
   robots: { index: false, follow: true },
 };
-export default function VzeModelDraftsPage() {
+
+export default async function VzeModelDraftsPage() {
+  // Veröffentlichungen sind nur produktbezogene, nicht zurückgezogene Dateieinträge.
+  // Neue Entwürfe in td_guide_document_drafts werden niemals in dieser Liste gezeigt.
+  let published: typeof VZE_VARIANT_DRAFTS[number][] = [];
+  try {
+    const sql = await ensureGuideShopSchema();
+    const ids = VZE_VARIANT_DRAFTS.map(d => d.productId);
+    const rows = await sql`SELECT product_id, sha256, assigned_filename FROM td_guide_documents
+      WHERE product_id=ANY(${ids}::text[]) AND NOT withdrawn`;
+    published = VZE_VARIANT_DRAFTS.filter(draft =>
+      rows.some(row => row.product_id === draft.productId &&
+        (row.sha256 === draft.sha256 || typeof row.assigned_filename === "string")));
+  } catch {
+    // Kein Datenbankstatus: keine potentiell unfreigegebenen Produkte zeigen.
+  }
   return <main className="min-h-screen bg-slate-50 py-10 text-slate-900">
     <div className="container-x max-w-5xl">
       <Link className="text-sm font-semibold text-blue-700" href="/codieranleitungen">← Zurück zu PDF-Anleitungen</Link>
       <p className="mt-6 text-xs font-bold uppercase tracking-[0.18em] text-blue-700">TD Fahrzeugcodierung · VZE / Sign Assist</p>
-      <h1 className="mt-2 text-3xl font-black">VZE-Modellanleitungen für 12 MQB-Modelle</h1>
-      <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">TD Fahrzeugcodierung hat diese zwölf eigenständig formulierten Fachfassungen zur Veröffentlichung freigegeben.
-        Sie ersetzen jedoch keine Prüfung am konkreten Fahrzeug. Frontkamera A5, Kombiinstrument 17,
-        Infotainment 5F, Navigation, Lizenzen und eventuell notwendige Kalibrierungen
-        entscheiden über die tatsächliche Umsetzung. Ein Kauf wird erst angeboten,
-        nachdem die jeweilige PDF geschützt hinterlegt wurde.</p>
+      <h1 className="mt-2 text-3xl font-black">Veröffentlichte VZE-Modellanleitungen</h1>
+      <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
+        Hier erscheinen nur die ausdrücklich veröffentlichten Fachfassungen. Ein Kauf wird erst angeboten,
+        nachdem die jeweilige PDF geschützt hinterlegt wurde. Die fahrzeugspezifische Eignung ist anhand
+        von Frontkamera A5, Kombiinstrument 17, Infotainment 5F, Navigationssystem, Lizenzen und
+        gegebenenfalls Kalibrierungsstatus vor jeder Codierung zu prüfen.
+      </p>
       <div className="mt-7 overflow-hidden rounded-xl border border-slate-200 bg-white">
-        {VZE_VARIANT_DRAFTS.map(draft => <div key={draft.slug}
+        {published.length ? published.map(draft => <div key={draft.slug}
           className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 px-4 py-3 last:border-b-0">
           <div>
             <p className="text-sm font-bold">{draft.name} <span className="text-slate-500">({draft.code})</span></p>
@@ -29,13 +47,15 @@ export default function VzeModelDraftsPage() {
             className="inline-flex rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-blue-800 hover:bg-blue-100">
             Modellanleitung ansehen · 13,99 €
           </Link>
-        </div>)}
+        </div>) : <p className="p-4 text-sm text-slate-600">Derzeit sind keine VZE-Modellanleitungen veröffentlicht.</p>}
       </div>
       <div className="mt-6 rounded-lg border border-blue-100 bg-blue-50 p-4 text-xs leading-5 text-slate-700">
-        Die fachliche Veröffentlichung wurde durch TD bestätigt. Eine Freigabe für jede mögliche Baujahr-, Kamera- und Steuergerätevariante ist damit nicht verbunden. Die PDF wird ausschließlich nach bestätigter PayPal-Zahlung im Kundenkonto freigegeben.
+        Die Veröffentlichung erfolgt ausschließlich nach Freigabe durch TD Fahrzeugcodierung.
+        Sie ist keine pauschale Freigabe für jede Fahrzeug-, Kamera- und Softwarevariante.
+        Die Lieferung erfolgt erst nach bestätigter Zahlung.
       </div>
       <Link href="/codieranleitungen/golf7-vze" className="mt-5 inline-block text-sm font-bold text-blue-700 underline">
-        Zur bestehenden Golf-7-VZE-PDF
+        Zur Golf-7-VZE-PDF
       </Link>
     </div>
   </main>;
