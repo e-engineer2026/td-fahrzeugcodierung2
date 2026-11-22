@@ -5,6 +5,8 @@ import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
 import { VZE_VARIANT_DRAFTS } from "../../../lib/vzeVariantDrafts";
 import { MQB_GUIDE_PRODUCTS } from "../../../lib/mqbGuideProducts";
 import { isAvailableGuideDocument } from "../../../lib/guideDocuments";
+import { catalogDownloadHref } from "../../../lib/guideCatalogLinks";
+import { catalogGuideProduct } from "../../../lib/guideCatalogDocuments";
 import { readMqbGuideDocument } from "../../../lib/mqbGuideDocument";
 
 export const runtime = "nodejs";
@@ -17,8 +19,10 @@ export async function GET() {
     const orders = await sql`SELECT product_id, status, paid_at, amount_cents, currency FROM td_guide_orders WHERE
       clerk_user_id=${userId} AND status IN ('paid','pending')
       ORDER BY paid_at DESC NULLS LAST LIMIT 100`;
+    const catalogIds = [...new Set(orders.map(order => String(order.product_id)).filter(id => id.startsWith("catalog:")))];
+    const catalogProducts = catalogIds.map(catalogGuideProduct).filter(product => product !== null);
     const productIds = [GOLF7_VZE.id, ...VZE_VARIANT_DRAFTS.map(draft => draft.productId),
-      ...MQB_GUIDE_PRODUCTS.map(product => product.id)];
+      ...MQB_GUIDE_PRODUCTS.map(product => product.id), ...catalogProducts.map(product => product.id)];
     const documents = await sql`SELECT product_id, sha256, assigned_filename, withdrawn FROM td_guide_documents
       WHERE product_id = ANY(${productIds}::text[])`;
     const hasDoc = (id: string, hash: string, fallback?: () => Buffer | null) =>
@@ -39,6 +43,16 @@ export async function GET() {
           paid: !!purchase, pending: !purchase && isPending,
           documentAvailable: hasDoc(draft.productId, draft.sha256),
           purchasedAt: purchase?.paid_at ?? null, version: "1.0",
+        };
+      }),
+      catalogGuides: catalogProducts.map(product => {
+        const matching = orders.filter(order => order.product_id === product.id && order.currency === "EUR");
+        const paid = matching.some(order => order.status === "paid");
+        return {
+          slug: product.slug, name: product.title, sku: product.sku, paid,
+          pending: !paid && matching.some(order => order.status === "pending"),
+          documentAvailable: paid && hasDoc(product.id, product.sha256),
+          downloadHref: catalogDownloadHref(product.slug), label: "PDF-Anleitung",
         };
       }),
       mqbGuides: MQB_GUIDE_PRODUCTS.map(product => {

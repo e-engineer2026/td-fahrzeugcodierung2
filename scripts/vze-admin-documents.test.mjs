@@ -168,11 +168,11 @@ test("Öffentliche und interne PDF-Anleitungen verwenden dieselbe Fahrzeugliste"
   const selector = load("app/components/GuideSelector.tsx");
   const table = load("app/components/GuideTable.tsx");
 
-  assert.match(publicPage, /<GuideCatalogPage>[\s\S]*<GuideSelector\s*\/>/);
+  assert.match(publicPage, /<GuideCatalogPage>[\s\S]*<GuideSelector publishedCatalogSlugs=\{publishedCatalogSlugs\} \/>/);
   assert.match(adminPage, /if \(admin\) return <GuideCatalogPage admin>/);
-  assert.match(selector, /documentSlug: mqbGuide\?\.slug \?\? \(golf7Vze \? GOLF7_VZE_ADMIN_SLUG : vzeHref \? vzePdfSlug/);
+  assert.match(selector, /catalogDocumentSlug\(vehicle\.model, row\.id\)/);
   assert.match(table, /showDownload=\{!renderDocumentActions \|\| !row.documentSlug\}/);
-  assert.match(table, /renderDocumentActions\(row.documentSlug\)/);
+  assert.match(table, /renderDocumentActions\(row.documentSlug, row.title\)/);
 });
 
 test("Veröffentlichte PDFs benötigen zum Löschen Admin-Zugriff und die aktuelle Prüfsumme", async () => {
@@ -237,4 +237,22 @@ test("Veröffentlichte PDFs benötigen zum Löschen Admin-Zugriff und die aktuel
     product.id, product.sha256, product.filename, () => bundled), null);
   assert.deepEqual(await documents.readGuidePdf(async () => [],
     product.id, product.sha256, product.filename, () => bundled), { bytes: bundled, filename: product.filename });
+});
+
+test("Fehlende Fahrzeug-PDF kann anhand der Katalogzeile zugeordnet werden", () => {
+  const { catalogGuideProduct } = loadTs("app/lib/guideCatalogDocuments");
+  const { catalogDocumentSlug } = loadTs("app/lib/guideCatalogLinks");
+  const { findGuideAdminDocument } = loadTs("app/lib/vzeAdminDocuments");
+  const { guideOrderProduct, guideOrderProductFromId, paypalMeUrl } = loadTs("app/lib/vzeShopProducts");
+  const slug = catalogDocumentSlug("Polo AW", "coding-vcds-lane-memory");
+  const product = catalogGuideProduct(slug);
+  assert.ok(product);
+  assert.equal(product.priceCents, 999);
+  assert.match(product.title, /letzte Einstellung speichern/);
+  assert.equal(findGuideAdminDocument(slug).productId, slug);
+  assert.deepEqual(guideOrderProduct(slug), guideOrderProductFromId(slug));
+  assert.equal(paypalMeUrl(product), "https://paypal.me/TiDrechsler/9.99EUR");
+  assert.equal(catalogGuideProduct(catalogDocumentSlug("Fahrzeug unbekannt", "coding-vcds-lane-memory")), null);
+  assert.equal(catalogGuideProduct(catalogDocumentSlug("Polo AW", "coding-tcross-lane-activate")), null);
+  assert.equal(findGuideAdminDocument("mqb-lane-assist").productId, "mqb-lane-assist");
 });

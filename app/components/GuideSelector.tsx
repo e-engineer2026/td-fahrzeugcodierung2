@@ -2,11 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
-import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
-import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
-import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
+import { vehicles, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
-import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
 import { matchesCodingSearch } from "../lib/codingSearch";
 import GuideTable, { type GuideTableRow, type RenderDocumentActions } from "./GuideTable";
 import { guideDetails } from "../lib/guideDetails";
@@ -15,48 +12,22 @@ import { guideVehicleRequirements } from "../lib/guideVehicleRequirements";
 import { researchGuideEstimate, referenceIdeaEstimate } from "../lib/researchGuidePricing";
 import { retrofitFocusFor } from "../lib/retrofitFocus";
 import { referenceIdeasForVehicle } from "../data/referenceIdeas";
-import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
+import { researchedGuidesForModel } from "../data/guideResearch";
+import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLinks";
+import { availableModelCodings, catalogMqbGuide,
+  catalogReferenceIdeas, catalogResearch, codingDocumentSlug, guideCategories, guideCategory,
+  type GuideCategory } from "../lib/guideCatalogDocuments";
+import { GOLF7_VZE_ADMIN_SLUG } from "../lib/vzePdfVehicleLinks";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
-const guideCategories = ["Codierungen", "Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
-
-/** Link only to an actual, model-specific VZE release. The download itself remains paywalled. */
-function vzeProductHref(title: string, slug?: string): string | undefined {
-  if (!slug || !/\bverkehrszeichenerkennung\s+(?:aktivieren|freischalten)\b|\bvze\s+(?:aktivieren|freischalten)\b/i.test(title)) return undefined;
-  return "/api/guide-shop/download/vze/" + slug + "?liste=1";
-}
-
-type GuideCategory = (typeof guideCategories)[number];
-
 function manufacturerOf(vehicle: Vehicle): Manufacturer {
   return vehicle.brand as Manufacturer;
 }
 
-// Nur ausdrücklich als Nachrüstung oder Umbau bezeichnete Einträge in diese Bereiche einsortieren.
-function guideCategory(coding: Coding): GuideCategory {
-  const name = coding.name;
-  if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
-  if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
-  if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") return "Assistenzsysteme";
-  return "Codierungen";
-}
-
-function availableModelCodings(vehicle: Vehicle): Coding[] {
-  if (vehicle.diagnosticsOnly || vehicle.startYear >= 2024) return [];
-  const ids = new Set(codingsForVehicle(vehicle));
-  // Keine 0-Euro-Codierungen in der Anleitungsliste; Duplikate nicht durch
-  // Gross-/Kleinschreibung, Umlaute, Satzzeichen oder Leerzeichen mehrfach anzeigen.
-  return uniqueByCodingName(codingCatalog
-    .filter((coding) => ids.has(coding.id) && coding.id !== "diagnose" && coding.uiGroup !== "Diagnose")
-    .filter((coding) => hasDisplayPrice(coding.price))
-    // Die freigegebene Golf-7-VZE-PDF ersetzt den generischen VZE-Katalogeintrag.
-    .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf")))
-    .sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
-}
-
-export default function GuideSelector({ renderDocumentActions }: {
+export default function GuideSelector({ renderDocumentActions, publishedCatalogSlugs = [] }: {
   renderDocumentActions?: RenderDocumentActions;
+  publishedCatalogSlugs?: string[];
 }) {
   const [manufacturer, setManufacturer] = useState<Manufacturer | "">("");
   const [model, setModel] = useState("");
@@ -71,36 +42,10 @@ export default function GuideSelector({ renderDocumentActions }: {
     [manufacturer]
   );
   const vehicle = models.find((item) => item.model === model);
-  const vzePdfSlug = vehicle ? vzePdfSlugForModel(vehicle.model) : undefined;
   const codings = useMemo(() => vehicle ? availableModelCodings(vehicle) : [], [vehicle]);
-  const researchEntries = useMemo(() => {
-    if (!vehicle) return [];
-    const seen = new Set(codings.map((coding) => guideCategory(coding) + ":" + codingNameKey(coding.name)));
-    return (["Nachrüstungen", "Umbauten"] as ResearchCategory[])
-      .flatMap((category) => researchedGuidesForModel(vehicle.model, category))
-      .filter((entry) => entry.access !== "Anbieterleistung" && hasDisplayPrice(researchGuideEstimate(entry).price))
-      .filter((entry) => {
-        const key = entry.category + ":" + codingNameKey(entry.title);
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
-  }, [vehicle, codings]);
-  const sourceIdeas = useMemo(() => {
-    if (!vehicle) return [];
-    const seen = new Set([
-      ...codings.map((coding) => guideCategory(coding) + ":" + codingNameKey(coding.name)),
-      ...researchEntries.map((entry) => entry.category + ":" + codingNameKey(entry.title)),
-    ]);
-    return referenceIdeasForVehicle(vehicle)
-      .filter((idea) => hasDisplayPrice(referenceIdeaEstimate(idea).price))
-      .filter((idea) => {
-        const key = idea.category + ":" + codingNameKey(idea.title);
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
-  }, [vehicle, codings, researchEntries]);
+  const researchEntries = useMemo(() => vehicle ? catalogResearch(vehicle, codings) : [], [vehicle, codings]);
+  const sourceIdeas = useMemo(() => vehicle ? catalogReferenceIdeas(vehicle, codings, researchEntries) : [],
+    [vehicle, codings, researchEntries]);
   const categoryCounts = useMemo(
     () => guideCategories.map((category) => ({
       category,
@@ -125,12 +70,11 @@ export default function GuideSelector({ renderDocumentActions }: {
     matchesCodingSearch([coding.name, coding.uiGroup ?? "", coding.requirements ?? ""].join(" "), codingSearch)
   );
 
-  const visibleGuideRows: GuideTableRow[] = [
+  const rows: GuideTableRow[] = [
     ...visibleCodings.map((coding) => {
       const step = guideDifficultyStep(coding);
-      const mqbGuide = vehicle?.platform === "MQB" || vehicle?.platform === "MQB-A0"
-        ? MQB_GUIDE_PRODUCTS.find(product => product.codingIds.some(id => id === coding.id))
-        : undefined;
+      const mqbGuide = vehicle ? catalogMqbGuide(vehicle, coding) : undefined;
+      const documentSlug = vehicle ? codingDocumentSlug(vehicle, coding) : undefined;
       const details = guideDetails({
         title: coding.name,
         note: coding.requirements,
@@ -150,13 +94,12 @@ export default function GuideSelector({ renderDocumentActions }: {
         vehicleModel: vehicle?.model,
         platform: vehicle?.platform
       });
-      const golf7Vze = coding.id === "golf7-vze-pdf";
-      const vzeHref = vzeProductHref(coding.name, vzePdfSlug);
       return {
         id: "coding-" + coding.id,
         productHref: mqbGuide ? "/api/guide-shop/download/mqb/" + mqbGuide.slug + "?liste=1"
-          : golf7Vze ? "/api/guide-shop/download/golf7-vze?liste=1" : vzeHref,
-        documentSlug: mqbGuide?.slug ?? (golf7Vze ? GOLF7_VZE_ADMIN_SLUG : vzeHref ? vzePdfSlug : undefined),
+          : documentSlug === GOLF7_VZE_ADMIN_SLUG ? "/api/guide-shop/download/golf7-vze?liste=1"
+          : documentSlug ? "/api/guide-shop/download/vze/" + documentSlug + "?liste=1" : undefined,
+        documentSlug,
         isProofDocument: !!mqbGuide,
         title: coding.name,
         requirements: guideVehicleRequirements({
@@ -220,6 +163,15 @@ export default function GuideSelector({ renderDocumentActions }: {
       };
     })
   ];
+
+  const visibleGuideRows = vehicle ? rows.map(row => {
+    if (row.documentSlug) return row;
+    const documentSlug = catalogDocumentSlug(vehicle.model, row.id);
+    return {
+      ...row, documentSlug,
+      productHref: publishedCatalogSlugs.includes(documentSlug) ? catalogDocumentHref(documentSlug) : undefined,
+    };
+  }) : rows;
 
   function chooseManufacturer(next: Manufacturer) {
     setManufacturer(next);
