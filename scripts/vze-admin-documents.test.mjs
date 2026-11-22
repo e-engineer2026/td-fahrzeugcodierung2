@@ -63,7 +63,7 @@ test("Gemeinsamer Admin-Zugang bewahrt Auth, SHA-Prüfung und Käufertrennung", 
   const download = fs.readFileSync("app/api/guide-shop/admin/vze-variants/download/route.ts","utf8");
   assert.doesNotMatch(workspace, /Golf 7 VZE · PDF Rev\. 1\.3 verwalten/);
   assert.match(workspace, /<GuideAdminVzeVariants\s*\/>/);
-  assert.match(list, /PDF-Downloads/);
+  assert.match(list, /<GuideSelector renderDocumentActions=\{renderDocumentActions\}/);
   for (const route of [api, bulk, download]) {
     assert.match(route, /await isGuideAdmin\(\)/);
     assert.match(route, /Cache-Control/);
@@ -158,4 +158,18 @@ test("Die Zuordnung verwendet alle 15 Shop-Produkte und speichert eine bearbeite
     target.id, target.sha256, target.filename), null);
   assert.equal(await documents.readGuidePdf(async () => [{ ...row, assigned_filename: null }],
     target.id, target.sha256, target.filename), null);
+});
+
+test("Öffentliche und interne PDF-Anleitungen verwenden dieselbe Fahrzeugliste", () => {
+  const load = file => fs.readFileSync(file, "utf8");
+  const publicPage = load("app/codieranleitungen/page.tsx");
+  const adminPage = load("app/konto/pdf-verwaltung/page.tsx");
+  const selector = load("app/components/GuideSelector.tsx");
+  const table = load("app/components/GuideTable.tsx");
+
+  assert.match(publicPage, /<GuideCatalogPage>[\s\S]*<GuideSelector\s*\/>/);
+  assert.match(adminPage, /if \(admin\) return <GuideCatalogPage admin>/);
+  assert.match(selector, /documentSlug: mqbGuide\?\.slug \?\? \(golf7Vze \? GOLF7_VZE_ADMIN_SLUG : vzeHref \? vzePdfSlug/);
+  assert.match(table, /showDownload=\{!renderDocumentActions \|\| !row.documentSlug\}/);
+  assert.match(table, /renderDocumentActions\(row.documentSlug\)/);
 });

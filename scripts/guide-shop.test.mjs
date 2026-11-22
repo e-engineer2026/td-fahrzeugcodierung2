@@ -440,9 +440,9 @@ test("PDF-Admin ist mobil in drei Bereiche gegliedert, ohne sichere Aktionen zu 
   assert.ok(gmail.includes("Gmail-Verbindung einrichten oder ändern"));
   assert.ok(orders.includes("Zahlung anhand der Uhrzeit zuordnen"));
   assert.ok(orders.includes("paymentVerified"));
-  assert.ok(files.includes("PDF-Downloads"));
+  assert.match(files, /<GuideSelector renderDocumentActions=\{renderDocumentActions\}/);
   assert.ok(files.includes("PDF-Sammelupload"));
-  assert.ok(files.indexOf("PDF-Sammelupload") < files.indexOf("documents.map(document"));
+  assert.ok(files.indexOf("PDF-Sammelupload") < files.indexOf("<GuideSelector"));
   assert.ok(files.includes("Vorschau"));
   assert.ok(files.includes("Veröffentlichen"));
 });

@@ -2,13 +2,13 @@
 
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
-import { vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
+import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
 import { matchesCodingSearch } from "../lib/codingSearch";
-import GuideTable, { type GuideTableRow } from "./GuideTable";
+import GuideTable, { type GuideTableRow, type RenderDocumentActions } from "./GuideTable";
 import { guideDetails } from "../lib/guideDetails";
 import { guideInterface } from "../lib/guideInterface";
 import { guideVehicleRequirements } from "../lib/guideVehicleRequirements";
@@ -55,7 +55,9 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
     .sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
-export default function GuideSelector() {
+export default function GuideSelector({ renderDocumentActions }: {
+  renderDocumentActions?: RenderDocumentActions;
+}) {
   const [manufacturer, setManufacturer] = useState<Manufacturer | "">("");
   const [model, setModel] = useState("");
   const [showModels, setShowModels] = useState(true);
@@ -148,11 +150,13 @@ export default function GuideSelector() {
         vehicleModel: vehicle?.model,
         platform: vehicle?.platform
       });
+      const golf7Vze = coding.id === "golf7-vze-pdf";
+      const vzeHref = vzeProductHref(coding.name, vzePdfSlug);
       return {
         id: "coding-" + coding.id,
         productHref: mqbGuide ? "/api/guide-shop/download/mqb/" + mqbGuide.slug + "?liste=1"
-          : coding.id === "golf7-vze-pdf" ? "/api/guide-shop/download/golf7-vze?liste=1"
-          : vzeProductHref(coding.name, vzePdfSlug),
+          : golf7Vze ? "/api/guide-shop/download/golf7-vze?liste=1" : vzeHref,
+        documentSlug: mqbGuide?.slug ?? (golf7Vze ? GOLF7_VZE_ADMIN_SLUG : vzeHref ? vzePdfSlug : undefined),
         isProofDocument: !!mqbGuide,
         title: coding.name,
         requirements: guideVehicleRequirements({
@@ -343,7 +347,7 @@ export default function GuideSelector() {
           </div>}
 
 
-          <GuideTable rows={visibleGuideRows} />
+          <GuideTable rows={visibleGuideRows} renderDocumentActions={renderDocumentActions} />
           {visibleGuideRows.length === 0 && (codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
               {codingSearch.trim()

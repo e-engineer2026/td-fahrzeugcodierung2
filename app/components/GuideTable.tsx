@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import GuidePriceIndicator from "./GuidePriceIndicator";
 import type { GuideEstimate } from "../lib/researchGuidePricing";
@@ -11,11 +12,17 @@ export type GuideTableRow = {
   description: string | null;
   estimate: GuideEstimate;
   productHref?: string;
+  documentSlug?: string;
   isProofDocument?: boolean;
 };
 
+export type RenderDocumentActions = (slug: string) => ReactNode;
+
 /** Einheitliche Darstellung; Werkzeuge nur mit ausgewiesener Eignung nennen. */
-export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
+export default function GuideTable({ rows, renderDocumentActions }: {
+  rows: GuideTableRow[];
+  renderDocumentActions?: RenderDocumentActions;
+}) {
   if (!rows.length) return null;
   return (
     <div role="table" aria-label="Professionelle PDF-Codieranleitungen" className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -51,8 +58,12 @@ export default function GuideTable({ rows }: { rows: GuideTableRow[] }) {
               {row.diagnosticInterface.sfdNotice && <p className="mt-1 text-[11px] leading-4 text-amber-800">{row.diagnosticInterface.sfdNotice}</p>}
             </div>
             <div role="cell" className="col-start-2 row-start-1 flex justify-end sm:col-start-3">
-              <GuidePriceIndicator estimate={row.estimate} productHref={row.productHref} isProofDocument={row.isProofDocument} />
+              <GuidePriceIndicator estimate={row.estimate} productHref={row.productHref} isProofDocument={row.isProofDocument}
+                showDownload={!renderDocumentActions || !row.documentSlug} />
             </div>
+            {row.documentSlug && renderDocumentActions && <div role="cell" className="col-span-full">
+              {renderDocumentActions(row.documentSlug)}
+            </div>}
           </div>
         ))}
       </div>
