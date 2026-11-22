@@ -98,5 +98,14 @@ export async function ensureGuideShopSchema() {
     uploaded_at timestamptz NOT NULL DEFAULT now()
   )`;
   await sql`ALTER TABLE td_guide_documents ADD COLUMN IF NOT EXISTS assigned_filename text`;
+  // Entwürfe sind getrennt von produktiven PDFs; Käufer sehen sie erst nach Freigabe.
+  await sql`CREATE TABLE IF NOT EXISTS td_guide_document_drafts (
+    product_id text PRIMARY KEY,
+    version text NOT NULL,
+    sha256 text NOT NULL,
+    file_data bytea NOT NULL,
+    assigned_filename text NOT NULL,
+    uploaded_at timestamptz NOT NULL DEFAULT now()
+  )`;
   return sql;
 }

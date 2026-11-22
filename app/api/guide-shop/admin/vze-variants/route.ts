@@ -17,13 +17,19 @@ export async function GET() {
     const ids = GUIDE_ADMIN_DOCUMENTS.map(document => document.productId);
     const rows = await sql`SELECT product_id, sha256, assigned_filename FROM td_guide_documents
       WHERE product_id = ANY(${ids}::text[])`;
+    const drafts = await sql`SELECT product_id, sha256, assigned_filename FROM td_guide_document_drafts
+      WHERE product_id = ANY(${ids}::text[])`;
     const byId = new Map(rows.map(row => [row.product_id, row]));
+    const draftsById = new Map(drafts.map(row => [row.product_id, row]));
     const documents = GUIDE_ADMIN_DOCUMENTS.map(document => {
       const row = byId.get(document.productId);
       const mqb = findMqbGuideProduct(document.slug);
       const available = isAvailableGuideDocument(row, document.sha256) || !!(mqb && readMqbGuideDocument(mqb));
       return {
         slug: document.slug, title: document.title, sku: document.sku, available,
+        draftFilename: draftsById.get(document.productId)?.assigned_filename ?? null,
+        draftSha256: draftsById.get(document.productId)?.sha256 ?? null,
+        defaultFilename: document.filename,
         filename: typeof row?.assigned_filename === "string" ? row.assigned_filename
           : available ? document.filename : null,
       };
@@ -57,10 +63,34 @@ export async function POST(request: Request) {
   try {
     const sql = await ensureGuideShopSchema();
     const encoded = bytes.toString("base64");
-    await sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data, assigned_filename)
+    await sql`INSERT INTO td_guide_document_drafts (product_id, version, sha256, file_data, assigned_filename)
       VALUES (${document.productId}, ${document.revision}, ${digest}, decode(${encoded}, 'base64'), ${displayFilename})
       ON CONFLICT (product_id) DO UPDATE SET version=EXCLUDED.version, sha256=EXCLUDED.sha256,
         file_data=EXCLUDED.file_data, assigned_filename=EXCLUDED.assigned_filename, uploaded_at=now()`;
-    return NextResponse.json({ stored: true, slug: document.slug, title: document.title, filename: displayFilename }, { status: 201, headers });
+    return NextResponse.json({ stored: true, slug: document.slug, title: document.title, filename: displayFilename, sha256: digest }, { status: 201, headers });
   } catch { return NextResponse.json({ error: "PDF konnte nicht gespeichert werden." }, { status: 500, headers }); }
+}
+
+export async function PATCH(request: Request) {
+  if (!await isGuideAdmin()) return NextResponse.json({ error: "Keine Berechtigung." }, { status: 403, headers });
+  if (request.headers.get("origin") !== new URL(request.url).origin)
+    return NextResponse.json({ error: "Ungültige Herkunft." }, { status: 403, headers });
+  let body: { slug?: unknown; sha256?: unknown };
+  try { body = await request.json(); } catch { return NextResponse.json({ error: "Ungültige Angaben." }, { status: 400, headers }); }
+  const document = GUIDE_ADMIN_DOCUMENTS.find(item => item.slug === body.slug);
+  if (!document || typeof body.sha256 !== "string" || !/^[a-f0-9]{64}$/.test(body.sha256))
+    return NextResponse.json({ error: "Ungültiger PDF-Entwurf." }, { status: 400, headers });
+  try {
+    const sql = await ensureGuideShopSchema();
+    const [published] = await sql`WITH chosen AS (
+      DELETE FROM td_guide_document_drafts WHERE product_id=${document.productId} AND sha256=${body.sha256}
+      RETURNING product_id, version, sha256, file_data, assigned_filename
+    ) INSERT INTO td_guide_documents (product_id, version, sha256, file_data, assigned_filename)
+      SELECT product_id, version, sha256, file_data, assigned_filename FROM chosen
+      ON CONFLICT (product_id) DO UPDATE SET version=EXCLUDED.version, sha256=EXCLUDED.sha256,
+        file_data=EXCLUDED.file_data, assigned_filename=EXCLUDED.assigned_filename, uploaded_at=now()
+      RETURNING product_id`;
+    return published ? NextResponse.json({ published: true }, { headers }) :
+      NextResponse.json({ error: "Entwurf wurde geändert oder ist nicht mehr vorhanden. Bitte Liste aktualisieren." }, { status: 409, headers });
+  } catch { return NextResponse.json({ error: "Veröffentlichung fehlgeschlagen." }, { status: 500, headers }); }
 }
