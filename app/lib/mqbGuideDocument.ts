@@ -7,7 +7,9 @@ export function readMqbGuideDocument(product: (typeof MQB_GUIDE_PRODUCTS)[number
   const key = Buffer.from(process.env.TD_MQB_GUIDE_DOCUMENT_KEY ?? "", "base64");
   if (key.length !== 32) return null;
   try {
-    const sealed = Buffer.from(sealedMqbGuides[product.slug], "base64");
+    const source = (sealedMqbGuides as Readonly<Record<string, string | undefined>>)[product.slug];
+    if (!source) return null;
+    const sealed = Buffer.from(source, "base64");
     const decipher = createDecipheriv("aes-256-gcm", key, sealed.subarray(0, 12));
     decipher.setAAD(Buffer.from(product.slug));
     decipher.setAuthTag(sealed.subarray(12, 28));
