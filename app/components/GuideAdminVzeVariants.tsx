@@ -104,9 +104,12 @@ export default function GuideAdminVzeVariants() {
     } catch (error) { setMessage(error instanceof Error ? error.message : "Löschen fehlgeschlagen."); }
     finally { setBusy(false); }
   }
-  function renderDocumentActions(slug: string) {
-    const document = documents?.find(item => item.slug === slug);
-    if (!document) return null;
+  function renderDocumentActions(slug: string, title: string) {
+    if (!documents) return null;
+    const document = documents.find(item => item.slug === slug) ?? {
+      slug, title, available: false, filename: null, publishedSha256: null,
+      draftFilename: null, draftSha256: null, defaultFilename: "", sku: "",
+    };
 
     return <div className="rounded-lg border border-slate-200 bg-slate-50 p-2 text-sm sm:p-3">
       <p className="text-xs font-semibold text-slate-600">{document.available ? "Veröffentlicht" : "PDF fehlt"}</p>

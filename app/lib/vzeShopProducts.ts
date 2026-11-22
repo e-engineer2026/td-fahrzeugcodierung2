@@ -1,5 +1,6 @@
 import { GOLF7_VZE } from "./guideShopShared";
 import { findVzeDraft, VZE_VARIANT_DRAFTS, VZE_MODEL_PRICE_CENTS } from "./vzeVariantDrafts";
+import { catalogGuideProduct } from "./guideCatalogDocuments";
 import { findMqbGuideProduct } from "./mqbGuideProducts";
 
 /** Technisch freigegebene Fachfassung bedeutet nicht: jedes Fahrzeug unterstützt diese Bytes. */
@@ -14,6 +15,7 @@ export function guideOrderProduct(slug?: string | null): GuideOrderProduct | nul
     priceCents: GOLF7_VZE.priceCents, sha256: GOLF7_VZE.expectedSha256,
     revision: GOLF7_VZE.revision, sku: GOLF7_VZE.sku, model: GOLF7_VZE.model,
   };
+  if (slug.startsWith("catalog:")) return catalogGuideProduct(slug);
   const mqb = findMqbGuideProduct(slug);
   if (mqb) return mqb;
   const draft = findVzeDraft(slug);
@@ -27,6 +29,7 @@ export function guideOrderProduct(slug?: string | null): GuideOrderProduct | nul
 
 export function guideOrderProductFromId(productId: string): GuideOrderProduct | null {
   if (productId === GOLF7_VZE.id) return guideOrderProduct();
+  if (productId.startsWith("catalog:")) return catalogGuideProduct(productId);
   const mqb = findMqbGuideProduct(productId);
   if (mqb) return mqb;
   const draft = VZE_VARIANT_DRAFTS.find(item => item.productId === productId);
@@ -34,11 +37,12 @@ export function guideOrderProductFromId(productId: string): GuideOrderProduct | 
 }
 
 export function orderReference(id: string, product: GuideOrderProduct): string {
-  const prefix = product.slug?.startsWith("mqb-") ? "TDMQB-" : product.slug ? "TDVZE-" : "TDG7-";
+  const prefix = product.slug?.startsWith("catalog:") ? "TDPDF-" : product.slug?.startsWith("mqb-") ? "TDMQB-" : product.slug ? "TDVZE-" : "TDG7-";
   return prefix + id.slice(0, 8).toUpperCase();
 }
 
 export function paypalMeUrl(product: GuideOrderProduct): string {
-  if (product.priceCents !== 1399) throw new Error("PayPal.Me-Betrag nicht konfiguriert.");
-  return "https://paypal.me/TiDrechsler/13.99EUR";
+  if (!Number.isSafeInteger(product.priceCents) || product.priceCents <= 0)
+    throw new Error("PayPal.Me-Betrag nicht konfiguriert.");
+  return "https://paypal.me/TiDrechsler/" + (product.priceCents / 100).toFixed(2) + "EUR";
 }

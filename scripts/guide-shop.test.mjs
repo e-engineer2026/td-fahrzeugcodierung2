@@ -208,7 +208,7 @@ test("Doppelte Codierungen und 0-Euro-Angebote aus Fahrzeug- und PDF-Listen entf
   ]);
 
   const display = fs.readFileSync("app/lib/codingDisplay.ts","utf8");
-  const pdfCatalog = fs.readFileSync("app/components/GuideSelector.tsx","utf8");
+  const pdfCatalog = fs.readFileSync("app/lib/guideCatalogDocuments.ts","utf8");
   assert.match(display, /entries = entries.filter\(\(entry\) => hasDisplayPrice\(entry.price\)\)/);
   assert.match(display, /return dedupePricedDisplayEntries\(displayed\)/);
   assert.match(pdfCatalog, /uniqueByCodingName\(codingCatalog/);
@@ -388,8 +388,7 @@ test("Fahrzeugauswahl verlinkt VZE-Fachfassungen nur bei passenden MQB-Modellen"
   assert.ok(map.includes('"A3 / S3 8V": "audi-a3-8v"'));
   assert.ok(!map.includes('"A3 / S3 8Y"'));
   assert.ok(!map.includes('"Golf 8 (CD)"'));
-  assert.ok(chooser.includes("vzePdfSlugForModel"));
-  assert.ok(chooser.includes("vzeProductHref(coding.name, vzePdfSlug)"));
+  assert.ok(chooser.includes("codingDocumentSlug(vehicle, coding)"));
   assert.ok(catalog.includes('"Golf Sportsvan AM1"'));
 });
 
@@ -397,9 +396,8 @@ test("VZE-Tabelle: nur passende freigegebene Modell-PDF hat aktiven Produktlink"
   const selector = fs.readFileSync("app/components/GuideSelector.tsx", "utf8");
   const indicator = fs.readFileSync("app/components/GuidePriceIndicator.tsx", "utf8");
   const mapping = fs.readFileSync("app/lib/vzePdfVehicleLinks.ts", "utf8");
-  assert.ok(selector.includes("vzeProductHref(coding.name, vzePdfSlug)"));
-  assert.ok(selector.includes("if (!slug || !/"));
-  assert.ok(selector.includes('"/api/guide-shop/download/vze/" + slug + "?liste=1"'));
+  assert.ok(selector.includes("codingDocumentSlug(vehicle, coding)"));
+  assert.ok(selector.includes('"/api/guide-shop/download/vze/" + documentSlug + "?liste=1"'));
   assert.ok(!selector.includes("Fachfassung ansehen · 13,99 €"));
   assert.ok(mapping.includes('"Octavia 3 5E": "skoda-octavia-iii-5e"'));
   assert.ok(!mapping.includes('"Golf 8 (CD)"'));
