@@ -31,16 +31,16 @@ export default async function ModelVzePage({ params }: { params: Promise<{ slug:
         ← Zur Modellübersicht
       </Link>
       <article className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">
-        <p className="text-xs font-bold uppercase tracking-[.14em] text-blue-700">{draft.sku} · Rev. 1.0</p>
+        <p className="text-xs font-bold uppercase tracking-[.14em] text-blue-700">{draft.sku} · MQB-VZE</p>
         <h1 className="mt-2 text-2xl font-black sm:text-3xl">Verkehrszeichenerkennung (VZE) · {draft.name}</h1>
         <p className="mt-3 text-sm leading-6 text-slate-700">
-          Von TD Fahrzeugcodierung zur fachlichen Veröffentlichung freigegebene, dreiseitige PDF-Fachfassung.
+          Vierseitige, modellbezogene VZE-Prüfanleitung. Freigabe und Verkauf erfolgen erst nach ausdrücklicher Veröffentlichung durch TD Fahrzeugcodierung.
           Die Freigabe gilt für das beschriebene Prüfverfahren, nicht pauschal für jede Motorisierung,
           Kamera-, Modelljahr- und Softwarevariante.
         </p>
         <div className="mt-4 grid gap-3 border-y border-slate-100 py-4 text-sm sm:grid-cols-3">
           <p><span className="block text-xs text-slate-500">PDF-Dokument</span><strong className="text-xl text-blue-700">13,99 €</strong></p>
-          <p><span className="block text-xs text-slate-500">Umfang / Fassung</span><strong>3 Seiten · Rev. 1.0</strong></p>
+          <p><span className="block text-xs text-slate-500">Umfang / Fassung</span><strong>4 Seiten · Fachfassung</strong></p>
           <p><span className="block text-xs text-slate-500">Interface</span><strong>VCDS / VCP, je nach Variante</strong></p>
         </div>
         <h2 className="mt-5 text-lg font-bold">Voraussetzungen und Inhalt</h2>
@@ -57,7 +57,7 @@ export default async function ModelVzePage({ params }: { params: Promise<{ slug:
         {ready
           ? <ModelVzeCheckout signedIn={!!userId} slug={draft.slug} name={draft.name}/>
           : <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
-              Der endgültige private PDF-Upload ist noch nicht abgeschlossen.
+              Diese PDF ist derzeit noch nicht durch TD Fahrzeugcodierung veröffentlicht.
               Diese Anleitung wird erst angeboten, wenn die freigegebene Dateiversion sicher hinterlegt ist.
               Bitte noch keine PayPal-Zahlung ausführen.
             </div>}
