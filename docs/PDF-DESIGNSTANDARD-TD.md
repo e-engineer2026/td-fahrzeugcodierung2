@@ -2,13 +2,16 @@
 
 **Referenz:** `TD_Golf7_VZE_Entwurf_Nummerierung_korrigiert.pdf` (4 Seiten, Stand 22.11.2026). Die korrigierte Fassung ist die maßgebliche visuelle Vorlage für weitere technische PDF-Codieranleitungen. Die Quelldatei wurde im Chat als `TD_PDF_Referenzdesign.pdf` bereitgestellt.
 
-## Aktuelles Markenlogo und QR-Code (Ergänzung 22.11.2026)
+## Freigegebenes Original-Logo und PDF-Download-QR (22.11.2026)
 
-- **Offizielle Logo-Datei:** `public/td-logo-icon.png` im selben Repository. Für jede künftig erzeugte PDF **dieses Originalasset laden und unverändert einbetten**; keine generisch erzeugten TD-Quadrate und keine frei nachempfundenen Ersatzlogos.
-- **Platzierung:** Kompaktes TD-Logo links oben in der wiederkehrenden Kopfzeile, direkt gefolgt von „FAHRZEUGCODIERUNG“. Seitenkennung bleibt rechts. Seitenüberschriften, Kapitel und Tabellenspalten dürfen nicht verrutschen.
-- **QR-Code:** auf der Titelseite oben rechts in der dunkelblauen Titelkarte, mit weißer Ruhezone, ausreichend groß zum Scannen und mit Linkziel `https://td-fahrzeugcodierung.de/`. Optional zusätzlichen klickbaren URL-Text in der Fußzone der letzten Seite.
-- **Drucktauglichkeit:** QR-Code in Schwarz/Dunkelblau auf Weiß mit ausreichend quiet zone und mind. Fehlerkorrekturstufe Q, bei PDF-Export in möglichst hoher Auflösung; mit echtem Scanner und aus dem gerenderten PDF testen.
-- **Neue Standardversion:** `TD_PDF_Referenzdesign_Logo_QR.pdf` aus dem Chat ist eine visuelle Entwurfsfassung. Für die Website-PDF-Erzeugung ist das oben genannte Original-Logoasset verbindlich. Die Ausgabe darf erst nach visuellem Vergleich als finale Produktionsvorlage gelten.
+- **Maßgebliches Logo:** das vom Inhaber am 22.11.2026 bereitgestellte Bild `1000517211.jpg` mit dem dunkelblau-cyanen, breiten stilisierten **TD**-Zeichen und blauer Wortmarke **„Fahrzeugcodierung“**. Es wurde für die vierseitige PDF-Referenz als transparente Grafik freigestellt und **direkt aus dem Originalfoto**, nicht nachgezeichnet, eingebettet.
+- **Gestalterische Referenz-PDF:** `TD_Golf7_VZE_PDF_Vorlage_Original_Logo_Download_QR.pdf` (im Chat erstellt). Diese ist maßgeblich für die Optik, solange keine neue Fassung freigegeben wird.
+- **Wichtig:** `public/td-logo-icon.png` im Repository stellt eine **andere** TD-Logovariante dar und ist **nicht** die vom Inhaber zuletzt bestätigte Logo-Fassung. Für neue PDFs die zuletzt bestätigte Bildvorlage verwenden. Das Nutzerbild ist derzeit im Chat bereitgestellt, nicht als Datei in diesem Repository hinterlegt.
+- **Logo-Positionierung:** Originales breites TD-Zeichen links oben auf jeder Seite, „Fahrzeugcodierung“ rechts daneben; proportionstreu und möglichst mit transparentem Hintergrund.
+- **QR-Code auf der Titelseite:** verlinkt den *bestehenden geschützten* Golf-7-VZE-Download-Endpunkt `https://td-fahrzeugcodierung.de/api/guide-shop/download/golf7-vze?liste=1`. Bei gültiger Berechtigung wird die Datei ausgeliefert; ohne Berechtigung leitet der vorhandene Endpunkt zur Produkt-/Anleitungsseite `/codieranleitungen/golf7-vze` weiter.
+- **QR-Sicherheit und Druck:** mind. Fehlerkorrekturstufe Q, ruhiger weißer Rand, schwarze oder dunkelblaue Module; im final gerenderten PDF auf Scannbarkeit prüfen (für die Referenz am 22.11.2026 erfolgreich getestet).
+- **Andere PDF-Produkte:** immer den *jeweils zugewiesenen bestehenden* Downloadpfad benutzen; nicht pauschal den Golf-7-VZE-Link in alle PDFs einfügen und keine ungeschützten Direktlinks erfinden.
+- **Veröffentlichung:** Durch Überarbeitung der PDF-Referenz selbst wird noch nichts in der Website-PDF-Verwaltung zugeordnet oder veröffentlicht.
 
 ## Geltung
 
@@ -19,7 +22,7 @@ Dieser Standard gilt für neu erstellte TD-PDF-Anleitungen (Codierung, Diagnose,
 - **Format:** DIN A4 hochkant, weiße Seiten, großzügiger Rand ca. 43 pt (15 mm).
 - **Farbe:** Dunkelblau `#11213A` für Titelkarten und Hauptüberschriften, Blau `#1769D2` für Nummern und Akzente, Akzentflächen Hellblau `#EAF3FF`, Tabellenzeilen `#F4F8FD`, Linien `#D9E4F2`. **Keine gelben Bereiche.**
 - **Schrift:** klare serifenlose Schrift (Referenz DejaVu Sans), Titel/Überschriften fett, Erklärungstext gut lesbar, keine unnötigen Textblöcke.
-- **Kopf:** originales TD-Markenzeichen aus `public/td-logo-icon.png` und „FAHRZEUGCODIERUNG“ links; kurze fachliche Seitenkennung rechts; feine horizontale Linie.
+- **Kopf:** bestätigtes originales TD-Markenzeichen aus dem Nutzerbild `1000517211.jpg` und „FAHRZEUGCODIERUNG“ links; kurze fachliche Seitenkennung rechts; feine horizontale Linie.
 - **Titelseite:** dunkelblaue Titelkarte mit Fahrzeug-/Plattformzeile, großem Funktionstitel, Fachbezeichnung und kurzer Einordnung.
 - **Metadaten:** darunter 2 gleich breite hellblaue Karten: „Fahrzeug / Plattform“ und „Diagnoseinterface“ (je nach Thema ggf. abweichende fachliche Metadaten).
 - **Kapitel:** zweistellige Nummern-Kapsel `01`, `02`, ... links vor dem Abschnittstitel; **fortlaufend ohne Sprünge**. Nach Umstellen von Abschnitten neu nummerieren.
