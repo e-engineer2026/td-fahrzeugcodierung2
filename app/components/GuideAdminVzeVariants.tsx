@@ -131,6 +131,10 @@ export default function GuideAdminVzeVariants() {
     </div>;
   }
 
+  const publishedDocuments = (documents ?? [])
+    .filter(document => document.available && document.publishedSha256)
+    .sort((a, b) => a.title.localeCompare(b.title, "de"));
+
   return <>
     <div className="mx-auto mb-4 max-w-5xl">
       <details className="rounded-lg border border-slate-200 bg-white p-3 text-sm">
@@ -153,6 +157,46 @@ export default function GuideAdminVzeVariants() {
             className="mt-2 text-sm font-bold text-blue-800 underline">Erneut laden</button>
         : <p className="mt-2 text-sm text-slate-600" role="status">PDF-Status wird geladen …</p>)}
     </div>
+    <section className="mx-auto mb-6 max-w-5xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" aria-label="Veröffentlichte PDF-Anleitungen">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 p-4 sm:px-5">
+        <div>
+          <h2 className="text-lg font-black text-slate-900">Veröffentlichte PDFs</h2>
+          <p className="mt-1 text-xs text-slate-600">Hier stehen alle aktuell zum Download bereitgestellten Anleitungen.</p>
+        </div>
+        {documents && <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800">
+          {publishedDocuments.length} veröffentlicht
+        </span>}
+      </div>
+      {!documents ? <p className="p-4 text-sm text-slate-600" role="status">Veröffentlichte PDFs werden geladen …</p>
+        : publishedDocuments.length === 0
+          ? <p className="p-4 text-sm text-slate-600">Zurzeit sind keine PDFs veröffentlicht.</p>
+          : <ul className="divide-y divide-slate-100">
+              {publishedDocuments.map(document => <li key={document.slug}
+                className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
+                <div className="min-w-0">
+                  <p className="font-bold text-slate-900">{document.title}</p>
+                  <p className="mt-1 break-all text-xs text-slate-500">{document.filename ?? document.defaultFilename}</p>
+                </div>
+                <div className="flex shrink-0 flex-wrap gap-2 text-sm">
+                  <a href={endpoint + "/download?inline=1&slug=" + encodeURIComponent(document.slug)}
+                    target="_blank" rel="noopener noreferrer"
+                    className="inline-flex min-h-10 items-center rounded-lg border border-blue-200 px-3 font-bold text-blue-800 hover:bg-blue-50">
+                    Vorschau<span className="sr-only"> · {document.title}</span>
+                  </a>
+                  <a href={endpoint + "/download?slug=" + encodeURIComponent(document.slug)}
+                    className="inline-flex min-h-10 items-center rounded-lg border border-slate-200 px-3 font-bold text-slate-800 hover:bg-slate-50">
+                    Herunterladen<span className="sr-only"> · {document.title}</span>
+                  </a>
+                  <button type="button" disabled={busy}
+                    onClick={() => void deletePublished(document)}
+                    className="min-h-10 rounded-lg border border-red-200 px-3 font-bold text-red-700 hover:bg-red-50 disabled:opacity-50">
+                    Löschen<span className="sr-only"> · veröffentlichte PDF · {document.title}</span>
+                  </button>
+                </div>
+              </li>)}
+            </ul>}
+      {message && messageSlug && <p className="border-t border-slate-100 px-4 py-3 text-sm font-semibold text-slate-700" role="status">{message}</p>}
+    </section>
     <GuideSelector renderDocumentActions={renderDocumentActions} />
   </>;
 }
