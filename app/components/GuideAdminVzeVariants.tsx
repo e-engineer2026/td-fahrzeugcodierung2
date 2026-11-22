@@ -21,6 +21,7 @@ export default function GuideAdminVzeVariants() {
   const [documents, setDocuments] = useState<DownloadDocument[] | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  const [selectedPublished, setSelectedPublished] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [messageSlug, setMessageSlug] = useState<string | null>(null);
@@ -32,7 +33,12 @@ export default function GuideAdminVzeVariants() {
     });
     return () => controller.abort();
   }, [loadAttempt]);
-  async function refresh() { setDocuments(await loadDocuments()); }
+  async function refresh() {
+    const next = await loadDocuments();
+    setDocuments(next);
+    setSelectedPublished(current => current.filter(slug =>
+      next.some(document => document.slug === slug && document.available && document.publishedSha256)));
+  }
   async function stage(slug: string, file: File) {
     const data = new FormData(); data.set("slug", slug); data.set("pdf", file);
     const response = await fetch(endpoint, { method: "POST", body: data });
@@ -100,10 +106,52 @@ export default function GuideAdminVzeVariants() {
       setDocuments(current => current?.map(item => item.slug === document.slug
         ? { ...item, available: false, filename: null, publishedSha256: null }
         : item) ?? null);
+      setSelectedPublished(current => current.filter(slug => slug !== document.slug));
       setMessage("Veröffentlichte PDF gelöscht.");
     } catch (error) { setMessage(error instanceof Error ? error.message : "Löschen fehlgeschlagen."); }
     finally { setBusy(false); }
   }
+  async function deleteSelectedPublished() {
+    const targets = (documents ?? []).filter(document =>
+      selectedPublished.includes(document.slug) && document.available && document.publishedSha256);
+    if (!targets.length || !window.confirm(
+      `${targets.length} veröffentlichte PDF${targets.length === 1 ? "" : "s"} endgültig löschen? Auch bisherige Käufer können diese Dateien danach nicht mehr herunterladen.`
+    )) return;
+    setBusy(true);
+    setMessage("");
+    setMessageSlug(null);
+    const deleted: string[] = [];
+    const failed: string[] = [];
+    try {
+      // Serverseitige SHA256-Prüfung und Admin-Berechtigung gelten für jede einzelne Datei.
+      for (const document of targets) {
+        try {
+          const response = await fetch(endpoint, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ slug: document.slug, sha256: document.publishedSha256 }),
+          });
+          const result = await response.json() as { deleted?: boolean; error?: string };
+          if (!response.ok || !result.deleted) throw new Error(result.error ?? "Löschen fehlgeschlagen.");
+          deleted.push(document.slug);
+        } catch (error) {
+          failed.push(`${document.title}: ${error instanceof Error ? error.message : "Löschen fehlgeschlagen."}`);
+        }
+      }
+      // Bestätigte Löschungen sofort ausblenden, auch falls das Neuladen fehlschlägt.
+      if (deleted.length) {
+        setDocuments(current => current?.map(document => deleted.includes(document.slug)
+          ? { ...document, available: false, filename: null, publishedSha256: null }
+          : document) ?? null);
+        setSelectedPublished(current => current.filter(slug => !deleted.includes(slug)));
+      }
+      await refresh().catch(() => {});
+      setMessage(failed.length
+        ? `${deleted.length} PDF(s) gelöscht. ${failed.length} fehlgeschlagen: ${failed.join(" | ")}`
+        : `${deleted.length} veröffentlichte PDF${deleted.length === 1 ? "" : "s"} gelöscht.`);
+    } finally { setBusy(false); }
+  }
+
   function renderDocumentActions(slug: string) {
     const document = documents?.find(item => item.slug === slug);
     if (!document) return null;
@@ -134,6 +182,10 @@ export default function GuideAdminVzeVariants() {
   const publishedDocuments = (documents ?? [])
     .filter(document => document.available && document.publishedSha256)
     .sort((a, b) => a.title.localeCompare(b.title, "de"));
+  const selectedPublishedCount = publishedDocuments.filter(document =>
+    selectedPublished.includes(document.slug)).length;
+  const allPublishedSelected = publishedDocuments.length > 0 &&
+    selectedPublishedCount === publishedDocuments.length;
 
   return <>
     <div className="mx-auto mb-4 max-w-5xl">
@@ -167,16 +219,40 @@ export default function GuideAdminVzeVariants() {
           {publishedDocuments.length} veröffentlicht
         </span>}
       </div>
+      {documents && publishedDocuments.length > 0 && <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 bg-slate-50 px-4 py-3 sm:px-5">
+        <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 text-sm font-semibold text-slate-800">
+          <input type="checkbox" checked={allPublishedSelected} disabled={busy}
+            onChange={event => setSelectedPublished(event.target.checked
+              ? publishedDocuments.map(document => document.slug) : [])}
+            className="h-5 w-5 rounded border-slate-300 accent-blue-700" />
+          Alle auswählen
+        </label>
+        <span className="text-xs text-slate-600">{selectedPublishedCount} ausgewählt</span>
+        <button type="button" disabled={busy || selectedPublishedCount === 0}
+          onClick={() => void deleteSelectedPublished()}
+          className="ml-auto min-h-10 rounded-lg border border-red-200 px-3 text-sm font-bold text-red-700 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40">
+          {busy ? "Bitte warten …" : `Ausgewählte löschen (${selectedPublishedCount})`}
+        </button>
+      </div>}
       {!documents ? <p className="p-4 text-sm text-slate-600" role="status">Veröffentlichte PDFs werden geladen …</p>
         : publishedDocuments.length === 0
           ? <p className="p-4 text-sm text-slate-600">Zurzeit sind keine PDFs veröffentlicht.</p>
           : <ul className="divide-y divide-slate-100">
               {publishedDocuments.map(document => <li key={document.slug}
                 className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
-                <div className="min-w-0">
-                  <p className="font-bold text-slate-900">{document.title}</p>
-                  <p className="mt-1 break-all text-xs text-slate-500">{document.filename ?? document.defaultFilename}</p>
-                </div>
+
+                <label className="flex min-w-0 cursor-pointer items-start gap-3">
+                  <input type="checkbox" checked={selectedPublished.includes(document.slug)} disabled={busy}
+                    onChange={event => setSelectedPublished(current => event.target.checked
+                      ? [...new Set([...current, document.slug])]
+                      : current.filter(slug => slug !== document.slug))}
+                    aria-label={`Veröffentlichte PDF auswählen: ${document.title}`}
+                    className="mt-1 h-5 w-5 shrink-0 rounded border-slate-300 accent-blue-700" />
+                  <span className="min-w-0">
+                    <span className="block font-bold text-slate-900">{document.title}</span>
+                    <span className="mt-1 block break-all text-xs text-slate-500">{document.filename ?? document.defaultFilename}</span>
+                  </span>
+                </label>
                 <div className="flex shrink-0 flex-wrap gap-2 text-sm">
                   <a href={endpoint + "/download?inline=1&slug=" + encodeURIComponent(document.slug)}
                     target="_blank" rel="noopener noreferrer"
