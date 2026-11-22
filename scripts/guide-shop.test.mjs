@@ -323,15 +323,15 @@ test("PDF-Administrator: eigener Vercel-Admin-Zugang ohne vorhandene Adminliste 
   assert.ok(admin.includes("allow.has("));
 });
 
-test("12 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfreigabe", () => {
+test("27 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfreigabe", () => {
   const catalog = fs.readFileSync("app/lib/vzeVariantDrafts.ts", "utf8");
   const upload = fs.readFileSync("app/api/guide-shop/admin/vze-variants/route.ts", "utf8");
   const bulk = fs.readFileSync("app/api/guide-shop/admin/vze-variants/bulk/route.ts", "utf8");
   const download = fs.readFileSync("app/api/guide-shop/admin/vze-variants/download/route.ts", "utf8");
   const adminPage = fs.readFileSync("app/konto/pdf-verwaltung/page.tsx", "utf8");
   const catalogPage = fs.readFileSync("app/codieranleitungen/vze-modelle/page.tsx", "utf8");
-  assert.equal((catalog.match(/productId: "vze-/g) ?? []).length, 12);
-  assert.equal((catalog.match(/sha256: "[a-f0-9]{64}"/g) ?? []).length, 12);
+  assert.equal((catalog.match(/productId: "vze-/g) ?? []).length, 27);
+  assert.equal((catalog.match(/sha256: "[a-f0-9]{64}"/g) ?? []).length, 27);
   for (const handler of [upload, bulk, download]) {
     assert.ok(handler.includes("await isGuideAdmin()"));
     assert.ok(!handler.includes("SET status='paid'"));
@@ -342,12 +342,12 @@ test("12 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfr
   assert.ok(adminPage.includes("GuideAdminWorkspace"));
   const workspace = fs.readFileSync("app/components/GuideAdminWorkspace.tsx", "utf8");
   assert.ok(workspace.includes("GuideAdminVzeVariants"));
-  assert.ok(catalogPage.includes("zur Veröffentlichung freigegeben"));
+  assert.ok(catalogPage.includes("veröffentlicht"));
   assert.ok(catalogPage.includes("erst angeboten"));
   assert.ok(catalogPage.includes("Modellanleitung ansehen"));
 });
 
-test("12 VZE-Fachfassungen: Bestellung und Downloads sind nur produktgebunden nach Zahlung möglich", () => {
+test("27 VZE-Modellfassungen: Bestellung und Downloads sind nur produktgebunden nach Zahlung möglich", () => {
   const products = fs.readFileSync("app/lib/vzeShopProducts.ts","utf8");
   const orders = fs.readFileSync("app/api/guide-shop/account-orders/route.ts","utf8");
   const release = fs.readFileSync("app/api/guide-shop/admin/account-orders/route.ts","utf8");
@@ -384,7 +384,7 @@ test("Fahrzeugauswahl verlinkt VZE-Fachfassungen nur bei passenden MQB-Modellen"
   const map = fs.readFileSync("app/lib/vzePdfVehicleLinks.ts","utf8");
   const chooser = fs.readFileSync("app/components/GuideSelector.tsx","utf8");
   const catalog = fs.readFileSync("app/data/catalog8Base.ts","utf8");
-  assert.ok(map.includes('"Octavia 3 5E Facelift": "skoda-octavia-iii-5e"'));
+  assert.ok(map.includes('"Octavia 3 5E Facelift": "skoda-octavia-iii-5e-facelift"'));
   assert.ok(map.includes('"A3 / S3 8V": "audi-a3-8v"'));
   assert.ok(!map.includes('"A3 / S3 8Y"'));
   assert.ok(!map.includes('"Golf 8 (CD)"'));
