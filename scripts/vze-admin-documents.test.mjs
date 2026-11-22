@@ -88,15 +88,19 @@ test("Die Zuordnung verwendet alle 15 Shop-Produkte und speichert eine bearbeite
   const documents = loadTs("app/lib/guideDocuments", { "server-only": {} });
   const { createHash } = require("node:crypto");
   let allowed = true;
+  let publishRows = [];
   const writes = [];
+  const statements = [];
   const sql = async (chunks, ...parameters) => {
+    statements.push(chunks.join("?"));
     if (chunks[0].includes("SELECT")) return [
       { product_id: GOLF7_VZE.id, sha256: GOLF7_VZE.expectedSha256, assigned_filename: null },
     ];
     writes.push(parameters);
+    if (chunks[0].includes("WITH chosen")) return publishRows;
     return [];
   };
-  const { GET, POST } = loadTs("app/api/guide-shop/admin/vze-variants/route", {
+  const { GET, POST, PATCH } = loadTs("app/api/guide-shop/admin/vze-variants/route", {
     "next/server": { NextResponse: Response },
     "../../../../lib/guideAdmin": { isGuideAdmin: async () => allowed },
     "../../../../lib/guideShopDb": { ensureGuideShopSchema: async () => sql },
@@ -130,6 +134,22 @@ test("Die Zuordnung verwendet alle 15 Shop-Produkte und speichert eine bearbeite
   assert.equal((await response.json()).slug, target.slug);
   const hash = createHash("sha256").update(pdf).digest("hex");
   assert.deepEqual(writes, [[target.id, target.revision, hash, pdf.toString("base64"), "Neue Fassung.pdf"]]);
+  assert.match(statements.at(-1), /INSERT INTO td_guide_document_drafts/);
+  const publishRequest = (requestOrigin = origin, sha256 = hash) => new Request(origin + "/upload", {
+    method: "PATCH", headers: { origin: requestOrigin, "content-type": "application/json" },
+    body: JSON.stringify({ slug: target.slug, sha256 }),
+  });
+  allowed = false;
+  assert.equal((await PATCH(publishRequest())).status, 403);
+  allowed = true;
+  assert.equal((await PATCH(publishRequest("https://other.example"))).status, 403);
+  assert.equal((await PATCH(publishRequest(origin, "wrong"))).status, 400);
+  assert.equal((await PATCH(publishRequest())).status, 409);
+  assert.match(statements.at(-1), /DELETE FROM td_guide_document_drafts/);
+  assert.match(statements.at(-1), /INSERT INTO td_guide_documents/);
+  publishRows = [{ product_id: target.id }];
+  assert.equal((await PATCH(publishRequest())).status, 200);
+  assert.equal((await (await PATCH(publishRequest())).json()).published, true);
 
   const row = { data: pdf.toString("base64"), sha256: hash, assigned_filename: "Neue Fassung.pdf" };
   const assigned = await documents.readGuidePdf(async () => [row], target.id, target.sha256, target.filename);

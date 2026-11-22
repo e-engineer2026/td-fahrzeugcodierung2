@@ -441,7 +441,10 @@ test("PDF-Admin ist mobil in drei Bereiche gegliedert, ohne sichere Aktionen zu 
   assert.ok(orders.includes("Zahlung anhand der Uhrzeit zuordnen"));
   assert.ok(orders.includes("paymentVerified"));
   assert.ok(files.includes("PDF-Downloads"));
-  assert.ok(files.includes("VZE-Sammelupload"));
+  assert.ok(files.includes("PDF-Sammelupload"));
+  assert.ok(files.indexOf("PDF-Sammelupload") < files.indexOf("documents.map(document"));
+  assert.ok(files.includes("Vorschau"));
+  assert.ok(files.includes("Veröffentlichen"));
 });
 
 test("PayPal-Admin: Zahlungspruefungs-Checkbox bleibt auf Mobilgeraeten klein", () => {

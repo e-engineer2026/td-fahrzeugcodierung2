@@ -45,12 +45,12 @@ export async function POST(request: Request) {
   try {
     const sql = await ensureGuideShopSchema();
     const results = await sql.transaction(verified.map(draft =>
-      sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data)
-        VALUES (${draft.productId}, ${draft.version}, ${draft.sha256}, decode(${draft.encoded},'base64'))
+      sql`INSERT INTO td_guide_document_drafts (product_id, version, sha256, file_data, assigned_filename)
+        VALUES (${draft.productId}, ${draft.version}, ${draft.sha256}, decode(${draft.encoded},'base64'), ${draft.name + '.pdf'})
         ON CONFLICT (product_id) DO UPDATE SET
           version=EXCLUDED.version, sha256=EXCLUDED.sha256,
-          file_data=EXCLUDED.file_data, uploaded_at=now()
-        WHERE td_guide_documents.assigned_filename IS NULL RETURNING product_id`));
+          file_data=EXCLUDED.file_data, assigned_filename=EXCLUDED.assigned_filename, uploaded_at=now()
+        RETURNING product_id`));
     const count = results.filter(rows => rows.length > 0).length;
     return NextResponse.json({ stored: true, count, skipped: verified.length - count }, { status: 201, headers });
   } catch { return NextResponse.json({ error: "Privater Fachfassungs-Sammelupload fehlgeschlagen." }, { status: 500, headers }); }
