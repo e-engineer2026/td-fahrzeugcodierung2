@@ -23,6 +23,7 @@ export default function GuideAdminVzeVariants() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedPublished, setSelectedPublished] = useState<string[]>([]);
+  const [selectedDrafts, setSelectedDrafts] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [messageSlug, setMessageSlug] = useState<string | null>(null);
@@ -39,6 +40,8 @@ export default function GuideAdminVzeVariants() {
     setDocuments(next);
     setSelectedPublished(current => current.filter(slug =>
       next.some(document => document.slug === slug && document.available && document.publishedSha256)));
+    setSelectedDrafts(current => current.filter(slug =>
+      next.some(document => document.slug === slug && document.draftSha256)));
   }
   async function stage(slug: string, file: File) {
     const data = new FormData(); data.set("slug", slug); data.set("pdf", file);
@@ -110,9 +113,57 @@ export default function GuideAdminVzeVariants() {
         body: JSON.stringify({ slug: document.slug, sha256: document.draftSha256 }) });
       const result = await response.json() as { published?: boolean; error?: string };
       if (!response.ok || !result.published) throw new Error(result.error ?? "Veröffentlichung fehlgeschlagen.");
+      setSelectedDrafts(current => current.filter(slug => slug !== document.slug));
       await refresh(); setMessage(`${document.title}: PDF veröffentlicht.`);
     } catch (error) { setMessage(error instanceof Error ? error.message : "Veröffentlichung fehlgeschlagen."); }
     finally { setBusy(false); }
+  }
+  async function publishSelectedDrafts() {
+    const targets = (documents ?? []).filter(document =>
+      selectedDrafts.includes(document.slug) && document.draftSha256);
+    if (!targets.length || !window.confirm(
+      `${targets.length} ausgewählte PDF-${targets.length === 1 ? "Entwurf" : "Entwürfe"} veröffentlichen? Die Anleitungen stehen danach berechtigten Käufern zum Download zur Verfügung. Bereits veröffentlichte Versionen werden gegebenenfalls ersetzt.`
+    )) return;
+
+    setBusy(true);
+    setMessage(""); setMessageSlug(null);
+    const published: string[] = [];
+    const failed: string[] = [];
+    try {
+      for (const document of targets) {
+        try {
+          const response = await fetch(endpoint, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ slug: document.slug, sha256: document.draftSha256 }),
+          });
+          const result = await response.json() as { published?: boolean; error?: string };
+          if (!response.ok || !result.published) {
+            throw new Error(result.error ?? "Veröffentlichung fehlgeschlagen.");
+          }
+          published.push(document.slug);
+          setMessage(`${published.length} von ${targets.length} PDF-Entwürfen veröffentlicht …`);
+        } catch (error) {
+          failed.push(`${document.title}: ${error instanceof Error ? error.message : "Veröffentlichung fehlgeschlagen."}`);
+        }
+      }
+      if (published.length) {
+        setDocuments(current => current?.map(document => published.includes(document.slug)
+          ? {
+              ...document, available: true, filename: document.draftFilename,
+              publishedSha256: document.draftSha256, draftSha256: null, draftFilename: null,
+            } : document) ?? null);
+        setSelectedDrafts(current => current.filter(slug => !published.includes(slug)));
+      }
+      try { await refresh(); } catch {
+        failed.push("Die Liste konnte nicht aktualisiert werden. Bitte Seite neu laden.");
+      }
+      setMessage(failed.length
+        ? `${published.length} veröffentlicht, ${failed.length} Fehler: ${failed.join(" | ")}`
+        : `${published.length} PDF-${published.length === 1 ? "Entwurf" : "Entwürfe"} erfolgreich veröffentlicht.`);
+    } finally {
+      setBusy(false);
+    }
   }
   async function deletePublished(document: DownloadDocument) {
     if (!document.publishedSha256 ||
@@ -207,6 +258,9 @@ export default function GuideAdminVzeVariants() {
   const draftDocuments = (documents ?? [])
     .filter(document => document.draftSha256)
     .sort((a, b) => a.title.localeCompare(b.title, "de"));
+  const selectedDraftCount = draftDocuments.filter(document =>
+    selectedDrafts.includes(document.slug)).length;
+  const allDraftsSelected = draftDocuments.length > 0 && selectedDraftCount === draftDocuments.length;
   const publishedDocuments = (documents ?? [])
     .filter(document => document.available && document.publishedSha256)
     .sort((a, b) => a.title.localeCompare(b.title, "de"));
@@ -251,15 +305,38 @@ export default function GuideAdminVzeVariants() {
         </div>
         {documents && <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800">{draftDocuments.length} Entwürfe</span>}
       </div>
+      {documents && draftDocuments.length > 0 && <div className="flex flex-wrap items-center gap-3 border-b border-blue-100 bg-blue-50/40 px-4 py-3 sm:px-5">
+        <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 text-sm font-semibold text-slate-800">
+          <input type="checkbox" checked={allDraftsSelected} disabled={busy}
+            onChange={event => setSelectedDrafts(event.target.checked
+              ? draftDocuments.map(document => document.slug) : [])}
+            className="h-5 w-5 rounded border-slate-300 accent-blue-700" />
+          Alle auswählen
+        </label>
+        <span className="text-xs text-slate-600">{selectedDraftCount} ausgewählt</span>
+        <button type="button" disabled={busy || selectedDraftCount === 0}
+          onClick={() => void publishSelectedDrafts()}
+          className="ml-auto min-h-10 rounded-lg bg-blue-700 px-3 text-sm font-bold text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-40">
+          {busy ? "Bitte warten …" : `Ausgewählte veröffentlichen (${selectedDraftCount})`}
+        </button>
+      </div>}
       {!documents ? <p className="p-4 text-sm text-slate-600">Entwürfe werden geladen …</p>
         : !draftDocuments.length ? <p className="p-4 text-sm text-slate-600">Noch keine PDF-Entwürfe hinterlegt. Verwende oben den Sammelupload.</p>
         : <ul className="divide-y divide-slate-100">
           {draftDocuments.map(document => <li key={document.slug}
             className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-            <div className="min-w-0">
-              <p className="font-bold text-slate-900">{document.title}</p>
-              <p className="mt-1 break-all text-xs text-slate-500">{document.draftFilename}</p>
-            </div>
+            <label className="flex min-w-0 cursor-pointer items-start gap-3">
+              <input type="checkbox" checked={selectedDrafts.includes(document.slug)} disabled={busy}
+                onChange={event => setSelectedDrafts(current => event.target.checked
+                  ? [...new Set([...current, document.slug])]
+                  : current.filter(slug => slug !== document.slug))}
+                aria-label={`PDF-Entwurf auswählen: ${document.title}`}
+                className="mt-1 h-5 w-5 shrink-0 rounded border-slate-300 accent-blue-700" />
+              <span className="min-w-0">
+                <span className="block font-bold text-slate-900">{document.title}</span>
+                <span className="mt-1 block break-all text-xs text-slate-500">{document.draftFilename}</span>
+              </span>
+            </label>
             <div className="flex shrink-0 flex-wrap gap-2 text-sm">
               <a href={endpoint + "/download?draft=1&slug=" + encodeURIComponent(document.slug)}
                 target="_blank" rel="noopener noreferrer"
