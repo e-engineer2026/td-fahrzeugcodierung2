@@ -1,3 +1,5 @@
+import { MQB_LANE_ASSIST_MODEL_PRODUCTS } from "./mqbLaneAssistModels";
+
 export const MQB_GUIDE_PRODUCTS = [
   {
     id: "mqb-lane-assist",
@@ -25,6 +27,8 @@ export const MQB_GUIDE_PRODUCTS = [
     codingIds: ["vcds-fla", "tcross-fla"],
     description: "Prüfablauf für Kamera und Lichtanlage mit Protokoll für den Funktionstest der Fernlichtumschaltung.",
   },
+  // Separate private model drafts. Only an administrator can upload and publish.
+  ...MQB_LANE_ASSIST_MODEL_PRODUCTS,
 ] as const;
 
 export function findMqbGuideProduct(slug: string) {
