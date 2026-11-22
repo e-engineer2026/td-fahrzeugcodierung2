@@ -2,10 +2,15 @@ import "server-only";
 import { createHash } from "node:crypto";
 import type { shopDatabase } from "./guideShopDb";
 
-type DocumentRow = { sha256?: unknown; assigned_filename?: unknown };
+type DocumentRow = { sha256?: unknown; assigned_filename?: unknown; withdrawn?: unknown };
 
-export function isAvailableGuideDocument(row: DocumentRow | undefined, expectedSha256: string): boolean {
-  return !!row && (typeof row.assigned_filename === "string" || row.sha256 === expectedSha256);
+export function isAvailableGuideDocument(
+  row: DocumentRow | undefined,
+  expectedSha256: string,
+  fallback?: () => Buffer | null,
+): boolean {
+  return row?.withdrawn !== true &&
+    (typeof row?.assigned_filename === "string" || row?.sha256 === expectedSha256 || !!fallback?.());
 }
 
 export function isGuidePdf(bytes: Buffer): boolean {
@@ -18,13 +23,19 @@ export async function readGuidePdf(
   productId: string,
   expectedSha256: string,
   defaultFilename: string,
+  fallback?: () => Buffer | null,
 ) {
-  const [file] = await sql`SELECT encode(file_data,'base64') AS data, sha256, assigned_filename
+  const [file] = await sql`SELECT encode(file_data,'base64') AS data, sha256, assigned_filename, withdrawn
     FROM td_guide_documents WHERE product_id=${productId}`;
-  if (!file || !isAvailableGuideDocument(file, expectedSha256) || typeof file.data !== "string") return null;
-  const bytes = Buffer.from(file.data, "base64");
-  if (!isGuidePdf(bytes) || createHash("sha256").update(bytes).digest("hex") !== file.sha256) return null;
-  return { bytes, filename: typeof file.assigned_filename === "string" ? file.assigned_filename : defaultFilename };
+  if (file?.withdrawn === true) return null;
+  if (file && isAvailableGuideDocument(file, expectedSha256) && typeof file.data === "string") {
+    const bytes = Buffer.from(file.data, "base64");
+    if (isGuidePdf(bytes) && createHash("sha256").update(bytes).digest("hex") === file.sha256) {
+      return { bytes, filename: typeof file.assigned_filename === "string" ? file.assigned_filename : defaultFilename };
+    }
+  }
+  const bytes = fallback?.();
+  return bytes ? { bytes, filename: defaultFilename } : null;
 }
 
 export function guidePdfResponse(bytes: Buffer, filename: string, headers: Record<string, string>) {

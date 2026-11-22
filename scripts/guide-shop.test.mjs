@@ -359,10 +359,10 @@ test("12 VZE-Fachfassungen: Bestellung und Downloads sind nur produktgebunden na
   assert.ok(products.includes("VZE_MODEL_PRICE_CENTS"));
   assert.ok(orders.includes("productSlug"));
   assert.ok(orders.includes("termsAccepted !== true"));
-  assert.ok(orders.includes("sha256="));
+  assert.ok(orders.includes("isAvailableGuideDocument(document, product.sha256"));
   assert.ok(release.includes("paymentVerified !== true"));
   assert.ok(release.includes("td_guide_manual_grants"));
-  assert.ok(release.includes("sha256="));
+  assert.ok(release.includes("isAvailableGuideDocument(document, product.sha256"));
   assert.ok(download.includes("await auth()"));
   assert.ok(download.includes("status='paid'"));
   assert.ok(download.includes("readGuidePdf(sql, draft.productId, draft.sha256"));

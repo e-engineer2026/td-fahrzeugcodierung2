@@ -5,6 +5,7 @@ import Golf7VzeCheckout from "../../components/Golf7VzeCheckout";
 import AccountPaypalGuideCheckout from "../../components/AccountPaypalGuideCheckout";
 import { auth } from "@clerk/nextjs/server";
 import { GOLF7_VZE } from "../../lib/guideShopShared";
+import { ensureGuideShopSchema } from "../../lib/guideShopDb";
 import { configuredShopMode } from "../../lib/guidePaypal";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -15,6 +16,12 @@ export const metadata: Metadata = {
 export default async function Golf7VzePage() {
   const mode = configuredShopMode();
   const { userId } = await auth();
+  let unavailable = true;
+  try {
+    const sql = await ensureGuideShopSchema();
+    const [document] = await sql`SELECT withdrawn FROM td_guide_documents WHERE product_id=${GOLF7_VZE.id}`;
+    unavailable = document?.withdrawn === true;
+  } catch { /* Bei fehlender Statusprüfung keine Zahlung anbieten. */ }
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <div className="container-x max-w-4xl py-8 sm:py-12">
@@ -48,10 +55,12 @@ export default async function Golf7VzePage() {
               Sicherheitskontrollen, Backup, Funktionsprüfung, Rückbau und Dokumentationsprotokoll</p>
           </section>
 
-          <div className="mt-6">{mode === "off"
+          <div className="mt-6">{unavailable
+            ? <p className="text-sm text-amber-900">Die PDF ist derzeit nicht verfügbar. Bitte noch keine Zahlung ausführen.</p>
+            : mode === "off"
             ? <AccountPaypalGuideCheckout signedIn={!!userId} />
             : <Golf7VzeCheckout mode={mode} />}</div>
-          {mode === "off" ? null : <p className="mt-4 text-xs leading-5 text-slate-500">
+          {unavailable || mode === "off" ? null : <p className="mt-4 text-xs leading-5 text-slate-500">
             Zahlungen ausschließlich über den technisch freigegebenen PayPal-Checkout.
             PDF-Downloads werden erst nach einer serverseitig verifizierten Bezahlung
             für die zugeordnete Gastbestellung bereitgestellt. Eine Registrierung ist nicht nötig.

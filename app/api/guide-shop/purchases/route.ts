@@ -19,9 +19,10 @@ export async function GET() {
       ORDER BY paid_at DESC NULLS LAST LIMIT 100`;
     const productIds = [GOLF7_VZE.id, ...VZE_VARIANT_DRAFTS.map(draft => draft.productId),
       ...MQB_GUIDE_PRODUCTS.map(product => product.id)];
-    const documents = await sql`SELECT product_id, sha256, assigned_filename FROM td_guide_documents
+    const documents = await sql`SELECT product_id, sha256, assigned_filename, withdrawn FROM td_guide_documents
       WHERE product_id = ANY(${productIds}::text[])`;
-    const hasDoc = (id: string, hash: string) => isAvailableGuideDocument(documents.find(d => d.product_id === id), hash);
+    const hasDoc = (id: string, hash: string, fallback?: () => Buffer | null) =>
+      isAvailableGuideDocument(documents.find(d => d.product_id === id), hash, fallback);
     const paid = orders.find(o => o.product_id === GOLF7_VZE.id && o.status === "paid");
     const pending = orders.some(o => o.product_id === GOLF7_VZE.id && o.status === "pending");
     return NextResponse.json({
@@ -47,7 +48,7 @@ export async function GET() {
         return {
           slug: product.slug, name: product.name, sku: product.sku, paid,
           pending: !paid && matching.some(order => order.status === "pending"),
-          documentAvailable: paid && (hasDoc(product.id, product.sha256) || !!readMqbGuideDocument(product)),
+          documentAvailable: paid && hasDoc(product.id, product.sha256, () => readMqbGuideDocument(product)),
           downloadHref: "/api/guide-shop/download/mqb/" + product.slug,
           label: "MQB-Prüfunterlage · Rev. " + product.revision,
         };

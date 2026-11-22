@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
 import { guideOrderProduct, orderReference, paypalMeUrl } from "../../../lib/vzeShopProducts";
 import { findMqbGuideProduct } from "../../../lib/mqbGuideProducts";
+import { isAvailableGuideDocument } from "../../../lib/guideDocuments";
 import { readMqbGuideDocument } from "../../../lib/mqbGuideDocument";
 
 export const runtime = "nodejs";
@@ -16,6 +17,8 @@ export async function GET(request: Request) {
   if (!product) return NextResponse.json({ error: "Modell nicht gefunden." }, { status: 404, headers });
   try {
     const sql = await ensureGuideShopSchema();
+    const [document] = await sql`SELECT withdrawn FROM td_guide_documents WHERE product_id=${product.id}`;
+    if (document?.withdrawn === true) return NextResponse.json({ order: null }, { headers });
     const [pending] = await sql`SELECT id FROM td_guide_orders
       WHERE clerk_user_id=${userId} AND product_id=${product.id} AND status='pending'
       ORDER BY created_at DESC LIMIT 1`;
@@ -45,14 +48,12 @@ export async function POST(request: Request) {
     const email = user.emailAddresses.find(address => address.verification?.status === "verified")?.emailAddress;
     if (!email) return NextResponse.json({ error: "Verifizierte E-Mail-Adresse erforderlich." }, { status: 403, headers });
     const sql = await ensureGuideShopSchema();
-    // Modellbestellungen benötigen eine verfügbare Shop-Datei.
-    if (product.slug) {
-      const mqb = findMqbGuideProduct(product.slug);
-      const [document] = await sql`SELECT product_id FROM td_guide_documents
-        WHERE product_id=${product.id} AND (sha256=${product.sha256} OR assigned_filename IS NOT NULL)`;
-      if (!document && !(mqb && readMqbGuideDocument(mqb))) return NextResponse.json({ error: "Diese Fachanleitung ist noch nicht bereitgestellt. Noch keine Zahlung ausführen." },
+    const [document] = await sql`SELECT sha256, assigned_filename, withdrawn FROM td_guide_documents WHERE product_id=${product.id}`;
+    const mqb = findMqbGuideProduct(product.id);
+    if (document?.withdrawn === true || (product.slug &&
+        !isAvailableGuideDocument(document, product.sha256, mqb ? () => readMqbGuideDocument(mqb) : undefined)))
+      return NextResponse.json({ error: "Diese PDF ist derzeit nicht verfügbar. Bitte noch keine Zahlung ausführen." },
         { status: 503, headers });
-    }
     const [paid] = await sql`SELECT id FROM td_guide_orders WHERE clerk_user_id=${userId}
       AND product_id=${product.id} AND status='paid' LIMIT 1`;
     if (paid) return NextResponse.json({ error: "Diese PDF ist bereits in deinem Konto freigeschaltet." }, { status: 409, headers });
