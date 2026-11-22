@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { isGuideAdmin } from "../../lib/guideAdmin";
 // Sicherheitshinweis zum Vercel Automation Bypass ist im erweiterten Technikbereich sichtbar.
+import GuideCatalogPage from "../../components/GuideCatalogPage";
 import GuideAdminWorkspace from "../../components/GuideAdminWorkspace";
 import { resolveShopMode } from "../../lib/guideShopShared";
 
@@ -33,15 +34,18 @@ export default async function GuideAdminPage() {
     { name: "Sandbox-Betriebsart", ready: process.env.TD_GUIDE_SHOP_MODE === "sandbox" && process.env.PAYPAL_ENV === "sandbox" },
     { name: "HTTPS-Preview-Rückleitung", ready: !!process.env.TD_GUIDE_SHOP_RETURN_ORIGIN },
   ];
+  if (admin) return <GuideCatalogPage admin>
+    <GuideAdminWorkspace production={production} preview={preview}
+      liveMode={liveMode} liveChecks={liveChecks} paypalChecks={paypalChecks} />
+  </GuideCatalogPage>;
+
   return <main className="container-x min-h-[70vh] max-w-4xl py-8 sm:py-10">
     <Link href="/konto" className="text-sm font-bold text-blue-700 hover:underline">
       ← Zum Kundenkonto
     </Link>
     <h1 className="mt-4 text-2xl font-black">PDF-Verwaltung</h1>
-    {admin ? <GuideAdminWorkspace production={production} preview={preview}
-      liveMode={liveMode} liveChecks={liveChecks} paypalChecks={paypalChecks} /> :
-      <p className="mt-5 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-700">
-        Für die PDF-Verwaltung ist ein ausdrücklich freigegebenes, verifiziertes Administratorkonto erforderlich.
-      </p>}
+    <p className="mt-5 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-700">
+      Für die PDF-Verwaltung ist ein ausdrücklich freigegebenes, verifiziertes Administratorkonto erforderlich.
+    </p>
   </main>;
 }

@@ -5,6 +5,7 @@ import { CreditCard, FileText, Settings2 } from "lucide-react";
 import GuideAdminManualRelease from "./GuideAdminManualRelease";
 import GuideAdminAccountOrders from "./GuideAdminAccountOrders";
 import GuideAdminVzeVariants from "./GuideAdminVzeVariants";
+import GuideSelector from "./GuideSelector";
 
 type Check = { name: string; ready: boolean };
 type Tab = "payments" | "documents" | "more";
@@ -17,16 +18,16 @@ type Props = {
 };
 
 const tabs: { id: Tab; label: string; Icon: typeof CreditCard }[] = [
-  { id: "payments", label: "Zahlungen", Icon: CreditCard },
   { id: "documents", label: "PDF-Dateien", Icon: FileText },
+  { id: "payments", label: "Zahlungen", Icon: CreditCard },
   { id: "more", label: "Weitere", Icon: Settings2 },
 ];
 
 /** Nur die Oberfläche wird vereinfacht. Alle Berechtigungen bleiben serverseitig geprüft. */
 export default function GuideAdminWorkspace({ production, preview, liveMode, liveChecks, paypalChecks }: Props) {
-  const [active, setActive] = useState<Tab>(production ? "payments" : "documents");
-  return <div className="mt-5">
-    <nav className="grid grid-cols-3 gap-1.5 rounded-xl border border-slate-200 bg-slate-100 p-1.5" aria-label="PDF-Verwaltung">
+  const [active, setActive] = useState<Tab>("documents");
+  return <div className="container-x py-5 sm:py-7">
+    <nav className="mx-auto mb-4 grid max-w-5xl grid-cols-3 gap-1.5 rounded-xl border border-slate-200 bg-slate-100 p-1.5" aria-label="PDF-Verwaltung">
       {tabs.map(({ id, label, Icon }) => <button key={id} type="button"
         aria-current={active === id ? "page" : undefined}
         onClick={() => setActive(id)}
@@ -37,17 +38,17 @@ export default function GuideAdminWorkspace({ production, preview, liveMode, liv
       </button>)}
     </nav>
 
-    {active === "payments" && <section aria-label="Zahlungen und Bestellungen">
+    {active === "payments" && <section className="mx-auto max-w-4xl" aria-label="Zahlungen und Bestellungen">
       <p className="mt-4 text-sm text-slate-600">Bestellungen prüfen, PayPal-Zahlungen zuordnen und den gekauften Download freigeben.</p>
       {production ? <GuideAdminAccountOrders /> :
         <p className="mt-4 rounded-lg border border-slate-200 bg-white p-4 text-sm">Bestellungen können nur in der Produktionsumgebung bearbeitet werden.</p>}
     </section>}
 
     {active === "documents" && <section aria-label="PDF-Dateien verwalten">
-      {production && <GuideAdminVzeVariants />}
+      {production ? <GuideAdminVzeVariants /> : <GuideSelector />}
     </section>}
 
-    {active === "more" && <section aria-label="Weitere Funktionen">
+    {active === "more" && <section className="mx-auto max-w-4xl" aria-label="Weitere Funktionen">
       <p className="mt-4 text-sm text-slate-600">Sonderfälle und technische Informationen. Für normale Bestellungen nicht erforderlich.</p>
       {production && <details className="mt-4 rounded-xl border border-slate-200 bg-white p-4">
         <summary className="cursor-pointer font-bold text-slate-900">Gastkauf: Persönlichen PDF-Link erstellen</summary>

@@ -1,3 +1,4 @@
+import { GOLF7_VZE_ADMIN_SLUG } from "./vzePdfVehicleLinks";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
 import { GOLF7_VZE } from "./guideShopShared";
 import { VZE_VARIANT_DRAFTS, type VzeVariantDraft } from "./vzeVariantDrafts";
@@ -7,7 +8,7 @@ import { VZE_VARIANT_DRAFTS, type VzeVariantDraft } from "./vzeVariantDrafts";
  * Die zwölf Rev.-1.0-Modellfassungen bleiben unabhängig von Golf 7 Rev. 1.3.
  */
 export const GOLF7_ADMIN_DOCUMENT: VzeVariantDraft = {
-  slug: "vw-golf-7-5g",
+  slug: GOLF7_VZE_ADMIN_SLUG,
   name: "VW Golf 7 / 7.5",
   code: "5G / AU",
   sku: GOLF7_VZE.sku,

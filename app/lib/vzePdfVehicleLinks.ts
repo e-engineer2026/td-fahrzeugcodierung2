@@ -1,3 +1,5 @@
+export const GOLF7_VZE_ADMIN_SLUG = "vw-golf-7-5g";
+
 /** Only explicitly documented MQB generations are linked to TD's corresponding model PDF.
  * SFD2/MQB evo/other platforms are deliberately not inferred from name similarity. */
 const VZE_MODEL_LINKS: Record<string,string> = {
