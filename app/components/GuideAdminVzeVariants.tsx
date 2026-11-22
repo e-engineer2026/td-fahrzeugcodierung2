@@ -5,7 +5,7 @@ import GuideSelector from "./GuideSelector";
 
 type DownloadDocument = {
   slug: string; title: string; sku: string; filename: string | null; available: boolean;
-  defaultFilename: string; draftFilename: string | null; draftSha256: string | null;
+  defaultFilename: string; publishedSha256: string | null; draftFilename: string | null; draftSha256: string | null;
 };
 type Candidate = { file: File; slug: string };
 const endpoint = "/api/guide-shop/admin/vze-variants";
@@ -83,6 +83,27 @@ export default function GuideAdminVzeVariants() {
     } catch (error) { setMessage(error instanceof Error ? error.message : "Veröffentlichung fehlgeschlagen."); }
     finally { setBusy(false); }
   }
+  async function deletePublished(document: DownloadDocument) {
+    if (!document.publishedSha256 ||
+        !window.confirm(`Veröffentlichte PDF für ${document.title} löschen? Auch bisherige Käufer können diese Datei danach nicht mehr herunterladen.`)) return;
+    setBusy(true); setMessage(""); setMessageSlug(document.slug);
+    try {
+      const response = await fetch(endpoint, {
+        method: "DELETE", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: document.slug, sha256: document.publishedSha256 }),
+      });
+      const result = await response.json() as { deleted?: boolean; error?: string };
+      if (!response.ok || !result.deleted) {
+        if (response.status === 409) await refresh().catch(() => {});
+        throw new Error(result.error ?? "Löschen fehlgeschlagen.");
+      }
+      setDocuments(current => current?.map(item => item.slug === document.slug
+        ? { ...item, available: false, filename: null, publishedSha256: null }
+        : item) ?? null);
+      setMessage("Veröffentlichte PDF gelöscht.");
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Löschen fehlgeschlagen."); }
+    finally { setBusy(false); }
+  }
   function renderDocumentActions(slug: string) {
     const document = documents?.find(item => item.slug === slug);
     if (!document) return null;
@@ -97,6 +118,11 @@ export default function GuideAdminVzeVariants() {
         {document.draftSha256 && <><a href={endpoint + "/download?draft=1&slug=" + encodeURIComponent(document.slug)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center rounded-lg border border-blue-200 px-3 font-bold text-blue-800">Vorschau<span className="sr-only"> · {document.title}</span></a>
           <button type="button" disabled={busy} onClick={() => void publish(document)} className="min-h-10 rounded-lg bg-blue-700 px-3 font-bold text-white disabled:opacity-50">Veröffentlichen<span className="sr-only"> · {document.title}</span></button></>}
         <button type="button" disabled={busy} aria-expanded={selected === document.slug} onClick={() => { setMessage(""); setSelected(selected === document.slug ? null : document.slug); }} className="min-h-10 rounded-lg border border-blue-200 px-3 font-bold text-blue-800 disabled:opacity-50">PDF zuweisen<span className="sr-only"> · {document.title}</span></button>
+        {document.publishedSha256 && <button type="button" disabled={busy}
+          onClick={() => void deletePublished(document)}
+          className="min-h-10 rounded-lg border border-red-200 px-3 font-bold text-red-700 hover:bg-red-50 disabled:opacity-50">
+          Löschen<span className="sr-only"> · veröffentlichte PDF · {document.title}</span>
+        </button>}
       </div>
       {selected === document.slug && <form onSubmit={event => void uploadOne(event)} className="mt-3 space-y-3 rounded-lg bg-slate-50 p-3"><input type="hidden" name="slug" value={document.slug} />
         <label className="block font-semibold">Datei auswählen (PDF, max. 3 MB)<input className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2" type="file" name="pdf" accept=".pdf,application/pdf" required disabled={busy} /></label>

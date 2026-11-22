@@ -147,6 +147,7 @@ test("Die Zuordnung verwendet alle 15 Shop-Produkte und speichert eine bearbeite
   assert.equal((await PATCH(publishRequest())).status, 409);
   assert.match(statements.at(-1), /DELETE FROM td_guide_document_drafts/);
   assert.match(statements.at(-1), /INSERT INTO td_guide_documents/);
+  assert.match(statements.at(-1), /withdrawn=false/);
   publishRows = [{ product_id: target.id }];
   assert.equal((await PATCH(publishRequest())).status, 200);
   assert.equal((await (await PATCH(publishRequest())).json()).published, true);
@@ -172,4 +173,68 @@ test("Öffentliche und interne PDF-Anleitungen verwenden dieselbe Fahrzeugliste"
   assert.match(selector, /documentSlug: mqbGuide\?\.slug \?\? \(golf7Vze \? GOLF7_VZE_ADMIN_SLUG : vzeHref \? vzePdfSlug/);
   assert.match(table, /showDownload=\{!renderDocumentActions \|\| !row.documentSlug\}/);
   assert.match(table, /renderDocumentActions\(row.documentSlug\)/);
+});
+
+test("Veröffentlichte PDFs benötigen zum Löschen Admin-Zugriff und die aktuelle Prüfsumme", async () => {
+  const { MQB_GUIDE_PRODUCTS } = loadTs("app/lib/mqbGuideProducts");
+  const product = MQB_GUIDE_PRODUCTS[0];
+  const documents = loadTs("app/lib/guideDocuments", { "server-only": {} });
+  const bundled = Buffer.from("%PDF-1.7\nMQB\n%%EOF");
+  let allowed = true;
+  let withdrawn = false;
+  let deleteCount = 0;
+  const sql = async (chunks, ...parameters) => {
+    const statement = chunks.join("?");
+    if (statement.includes("FROM td_guide_document_drafts")) {
+      return [{ product_id: product.id, assigned_filename: "Entwurf.pdf", sha256: "draft" }];
+    }
+    if (statement.startsWith("SELECT")) {
+      return withdrawn ? [{ product_id: product.id, withdrawn: true, sha256: "", assigned_filename: null }] : [];
+    }
+    assert.match(statement, /file_data=decode\('', 'base64'\)/);
+    assert.match(statement, /WHERE NOT td_guide_documents.withdrawn/);
+    assert.equal(parameters[0], product.id);
+    deleteCount++;
+    if (withdrawn || parameters[4] !== product.sha256) return [];
+    withdrawn = true;
+    return [{ product_id: product.id }];
+  };
+
+  const { GET, DELETE } = loadTs("app/api/guide-shop/admin/vze-variants/route", {
+    "next/server": { NextResponse: Response },
+    "../../../../lib/guideAdmin": { isGuideAdmin: async () => allowed },
+    "../../../../lib/guideShopDb": { ensureGuideShopSchema: async () => sql },
+    "../../../../lib/mqbGuideDocument": { readMqbGuideDocument: item => item.id === product.id ? bundled : null },
+    "../../../../lib/guideDocuments": documents,
+  });
+  const status = async () => (await (await GET()).json()).documents.find(item => item.slug === product.slug);
+  assert.equal((await status()).publishedSha256, product.sha256);
+
+  const origin = "https://td.example";
+  function remove({ slug = product.slug, sha256 = product.sha256, requestOrigin = origin } = {}) {
+    return DELETE(new Request(origin + "/admin", { method: "DELETE",
+      headers: { origin: requestOrigin, "content-type": "application/json" },
+      body: JSON.stringify({ slug, sha256 }) }));
+  }
+  allowed = false;
+  assert.equal((await remove()).status, 403);
+  allowed = true;
+  assert.equal((await remove({ requestOrigin: "https://other.example" })).status, 403);
+  assert.equal((await remove({ slug: "unknown" })).status, 400);
+  assert.equal(deleteCount, 0);
+  assert.equal((await remove({ sha256: "a".repeat(64) })).status, 409);
+  assert.equal((await (await remove()).json()).deleted, true);
+  assert.equal((await remove()).status, 409);
+
+  const removed = await status();
+  assert.equal(removed.available, false);
+  assert.equal(removed.publishedSha256, null);
+  assert.equal(removed.filename, null);
+  assert.equal(removed.draftFilename, "Entwurf.pdf");
+
+  assert.equal(documents.isAvailableGuideDocument({ withdrawn: true }, product.sha256, () => bundled), false);
+  assert.equal(await documents.readGuidePdf(async () => [{ withdrawn: true }],
+    product.id, product.sha256, product.filename, () => bundled), null);
+  assert.deepEqual(await documents.readGuidePdf(async () => [],
+    product.id, product.sha256, product.filename, () => bundled), { bytes: bundled, filename: product.filename });
 });

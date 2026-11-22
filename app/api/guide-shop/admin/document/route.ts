@@ -34,8 +34,8 @@ export async function PUT(request: Request) {
       ON CONFLICT(product_id) DO UPDATE
       SET version=EXCLUDED.version, sha256=EXCLUDED.sha256,
           file_data=EXCLUDED.file_data, uploaded_at=now()
-      WHERE td_guide_documents.assigned_filename IS NULL RETURNING product_id`;
-    if (!stored) return NextResponse.json({ error: "Für diesen Download ist bereits eine PDF manuell zugeordnet." },
+      WHERE td_guide_documents.assigned_filename IS NULL AND NOT td_guide_documents.withdrawn RETURNING product_id`;
+    if (!stored) return NextResponse.json({ error: "Dieser Download wird in der PDF-Verwaltung gepflegt." },
       { status: 409, headers: headers });
     return NextResponse.json({ stored: true, sha256, bytes: pdf.length }, { headers });
   } catch {

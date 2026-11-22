@@ -26,10 +26,10 @@ export async function GET(request: Request, context: { params: Promise<{ slug: s
       AND amount_cents=${product.priceCents} AND currency='EUR' LIMIT 1`;
     if (!paid) return fromCatalog ? redirectToOrder()
       : NextResponse.json({ error: "Keine bestätigte Zahlung für diese PDF." }, { status: 403, headers });
-    const file = await readGuidePdf(sql, product.id, product.sha256, product.filename);
-    const pdf = file?.bytes ?? readMqbGuideDocument(product);
-    if (!pdf) return NextResponse.json({ error: "Die PDF ist derzeit nicht hinterlegt." }, { status: 503, headers });
-    return guidePdfResponse(pdf, file?.filename ?? product.filename, headers);
+    const file = await readGuidePdf(sql, product.id, product.sha256, product.filename,
+      () => readMqbGuideDocument(product));
+    if (!file) return NextResponse.json({ error: "Die PDF ist derzeit nicht hinterlegt." }, { status: 503, headers });
+    return guidePdfResponse(file.bytes, file.filename, headers);
   } catch {
     return NextResponse.json({ error: "Download vorübergehend nicht verfügbar." }, { status: 500, headers });
   }

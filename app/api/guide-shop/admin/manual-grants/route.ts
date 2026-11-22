@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   try {
     const sql = await ensureGuideShopSchema();
     const [document] = await sql`SELECT product_id FROM td_guide_documents
-      WHERE product_id=${GOLF7_VZE.id} AND (sha256=${GOLF7_VZE.expectedSha256} OR assigned_filename IS NOT NULL)`;
+      WHERE product_id=${GOLF7_VZE.id} AND NOT withdrawn AND (sha256=${GOLF7_VZE.expectedSha256} OR assigned_filename IS NOT NULL)`;
     if (!document) return NextResponse.json({ error: "PDF-Dokument fehlt oder Pruefsumme stimmt nicht." }, { status: 503, headers });
     const claimToken = newGuestToken();
     const claimHash = hashGuestToken(claimToken);

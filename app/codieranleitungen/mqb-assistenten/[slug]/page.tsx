@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ModelVzeCheckout from "../../../components/ModelVzeCheckout";
 import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
+import { isAvailableGuideDocument } from "../../../lib/guideDocuments";
 import { readMqbGuideDocument } from "../../../lib/mqbGuideDocument";
 import { findMqbGuideProduct } from "../../../lib/mqbGuideProducts";
 import { formatGuidePrice } from "../../../lib/guidePricing";
@@ -18,15 +19,12 @@ export default async function MqbGuidePage({ params }: { params: Promise<{ slug:
   const product = findMqbGuideProduct((await params).slug);
   if (!product) notFound();
   const { userId } = await auth();
-  let ready = !!readMqbGuideDocument(product);
-  if (!ready) {
-    try {
-      const sql = await ensureGuideShopSchema();
-      const [document] = await sql`SELECT product_id FROM td_guide_documents
-        WHERE product_id=${product.id} AND (sha256=${product.sha256} OR assigned_filename IS NOT NULL)`;
-      ready = !!document;
-    } catch { ready = false; }
-  }
+  let ready = false;
+  try {
+    const sql = await ensureGuideShopSchema();
+    const [document] = await sql`SELECT sha256, assigned_filename, withdrawn FROM td_guide_documents WHERE product_id=${product.id}`;
+    ready = isAvailableGuideDocument(document, product.sha256, () => readMqbGuideDocument(product));
+  } catch { ready = false; }
   return <main className="min-h-screen bg-slate-50 text-slate-950">
     <div className="container-x max-w-4xl py-8 sm:py-12">
       <Link href="/codieranleitungen" className="text-sm font-bold text-blue-700 hover:underline">← PDF-Anleitungen</Link>
