@@ -1,3 +1,4 @@
+import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
 import { GOLF7_VZE } from "./guideShopShared";
 import { VZE_VARIANT_DRAFTS, type VzeVariantDraft } from "./vzeVariantDrafts";
 
@@ -31,3 +32,18 @@ export function vzeAdminStorageVersion(productId: string): string {
 export function vzeAdminDisplayRevision(productId: string): string {
   return productId === GOLF7_VZE.id ? GOLF7_VZE.revision : "1.0";
 }
+
+/** Die Verwaltung verwendet dieselben Downloads wie der Kundenbereich. */
+export const GUIDE_ADMIN_DOCUMENTS = [
+  ...VZE_ADMIN_DOCUMENTS.map(document => ({
+    ...document,
+    title: "Verkehrszeichenerkennung (VZE) · " + document.name,
+    revision: vzeAdminDisplayRevision(document.productId),
+  })),
+  ...MQB_GUIDE_PRODUCTS.map(product => ({
+    ...product,
+    productId: product.id,
+    title: product.name + " · MQB",
+    code: "MQB",
+  })),
+];

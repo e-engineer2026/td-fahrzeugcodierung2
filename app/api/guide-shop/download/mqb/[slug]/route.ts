@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { ensureGuideShopSchema } from "../../../../../lib/guideShopDb";
+import { guidePdfResponse, readGuidePdf } from "../../../../../lib/guideDocuments";
 import { readMqbGuideDocument } from "../../../../../lib/mqbGuideDocument";
 import { findMqbGuideProduct } from "../../../../../lib/mqbGuideProducts";
 
@@ -25,13 +26,10 @@ export async function GET(request: Request, context: { params: Promise<{ slug: s
       AND amount_cents=${product.priceCents} AND currency='EUR' LIMIT 1`;
     if (!paid) return fromCatalog ? redirectToOrder()
       : NextResponse.json({ error: "Keine bestätigte Zahlung für diese PDF." }, { status: 403, headers });
-    const pdf = readMqbGuideDocument(product);
+    const file = await readGuidePdf(sql, product.id, product.sha256, product.filename);
+    const pdf = file?.bytes ?? readMqbGuideDocument(product);
     if (!pdf) return NextResponse.json({ error: "Die PDF ist derzeit nicht hinterlegt." }, { status: 503, headers });
-    return new Response(new Uint8Array(pdf), { headers: {
-      ...headers, "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="${product.filename}"`,
-      "Content-Length": String(pdf.length),
-    } });
+    return guidePdfResponse(pdf, file?.filename ?? product.filename, headers);
   } catch {
     return NextResponse.json({ error: "Download vorübergehend nicht verfügbar." }, { status: 500, headers });
   }

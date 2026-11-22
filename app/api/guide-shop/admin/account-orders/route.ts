@@ -51,10 +51,9 @@ export async function POST(request: Request) {
     if (!product || Number(pending.amount_cents) !== product.priceCents || pending.currency !== "EUR")
       return NextResponse.json({ error: "Ungültige offene Produktbestellung." }, { status: 409, headers });
     const mqb = findMqbGuideProduct(product.id);
-    const document = mqb ? readMqbGuideDocument(mqb)
-      : (await sql`SELECT product_id FROM td_guide_documents
-        WHERE product_id=${product.id} AND sha256=${product.sha256}`)[0];
-    if (!document) return NextResponse.json({ error: "PDF fehlt oder Prüfsumme stimmt nicht." }, { status: 503, headers });
+    const [document] = await sql`SELECT product_id FROM td_guide_documents
+      WHERE product_id=${product.id} AND (sha256=${product.sha256} OR assigned_filename IS NOT NULL)`;
+    if (!document && !(mqb && readMqbGuideDocument(mqb))) return NextResponse.json({ error: "PDF fehlt oder Prüfsumme stimmt nicht." }, { status: 503, headers });
     const [guestGrant] = await sql`SELECT id FROM td_guide_manual_grants
       WHERE paypal_transaction_id=${transaction} LIMIT 1`;
     if (guestGrant) return NextResponse.json({ error: "Diese Transaktion wurde bereits für einen Gastzugang verwendet." }, { status: 409, headers });

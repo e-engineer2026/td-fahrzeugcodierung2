@@ -97,5 +97,6 @@ export async function ensureGuideShopSchema() {
     file_data bytea NOT NULL,
     uploaded_at timestamptz NOT NULL DEFAULT now()
   )`;
+  await sql`ALTER TABLE td_guide_documents ADD COLUMN IF NOT EXISTS assigned_filename text`;
   return sql;
 }

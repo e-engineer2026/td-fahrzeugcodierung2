@@ -45,13 +45,12 @@ export async function POST(request: Request) {
     const email = user.emailAddresses.find(address => address.verification?.status === "verified")?.emailAddress;
     if (!email) return NextResponse.json({ error: "Verifizierte E-Mail-Adresse erforderlich." }, { status: 403, headers });
     const sql = await ensureGuideShopSchema();
-    // Do not take money for a PDF that has not actually been uploaded and hash-checked.
+    // Modellbestellungen benötigen eine verfügbare Shop-Datei.
     if (product.slug) {
       const mqb = findMqbGuideProduct(product.slug);
-      const document = mqb ? readMqbGuideDocument(mqb)
-        : (await sql`SELECT product_id FROM td_guide_documents
-          WHERE product_id=${product.id} AND sha256=${product.sha256}`)[0];
-      if (!document) return NextResponse.json({ error: "Diese Fachanleitung ist noch nicht bereitgestellt. Noch keine Zahlung ausführen." },
+      const [document] = await sql`SELECT product_id FROM td_guide_documents
+        WHERE product_id=${product.id} AND (sha256=${product.sha256} OR assigned_filename IS NOT NULL)`;
+      if (!document && !(mqb && readMqbGuideDocument(mqb))) return NextResponse.json({ error: "Diese Fachanleitung ist noch nicht bereitgestellt. Noch keine Zahlung ausführen." },
         { status: 503, headers });
     }
     const [paid] = await sql`SELECT id FROM td_guide_orders WHERE clerk_user_id=${userId}

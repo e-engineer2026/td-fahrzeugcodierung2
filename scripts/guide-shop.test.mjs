@@ -338,7 +338,7 @@ test("12 VZE-Modell-PDFs nur fuer verifizierte Admins, keine unbezahlte Kundenfr
   }
   assert.ok(upload.includes('createHash("sha256")'));
   assert.ok(bulk.includes('createHash("sha256")'));
-  assert.ok(download.includes('encode(file_data,\'base64\')'));
+  assert.ok(download.includes("readGuidePdf"));
   assert.ok(adminPage.includes("GuideAdminWorkspace"));
   const workspace = fs.readFileSync("app/components/GuideAdminWorkspace.tsx", "utf8");
   assert.ok(workspace.includes("GuideAdminVzeVariants"));
@@ -365,7 +365,7 @@ test("12 VZE-Fachfassungen: Bestellung und Downloads sind nur produktgebunden na
   assert.ok(release.includes("sha256="));
   assert.ok(download.includes("await auth()"));
   assert.ok(download.includes("status='paid'"));
-  assert.ok(download.includes("sha256="));
+  assert.ok(download.includes("readGuidePdf(sql, draft.productId, draft.sha256"));
   assert.ok(!download.includes("isGuideAdmin()"));
   assert.ok(model.includes("ModelVzeCheckout"));
   assert.ok(checkout.includes("account-orders/payment-start"));
@@ -440,8 +440,8 @@ test("PDF-Admin ist mobil in drei Bereiche gegliedert, ohne sichere Aktionen zu 
   assert.ok(gmail.includes("Gmail-Verbindung einrichten oder ändern"));
   assert.ok(orders.includes("Zahlung anhand der Uhrzeit zuordnen"));
   assert.ok(orders.includes("paymentVerified"));
-  assert.ok(files.includes("Alle 13 Dokumente und Downloads anzeigen"));
-  assert.ok(files.includes('bulkUpload'));
+  assert.ok(files.includes("PDF-Downloads"));
+  assert.ok(files.includes("VZE-Sammelupload"));
 });
 
 test("PayPal-Admin: Zahlungspruefungs-Checkbox bleibt auf Mobilgeraeten klein", () => {

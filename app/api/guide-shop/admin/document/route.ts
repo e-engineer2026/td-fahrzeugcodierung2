@@ -29,11 +29,14 @@ export async function PUT(request: Request) {
     if (sha256 !== GOLF7_VZE.expectedSha256) {
       return NextResponse.json({ error: "Es ist ausschließlich die geprüfte TD-G7-AS-003-Revision 1.2 zulässig." }, { status: 422, headers });
     }
-    await sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data)
+    const [stored] = await sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data)
       VALUES (${GOLF7_VZE.id}, ${GOLF7_VZE.revision}, ${sha256}, decode(${encoded},'base64'))
       ON CONFLICT(product_id) DO UPDATE
       SET version=EXCLUDED.version, sha256=EXCLUDED.sha256,
-          file_data=EXCLUDED.file_data, uploaded_at=now()`;
+          file_data=EXCLUDED.file_data, uploaded_at=now()
+      WHERE td_guide_documents.assigned_filename IS NULL RETURNING product_id`;
+    if (!stored) return NextResponse.json({ error: "Für diesen Download ist bereits eine PDF manuell zugeordnet." },
+      { status: 409, headers: headers });
     return NextResponse.json({ stored: true, sha256, bytes: pdf.length }, { headers });
   } catch {
     return NextResponse.json({ error: "Dokument konnte nicht gespeichert werden." }, { status: 500, headers });

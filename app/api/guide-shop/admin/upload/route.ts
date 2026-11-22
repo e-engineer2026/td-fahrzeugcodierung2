@@ -41,11 +41,14 @@ export async function POST(request: Request) {
   try {
     const sql = await ensureGuideShopSchema();
     const encoded = bytes.toString("base64");
-    await sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data)
-      VALUES (@{GOLF7_VZE.id}, @{GOLF7_VZE.revision}, @{digest}, decode(@{encoded}, 'base64'))
+    const [stored] = await sql`INSERT INTO td_guide_documents (product_id, version, sha256, file_data)
+      VALUES (${GOLF7_VZE.id}, ${GOLF7_VZE.revision}, ${digest}, decode(${encoded}, 'base64'))
       ON CONFLICT(product_id) DO UPDATE
       SET version=EXCLUDED.version, sha256=EXCLUDED.sha256,
-        file_data=EXCLUDED.file_data, uploaded_at=now()`;
+        file_data=EXCLUDED.file_data, uploaded_at=now()
+      WHERE td_guide_documents.assigned_filename IS NULL RETURNING product_id`;
+    if (!stored) return NextResponse.json({ error: "Für diesen Download ist bereits eine PDF manuell zugeordnet." },
+      { status: 409, headers: noStore });
     return NextResponse.json({ stored: true, productId: GOLF7_VZE.id,
       revision: GOLF7_VZE.revision, bytes: bytes.length, sha256: digest,
       technicalApproved: false, checkoutActivated: false }, { status: 201, headers: noStore });
