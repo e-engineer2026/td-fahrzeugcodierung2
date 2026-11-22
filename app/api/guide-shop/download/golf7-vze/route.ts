@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { GOLF7_VZE } from "../../../../lib/guideShopShared";
 import { ensureGuideShopSchema } from "../../../../lib/guideShopDb";
+import { guidePdfResponse, readGuidePdf } from "../../../../lib/guideDocuments";
 import { guestTokenHashFromCookie } from "../../../../lib/guideGuest";
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
@@ -34,21 +35,9 @@ export async function GET(request: Request) {
       ? NextResponse.redirect(new URL("/codieranleitungen/golf7-vze", url), { headers })
       : NextResponse.json({ error: "Kein bezahlter Downloadanspruch für diesen Browser." },
       { status: 403, headers });
-    const [file] = await sql`SELECT encode(file_data,'base64') AS data FROM td_guide_documents
-      WHERE product_id=${GOLF7_VZE.id} AND sha256=${GOLF7_VZE.expectedSha256}`;
-    if (!file || typeof file.data !== "string") return NextResponse.json({
-      error: "PDF-Dokument nicht bereitgestellt."
-    }, { status: 503, headers });
-    const pdf = Buffer.from(file.data as string, "base64");
-    if (pdf.length < 100 || pdf.subarray(0, 5).toString("ascii") !== "%PDF-")
-      return NextResponse.json({ error: "Ungültige PDF-Daten." }, { status: 503, headers });
-    return new Response(new Uint8Array(pdf), {
-      status: 200, headers: { ...headers,
-        "Content-Type": "application/pdf",
-        "Content-Disposition": "attachment; filename=TD_Golf7_03_Verkehrszeichenerkennung.pdf",
-        "Content-Length": String(pdf.length),
-      }
-    });
+    const file = await readGuidePdf(sql, GOLF7_VZE.id, GOLF7_VZE.expectedSha256, "TD_Golf7_03_Verkehrszeichenerkennung.pdf");
+    if (!file) return NextResponse.json({ error: "PDF-Dokument nicht bereitgestellt." }, { status: 503, headers });
+    return guidePdfResponse(file.bytes, file.filename, headers);
   } catch {
     return NextResponse.json({ error: "Download derzeit nicht erreichbar." },
       { status: 500, headers });

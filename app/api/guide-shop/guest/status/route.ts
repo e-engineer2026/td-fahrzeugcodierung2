@@ -15,7 +15,7 @@ export async function GET() {
       AND status='paid' AND paid_at > now() - interval '30 days' LIMIT 1`;
     if (!paid) return NextResponse.json({ golf7Vze: { paid: false, documentAvailable: false } }, { headers });
     const [document] = await sql`SELECT version FROM td_guide_documents WHERE
-      product_id=${GOLF7_VZE.id} AND sha256=${GOLF7_VZE.expectedSha256}`;
+      product_id=${GOLF7_VZE.id} AND (sha256=${GOLF7_VZE.expectedSha256} OR assigned_filename IS NOT NULL)`;
     return NextResponse.json({ golf7Vze: {
       paid: true, documentAvailable: !!document,
       version: document?.version ?? null, purchasedAt: paid.paid_at ?? null,

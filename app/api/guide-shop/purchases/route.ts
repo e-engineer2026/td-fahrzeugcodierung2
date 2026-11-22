@@ -4,6 +4,7 @@ import { GOLF7_VZE } from "../../../lib/guideShopShared";
 import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
 import { VZE_VARIANT_DRAFTS } from "../../../lib/vzeVariantDrafts";
 import { MQB_GUIDE_PRODUCTS } from "../../../lib/mqbGuideProducts";
+import { isAvailableGuideDocument } from "../../../lib/guideDocuments";
 import { readMqbGuideDocument } from "../../../lib/mqbGuideDocument";
 
 export const runtime = "nodejs";
@@ -16,9 +17,11 @@ export async function GET() {
     const orders = await sql`SELECT product_id, status, paid_at, amount_cents, currency FROM td_guide_orders WHERE
       clerk_user_id=${userId} AND status IN ('paid','pending')
       ORDER BY paid_at DESC NULLS LAST LIMIT 100`;
-    const documents = await sql`SELECT product_id, sha256, version FROM td_guide_documents
-      WHERE product_id=${GOLF7_VZE.id} OR product_id LIKE 'vze-%'`;
-    const hasDoc = (id: string, hash: string) => documents.some(d => d.product_id === id && d.sha256 === hash);
+    const productIds = [GOLF7_VZE.id, ...VZE_VARIANT_DRAFTS.map(draft => draft.productId),
+      ...MQB_GUIDE_PRODUCTS.map(product => product.id)];
+    const documents = await sql`SELECT product_id, sha256, assigned_filename FROM td_guide_documents
+      WHERE product_id = ANY(${productIds}::text[])`;
+    const hasDoc = (id: string, hash: string) => isAvailableGuideDocument(documents.find(d => d.product_id === id), hash);
     const paid = orders.find(o => o.product_id === GOLF7_VZE.id && o.status === "paid");
     const pending = orders.some(o => o.product_id === GOLF7_VZE.id && o.status === "pending");
     return NextResponse.json({
@@ -44,7 +47,7 @@ export async function GET() {
         return {
           slug: product.slug, name: product.name, sku: product.sku, paid,
           pending: !paid && matching.some(order => order.status === "pending"),
-          documentAvailable: paid && !!readMqbGuideDocument(product),
+          documentAvailable: paid && (hasDoc(product.id, product.sha256) || !!readMqbGuideDocument(product)),
           downloadHref: "/api/guide-shop/download/mqb/" + product.slug,
           label: "MQB-Prüfunterlage · Rev. " + product.revision,
         };

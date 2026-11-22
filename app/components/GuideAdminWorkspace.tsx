@@ -44,7 +44,6 @@ export default function GuideAdminWorkspace({ production, preview, liveMode, liv
     </section>}
 
     {active === "documents" && <section aria-label="PDF-Dateien verwalten">
-      <p className="mt-4 text-sm text-slate-600">Fertiggestellte Anleitungen sicher hinterlegen und verwalten.</p>
       {production && <GuideAdminVzeVariants />}
     </section>}
 

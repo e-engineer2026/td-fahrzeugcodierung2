@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   try {
     const sql = await ensureGuideShopSchema();
     const [document] = await sql`SELECT product_id FROM td_guide_documents
-      WHERE product_id=${GOLF7_VZE.id} AND sha256=${GOLF7_VZE.expectedSha256}`;
+      WHERE product_id=${GOLF7_VZE.id} AND (sha256=${GOLF7_VZE.expectedSha256} OR assigned_filename IS NOT NULL)`;
     if (!document) return NextResponse.json({ error: "PDF steht derzeit nicht bereit." }, { status: 503, headers });
 
     const guestToken = newGuestToken();

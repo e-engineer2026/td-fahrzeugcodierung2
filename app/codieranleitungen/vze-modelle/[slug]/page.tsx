@@ -22,7 +22,7 @@ export default async function ModelVzePage({ params }: { params: Promise<{ slug:
   try {
     const sql = await ensureGuideShopSchema();
     const [file] = await sql`SELECT product_id FROM td_guide_documents
-      WHERE product_id=${draft.productId} AND sha256=${draft.sha256}`;
+      WHERE product_id=${draft.productId} AND (sha256=${draft.sha256} OR assigned_filename IS NOT NULL)`;
     ready = !!file;
   } catch { ready = false; }
   return <main className="min-h-screen bg-slate-50 text-slate-950">

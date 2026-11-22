@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ModelVzeCheckout from "../../../components/ModelVzeCheckout";
+import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
 import { readMqbGuideDocument } from "../../../lib/mqbGuideDocument";
 import { findMqbGuideProduct } from "../../../lib/mqbGuideProducts";
 import { formatGuidePrice } from "../../../lib/guidePricing";
@@ -17,6 +18,15 @@ export default async function MqbGuidePage({ params }: { params: Promise<{ slug:
   const product = findMqbGuideProduct((await params).slug);
   if (!product) notFound();
   const { userId } = await auth();
+  let ready = !!readMqbGuideDocument(product);
+  if (!ready) {
+    try {
+      const sql = await ensureGuideShopSchema();
+      const [document] = await sql`SELECT product_id FROM td_guide_documents
+        WHERE product_id=${product.id} AND (sha256=${product.sha256} OR assigned_filename IS NOT NULL)`;
+      ready = !!document;
+    } catch { ready = false; }
+  }
   return <main className="min-h-screen bg-slate-50 text-slate-950">
     <div className="container-x max-w-4xl py-8 sm:py-12">
       <Link href="/codieranleitungen" className="text-sm font-bold text-blue-700 hover:underline">← PDF-Anleitungen</Link>
@@ -26,7 +36,7 @@ export default async function MqbGuidePage({ params }: { params: Promise<{ slug:
         <p className="mt-3 text-sm leading-6 text-slate-700">{product.description}</p>
         <p className="mt-2 text-sm leading-6 text-slate-700">Zweiseitige Prüfunterlage für Fachkräfte.</p>
         <p className="mt-4 text-xl font-black text-blue-700">{formatGuidePrice(product.priceCents / 100)}</p>
-        {readMqbGuideDocument(product)
+        {ready
           ? <ModelVzeCheckout signedIn={!!userId} slug={product.slug} name={product.name} mqb />
           : <p className="mt-4 text-sm text-amber-900">Die PDF ist momentan nicht verfügbar. Bitte noch keine Zahlung ausführen.</p>}
       </article>
