@@ -15,9 +15,9 @@ export function validateServiceRequest(value: unknown): ServiceRequest | null {
   const mode = data.mode;
   if (!brands.has(brand) || model.length < 2 || model.length > 120 ||
       services.length < 5 || services.length > 2000 ||
-      !Number.isInteger(year) || (year as number) < 1980 || (year as number) > 2027 ||
+      typeof year !== "number" || !Number.isInteger(year) || year < 1980 || year > 2027 ||
       (mode !== "onsite" && mode !== "remote")) return null;
-  return { brand, model, services, year: year as number, mode };
+  return { brand, model, services, year, mode };
 }
 
 export function canTransitionServiceOrder(from: string, to: string): boolean {
