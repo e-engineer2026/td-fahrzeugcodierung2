@@ -43,7 +43,7 @@ export const MQB_FLA_MODEL_PRODUCTS = MQB_LANE_ASSIST_MODEL_PRODUCTS.map((model,
   return {
     id: "mqb-fla-" + modelSlug,
     slug: "mqb-fla-" + modelSlug,
-    name: "Fernlichtassistent (FLA inkl. DLA) · " + model.model.split(" (")[0],
+    name: "Fernlichtassistent (FLA/DLA) · " + model.model.split(" (")[0],
     model: model.model,
     sku: "TD-MQB-FLA-" + String(index + 1).padStart(2, "0"),
     revision: "1.0",

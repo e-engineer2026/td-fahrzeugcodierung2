@@ -9,6 +9,7 @@ import { ASSISTANCE_CATEGORIES, assistanceCategoryForName } from "../lib/assista
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
+import { displayPdfGuideCoding, isPdfGuideCoding } from "../lib/pdfGuideCoding";
 import { matchesCodingSearch } from "../lib/codingSearch";
 import GuideTable, { type GuideTableRow, type RenderDocumentActions } from "./GuideTable";
 import { guideDetails } from "../lib/guideDetails";
@@ -55,7 +56,9 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
     .filter((coding) => ids.has(coding.id) && coding.id !== "diagnose" && coding.uiGroup !== "Diagnose")
     .filter((coding) => hasDisplayPrice(coding.price))
     // Die freigegebene Golf-7-VZE-PDF ersetzt den generischen VZE-Katalogeintrag.
-    .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf")))
+    .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf"))
+    .filter(isPdfGuideCoding)
+    .map(displayPdfGuideCoding))
     .sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
