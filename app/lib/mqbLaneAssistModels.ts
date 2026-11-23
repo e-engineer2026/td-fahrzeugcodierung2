@@ -1,4 +1,6 @@
 import { VZE_VARIANT_DRAFTS } from "./vzeVariantDrafts";
+import { vzePdfSlugForModel } from "./vzePdfVehicleLinks";
+import type { Coding } from "../data/catalog";
 
 /**
  * Separate model-specific Lane Assist draft products.
@@ -61,6 +63,27 @@ export const MQB_LANE_ASSIST_MODEL_PRODUCTS = MODEL_ENTRIES.map((model, index) =
   codingIds: [] as string[],
   description: "Vierseitige technische Lane-Assist-Prüfanleitung mit Variantenwegen für 3Q0/3QD/2Q0. Abgleich von Kamera, Lenkhilfe und Software ist für jedes Fahrzeug erforderlich.",
 }));
+
+/** Visible model-specific Lane Assist PDF item in the vehicle document list.
+ * The PDF remains unavailable until the owner uploads and publishes it.
+ */
+export const MQB_LANE_CODING_ID = "mqb-lane-guide-enable";
+export const MQB_LANE_CODING: Coding = {
+  id: MQB_LANE_CODING_ID,
+  name: "Spurhalteassistent (Lane Assist) aktivieren",
+  price: 49,
+  category: "Assistenzsysteme",
+  uiGroup: "Assistenz",
+  interfaceInfo: "VCDS / VCP, je nach Steuergeräte- und Softwarestand",
+  hardware: "Kompatible A5-Frontkamera, Lenkhilfe und passende Steuergeräte erforderlich. Nach Kamerawechsel oder Nachrüstung Kalibrierung und Funktionsprüfung beachten.",
+  requirements: "Vierseitige modellbezogene Prüfunterlage. Kameraindex und Codierwerte am konkreten Fahrzeug vor Durchführung prüfen.",
+  sourceUrl: "https://wiki-online.vcds.de/de/Codierungen/MQB/Assistenten/Lane_Assist",
+};
+
+export function mqbLaneGuideForVehicle(vehicleModel: string) {
+  const modelSlug = vehicleModel === "Golf 7 (5G)" ? "vw-golf-7-5g" : vzePdfSlugForModel(vehicleModel);
+  return modelSlug ? MQB_LANE_ASSIST_MODEL_PRODUCTS.find(product => product.slug === "mqb-lane-" + modelSlug) : undefined;
+}
 
 // This guards the repository metadata without exposing any PDF bytes.
 if (MODEL_ENTRIES.length !== 28 || MODEL_ENTRIES.some(model => !MQB_LANE_ASSIST_CHECKSUMS[model.slug])) {
