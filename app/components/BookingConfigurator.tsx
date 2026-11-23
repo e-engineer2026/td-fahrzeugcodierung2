@@ -14,13 +14,14 @@ import SaveVehicleCard from "./SaveVehicleCard";
 import FunctionExample, { hasFunctionExample } from "./FunctionExample";
 import { brands, vehicles } from "../data/catalog";
 import { platformCodingGroups, type PlatformCodingGroup } from "../data/platformCodingPricing";
-import { ASSISTANCE_CATEGORIES, assistanceCategoryForName, type AssistanceCategory } from "../lib/assistanceCategories";
+import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding, type AssistanceCategory } from "../lib/assistanceCategories";
 
 type DisplayCodingGroup = Exclude<PlatformCodingGroup, "Assistenz"> | AssistanceCategory;
 const displayCodingGroups: DisplayCodingGroup[] = platformCodingGroups.flatMap(group =>
   group === "Assistenz" ? [...ASSISTANCE_CATEGORIES] : [group]);
 function displayCodingGroup(entry: Pick<UnifiedCodingEntry, "uiGroup" | "name">): DisplayCodingGroup {
-  return entry.uiGroup === "Assistenz" ? assistanceCategoryForName(entry.name) : entry.uiGroup;
+  // Auch ältere Katalogeinträge unter Komfort/Fahrdynamik richtig einsortieren.
+  return assistanceCategoryForCoding(entry) ?? entry.uiGroup;
 }
 
 const popularTerms = ["zeigertest", "rückleuchten zusätzlich aktiv", "auto-lock", "coming home", "spiegel", "tagfahrlicht", "start-stopp", "regenschließ"];
@@ -34,6 +35,7 @@ function SfdBadge({ value }: { value?: "Ja" | "Nein" | "Unklar" }) { return valu
 // Bei Assistenzsystemen gehören Bilder zu neuen Freischaltungen/Nachrüstungen,
 // nicht zu reinen Einstellungs- oder Anpassungsfunktionen.
 function mayShowAssistExample(entry: Pick<UnifiedCodingEntry, "uiGroup" | "name">): boolean {
+  if (assistanceCategoryForCoding(entry) === "Anpassungen für Assistenzsysteme") return false;
   if (entry.uiGroup !== "Assistenz") return true;
   return /(nachrüst|nachruest|freischalt|aktivier)/i.test(entry.name)
     && !/(anpass|einstell|speicher|memory|deaktivier|abschalt|ausschalt|moduswechsel|warnung|vibration)/i.test(entry.name);
