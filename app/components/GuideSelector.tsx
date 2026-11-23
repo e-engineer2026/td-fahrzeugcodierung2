@@ -6,6 +6,7 @@ import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLi
 import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLinks";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
+import { MQB_LANE_CODING, MQB_LANE_CODING_ID, mqbLaneGuideForVehicle } from "../lib/mqbLaneAssistModels";
 import { MQB_TJA_CODING, MQB_TJA_CODING_ID, mqbTjaGuideForVehicle } from "../lib/mqbTjaModels";
 import { MQB_TRAILER_CODING, MQB_TRAILER_CODING_ID, mqbTrailerGuideForVehicle } from "../lib/mqbTrailerAssistModels";
 import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "../lib/assistanceCategories";
@@ -65,6 +66,7 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
     .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf"))
     .filter(isPdfGuideCoding)
     .map(displayPdfGuideCoding)),
+    ...((vehicle.platform === "MQB" || vehicle.platform === "MQB-A0") && mqbLaneGuideForVehicle(vehicle.model) ? [MQB_LANE_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
   ].sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
@@ -152,11 +154,13 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         (coding.id === "vcds-fla" || coding.id === "tcross-fla")
         ? MQB_FLA_MODEL_PRODUCTS.find(product => product.slug === "mqb-fla-" + modelPdfSlug)
         : undefined;
+      const modelLaneGuide = mqbPlatform && coding.id === MQB_LANE_CODING_ID && vehicle
+        ? mqbLaneGuideForVehicle(vehicle.model) : undefined;
       const modelTjaGuide = mqbPlatform && coding.id === MQB_TJA_CODING_ID && vehicle
         ? mqbTjaGuideForVehicle(vehicle.model) : undefined;
       const modelTrailerGuide = mqbPlatform && coding.id === MQB_TRAILER_CODING_ID && vehicle
         ? mqbTrailerGuideForVehicle(vehicle.model) : undefined;
-      const mqbGuide = modelTrailerGuide ?? modelTjaGuide ?? modelFlaGuide ?? (mqbPlatform
+      const mqbGuide = modelLaneGuide ?? modelTrailerGuide ?? modelTjaGuide ?? modelFlaGuide ?? (mqbPlatform
         ? MQB_GUIDE_PRODUCTS.find(product => product.codingIds.some(id => id === coding.id))
         : undefined);
       const details = guideDetails({
