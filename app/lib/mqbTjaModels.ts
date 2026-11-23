@@ -25,6 +25,12 @@ const TJA_MODELS = [
   { slug: "seat-ateca-kh", name: "SEAT Ateca", code: "KH" },
   { slug: "seat-tarraco-kn2", name: "SEAT Tarraco", code: "KN2" },
   { slug: "cupra-ateca-kh7", name: "CUPRA Ateca", code: "KH7" },
+  // Weitere nachweislich TJA-fähige MQB-Familien. Keine pauschale FIN-Freigabe:
+  // Octavia FL: nur mit kompatibler A5 (3Q0/2Q0), ACC und Parametrierung.
+  // Leon 5F: TJA ist im Herstellerhandbuch als Lane-Assist-/ACC-Kombination aufgeführt.
+  // Am Ende angefügt, um die Bestands-SKUs der 16 bisherigen Modelle zu erhalten.
+  { slug: "skoda-octavia-iii-5e-facelift", name: "Škoda Octavia III Facelift", code: "5E FL" },
+  { slug: "seat-leon-iii-5f", name: "SEAT Leon III", code: "5F" },
 ] as const;
 
 export const MQB_TJA_CODING_ID = "mqb-tja-enable";
@@ -63,6 +69,6 @@ export function mqbTjaGuideForVehicle(vehicleModel: string) {
   return MQB_TJA_MODEL_PRODUCTS.find(product => product.slug === "mqb-tja-" + modelSlug);
 }
 
-if (MQB_TJA_MODEL_PRODUCTS.length !== 16 || new Set(MQB_TJA_MODEL_PRODUCTS.map(p => p.slug)).size !== 16) {
+if (MQB_TJA_MODEL_PRODUCTS.length !== 18 || new Set(MQB_TJA_MODEL_PRODUCTS.map(p => p.slug)).size !== 18) {
   throw new Error("MQB-TJA-Modellliste ist unvollständig.");
 }
