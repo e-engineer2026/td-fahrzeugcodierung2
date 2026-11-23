@@ -11,6 +11,8 @@ import { displayPdfGuideCoding, isPdfGuideCoding } from "./pdfGuideCoding";
 import { MQB_FLA_MODEL_PRODUCTS } from "./mqbFlaModels";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
 import { mqbRfkGuideForVehicle } from "./mqbRfkProducts";
+import { isLaneAssistActivation, isRearCameraActivationCoding } from "./guideDuplicateRules";
+import { mqbLaneGuideForVehicle } from "./mqbLaneAssistModels";
 import { MQB_TJA_CODING, MQB_TJA_CODING_ID, mqbTjaGuideForVehicle } from "./mqbTjaModels";
 import { MQB_TRAILER_CODING, MQB_TRAILER_CODING_ID, mqbTrailerGuideForVehicle } from "./mqbTrailerAssistModels";
 
@@ -21,6 +23,7 @@ export type GuideCategory = (typeof guideCategories)[number];
 // Nur ausdrücklich als Nachrüstung oder Umbau bezeichnete Einträge in diese Bereiche einsortieren.
 export function guideCategory(coding: Coding): GuideCategory {
   const name = coding.name;
+  if (isRearCameraActivationCoding(name)) return "Codierungen";
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   return assistanceCategoryForCoding(coding) ?? "Codierungen";
@@ -29,6 +32,7 @@ export function guideCategory(coding: Coding): GuideCategory {
 export function availableModelCodings(vehicle: Vehicle): Coding[] {
   if (vehicle.diagnosticsOnly || vehicle.startYear >= 2024) return [];
   const ids = new Set(codingsForVehicle(vehicle));
+  const specificLaneGuide = (vehicle.platform === "MQB" || vehicle.platform === "MQB-A0") && !!mqbLaneGuideForVehicle(vehicle.model);
   // Keine 0-Euro-Codierungen in der Anleitungsliste; Duplikate nicht durch
   // Gross-/Kleinschreibung, Umlaute, Satzzeichen oder Leerzeichen mehrfach anzeigen.
   return [...uniqueByCodingName(codingCatalog
@@ -36,7 +40,8 @@ export function availableModelCodings(vehicle: Vehicle): Coding[] {
     .filter((coding) => hasDisplayPrice(coding.price))
     // Die freigegebene Golf-7-VZE-PDF ersetzt den generischen VZE-Katalogeintrag.
     .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf"))
-    .filter(isPdfGuideCoding).map(displayPdfGuideCoding)),
+    .filter(isPdfGuideCoding).map(displayPdfGuideCoding)
+    .filter(coding => !specificLaneGuide || !isLaneAssistActivation(coding.name))),
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
   ].sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
