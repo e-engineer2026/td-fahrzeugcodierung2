@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { VZE_VARIANT_DRAFTS } from "../../lib/vzeVariantDrafts";
 import { ensureGuideShopSchema } from "../../lib/guideShopDb";
+import { GOLF7_VZE } from "../../lib/guideShopShared";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -14,14 +15,21 @@ export default async function VzeModelDraftsPage() {
   // Veröffentlichungen sind nur produktbezogene, nicht zurückgezogene Dateieinträge.
   // Neue Entwürfe in td_guide_document_drafts werden niemals in dieser Liste gezeigt.
   let published: typeof VZE_VARIANT_DRAFTS[number][] = [];
+  let golf7Available = false;
   try {
     const sql = await ensureGuideShopSchema();
-    const ids = VZE_VARIANT_DRAFTS.map(d => d.productId);
-    const rows = await sql`SELECT product_id, sha256, assigned_filename FROM td_guide_documents
+    const ids = [...VZE_VARIANT_DRAFTS.map(d => d.productId), GOLF7_VZE.id];
+    const rows = await sql`SELECT product_id, sha256, assigned_filename,
+      octet_length(file_data) AS file_size,
+      encode(substring(file_data from 1 for 5), 'hex') AS pdf_header
+      FROM td_guide_documents
       WHERE product_id=ANY(${ids}::text[]) AND NOT withdrawn`;
-    published = VZE_VARIANT_DRAFTS.filter(draft =>
-      rows.some(row => row.product_id === draft.productId &&
-        (row.sha256 === draft.sha256 || typeof row.assigned_filename === "string")));
+    const publishedFile = (id: string, expectedSha256: string) =>
+      rows.some(row => row.product_id === id && Number(row.file_size) >= 16 &&
+        row.pdf_header === "255044462d" &&
+        (row.sha256 === expectedSha256 || typeof row.assigned_filename === "string"));
+    published = VZE_VARIANT_DRAFTS.filter(draft => publishedFile(draft.productId, draft.sha256));
+    golf7Available = publishedFile(GOLF7_VZE.id, GOLF7_VZE.expectedSha256);
   } catch {
     // Kein Datenbankstatus: keine potentiell unfreigegebenen Produkte zeigen.
   }
@@ -54,9 +62,9 @@ export default async function VzeModelDraftsPage() {
         Sie ist keine pauschale Freigabe für jede Fahrzeug-, Kamera- und Softwarevariante.
         Die Lieferung erfolgt erst nach bestätigter Zahlung.
       </div>
-      <Link href="/codieranleitungen/golf7-vze" className="mt-5 inline-block text-sm font-bold text-blue-700 underline">
+      {golf7Available && <Link href="/codieranleitungen/golf7-vze" className="mt-5 inline-block text-sm font-bold text-blue-700 underline">
         Zur Golf-7-VZE-PDF
-      </Link>
+      </Link>}
     </div>
   </main>;
 }
