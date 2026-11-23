@@ -37,5 +37,6 @@ export function assistanceCategoryForName(name: string): AssistanceCategory {
 
 /** Einheitliche Gruppierung für Fahrzeugsuche, PDF-Anleitungen und Buchung. */
 export function assistanceCategoryForCoding(entry: {name: string; uiGroup?: string; category?: string}): AssistanceCategory | null {
+  if (/(?:rückfahrkamera|rueckfahrkamera|rear view)/i.test(entry.name) && /aktivier|freischalt/i.test(entry.name) && !/nachrüsten|nachruesten/i.test(entry.name)) return null;
   return isAssistanceCoding(entry) ? assistanceCategoryForName(entry.name) : null;
 }
