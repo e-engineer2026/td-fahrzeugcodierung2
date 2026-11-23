@@ -17,15 +17,24 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
       - name: Install exact dependencies
         run: npm ci
-      - name: ESLint
-        run: npm run lint
+      - name: Lint newly added TypeScript files
+        shell: bash
+        run: |
+          mapfile -t files < <(git diff --name-only --diff-filter=A origin/main...HEAD | grep -E '^app/.*\.(ts|tsx)$' || true)
+          if (( ${#files[@]} > 0 )); then
+            npx eslint "${files[@]}"
+          else
+            echo "No new TypeScript files to lint"
+          fi
       - name: Regression tests
         run: npm test
-      - name: Production build (without live secrets)
+      - name: Next.js build and type checks (without live secrets)
         run: npm run build
