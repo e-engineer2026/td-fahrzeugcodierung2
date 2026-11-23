@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ModelVzeCheckout from "../../../components/ModelVzeCheckout";
 import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
-import { isAvailableGuideDocument } from "../../../lib/guideDocuments";
+import { readGuidePdf } from "../../../lib/guideDocuments";
 import { readMqbGuideDocument } from "../../../lib/mqbGuideDocument";
 import { findMqbGuideProduct } from "../../../lib/mqbGuideProducts";
 import { formatGuidePrice } from "../../../lib/guidePricing";
@@ -22,9 +22,10 @@ export default async function MqbGuidePage({ params }: { params: Promise<{ slug:
   let ready = false;
   try {
     const sql = await ensureGuideShopSchema();
-    const [document] = await sql`SELECT sha256, assigned_filename, withdrawn FROM td_guide_documents WHERE product_id=${product.id}`;
-    ready = isAvailableGuideDocument(document, product.sha256, () => readMqbGuideDocument(product));
+    ready = !!(await readGuidePdf(sql, product.id, product.sha256, product.filename,
+      () => readMqbGuideDocument(product)));
   } catch { ready = false; }
+  if (!ready) notFound();
   return <main className="min-h-screen bg-slate-50 text-slate-950">
     <div className="container-x max-w-4xl py-8 sm:py-12">
       <Link href="/codieranleitungen" className="text-sm font-bold text-blue-700 hover:underline">← PDF-Anleitungen</Link>
@@ -34,9 +35,7 @@ export default async function MqbGuidePage({ params }: { params: Promise<{ slug:
         <p className="mt-3 text-sm leading-6 text-slate-700">{product.description}</p>
         <p className="mt-2 text-sm leading-6 text-slate-700">{product.slug.startsWith("mqb-tja-") ? "Sechsseitige technische TJA-Anleitung mit Referenzcodierungen für A5 und ACC; optionale Emergency-Assist-Codierungen sind getrennt dokumentiert. Anwendung nur bei kompatibler Hardware und Software. Verkauf erst nach Veröffentlichung durch TD Fahrzeugcodierung." : product.slug.startsWith("mqb-trailer-") ? "Fünfseitige Modellanleitung mit vollständigen VCDS-Referenzcodierungen für 10, 17, 6C und den optionalen 5F-Anpassungskanälen. Nur bei kompatibler Hardware und Software; Verkauf erst nach Veröffentlichung durch TD Fahrzeugcodierung." : (product.slug.startsWith("mqb-fla-") || (product.slug.startsWith("mqb-lane-") && product.slug !== "mqb-lane-assist")) ? "Vierseitiger Modell-Entwurf. Codierwerte, Kamera, Steuergeräte und Hardware müssen am konkreten Fahrzeug geprüft werden. Verkauf erst nach Veröffentlichung durch TD Fahrzeugcodierung." : "Zweiseitige Prüfunterlage für Fachkräfte."}</p>
         <p className="mt-4 text-xl font-black text-blue-700">{formatGuidePrice(product.priceCents / 100)}</p>
-        {ready
-          ? <ModelVzeCheckout signedIn={!!userId} slug={product.slug} name={product.name} mqb />
-          : <p className="mt-4 text-sm text-amber-900">Die PDF ist momentan nicht verfügbar. Bitte noch keine Zahlung ausführen.</p>}
+        <ModelVzeCheckout signedIn={!!userId} slug={product.slug} name={product.name} mqb />
       </article>
     </div>
   </main>;
