@@ -16,7 +16,7 @@ export type GuideTableRow = {
   isProofDocument?: boolean;
 };
 
-export type RenderDocumentActions = (slug: string) => ReactNode;
+export type RenderDocumentActions = (slug: string, title: string) => ReactNode;
 
 /** Einheitliche Darstellung; Werkzeuge nur mit ausgewiesener Eignung nennen. */
 export default function GuideTable({ rows, renderDocumentActions }: {
@@ -62,7 +62,7 @@ export default function GuideTable({ rows, renderDocumentActions }: {
                 showDownload={!renderDocumentActions || !row.documentSlug} />
             </div>
             {row.documentSlug && renderDocumentActions && <div role="cell" className="col-span-full">
-              {renderDocumentActions(row.documentSlug)}
+              {renderDocumentActions(row.documentSlug, row.title)}
             </div>}
           </div>
         ))}

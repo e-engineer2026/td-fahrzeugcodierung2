@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
 import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
+import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLinks";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
 import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "../lib/assistanceCategories";
@@ -65,8 +66,9 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
     .sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
-export default function GuideSelector({ renderDocumentActions }: {
+export default function GuideSelector({ renderDocumentActions, publishedCatalogSlugs = [] }: {
   renderDocumentActions?: RenderDocumentActions;
+  publishedCatalogSlugs?: string[];
 }) {
   const [manufacturer, setManufacturer] = useState<Manufacturer | "">("");
   const [model, setModel] = useState("");
@@ -135,7 +137,7 @@ export default function GuideSelector({ renderDocumentActions }: {
     matchesCodingSearch([coding.name, coding.uiGroup ?? "", coding.requirements ?? ""].join(" "), codingSearch)
   );
 
-  const visibleGuideRows: GuideTableRow[] = [
+  const rows: GuideTableRow[] = [
     ...visibleCodings.map((coding) => {
       const step = guideDifficultyStep(coding);
       const mqbPlatform = vehicle?.platform === "MQB" || vehicle?.platform === "MQB-A0";
@@ -238,6 +240,12 @@ export default function GuideSelector({ renderDocumentActions }: {
       };
     })
   ];
+
+  const visibleGuideRows = vehicle ? rows.map(row => {
+    if (row.documentSlug) return row;
+    const documentSlug = catalogDocumentSlug(vehicle.model, row.id);
+    return { ...row, documentSlug, productHref: publishedCatalogSlugs.includes(documentSlug) ? catalogDocumentHref(documentSlug) : undefined };
+  }) : rows;
 
   function chooseManufacturer(next: Manufacturer) {
     setManufacturer(next);

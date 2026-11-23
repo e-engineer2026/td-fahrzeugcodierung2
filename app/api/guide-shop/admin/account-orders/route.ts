@@ -21,7 +21,7 @@ export async function GET() {
       const product = guideOrderProductFromId(String(row.product_id));
       if (!product) return [];
       return [{
-        id: row.id, productId: product.id, productName: product.model,
+        id: row.id, productId: product.id, productName: product.id.startsWith("catalog:") ? product.name + " · " + product.model : product.model,
         amountCents: row.amount_cents, currency: row.currency,
         email: row.buyer_email, createdAt: row.created_at,
         paypalStartedAt: row.paypal_started_at ?? null,

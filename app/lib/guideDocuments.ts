@@ -10,7 +10,7 @@ export function isAvailableGuideDocument(
   fallback?: () => Buffer | null,
 ): boolean {
   return row?.withdrawn !== true &&
-    (typeof row?.assigned_filename === "string" || row?.sha256 === expectedSha256 || !!fallback?.());
+    (typeof row?.assigned_filename === "string" || (expectedSha256 !== "" && row?.sha256 === expectedSha256) || !!fallback?.());
 }
 
 export function isGuidePdf(bytes: Buffer): boolean {
