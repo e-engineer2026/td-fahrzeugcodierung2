@@ -20,6 +20,8 @@ export type GuideCategory = (typeof guideCategories)[number];
 
 // Nur ausdrücklich als Nachrüstung oder Umbau bezeichnete Einträge in diese Bereiche einsortieren.
 export function guideCategory(coding: Coding): GuideCategory {
+  // Der ACC/GRA/Limiter-Moduswechsel wird bei den PDF-Nachrüstungen angeboten.
+  if (coding.id === "vcds-acc-mode") return "Nachrüstungen";
   const name = coding.name;
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
   // Eine bereits eingebaute Kamera freischalten ist eine Codierung, kein neues Assistenzsystem.
