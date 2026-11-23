@@ -36,7 +36,7 @@ export async function PATCH(request: Request) {
   const target = typeof data.status === "string" && SERVICE_STATES.includes(data.status as typeof SERVICE_STATES[number]) ? data.status : null;
   const amount = data.quoteCents === null ? null : data.quoteCents;
   if (!id || !target || (amount !== undefined && amount !== null &&
-      (!Number.isInteger(amount) || (amount as number) < 0 || (amount as number) > 2000000)) ||
+      (typeof amount !== "number" || !Number.isInteger(amount) || amount < 0 || amount > 2000000)) ||
       (data.bookingReference !== undefined && (typeof data.bookingReference !== "string" || data.bookingReference.length > 150)) ||
       (data.adminNote !== undefined && (typeof data.adminNote !== "string" || data.adminNote.length > 4000))) {
     return NextResponse.json({ error: "Status oder Felder ungültig." }, { status: 400, headers });
