@@ -1,9 +1,10 @@
-# TJA / Traffic Jam Assist · MQB-PDFs
+# Stauassistent (TJA) & Emergency Assist · MQB-PDFs
 
 Datum: 23.11.2026
 
 ## Interne Zuordnung
 - 16 gesonderte private PDF-Downloadartikel mit Slug `mqb-tja-<fahrzeug-slug>`.
+- PDF-Überschrift: **Stauassistent (TJA) & Emergency Assist**. Emergency Assist wird innerhalb der PDFs als gesonderter, optionaler Funktionsumfang behandelt.
 - Dateien: `<fahrzeug-slug>_tja_anleitung.pdf` (je 6 Seiten, entsprechender Dateiname im Sammel-Upload)
 - Kategorie: **Assistenzsysteme** (keine Anpassungen an einem bereits aktivierten System).
 - PDF-Verkaufspreis analog bestehenden MQB-FLA/Lane-Assist-Dokumenten: 13,99 €.
