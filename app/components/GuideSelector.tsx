@@ -13,8 +13,8 @@ import { MQB_TRAILER_CODING, MQB_TRAILER_CODING_ID, mqbTrailerGuideForVehicle } 
 import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "../lib/assistanceCategories";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
-import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
-import { displayPdfGuideCoding, isPdfGuideCoding } from "../lib/pdfGuideCoding";
+import { hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
+import { displayPdfGuideCoding, isPdfGuideCoding, pdfGuideFunctionKey, uniquePdfGuideCodings } from "../lib/pdfGuideCoding";
 import { matchesCodingSearch } from "../lib/codingSearch";
 import GuideTable, { type GuideTableRow, type RenderDocumentActions } from "./GuideTable";
 import { guideDetails } from "../lib/guideDetails";
@@ -46,6 +46,8 @@ function guideCategory(coding: Coding): GuideCategory {
   const name = coding.name;
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
+  // Die reine Aktivierung einer bereits verbauten RFK ist keine neue Fahrerassistenz.
+  if (/(?:rückfahrkamera|rear view)/i.test(name) && /(?:aktivieren|freischalten)/i.test(name)) return "Codierungen";
   return assistanceCategoryForCoding(coding) ?? "Codierungen";
 }
 
@@ -60,17 +62,21 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
   const ids = new Set(codingsForVehicle(vehicle));
   // Keine 0-Euro-Codierungen in der Anleitungsliste; Duplikate nicht durch
   // Gross-/Kleinschreibung, Umlaute, Satzzeichen oder Leerzeichen mehrfach anzeigen.
-  return [...uniqueByCodingName(codingCatalog
+  const standard = uniqueByCodingName(codingCatalog
     .filter((coding) => ids.has(coding.id) && coding.id !== "diagnose" && coding.uiGroup !== "Diagnose")
     .filter((coding) => hasDisplayPrice(coding.price))
     // Die freigegebene Golf-7-VZE-PDF ersetzt den generischen VZE-Katalogeintrag.
     .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf"))
     .filter(isPdfGuideCoding)
-    .map(displayPdfGuideCoding)),
+    .map(displayPdfGuideCoding));
+  // Modellbezogene Freischaltungs-PDFs haben Vorrang vor historischen generischen
+  // Varianten wie „Lane Assist / Spurhalteassistent aktivieren“.
+  return uniquePdfGuideCodings([
     ...((vehicle.platform === "MQB" || vehicle.platform === "MQB-A0") && mqbLaneGuideForVehicle(vehicle.model) ? [MQB_LANE_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
-  ].sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
+    ...standard,
+  ]).sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
 export default function GuideSelector({ renderDocumentActions, publishedCatalogSlugs = [] }: {
@@ -94,12 +100,12 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
   const codings = useMemo(() => vehicle ? availableModelCodings(vehicle) : [], [vehicle]);
   const researchEntries = useMemo(() => {
     if (!vehicle) return [];
-    const seen = new Set(codings.map((coding) => guideCategory(coding) + ":" + codingNameKey(coding.name)));
+    const seen = new Set(codings.map((coding) => pdfGuideFunctionKey(coding)));
     return (["Nachrüstungen", "Umbauten"] as ResearchCategory[])
       .flatMap((category) => researchedGuidesForModel(vehicle.model, category))
       .filter((entry) => entry.access !== "Anbieterleistung" && hasDisplayPrice(researchGuideEstimate(entry).price))
       .filter((entry) => {
-        const key = entry.category + ":" + codingNameKey(entry.title);
+        const key = pdfGuideFunctionKey({ name: entry.title });
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
@@ -108,13 +114,13 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
   const sourceIdeas = useMemo(() => {
     if (!vehicle) return [];
     const seen = new Set([
-      ...codings.map((coding) => guideCategory(coding) + ":" + codingNameKey(coding.name)),
-      ...researchEntries.map((entry) => entry.category + ":" + codingNameKey(entry.title)),
+      ...codings.map((coding) => pdfGuideFunctionKey(coding)),
+      ...researchEntries.map((entry) => pdfGuideFunctionKey({ name: entry.title })),
     ]);
     return referenceIdeasForVehicle(vehicle)
       .filter((idea) => hasDisplayPrice(referenceIdeaEstimate(idea).price))
       .filter((idea) => {
-        const key = guideCategoryForReference(idea) + ":" + codingNameKey(idea.title);
+        const key = pdfGuideFunctionKey({ name: idea.title });
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
