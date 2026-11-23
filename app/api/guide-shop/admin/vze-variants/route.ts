@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { isGuideAdmin } from "../../../../lib/guideAdmin";
 import { ensureGuideShopSchema } from "../../../../lib/guideShopDb";
-import { GUIDE_ADMIN_DOCUMENTS } from "../../../../lib/vzeAdminDocuments";
+import { GUIDE_ADMIN_DOCUMENTS, findGuideAdminDocument } from "../../../../lib/vzeAdminDocuments";
 import { findMqbGuideProduct } from "../../../../lib/mqbGuideProducts";
 import { readMqbGuideDocument } from "../../../../lib/mqbGuideDocument";
 import { isAvailableGuideDocument, isGuidePdf } from "../../../../lib/guideDocuments";
@@ -16,12 +16,14 @@ export async function GET() {
     const sql = await ensureGuideShopSchema();
     const ids = GUIDE_ADMIN_DOCUMENTS.map(document => document.productId);
     const rows = await sql`SELECT product_id, sha256, assigned_filename, withdrawn FROM td_guide_documents
-      WHERE product_id = ANY(${ids}::text[])`;
+      WHERE product_id = ANY(${ids}::text[]) OR product_id LIKE 'catalog:%'`;
     const drafts = await sql`SELECT product_id, sha256, assigned_filename FROM td_guide_document_drafts
-      WHERE product_id = ANY(${ids}::text[])`;
+      WHERE product_id = ANY(${ids}::text[]) OR product_id LIKE 'catalog:%'`;
     const byId = new Map(rows.map(row => [row.product_id, row]));
     const draftsById = new Map(drafts.map(row => [row.product_id, row]));
-    const documents = GUIDE_ADMIN_DOCUMENTS.map(document => {
+    const catalogIds = new Set([...rows, ...drafts].map(row => String(row.product_id)).filter(id => id.startsWith("catalog:")));
+    const catalogDocuments = Array.from(catalogIds, findGuideAdminDocument).filter(document => document !== null);
+    const documents = [...GUIDE_ADMIN_DOCUMENTS, ...catalogDocuments].map(document => {
       const row = byId.get(document.productId);
       const mqb = findMqbGuideProduct(document.slug);
       const stored = isAvailableGuideDocument(row, document.sha256);
@@ -50,7 +52,7 @@ export async function POST(request: Request) {
   try { form = await request.formData(); }
   catch { return NextResponse.json({ error: "Ungültige Upload-Daten." }, { status: 400, headers }); }
   const slug = form.get("slug");
-  const document = GUIDE_ADMIN_DOCUMENTS.find(item => item.slug === slug);
+  const document = typeof slug === "string" ? findGuideAdminDocument(slug) : null;
   const file = form.get("pdf");
   if (!document || !(file instanceof File) || !file.name.toLowerCase().endsWith(".pdf"))
     return NextResponse.json({ error: "Bitte einen Download und eine PDF-Datei auswählen." }, { status: 400, headers });
@@ -79,7 +81,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Ungültige Herkunft." }, { status: 403, headers });
   let body: { slug?: unknown; sha256?: unknown };
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Ungültige Angaben." }, { status: 400, headers }); }
-  const document = GUIDE_ADMIN_DOCUMENTS.find(item => item.slug === body.slug);
+  const document = typeof body?.slug === "string" ? findGuideAdminDocument(body.slug) : null;
   if (!document || typeof body.sha256 !== "string" || !/^[a-f0-9]{64}$/.test(body.sha256))
     return NextResponse.json({ error: "Ungültiger PDF-Entwurf." }, { status: 400, headers });
   try {
@@ -103,7 +105,7 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Ungültige Herkunft." }, { status: 403, headers });
   let body: { slug?: unknown; sha256?: unknown } | null;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Ungültige Angaben." }, { status: 400, headers }); }
-  const document = GUIDE_ADMIN_DOCUMENTS.find(item => item.slug === body?.slug);
+  const document = typeof body?.slug === "string" ? findGuideAdminDocument(body.slug) : null;
   const sha256 = body?.sha256;
   if (!document || typeof sha256 !== "string" || !/^[a-f0-9]{64}$/.test(sha256))
     return NextResponse.json({ error: "Ungültige PDF-Auswahl." }, { status: 400, headers });

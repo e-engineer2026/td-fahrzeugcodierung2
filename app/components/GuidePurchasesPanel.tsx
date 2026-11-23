@@ -10,6 +10,7 @@ type ApiResponse = {
   golf7Vze?: { paid: boolean; pending?: boolean; documentAvailable: boolean; purchasedAt: string | null };
   vzeModels?: Model[];
   mqbGuides?: Model[];
+  catalogGuides?: Model[];
 };
 export default function GuidePurchasesPanel() {
   const [paid, setPaid] = useState(false);
@@ -26,7 +27,7 @@ export default function GuidePurchasesPanel() {
         setPaid(data?.golf7Vze?.paid === true);
         setPending(data?.golf7Vze?.pending === true);
         setReady(data?.golf7Vze?.documentAvailable === true);
-        setModels([...(data?.vzeModels ?? []), ...(data?.mqbGuides ?? [])]);
+        setModels([...(data?.vzeModels ?? []), ...(data?.mqbGuides ?? []), ...(data?.catalogGuides ?? [])]);
       }).catch(() => {}).finally(() => { if (active) setLoaded(true); });
     return () => { active = false; };
   }, []);

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isGuideAdmin } from "../../../../../lib/guideAdmin";
 import { ensureGuideShopSchema } from "../../../../../lib/guideShopDb";
-import { GUIDE_ADMIN_DOCUMENTS } from "../../../../../lib/vzeAdminDocuments";
+import { findGuideAdminDocument } from "../../../../../lib/vzeAdminDocuments";
 import { guidePdfResponse, isGuidePdf, readGuidePdf } from "../../../../../lib/guideDocuments";
 import { findMqbGuideProduct } from "../../../../../lib/mqbGuideProducts";
 import { readMqbGuideDocument } from "../../../../../lib/mqbGuideDocument";
@@ -13,7 +13,7 @@ const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options"
 export async function GET(request: Request) {
   if (!await isGuideAdmin()) return NextResponse.json({ error: "Keine Berechtigung." }, { status: 403, headers });
   const slug = new URL(request.url).searchParams.get("slug");
-  const document = GUIDE_ADMIN_DOCUMENTS.find(item => item.slug === slug);
+  const document = slug ? findGuideAdminDocument(slug) : null;
   if (!document) return NextResponse.json({ error: "Download nicht gefunden." }, { status: 404, headers });
   try {
     const sql = await ensureGuideShopSchema();

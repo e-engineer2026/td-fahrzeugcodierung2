@@ -33,20 +33,20 @@ const {
   vzeAdminStorageVersion, vzeAdminDisplayRevision,
 } = loadTs("app/lib/vzeAdminDocuments");
 
-test("Alle 13 VZE-Admin-PDFs sind eindeutig, ohne Änderungen an Shop-Produkt-IDs", () => {
-  assert.equal(VZE_VARIANT_DRAFTS.length, 12);
-  assert.equal(VZE_ADMIN_DOCUMENTS.length, 13);
-  assert.equal(new Set(VZE_ADMIN_DOCUMENTS.map(doc => doc.slug)).size, 13);
-  assert.equal(new Set(VZE_ADMIN_DOCUMENTS.map(doc => doc.productId)).size, 13);
+test("Alle 28 VZE-Admin-PDFs sind eindeutig, ohne Änderungen an Shop-Produkt-IDs", () => {
+  assert.equal(VZE_VARIANT_DRAFTS.length, 27);
+  assert.equal(VZE_ADMIN_DOCUMENTS.length, 28);
+  assert.equal(new Set(VZE_ADMIN_DOCUMENTS.map(doc => doc.slug)).size, 28);
+  assert.equal(new Set(VZE_ADMIN_DOCUMENTS.map(doc => doc.productId)).size, 28);
   assert.deepEqual(VZE_ADMIN_DOCUMENTS.slice(1), VZE_VARIANT_DRAFTS);
   assert.equal(GOLF7_ADMIN_DOCUMENT.productId, GOLF7_VZE.id);
   assert.equal(GOLF7_ADMIN_DOCUMENT.sha256, GOLF7_VZE.expectedSha256);
   assert.equal(GOLF7_ADMIN_DOCUMENT.sku, GOLF7_VZE.sku);
-  assert.equal(findVzeAdminDocument("vw-golf-7-5g")?.productId, GOLF7_VZE.id);
+  assert.equal(findVzeAdminDocument(GOLF7_ADMIN_DOCUMENT.slug)?.productId, GOLF7_VZE.id);
   assert.equal(findVzeAdminDocument("does-not-exist"), undefined);
 });
 
-test("Golf 7 bleibt Rev. 1.3 und die anderen zwölf behalten ihre Rev. 1.0", () => {
+test("Golf 7 bleibt Rev. 1.3 und die anderen Modelle behalten ihre Rev. 1.0", () => {
   assert.equal(vzeAdminStorageVersion(GOLF7_VZE.id), "1.3");
   assert.equal(vzeAdminDisplayRevision(GOLF7_VZE.id), "1.3");
   for (const doc of VZE_VARIANT_DRAFTS) {
@@ -78,7 +78,7 @@ test("Gemeinsamer Admin-Zugang bewahrt Auth, SHA-Prüfung und Käufertrennung", 
   assert.match(buyer, /GOLF7_VZE\.id/);
 });
 
-test("Die Zuordnung verwendet alle 15 Shop-Produkte und speichert eine bearbeitete PDF", async () => {
+test("Die Zuordnung verwendet alle Shop-Produkte und speichert eine bearbeitete PDF", async () => {
   const { MQB_GUIDE_PRODUCTS } = loadTs("app/lib/mqbGuideProducts");
   assert.deepEqual(GUIDE_ADMIN_DOCUMENTS.map(doc => doc.productId), [
     ...VZE_ADMIN_DOCUMENTS.map(doc => doc.productId),
@@ -109,7 +109,7 @@ test("Die Zuordnung verwendet alle 15 Shop-Produkte und speichert eine bearbeite
   });
 
   const list = await (await GET()).json();
-  assert.equal(list.documents.length, 15);
+  assert.equal(list.documents.length, 28 + MQB_GUIDE_PRODUCTS.length);
   assert.equal(list.documents.find(doc => doc.slug === GOLF7_ADMIN_DOCUMENT.slug).available, true);
 
   const origin = "https://td.example";
@@ -128,6 +128,12 @@ test("Die Zuordnung verwendet alle 15 Shop-Produkte und speichert eine bearbeite
   assert.equal((await POST(request("unknown", pdf))).status, 400);
   assert.equal((await POST(request(target.slug, Buffer.from("keine PDF")))).status, 400);
   assert.equal(writes.length, 0);
+
+  const catalogSlug = loadTs("app/lib/guideCatalogLinks").catalogDocumentSlug("Polo AW", "coding-vcds-lane-memory");
+  assert.equal((await POST(request(catalogSlug, pdf))).status, 201);
+  assert.equal(writes.at(-1)[0], catalogSlug);
+  assert.match(statements.at(-1), /INSERT INTO td_guide_document_drafts/);
+  writes.length = 0;
 
   const response = await POST(request(target.slug, pdf));
   assert.equal(response.status, 201);
@@ -168,11 +174,11 @@ test("Öffentliche und interne PDF-Anleitungen verwenden dieselbe Fahrzeugliste"
   const selector = load("app/components/GuideSelector.tsx");
   const table = load("app/components/GuideTable.tsx");
 
-  assert.match(publicPage, /<GuideCatalogPage>[\s\S]*<GuideSelector\s*\/>/);
+  assert.match(publicPage, /<GuideCatalogPage>[\s\S]*<GuideSelector publishedCatalogSlugs=\{publishedCatalogSlugs\} \/>/);
   assert.match(adminPage, /if \(admin\) return <GuideCatalogPage admin>/);
-  assert.match(selector, /documentSlug: mqbGuide\?\.slug \?\? \(golf7Vze \? GOLF7_VZE_ADMIN_SLUG : vzeHref \? vzePdfSlug/);
+  assert.match(selector, /catalogDocumentSlug\(vehicle\.model, row\.id\)/);
   assert.match(table, /showDownload=\{!renderDocumentActions \|\| !row.documentSlug\}/);
-  assert.match(table, /renderDocumentActions\(row.documentSlug\)/);
+  assert.match(table, /renderDocumentActions\(row.documentSlug, row.title\)/);
 });
 
 test("Veröffentlichte PDFs benötigen zum Löschen Admin-Zugriff und die aktuelle Prüfsumme", async () => {
@@ -237,4 +243,22 @@ test("Veröffentlichte PDFs benötigen zum Löschen Admin-Zugriff und die aktuel
     product.id, product.sha256, product.filename, () => bundled), null);
   assert.deepEqual(await documents.readGuidePdf(async () => [],
     product.id, product.sha256, product.filename, () => bundled), { bytes: bundled, filename: product.filename });
+});
+
+test("Fehlende Fahrzeug-PDF kann anhand der Katalogzeile zugeordnet werden", () => {
+  const { catalogGuideProduct } = loadTs("app/lib/guideCatalogDocuments");
+  const { catalogDocumentSlug } = loadTs("app/lib/guideCatalogLinks");
+  const { findGuideAdminDocument } = loadTs("app/lib/vzeAdminDocuments");
+  const { guideOrderProduct, guideOrderProductFromId, paypalMeUrl } = loadTs("app/lib/vzeShopProducts");
+  const slug = catalogDocumentSlug("Polo AW", "coding-vcds-lane-memory");
+  const product = catalogGuideProduct(slug);
+  assert.ok(product);
+  assert.equal(product.priceCents, 999);
+  assert.match(product.title, /letzte Einstellung speichern/);
+  assert.equal(findGuideAdminDocument(slug).productId, slug);
+  assert.deepEqual(guideOrderProduct(slug), guideOrderProductFromId(slug));
+  assert.equal(paypalMeUrl(product), "https://paypal.me/TiDrechsler/9.99EUR");
+  assert.equal(catalogGuideProduct(catalogDocumentSlug("Fahrzeug unbekannt", "coding-vcds-lane-memory")), null);
+  assert.equal(catalogGuideProduct(catalogDocumentSlug("Polo AW", "coding-tcross-lane-activate")), null);
+  assert.equal(findGuideAdminDocument("mqb-lane-assist").productId, "mqb-lane-assist");
 });

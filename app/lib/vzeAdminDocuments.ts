@@ -1,4 +1,5 @@
 import { GOLF7_VZE_ADMIN_SLUG } from "./vzePdfVehicleLinks";
+import { catalogGuideProduct } from "./guideCatalogDocuments";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
 import { assistanceCategoryForName } from "./assistanceCategories";
 import { GOLF7_VZE } from "./guideShopShared";
@@ -51,3 +52,10 @@ export const GUIDE_ADMIN_DOCUMENTS = [
     code: "MQB",
   })),
 ];
+
+export function findGuideAdminDocument(slug: string) {
+  const existing = GUIDE_ADMIN_DOCUMENTS.find(document => document.slug === slug);
+  if (existing) return existing;
+  const product = catalogGuideProduct(slug);
+  return product ? { ...product, productId: product.id } : null;
+}

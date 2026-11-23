@@ -2,15 +2,26 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { catalogDocumentHref, catalogDownloadHref } from "../lib/guideCatalogLinks";
+import { formatGuidePrice } from "../lib/guidePricing";
 
 type Order = { orderId: string; reference: string; paypalUrl: string };
 type Purchase = { slug: string; paid: boolean; documentAvailable: boolean };
-type Purchases = { vzeModels?: Purchase[]; mqbGuides?: Purchase[] };
+type Purchases = { vzeModels?: Purchase[]; mqbGuides?: Purchase[]; catalogGuides?: Purchase[] };
 
-export default function ModelVzeCheckout({ signedIn, slug, name, mqb = false }: {
+async function purchaseReleased(slug: string, group: keyof Purchases, signal?: AbortSignal) {
+  const response = await fetch("/api/guide-shop/purchases", { cache: "no-store", credentials: "same-origin", signal });
+  const data = response.ok ? await response.json() as Purchases : null;
+  return data?.[group]?.some(item => item.slug === slug && item.paid && item.documentAvailable) ?? false;
+}
+
+export default function ModelVzeCheckout({ signedIn, slug, name, mqb = false, catalogPriceCents }: {
   signedIn: boolean; slug: string; name: string;
-  mqb?: boolean;
+  mqb?: boolean; catalogPriceCents?: number;
 }) {
+  const isCatalog = catalogPriceCents !== undefined;
+  const purchaseGroup = isCatalog ? "catalogGuides" : mqb ? "mqbGuides" : "vzeModels";
+  const price = formatGuidePrice((catalogPriceCents ?? 1399) / 100);
   const [terms, setTerms] = useState(false);
   const [order, setOrder] = useState<Order | null>(null);
   const [restoring, setRestoring] = useState(signedIn);
@@ -19,28 +30,30 @@ export default function ModelVzeCheckout({ signedIn, slug, name, mqb = false }: 
   const [paypalOpened, setPaypalOpened] = useState(false);
   const [message, setMessage] = useState("");
 
-  async function checkAccess(showMessage = true) {
+  async function checkAccess() {
     try {
-      const response = await fetch("/api/guide-shop/purchases", { cache: "no-store", credentials: "same-origin" });
-      const data = response.ok ? await response.json() as Purchases : null;
-      const released = (mqb ? data?.mqbGuides : data?.vzeModels)
-        ?.some(draft => draft.slug === slug && draft.paid && draft.documentAvailable) ?? false;
+      const released = await purchaseReleased(slug, purchaseGroup);
       setPaid(released);
-      if (!released && showMessage) setMessage("PayPal-Zahlung noch nicht überprüft. Bitte später erneut prüfen.");
-    } catch { if (showMessage) setMessage("Freigabestatus nicht erreichbar."); }
+      if (!released) setMessage("PayPal-Zahlung noch nicht überprüft. Bitte später erneut prüfen.");
+    } catch { setMessage("Freigabestatus nicht erreichbar."); }
   }
 
   useEffect(() => {
     if (!signedIn) return;
-    void checkAccess(false);
+    const controller = new AbortController();
+    void purchaseReleased(slug, purchaseGroup, controller.signal).then(released => {
+      if (!controller.signal.aborted) setPaid(released);
+    }).catch(() => {});
     void fetch("/api/guide-shop/account-orders?productSlug=" + encodeURIComponent(slug), {
-      credentials: "same-origin", cache: "no-store",
+      credentials: "same-origin", cache: "no-store", signal: controller.signal,
     }).then(r => r.ok ? r.json() : null)
       .then((data: { order?: Order | null } | null) => {
-        if (data?.order) setOrder(data.order);
-      }).catch(() => {}).finally(() => setRestoring(false));
-    // The product identifier is immutable for this page.
-  }, [signedIn, slug, mqb]);
+        if (data?.order && !controller.signal.aborted) setOrder(data.order);
+      }).catch(() => {}).finally(() => {
+        if (!controller.signal.aborted) setRestoring(false);
+      });
+    return () => controller.abort();
+  }, [signedIn, slug, purchaseGroup]);
 
   async function prepare() {
     setBusy(true); setMessage("");
@@ -57,7 +70,7 @@ export default function ModelVzeCheckout({ signedIn, slug, name, mqb = false }: 
     finally { setBusy(false); }
   }
 
-  const here = (mqb ? "/codieranleitungen/mqb-assistenten/" : "/codieranleitungen/vze-modelle/") + slug;
+  const here = isCatalog ? catalogDocumentHref(slug) : (mqb ? "/codieranleitungen/mqb-assistenten/" : "/codieranleitungen/vze-modelle/") + slug;
   if (!signedIn) return <div className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5 text-sm">
     <p className="font-bold">Anmelden, um diese PDF zu kaufen</p>
     <p className="mt-1 text-slate-600">Nach überprüftem Zahlungseingang erscheint die Anleitung in deinem Kundenkonto.</p>
@@ -67,13 +80,13 @@ export default function ModelVzeCheckout({ signedIn, slug, name, mqb = false }: 
 
   if (paid) return <section className="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5 text-sm">
     <p className="font-bold text-blue-900">{name}: PDF in deinem Kundenkonto freigeschaltet</p>
-    <a href={(mqb ? "/api/guide-shop/download/mqb/" : "/api/guide-shop/download/vze/") + slug}
+    <a href={isCatalog ? catalogDownloadHref(slug) : (mqb ? "/api/guide-shop/download/mqb/" : "/api/guide-shop/download/vze/") + slug}
       className="mt-3 inline-flex rounded-lg bg-blue-700 px-4 py-3 font-bold text-white">PDF jetzt herunterladen</a>
     <Link href="/konto" className="ml-3 text-blue-800 underline">Mein Konto</Link>
   </section>;
 
   return <section className="mt-6 rounded-xl border border-blue-200 bg-white p-5 text-sm">
-    <h2 className="text-lg font-black">{mqb ? "MQB-Prüfunterlage" : "VZE-Fachfassung"} {name} · 13,99 €</h2>
+    <h2 className="text-lg font-black">{isCatalog ? name : (mqb ? "MQB-Prüfunterlage " : "VZE-Fachfassung ") + name} · {price}</h2>
     <p className="mt-2 text-slate-600">Einmaliger Kauf der PDF. Zahlung über PayPal.Me.
       Freigabe erfolgt nach tatsächlicher Prüfung des Zahlungseingangs.</p>
     {restoring ? <p className="mt-3 text-slate-600">Offene Bestellung wird geladen …</p>
@@ -99,7 +112,7 @@ export default function ModelVzeCheckout({ signedIn, slug, name, mqb = false }: 
             }).catch(() => { setMessage("Der PayPal-Zeitstempel konnte nicht erfasst werden. Bitte den Support mit der Bestellnummer kontaktieren."); });
           }}
           className="mt-3 inline-flex min-h-11 rounded-lg bg-blue-700 px-4 py-3 font-bold text-white">
-          Zahlungspflichtig per PayPal bezahlen · 13,99 €</a>
+          Zahlungspflichtig per PayPal bezahlen · {price}</a>
         {paypalOpened && <button type="button" onClick={() => void checkAccess()}
           className="mt-3 block rounded-lg border border-blue-300 bg-white px-3 py-2 font-bold text-blue-800">
           Freigabe prüfen</button>}

@@ -18,5 +18,6 @@ export const config = {
     "/codieranleitungen/golf7-vze/:path*",
     "/codieranleitungen/vze-modelle/:path*",
     "/codieranleitungen/mqb-assistenten/:path*",
+    "/codieranleitungen/dokument",
   ],
 };

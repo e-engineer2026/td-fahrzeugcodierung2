@@ -62,7 +62,7 @@ test("coding search accepts umlauts, transliterations, punctuation, and reordere
 });
 
 test("Golf-7-VZE-PDF ersetzt den generischen VZE-Eintrag in der Anleitungsliste", () => {
-  const guide = fs.readFileSync("app/components/GuideSelector.tsx", "utf8");
+  const guide = fs.readFileSync("app/lib/guideCatalogDocuments.ts", "utf8");
   assert.match(guide, /coding\.id !== "vcds-vze" \|\| !ids\.has\("golf7-vze-pdf"\)/);
   assert.match(guide, /coding\.id === "golf7-vze-pdf"/);
   assert.equal(matchesCodingSearch("Verkehrszeichenerkennung (VZE / Sign Assist) aktivieren", "VZE"), true);
