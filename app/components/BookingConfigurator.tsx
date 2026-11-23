@@ -21,7 +21,9 @@ const displayCodingGroups: DisplayCodingGroup[] = platformCodingGroups.flatMap(g
   group === "Assistenz" ? [...ASSISTANCE_CATEGORIES] : [group]);
 function displayCodingGroup(entry: Pick<UnifiedCodingEntry, "uiGroup" | "name">): DisplayCodingGroup {
   // Auch ältere Katalogeinträge unter Komfort/Fahrdynamik richtig einsortieren.
-  return assistanceCategoryForCoding(entry) ?? entry.uiGroup;
+  const assistanceCategory = assistanceCategoryForCoding(entry);
+  if (assistanceCategory) return assistanceCategory;
+  return entry.uiGroup === "Assistenz" ? "Assistenzsysteme" : entry.uiGroup;
 }
 
 const popularTerms = ["zeigertest", "rückleuchten zusätzlich aktiv", "auto-lock", "coming home", "spiegel", "tagfahrlicht", "start-stopp", "regenschließ"];
