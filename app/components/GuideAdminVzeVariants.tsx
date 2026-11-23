@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import GuideSelector from "./GuideSelector";
 import { extractGuidePdfsFromZip } from "../lib/guideZipClient";
 
+type PdfCategory = "Assistenzsysteme" | "Anpassungen für Assistenzsysteme";
 type DownloadDocument = {
-  slug: string; title: string; sku: string; filename: string | null; available: boolean;
+  slug: string; title: string; category: PdfCategory; sku: string; filename: string | null; available: boolean;
   defaultFilename: string; publishedSha256: string | null; draftFilename: string | null; draftSha256: string | null;
 };
 type Candidate = { file: File; slug: string };
@@ -24,6 +25,7 @@ export default function GuideAdminVzeVariants() {
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedPublished, setSelectedPublished] = useState<string[]>([]);
   const [selectedDrafts, setSelectedDrafts] = useState<string[]>([]);
+  const [pdfCategory, setPdfCategory] = useState<"Alle PDFs" | PdfCategory>("Alle PDFs");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [messageSlug, setMessageSlug] = useState<string | null>(null);
@@ -255,13 +257,15 @@ export default function GuideAdminVzeVariants() {
     </div>;
   }
 
-  const draftDocuments = (documents ?? [])
+  const filteredDocuments = (documents ?? []).filter(document =>
+    pdfCategory === "Alle PDFs" || document.category === pdfCategory);
+  const draftDocuments = filteredDocuments
     .filter(document => document.draftSha256)
     .sort((a, b) => a.title.localeCompare(b.title, "de"));
   const selectedDraftCount = draftDocuments.filter(document =>
     selectedDrafts.includes(document.slug)).length;
   const allDraftsSelected = draftDocuments.length > 0 && selectedDraftCount === draftDocuments.length;
-  const publishedDocuments = (documents ?? [])
+  const publishedDocuments = filteredDocuments
     .filter(document => document.available && document.publishedSha256)
     .sort((a, b) => a.title.localeCompare(b.title, "de"));
   const selectedPublishedCount = publishedDocuments.filter(document =>
@@ -297,6 +301,19 @@ export default function GuideAdminVzeVariants() {
             className="mt-2 text-sm font-bold text-blue-800 underline">Erneut laden</button>
         : <p className="mt-2 text-sm text-slate-600" role="status">PDF-Status wird geladen …</p>)}
     </div>
+    <nav className="mx-auto mb-4 flex max-w-5xl flex-wrap gap-2" aria-label="PDF-Anleitungen nach Assistenzfunktion filtern">
+      {(["Alle PDFs", "Assistenzsysteme", "Anpassungen für Assistenzsysteme"] as const).map(category => (
+        <button key={category} type="button" disabled={busy} aria-pressed={pdfCategory === category}
+          onClick={() => { setPdfCategory(category); setSelectedDrafts([]); setSelectedPublished([]); }}
+          className={"min-h-10 rounded-lg border px-3 py-2 text-sm font-bold disabled:opacity-50 " +
+            (pdfCategory === category
+              ? "border-blue-700 bg-blue-700 text-white"
+              : "border-slate-200 bg-white text-slate-700 hover:border-blue-400")}>
+          {category} ({(documents ?? []).filter(document =>
+            category === "Alle PDFs" || document.category === category).length})
+        </button>
+      ))}
+    </nav>
     <section className="mx-auto mb-6 max-w-5xl overflow-hidden rounded-xl border border-blue-200 bg-white shadow-sm" aria-label="PDF-Entwürfe zur Freigabe">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-blue-100 p-4 sm:px-5">
         <div>
@@ -321,7 +338,9 @@ export default function GuideAdminVzeVariants() {
         </button>
       </div>}
       {!documents ? <p className="p-4 text-sm text-slate-600">Entwürfe werden geladen …</p>
-        : !draftDocuments.length ? <p className="p-4 text-sm text-slate-600">Noch keine PDF-Entwürfe hinterlegt. Verwende oben den Sammelupload.</p>
+        : !draftDocuments.length ? <p className="p-4 text-sm text-slate-600">{pdfCategory === "Alle PDFs"
+          ? "Noch keine PDF-Entwürfe hinterlegt. Verwende oben den Sammelupload."
+          : "In dieser Kategorie sind derzeit keine PDF-Entwürfe hinterlegt."}</p>
         : <ul className="divide-y divide-slate-100">
           {draftDocuments.map(document => <li key={document.slug}
             className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
@@ -334,6 +353,7 @@ export default function GuideAdminVzeVariants() {
                 className="mt-1 h-5 w-5 shrink-0 rounded border-slate-300 accent-blue-700" />
               <span className="min-w-0">
                 <span className="block font-bold text-slate-900">{document.title}</span>
+                <span className="mt-1 block text-xs text-blue-700">{document.category}</span>
                 <span className="mt-1 block break-all text-xs text-slate-500">{document.draftFilename}</span>
               </span>
             </label>
@@ -379,7 +399,9 @@ export default function GuideAdminVzeVariants() {
       </div>}
       {!documents ? <p className="p-4 text-sm text-slate-600" role="status">Veröffentlichte PDFs werden geladen …</p>
         : publishedDocuments.length === 0
-          ? <p className="p-4 text-sm text-slate-600">Zurzeit sind keine PDFs veröffentlicht.</p>
+          ? <p className="p-4 text-sm text-slate-600">{pdfCategory === "Alle PDFs"
+              ? "Zurzeit sind keine PDFs veröffentlicht."
+              : "In dieser Kategorie sind derzeit keine PDFs veröffentlicht."}</p>
           : <ul className="divide-y divide-slate-100">
               {publishedDocuments.map(document => <li key={document.slug}
                 className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
@@ -393,6 +415,7 @@ export default function GuideAdminVzeVariants() {
                     className="mt-1 h-5 w-5 shrink-0 rounded border-slate-300 accent-blue-700" />
                   <span className="min-w-0">
                     <span className="block font-bold text-slate-900">{document.title}</span>
+                    <span className="mt-1 block text-xs text-blue-700">{document.category}</span>
                     <span className="mt-1 block break-all text-xs text-slate-500">{document.filename ?? document.defaultFilename}</span>
                   </span>
                 </label>
