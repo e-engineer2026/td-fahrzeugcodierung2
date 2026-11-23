@@ -27,7 +27,7 @@ export async function GET() {
       const stored = isAvailableGuideDocument(row, document.sha256);
       const available = stored || (row?.withdrawn !== true && !!(mqb && readMqbGuideDocument(mqb)));
       return {
-        slug: document.slug, title: document.title, sku: document.sku, available,
+        slug: document.slug, title: document.title, category: document.category, sku: document.sku, available,
         publishedSha256: available ? (stored ? row?.sha256 : document.sha256) : null,
         draftFilename: draftsById.get(document.productId)?.assigned_filename ?? null,
         draftSha256: draftsById.get(document.productId)?.sha256 ?? null,
