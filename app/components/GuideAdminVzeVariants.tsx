@@ -372,16 +372,20 @@ export default function GuideAdminVzeVariants() {
           </li>)}
         </ul>}
     </section>
-    <section className="mx-auto mb-6 max-w-5xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" aria-label="Veröffentlichte PDF-Anleitungen">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 p-4 sm:px-5">
-        <div>
-          <h2 className="text-lg font-black text-slate-900">Veröffentlichte PDFs</h2>
-          <p className="mt-1 text-xs text-slate-600">Hier stehen alle aktuell zum Download bereitgestellten Anleitungen.</p>
-        </div>
-        {documents && <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800">
-          {publishedDocuments.length} veröffentlicht
-        </span>}
-      </div>
+    <details className="group mx-auto mb-6 max-w-5xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm" aria-label="Veröffentlichte PDF-Anleitungen">
+      <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-2 p-4 marker:content-none sm:px-5 [&::-webkit-details-marker]:hidden">
+        <span className="min-w-0">
+          <span className="block text-lg font-black text-slate-900">Veröffentlichte PDFs</span>
+          <span className="mt-1 block text-xs text-slate-600">Zum Anzeigen, Herunterladen oder Löschen aufklappen.</span>
+        </span>
+        <span className="flex items-center gap-2">
+          <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800">
+            {documents ? publishedDocuments.length + " veröffentlicht" : "Lädt …"}
+          </span>
+          <span aria-hidden="true" className="text-slate-500 transition-transform group-open:rotate-180">⌄</span>
+        </span>
+      </summary>
+      <div className="border-t border-slate-200">
       {documents && publishedDocuments.length > 0 && <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 bg-slate-50 px-4 py-3 sm:px-5">
         <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 text-sm font-semibold text-slate-800">
           <input type="checkbox" checked={allPublishedSelected} disabled={busy}
@@ -438,7 +442,8 @@ export default function GuideAdminVzeVariants() {
               </li>)}
             </ul>}
       {message && messageSlug && <p className="border-t border-slate-100 px-4 py-3 text-sm font-semibold text-slate-700" role="status">{message}</p>}
-    </section>
+      </div>
+    </details>
     <GuideSelector renderDocumentActions={renderDocumentActions} />
   </>;
 }
