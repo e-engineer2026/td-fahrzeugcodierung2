@@ -130,9 +130,10 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
       category,
       count: codings.filter((coding) => guideCategory(coding) === category).length
         + researchEntries.filter((entry) => entry.category === category).length
-        + sourceIdeas.filter((idea) => guideCategoryForReference(idea) === category).length,
+        + sourceIdeas.filter((idea) => guideCategoryForReference(idea) === category).length
+        + (category === "Nachrüstungen" && vehicle && mqbRfkGuideForVehicle(vehicle.model) ? 1 : 0),
     })),
-    [codings, researchEntries, sourceIdeas]
+    [codings, researchEntries, sourceIdeas, vehicle]
   );
   // Eine Suche durchsucht alle Kategorien. Ohne Suchbegriff bleibt der
   // gewählte Kategorienfilter aktiv.
