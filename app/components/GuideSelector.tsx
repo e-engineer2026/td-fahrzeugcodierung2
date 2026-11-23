@@ -6,6 +6,7 @@ import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLi
 import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLinks";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
+import { MQB_TJA_CODING, MQB_TJA_CODING_ID, mqbTjaGuideForVehicle } from "../lib/mqbTjaModels";
 import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "../lib/assistanceCategories";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
@@ -56,14 +57,15 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
   const ids = new Set(codingsForVehicle(vehicle));
   // Keine 0-Euro-Codierungen in der Anleitungsliste; Duplikate nicht durch
   // Gross-/Kleinschreibung, Umlaute, Satzzeichen oder Leerzeichen mehrfach anzeigen.
-  return uniqueByCodingName(codingCatalog
+  return [...uniqueByCodingName(codingCatalog
     .filter((coding) => ids.has(coding.id) && coding.id !== "diagnose" && coding.uiGroup !== "Diagnose")
     .filter((coding) => hasDisplayPrice(coding.price))
     // Die freigegebene Golf-7-VZE-PDF ersetzt den generischen VZE-Katalogeintrag.
     .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf"))
     .filter(isPdfGuideCoding)
-    .map(displayPdfGuideCoding))
-    .sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
+    .map(displayPdfGuideCoding)),
+    ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
+  ].sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
 export default function GuideSelector({ renderDocumentActions, publishedCatalogSlugs = [] }: {
@@ -148,7 +150,9 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         (coding.id === "vcds-fla" || coding.id === "tcross-fla")
         ? MQB_FLA_MODEL_PRODUCTS.find(product => product.slug === "mqb-fla-" + modelPdfSlug)
         : undefined;
-      const mqbGuide = modelFlaGuide ?? (mqbPlatform
+      const modelTjaGuide = mqbPlatform && coding.id === MQB_TJA_CODING_ID && vehicle
+        ? mqbTjaGuideForVehicle(vehicle.model) : undefined;
+      const mqbGuide = modelTjaGuide ?? modelFlaGuide ?? (mqbPlatform
         ? MQB_GUIDE_PRODUCTS.find(product => product.codingIds.some(id => id === coding.id))
         : undefined);
       const details = guideDetails({
