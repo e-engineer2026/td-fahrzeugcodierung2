@@ -454,3 +454,19 @@ test("PayPal-Admin: Zahlungspruefungs-Checkbox bleibt auf Mobilgeraeten klein", 
   assert.ok(orders.includes('type="checkbox" className="mt-1 h-4 w-4 shrink-0'));
   assert.match(orders, /paymentVerified: checked\[order\.id\]/);
 });
+
+test("Golf 7 Lane Assist PDF ist als modellbezogenes Dokument sichtbar und bleibt privat bis zur Freigabe", () => {
+  const source = fs.readFileSync("app/lib/mqbLaneAssistModels.ts", "utf8");
+  const selector = fs.readFileSync("app/components/GuideSelector.tsx", "utf8");
+  const products = fs.readFileSync("app/lib/mqbGuideProducts.ts", "utf8");
+  assert.match(source, /"vw-golf-7-5g": "[a-f0-9]{64}"/);
+  assert.match(source, /slug: "mqb-lane-" \+ model\.slug/);
+  assert.match(source, /export const MQB_LANE_CODING_ID = "mqb-lane-guide-enable"/);
+  assert.match(source, /export function mqbLaneGuideForVehicle/);
+  assert.match(source, /vehicleModel === "Golf 7 \(5G\)" \? "vw-golf-7-5g"/);
+  assert.match(selector, /\.\.\.\(\(vehicle\.platform === "MQB" \|\| vehicle\.platform === "MQB-A0"\).*\[MQB_LANE_CODING\]/);
+  assert.match(selector, /coding\.id === MQB_LANE_CODING_ID/);
+  assert.match(selector, /modelLaneGuide \?\? modelTrailerGuide/);
+  assert.match(selector, /"\/api\/guide-shop\/download\/mqb\/" \+ mqbGuide\.slug/);
+  assert.match(products, /\.\.\.MQB_LANE_ASSIST_MODEL_PRODUCTS/);
+});
