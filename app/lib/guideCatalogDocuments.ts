@@ -10,6 +10,7 @@ import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "./assistance
 import { displayPdfGuideCoding, isPdfGuideCoding } from "./pdfGuideCoding";
 import { MQB_FLA_MODEL_PRODUCTS } from "./mqbFlaModels";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
+import { MQB_TJA_CODING, MQB_TJA_CODING_ID, mqbTjaGuideForVehicle } from "./mqbTjaModels";
 
 export const guideCategories = ["Codierungen", ...ASSISTANCE_CATEGORIES, "Nachrüstungen", "Umbauten"] as const;
 
@@ -28,13 +29,14 @@ export function availableModelCodings(vehicle: Vehicle): Coding[] {
   const ids = new Set(codingsForVehicle(vehicle));
   // Keine 0-Euro-Codierungen in der Anleitungsliste; Duplikate nicht durch
   // Gross-/Kleinschreibung, Umlaute, Satzzeichen oder Leerzeichen mehrfach anzeigen.
-  return uniqueByCodingName(codingCatalog
+  return [...uniqueByCodingName(codingCatalog
     .filter((coding) => ids.has(coding.id) && coding.id !== "diagnose" && coding.uiGroup !== "Diagnose")
     .filter((coding) => hasDisplayPrice(coding.price))
     // Die freigegebene Golf-7-VZE-PDF ersetzt den generischen VZE-Katalogeintrag.
     .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf"))
-    .filter(isPdfGuideCoding).map(displayPdfGuideCoding))
-    .sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
+    .filter(isPdfGuideCoding).map(displayPdfGuideCoding)),
+    ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
+  ].sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
 export function catalogResearch(vehicle: Vehicle, codings: Coding[]) {
@@ -68,6 +70,7 @@ export function catalogReferenceIdeas(vehicle: Vehicle, codings: Coding[], resea
 
 export function catalogMqbGuide(vehicle: Vehicle, coding: Coding) {
   if (vehicle.platform !== "MQB" && vehicle.platform !== "MQB-A0") return undefined;
+  if (coding.id === MQB_TJA_CODING_ID) return mqbTjaGuideForVehicle(vehicle.model);
   const model = vehicle.model === "Golf 7 (5G)" ? "vw-golf-7-5g" : vzePdfSlugForModel(vehicle.model);
   const specific = model && (coding.id === "vcds-fla" || coding.id === "tcross-fla")
     ? MQB_FLA_MODEL_PRODUCTS.find(product => product.slug === "mqb-fla-" + model) : undefined;
