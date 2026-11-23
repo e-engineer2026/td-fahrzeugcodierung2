@@ -5,6 +5,7 @@ import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react
 import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
+import { ASSISTANCE_CATEGORIES, assistanceCategoryForName } from "../lib/assistanceCategories";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
@@ -20,7 +21,7 @@ import { researchedGuidesForModel, type ResearchCategory } from "../data/guideRe
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
-const guideCategories = ["Codierungen", "Assistenzsysteme", "Anpassungen für Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
+const guideCategories = ["Codierungen", ...ASSISTANCE_CATEGORIES, "Nachrüstungen", "Umbauten"] as const;
 
 /** Link only to an actual, model-specific VZE release. The download itself remains paywalled. */
 function vzeProductHref(title: string, slug?: string): string | undefined {
@@ -40,10 +41,7 @@ function guideCategory(coding: Coding): GuideCategory {
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") {
-    // Bei bereits vorhandenen Assistenten: Einstellungen statt Erstaktivierung.
-    // Auch "aktivieren" kann nur einen Menüpunkt und nicht das System meinen.
-    const adjustments = /anpass|einstell|speicher|merk|warnverzöger|warnstärk|warnintens|empfindlich|lenkeingriff|vibration|eingriffszeitpunkt|bedienung|res-taste|fahrprofilauswahl|grundeinstellung|abstandseinstellung|adaptive spurführung|letzte[nr]? (?:einstellung|einschaltzustand)|einschaltzustand/i;
-    return adjustments.test(name) ? "Anpassungen für Assistenzsysteme" : "Assistenzsysteme";
+    return assistanceCategoryForName(name);
   }
   return "Codierungen";
 }
