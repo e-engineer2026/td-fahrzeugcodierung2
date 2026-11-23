@@ -20,7 +20,7 @@ import { researchedGuidesForModel, type ResearchCategory } from "../data/guideRe
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
-const guideCategories = ["Codierungen", "Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
+const guideCategories = ["Codierungen", "Assistenzsysteme", "Anpassungen für Assistenzsysteme", "Nachrüstungen", "Umbauten"] as const;
 
 /** Link only to an actual, model-specific VZE release. The download itself remains paywalled. */
 function vzeProductHref(title: string, slug?: string): string | undefined {
@@ -39,7 +39,12 @@ function guideCategory(coding: Coding): GuideCategory {
   const name = coding.name;
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
-  if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") return "Assistenzsysteme";
+  if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") {
+    // Bei bereits vorhandenen Assistenten: Einstellungen statt Erstaktivierung.
+    // Auch "aktivieren" kann nur einen Menüpunkt und nicht das System meinen.
+    const adjustments = /anpass|einstell|speicher|merk|warnverzöger|warnstärk|warnintens|empfindlich|lenkeingriff|vibration|eingriffszeitpunkt|bedienung|res-taste|fahrprofilauswahl|grundeinstellung|abstandseinstellung|adaptive spurführung|letzte[nr]? (?:einstellung|einschaltzustand)|einschaltzustand/i;
+    return adjustments.test(name) ? "Anpassungen für Assistenzsysteme" : "Assistenzsysteme";
+  }
   return "Codierungen";
 }
 
@@ -111,7 +116,7 @@ export default function GuideSelector({ renderDocumentActions }: {
     })),
     [codings, researchEntries, sourceIdeas]
   );
-  // Eine Suche durchsucht alle vier Kategorien. Ohne Suchbegriff bleibt der
+  // Eine Suche durchsucht alle Kategorien. Ohne Suchbegriff bleibt der
   // gewählte Kategorienfilter aktiv.
   const visibleResearch = researchEntries.filter((entry) =>
     (searching || entry.category === activeCategory) &&
@@ -244,12 +249,12 @@ export default function GuideSelector({ renderDocumentActions }: {
     setCodingSearch("");
     const available = availableModelCodings(next);
     const hasOwnCodings = guideCategories.some((category) =>
-      (category === "Codierungen" || category === "Assistenzsysteme") &&
+      (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
       available.some((item) => guideCategory(item) === category)
     );
     if (hasOwnCodings) {
       setActiveCategory(guideCategories.find((category) =>
-        (category === "Codierungen" || category === "Assistenzsysteme") &&
+        (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
         available.some((item) => guideCategory(item) === category)
       ) ?? "Codierungen");
     } else {
@@ -343,7 +348,7 @@ export default function GuideSelector({ renderDocumentActions }: {
               className="rounded-md border border-slate-200 bg-white px-3 py-1.5 font-bold text-blue-700 hover:bg-blue-50">
               Suche zurücksetzen
             </button>
-          </div> : <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4" role="group" aria-label="Anleitungskategorien">
+          </div> : <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-5" role="group" aria-label="Anleitungskategorien">
             {categoryCounts.map(({ category, count }) => (
               <button key={category} type="button" aria-pressed={activeCategory === category}
                 onClick={() => setActiveCategory(category)}
