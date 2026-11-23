@@ -70,12 +70,27 @@ function availableModelCodings(vehicle: Vehicle, publishedSlugs?: readonly strin
     .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf"))
     .filter(isPdfGuideCoding)
     .map(displayPdfGuideCoding));
+  // Auch bei MQB-A0 oder modellbedingt reduzierten Codierlisten müssen bereits
+  // veröffentlichte VZE-/FLA-Modell-PDFs auffindbar sein. Die nachgeschaltete
+  // Freigabeprüfung zeigt diese Ergänzungen nur mit tatsächlich verfügbarer PDF.
+  const hasModelGuide = (vehicle.platform === "MQB" || vehicle.platform === "MQB-A0") &&
+    !!(vehicle.model === "Golf 7 (5G)" || vzePdfSlugForModel(vehicle.model));
+  const modelGuideFallbacks: Coding[] = [];
+  if (hasModelGuide && !standard.some(coding => /verkehrszeichenerkennung|\\bvze\\b/i.test(coding.name))) {
+    const vze = codingCatalog.find(coding => coding.id === "vcds-vze");
+    if (vze) modelGuideFallbacks.push(displayPdfGuideCoding(vze));
+  }
+  if (hasModelGuide && !standard.some(coding => /fernlichtassistent|light assist|\\bfla\\b/i.test(coding.name))) {
+    const fla = codingCatalog.find(coding => coding.id === "vcds-fla");
+    if (fla) modelGuideFallbacks.push(displayPdfGuideCoding(fla));
+  }
   // Modellbezogene Freischaltungs-PDFs haben Vorrang vor historischen generischen
   // Varianten wie „Lane Assist / Spurhalteassistent aktivieren“.
   return uniquePdfGuideCodings([
     ...((vehicle.platform === "MQB" || vehicle.platform === "MQB-A0") && mqbLaneGuideForVehicle(vehicle.model) ? [MQB_LANE_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
+    ...modelGuideFallbacks,
     ...standard,
   ].filter(coding => !publishedSlugs ||
     publishedSlugs.includes(codingDocumentSlugForVehicle(vehicle, coding)))).sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
