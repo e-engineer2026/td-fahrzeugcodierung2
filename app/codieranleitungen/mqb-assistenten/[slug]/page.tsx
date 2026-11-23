@@ -32,7 +32,7 @@ export default async function MqbGuidePage({ params }: { params: Promise<{ slug:
         <p className="text-xs font-bold uppercase tracking-wider text-blue-700">MQB-Prüfunterlage · {product.sku} · Rev. {product.revision}</p>
         <h1 className="mt-2 text-2xl font-black sm:text-3xl">{product.name}</h1>
         <p className="mt-3 text-sm leading-6 text-slate-700">{product.description}</p>
-        <p className="mt-2 text-sm leading-6 text-slate-700">{product.slug.startsWith("mqb-lane-") && product.slug !== "mqb-lane-assist" ? "Vierseitiger Modell-Entwurf. Codierwerte, Kameraindex und Lenkhilfe müssen am konkreten Fahrzeug geprüft werden. Verkauf erst nach Veröffentlichung durch TD Fahrzeugcodierung." : "Zweiseitige Prüfunterlage für Fachkräfte."}</p>
+        <p className="mt-2 text-sm leading-6 text-slate-700">{(product.slug.startsWith("mqb-fla-") || (product.slug.startsWith("mqb-lane-") && product.slug !== "mqb-lane-assist")) ? "Vierseitiger Modell-Entwurf. Codierwerte, Kamera, Steuergeräte und Hardware müssen am konkreten Fahrzeug geprüft werden. Verkauf erst nach Veröffentlichung durch TD Fahrzeugcodierung." : "Zweiseitige Prüfunterlage für Fachkräfte."}</p>
         <p className="mt-4 text-xl font-black text-blue-700">{formatGuidePrice(product.priceCents / 100)}</p>
         {ready
           ? <ModelVzeCheckout signedIn={!!userId} slug={product.slug} name={product.name} mqb />
