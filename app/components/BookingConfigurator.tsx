@@ -214,6 +214,12 @@ export default function BookingConfigurator({ integrated = false }: { integrated
     {integrated && selectedVehicle && year > 0 && <SaveVehicleCard brand={brand} model={vehicleModel} year={year} codings={selectedEntries.map((entry) => entry.name)} />}
     {selectedEntries.length > 0 && <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4"><button type="button" onClick={shareSelection} className="rounded-lg bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800">Auswahl teilen</button><p role="status" className="mt-2 text-sm text-slate-700">{shareMessage}</p>{shareLink && <input aria-label="Link zur Codierungsauswahl" className="mt-2 w-full" readOnly value={shareLink} onFocus={(event) => event.currentTarget.select()} />}</div>}
     
+    {!bookingDisabled && <Link href={`/konto?auftrag=${encodeURIComponent(JSON.stringify({
+      brand: brand === "SEAT / CUPRA" ? (vehicleModel.startsWith("CUPRA") ? "CUPRA" : "SEAT") : brand,
+      model: vehicleModel, year, mode, services: selectedEntries.map(entry => entry.name).join(", "),
+    }))}`} className="inline-flex rounded-lg border border-blue-300 bg-white px-4 py-3 text-sm font-bold text-blue-800 hover:bg-blue-50">
+      Auswahl als Anfrage im Kundenkonto speichern
+    </Link>}
     <ConfiguratorLiveActions snapshot={bookingDisabled ? null : { count: selectedEntries.length, subtotal: euro(subtotal), discount: euro(discount), total: euro(total), sfdFee, rate: Math.round(rate * 100), nextTier: upcomingTier ? String(upcomingTier) : "", nextDifference: upcomingTier ? euro(upcomingTier - subtotal) : "", mode, calUrl, vehicle: `${brand} ${selectedVehicle?.model} · ${year}`, codings: selectedEntries.map((entry) => entry.name), prepay, finalpay }} onBook={() => openBooking(mode === "remote")} onPayment={savePendingBooking} />
   </div>;
 }
