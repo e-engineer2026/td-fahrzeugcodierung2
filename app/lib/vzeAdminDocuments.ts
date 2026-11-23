@@ -1,5 +1,6 @@
 import { GOLF7_VZE_ADMIN_SLUG } from "./vzePdfVehicleLinks";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
+import { assistanceCategoryForName } from "./assistanceCategories";
 import { GOLF7_VZE } from "./guideShopShared";
 import { VZE_VARIANT_DRAFTS, type VzeVariantDraft } from "./vzeVariantDrafts";
 
@@ -46,8 +47,7 @@ export const GUIDE_ADMIN_DOCUMENTS = [
     ...product,
     productId: product.id,
     title: product.name + " · MQB",
-    category: /anpass|einstell|speicher|warnverzöger|warnstärk|empfindlich|lenkeingriff|vibration|eingriffszeitpunkt|abstandseinstellung/i.test(product.name)
-      ? "Anpassungen für Assistenzsysteme" as const : "Assistenzsysteme" as const,
+    category: assistanceCategoryForName(product.name),
     code: "MQB",
   })),
 ];
