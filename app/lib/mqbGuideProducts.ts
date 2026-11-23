@@ -1,4 +1,5 @@
 import { MQB_LANE_ASSIST_MODEL_PRODUCTS } from "./mqbLaneAssistModels";
+import { MQB_FLA_MODEL_PRODUCTS } from "./mqbFlaModels";
 
 export const MQB_GUIDE_PRODUCTS = [
   {
@@ -29,6 +30,7 @@ export const MQB_GUIDE_PRODUCTS = [
   },
   // Separate private model drafts. Only an administrator can upload and publish.
   ...MQB_LANE_ASSIST_MODEL_PRODUCTS,
+  ...MQB_FLA_MODEL_PRODUCTS,
 ] as const;
 
 export function findMqbGuideProduct(slug: string) {
