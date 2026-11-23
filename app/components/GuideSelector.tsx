@@ -13,7 +13,7 @@ import { MQB_TRAILER_CODING, MQB_TRAILER_CODING_ID, mqbTrailerGuideForVehicle } 
 import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "../lib/assistanceCategories";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
-import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
+import { hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
 import { displayPdfGuideCoding, isPdfGuideCoding, pdfGuideFunctionKey, uniquePdfGuideCodings } from "../lib/pdfGuideCoding";
 import { matchesCodingSearch } from "../lib/codingSearch";
 import GuideTable, { type GuideTableRow, type RenderDocumentActions } from "./GuideTable";
