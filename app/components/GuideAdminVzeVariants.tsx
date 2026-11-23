@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import GuideSelector from "./GuideSelector";
 import { extractGuidePdfsFromZip } from "../lib/guideZipClient";
+import { ASSISTANCE_CATEGORIES, type AssistanceCategory } from "../lib/assistanceCategories";
 
-type PdfCategory = "Assistenzsysteme" | "Anpassungen für Assistenzsysteme";
+type PdfCategory = AssistanceCategory;
 type DownloadDocument = {
   slug: string; title: string; category: PdfCategory; sku: string; filename: string | null; available: boolean;
   defaultFilename: string; publishedSha256: string | null; draftFilename: string | null; draftSha256: string | null;
@@ -301,7 +302,7 @@ export default function GuideAdminVzeVariants() {
         : <p className="mt-2 text-sm text-slate-600" role="status">PDF-Status wird geladen …</p>)}
     </div>
     <nav className="mx-auto mb-4 flex max-w-5xl flex-wrap gap-2" aria-label="PDF-Anleitungen nach Assistenzfunktion filtern">
-      {(["Alle PDFs", "Assistenzsysteme", "Anpassungen für Assistenzsysteme"] as const).map(category => (
+      {(["Alle PDFs", ...ASSISTANCE_CATEGORIES] as const).map(category => (
         <button key={category} type="button" disabled={busy} aria-pressed={pdfCategory === category}
           onClick={() => { setPdfCategory(category); setSelectedDrafts([]); setSelectedPublished([]); }}
           className={"min-h-10 rounded-lg border px-3 py-2 text-sm font-bold disabled:opacity-50 " +
