@@ -47,14 +47,14 @@ export const MQB_TJA_MODEL_PRODUCTS = TJA_MODELS.map((model, index) => ({
   name: "Stauassistent (TJA) · " + model.name,
   model: model.name + " (" + model.code + ")",
   sku: "TD-MQB-TJA-" + String(index + 1).padStart(2, "0"),
-  revision: "1.0",
+  revision: "1.1",
   priceCents: 1399,
   // Kein fest eingebettetes PDF und keine öffentliche Datei:
   // Upload als Entwurf, Veröffentlichung nur über die autorisierte Admin-Oberfläche.
   sha256: "",
   filename: model.slug + "_tja_anleitung.pdf",
   codingIds: [] as string[],
-  description: "Vierseitige modellbezogene TJA-Prüfanleitung zu ACC, A5-Kamera, Lenkhilfe, ESC, Getriebe und EPB. Funktionsfreigabe nur nach Nachweis der konkreten Variante.",
+  description: "Sechsseitige TJA-Prüfanleitung mit konkreten MQB-Referenzcodierungen für A5, ACC und gesondert Emergency Assist sowie originalem TD-Logo. Anwendbarkeit nur nach Prüfung von Kamera, Radar, Lenkhilfe, ESC, Getriebe und EPB.",
 }));
 
 export function mqbTjaGuideForVehicle(vehicleModel: string) {
