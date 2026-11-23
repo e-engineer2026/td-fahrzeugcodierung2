@@ -389,10 +389,11 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
   const displayed = [...curateLightAndInfotainmentEntries(curateComfortEntries(curateAssistEntries(normalized))), ...specific.offers, ...cockpitDesigns, ...smartphoneAid, ...selectedGolf7Offers].map((entry) => {
     const smartphoneActivation = /(carplay|android auto|app-connect)/i.test(entry.name) && /(freischalt|aktivier)/i.test(entry.name);
     const startStopDeactivation = /start[- /]?stopp?/i.test(entry.name) && /deaktivier/i.test(entry.name);
-    // Zusatzfunktionen bleiben sichtbar. Aktivierungen von Assistenzsystemen
-    // dürfen aber erst nach Prüfung von Ausstattung, Softwarestand und Lizenzen buchbar sein.
+    // Konkrete fahrzeugspezifische Assistenzangebote dürfen auswählbar sein.
+    // Die nötige Hardware-/Lizenzprüfung bleibt als Hinweis bestehen.
+    // Unbestätigte, rein plattformweite Referenzen behalten reviewOnly=true.
     const assistantActivation = entry.uiGroup === "Assistenz" && /(freischalt|aktivier)/i.test(entry.name);
-    const reviewOnly = Boolean(entry.reviewOnly || assistantActivation ||
+    const reviewOnly = Boolean(entry.reviewOnly ||
       (entry.uiGroup !== "Assistenz" && (smartphoneActivation || startStopDeactivation)));
     return { ...entry, price: servicePrice(entry.price), reviewOnly,
       // Bereits fahrzeugspezifisch beschriebene Lane-Assist-Hardware nicht mit
@@ -403,7 +404,13 @@ export function curateCodingEntries(entries: UnifiedCodingEntry[]): UnifiedCodin
           ? undefined
           : hardwareForName(entry.name),
       ),
-      requirements: mergePrerequisites(entry.requirements, reviewOnly ? "Vor Auftrag sind Teilenummern, Ausstattung, Softwarestand und gegebenenfalls vorhandene Funktionslizenzen zu prüfen. Erst nach Bestätigung buchbar." : undefined),
+      requirements: mergePrerequisites(
+        entry.requirements,
+        assistantActivation && !reviewOnly
+          ? "Technische Machbarkeit vor Durchführung anhand von Ausstattung, Steuergeräten, Softwarestand und gegebenenfalls Funktionslizenzen prüfen."
+          : undefined,
+        reviewOnly ? "Vor Auftrag sind Teilenummern, Ausstattung, Softwarestand und gegebenenfalls vorhandene Funktionslizenzen zu prüfen. Erst nach Bestätigung buchbar." : undefined,
+      ),
     };
   });
   return dedupePricedDisplayEntries(displayed);
