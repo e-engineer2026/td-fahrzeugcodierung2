@@ -43,6 +43,7 @@ function manufacturerOf(vehicle: Vehicle): Manufacturer {
 
 // Nur ausdrücklich als Nachrüstung oder Umbau bezeichnete Einträge in diese Bereiche einsortieren.
 function guideCategory(coding: Coding): GuideCategory {
+  if (coding.id === "vcds-acc-mode") return "Nachrüstungen";
   const name = coding.name;
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
   // Die reine Aktivierung einer bereits verbauten RFK ist keine neue Fahrerassistenz.
@@ -79,10 +80,38 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
   ]).sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
+/** Liefert für jeden angezeigten Eintrag die echte Download-ID. */
+function codingDocumentSlugForVehicle(vehicle: Vehicle, coding: Coding): string {
+  const mqbPlatform = vehicle.platform === "MQB" || vehicle.platform === "MQB-A0";
+  const modelPdfSlug = vehicle.model === "Golf 7 (5G)"
+    ? "vw-golf-7-5g" : vzePdfSlugForModel(vehicle.model);
+  const modelFla = mqbPlatform && modelPdfSlug &&
+    (coding.id === "vcds-fla" || coding.id === "tcross-fla")
+    ? MQB_FLA_MODEL_PRODUCTS.find(product => product.slug === "mqb-fla-" + modelPdfSlug)
+    : undefined;
+  const mqbGuide = (mqbPlatform && coding.id === MQB_LANE_CODING_ID
+      ? mqbLaneGuideForVehicle(vehicle.model) : undefined)
+    ?? (mqbPlatform && coding.id === MQB_TRAILER_CODING_ID
+      ? mqbTrailerGuideForVehicle(vehicle.model) : undefined)
+    ?? (mqbPlatform && coding.id === MQB_TJA_CODING_ID
+      ? mqbTjaGuideForVehicle(vehicle.model) : undefined)
+    ?? modelFla
+    ?? (mqbPlatform
+      ? MQB_GUIDE_PRODUCTS.find(product => product.codingIds.some(id => id === coding.id))
+      : undefined);
+  if (mqbGuide) return mqbGuide.slug;
+  if (coding.id === "golf7-vze-pdf") return GOLF7_VZE_ADMIN_SLUG;
+  if (vzeProductHref(coding.name, vzePdfSlugForModel(vehicle.model)))
+    return vzePdfSlugForModel(vehicle.model)!;
+  return catalogDocumentSlug(vehicle.model, "coding-" + coding.id);
+}
+
 export default function GuideSelector({ renderDocumentActions, publishedCatalogSlugs = [] }: {
   renderDocumentActions?: RenderDocumentActions;
   publishedCatalogSlugs?: string[];
 }) {
+  // Der Admin sieht auch fehlende PDFs und Entwürfe; Besucher nur freigegebene Downloads.
+  const publicOnly = !renderDocumentActions;
   const [manufacturer, setManufacturer] = useState<Manufacturer | "">("");
   const [model, setModel] = useState("");
   const [showModels, setShowModels] = useState(true);
@@ -97,20 +126,25 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
   );
   const vehicle = models.find((item) => item.model === model);
   const vzePdfSlug = vehicle ? vzePdfSlugForModel(vehicle.model) : undefined;
-  const codings = useMemo(() => vehicle ? availableModelCodings(vehicle) : [], [vehicle]);
+  const codings = useMemo(() => vehicle ? availableModelCodings(vehicle)
+    .filter(coding => !publicOnly ||
+      publishedCatalogSlugs.includes(codingDocumentSlugForVehicle(vehicle, coding))) : [],
+    [vehicle, publicOnly, publishedCatalogSlugs]);
   const researchEntries = useMemo(() => {
     if (!vehicle) return [];
     const seen = new Set(codings.map((coding) => pdfGuideFunctionKey(coding)));
     return (["Nachrüstungen", "Umbauten"] as ResearchCategory[])
       .flatMap((category) => researchedGuidesForModel(vehicle.model, category))
       .filter((entry) => entry.access !== "Anbieterleistung" && hasDisplayPrice(researchGuideEstimate(entry).price))
+      .filter((entry) => !publicOnly ||
+        publishedCatalogSlugs.includes(catalogDocumentSlug(vehicle.model, "research-" + entry.id)))
       .filter((entry) => {
         const key = pdfGuideFunctionKey({ name: entry.title });
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
       });
-  }, [vehicle, codings]);
+  }, [vehicle, codings, publicOnly, publishedCatalogSlugs]);
   const sourceIdeas = useMemo(() => {
     if (!vehicle) return [];
     const seen = new Set([
@@ -121,22 +155,26 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
       // The combined Low/High camera PDF replaces older partial RFK retrofit entries.
       .filter(idea => !mqbRfkGuideForVehicle(vehicle.model) || !(/rückfahrkamera|rueckfahrkamera|rear view/i.test(idea.title) && /nachrüst|nachruest/i.test(idea.title)))
       .filter((idea) => hasDisplayPrice(referenceIdeaEstimate(idea).price))
+      .filter((idea) => !publicOnly ||
+        publishedCatalogSlugs.includes(catalogDocumentSlug(vehicle.model, "reference-" + idea.id)))
       .filter((idea) => {
         const key = pdfGuideFunctionKey({ name: idea.title });
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
       });
-  }, [vehicle, codings, researchEntries]);
+  }, [vehicle, codings, researchEntries, publicOnly, publishedCatalogSlugs]);
   const categoryCounts = useMemo(
     () => guideCategories.map((category) => ({
       category,
       count: codings.filter((coding) => guideCategory(coding) === category).length
         + researchEntries.filter((entry) => entry.category === category).length
         + sourceIdeas.filter((idea) => guideCategoryForReference(idea) === category).length
-        + (category === "Nachrüstungen" && vehicle && mqbRfkGuideForVehicle(vehicle.model) ? 1 : 0),
+        + (category === "Nachrüstungen" && vehicle &&
+          mqbRfkGuideForVehicle(vehicle.model) &&
+          (!publicOnly || publishedCatalogSlugs.includes(mqbRfkGuideForVehicle(vehicle.model)!.slug)) ? 1 : 0),
     })),
-    [codings, researchEntries, sourceIdeas, vehicle]
+    [codings, researchEntries, sourceIdeas, vehicle, publicOnly, publishedCatalogSlugs]
   );
   // Eine Suche durchsucht alle Kategorien. Ohne Suchbegriff bleibt der
   // gewählte Kategorienfilter aktiv.
@@ -156,6 +194,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
   // One combined RFK guide per supported MQB model; its filename is auto-matched by the admin ZIP uploader.
   const rfkProduct = vehicle ? mqbRfkGuideForVehicle(vehicle.model) : undefined;
   const rfkRows: GuideTableRow[] = rfkProduct &&
+    (!publicOnly || publishedCatalogSlugs.includes(rfkProduct.slug)) &&
     (searching || activeCategory === "Nachrüstungen") &&
     matchesCodingSearch(rfkProduct.name + " Rückfahrkamera Low High MIB2 MIB3", codingSearch)
     ? [{
@@ -286,11 +325,12 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
     })
   ];
 
-  const visibleGuideRows = vehicle ? rows.map(row => {
+  const visibleGuideRows = (vehicle ? rows.map(row => {
     if (row.documentSlug) return row;
     const documentSlug = catalogDocumentSlug(vehicle.model, row.id);
     return { ...row, documentSlug, productHref: publishedCatalogSlugs.includes(documentSlug) ? catalogDocumentHref(documentSlug) : undefined };
-  }) : rows;
+  }) : rows).filter(row => !publicOnly ||
+    (!!row.documentSlug && publishedCatalogSlugs.includes(row.documentSlug)));
 
   function chooseManufacturer(next: Manufacturer) {
     setManufacturer(next);
@@ -304,7 +344,8 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
     setModel(next.model);
     setShowModels(false);
     setCodingSearch("");
-    const available = availableModelCodings(next);
+    const available = availableModelCodings(next).filter(coding => !publicOnly ||
+      publishedCatalogSlugs.includes(codingDocumentSlugForVehicle(next, coding)));
     const hasOwnCodings = guideCategories.some((category) =>
       (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
       available.some((item) => guideCategory(item) === category)
@@ -315,9 +356,15 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         available.some((item) => guideCategory(item) === category)
       ) ?? "Codierungen");
     } else {
-      const candidates = referenceIdeasForVehicle(next);
-      setActiveCategory(researchedGuidesForModel(next.model, "Nachrüstungen").some((entry) => entry.access !== "Anbieterleistung") ? "Nachrüstungen"
-        : researchedGuidesForModel(next.model, "Umbauten").some((entry) => entry.access !== "Anbieterleistung") ? "Umbauten"
+      const candidates = referenceIdeasForVehicle(next).filter(idea => !publicOnly ||
+        publishedCatalogSlugs.includes(catalogDocumentSlug(next.model, "reference-" + idea.id)));
+      const hasResearch = (category: ResearchCategory) => researchedGuidesForModel(next.model, category)
+        .some(entry => entry.access !== "Anbieterleistung" &&
+          (!publicOnly || publishedCatalogSlugs.includes(catalogDocumentSlug(next.model, "research-" + entry.id))));
+      const rfk = mqbRfkGuideForVehicle(next.model);
+      setActiveCategory(hasResearch("Nachrüstungen") ||
+        (rfk && (!publicOnly || publishedCatalogSlugs.includes(rfk.slug))) ? "Nachrüstungen"
+        : hasResearch("Umbauten") ? "Umbauten"
         : candidates.some((idea) => guideCategoryForReference(idea) === "Codierungen") ? "Codierungen"
         : candidates.length ? guideCategoryForReference(candidates[0]) : "Codierungen");
     }
@@ -428,7 +475,9 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
           )}
           {codings.length === 0 && researchEntries.length === 0 && sourceIdeas.length === 0 && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
-              Für dieses Fahrzeug sind derzeit keine ausreichend geprüften Anleitungen hinterlegt.
+              {publicOnly
+                ? "Für dieses Fahrzeug sind derzeit keine PDF-Anleitungen zum Download veröffentlicht."
+                : "Für dieses Fahrzeug sind derzeit keine ausreichend geprüften Anleitungen hinterlegt."}
               {vehicle.startYear >= 2024 ? " Für neuere Modelle ist vor einer Freigabe insbesondere der SFD-/SFD2-Schutz zu prüfen." : ""}
             </p>
           )}
