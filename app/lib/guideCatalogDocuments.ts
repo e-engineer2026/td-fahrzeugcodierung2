@@ -11,6 +11,7 @@ import { displayPdfGuideCoding, isPdfGuideCoding } from "./pdfGuideCoding";
 import { MQB_FLA_MODEL_PRODUCTS } from "./mqbFlaModels";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
 import { MQB_TJA_CODING, MQB_TJA_CODING_ID, mqbTjaGuideForVehicle } from "./mqbTjaModels";
+import { MQB_TRAILER_CODING, MQB_TRAILER_CODING_ID, mqbTrailerGuideForVehicle } from "./mqbTrailerAssistModels";
 
 export const guideCategories = ["Codierungen", ...ASSISTANCE_CATEGORIES, "Nachrüstungen", "Umbauten"] as const;
 
@@ -36,6 +37,7 @@ export function availableModelCodings(vehicle: Vehicle): Coding[] {
     .filter((coding) => coding.id !== "vcds-vze" || !ids.has("golf7-vze-pdf"))
     .filter(isPdfGuideCoding).map(displayPdfGuideCoding)),
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
+    ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
   ].sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
@@ -71,6 +73,7 @@ export function catalogReferenceIdeas(vehicle: Vehicle, codings: Coding[], resea
 export function catalogMqbGuide(vehicle: Vehicle, coding: Coding) {
   if (vehicle.platform !== "MQB" && vehicle.platform !== "MQB-A0") return undefined;
   if (coding.id === MQB_TJA_CODING_ID) return mqbTjaGuideForVehicle(vehicle.model);
+  if (coding.id === MQB_TRAILER_CODING_ID) return mqbTrailerGuideForVehicle(vehicle.model);
   const model = vehicle.model === "Golf 7 (5G)" ? "vw-golf-7-5g" : vzePdfSlugForModel(vehicle.model);
   const specific = model && (coding.id === "vcds-fla" || coding.id === "tcross-fla")
     ? MQB_FLA_MODEL_PRODUCTS.find(product => product.slug === "mqb-fla-" + model) : undefined;
