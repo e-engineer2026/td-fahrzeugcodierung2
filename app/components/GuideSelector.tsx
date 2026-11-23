@@ -31,7 +31,7 @@ const guideCategories = ["Codierungen", ...ASSISTANCE_CATEGORIES, "Nachrüstunge
 
 /** Link only to an actual, model-specific VZE release. The download itself remains paywalled. */
 function vzeProductHref(title: string, slug?: string): string | undefined {
-  if (!slug || !/\bverkehrszeichenerkennung\s+(?:aktivieren|freischalten)\b|\bvze\s+(?:aktivieren|freischalten)\b/i.test(title)) return undefined;
+  if (!slug || !/\b(?:verkehrszeichenerkennung|vze)\b.{0,60}\b(?:aktivieren|freischalten)\b/i.test(title)) return undefined;
   return "/api/guide-shop/download/vze/" + slug + "?liste=1";
 }
 
