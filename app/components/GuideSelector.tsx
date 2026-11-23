@@ -5,6 +5,7 @@ import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react
 import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLinks";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
+import { mqbRfkGuideForVehicle } from "../lib/mqbRfkProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
 import { MQB_LANE_CODING, MQB_LANE_CODING_ID, mqbLaneGuideForVehicle } from "../lib/mqbLaneAssistModels";
 import { MQB_TJA_CODING, MQB_TJA_CODING_ID, mqbTjaGuideForVehicle } from "../lib/mqbTjaModels";
@@ -143,7 +144,30 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
     matchesCodingSearch([coding.name, coding.uiGroup ?? "", coding.requirements ?? ""].join(" "), codingSearch)
   );
 
+  // One combined RFK guide per supported MQB model; its filename is auto-matched by the admin ZIP uploader.
+  const rfkProduct = vehicle ? mqbRfkGuideForVehicle(vehicle.model) : undefined;
+  const rfkRows: GuideTableRow[] = rfkProduct &&
+    (searching || activeCategory === "Nachrüstungen") &&
+    matchesCodingSearch(rfkProduct.name + " Rückfahrkamera Low High MIB2 MIB3", codingSearch)
+    ? [{
+      id: "reference-mqb-rfk",
+      title: rfkProduct.name,
+      description: "Modellbezogene PDF mit den unterscheidbaren Systemvarianten Low/High und MIB2/MIB3.",
+      requirements: "Kameratyp, Infotainment, Verkabelung, Steuergeräte und bei High Systemen Datensatz und Kalibrierung fahrzeugspezifisch prüfen. Nicht jede Kombination ist für jedes Modell vorgesehen.",
+      diagnosticInterface: guideInterface({
+        id: "mqb-rfk", title: rfkProduct.name, category: "Nachrüstungen",
+        source: "research", vehicleYear: vehicle?.startYear, vehicleEndYear: vehicle?.endYear,
+        sfd1From: vehicle?.sfd1From, vehicleBrand: vehicle?.brand,
+        vehicleModel: vehicle?.model, platform: vehicle?.platform,
+      }),
+      estimate: { step: 4, level: 2, price: rfkProduct.priceCents / 100 },
+      documentSlug: rfkProduct.slug,
+      productHref: publishedCatalogSlugs.includes(rfkProduct.slug)
+        ? catalogDocumentHref(rfkProduct.slug) : undefined,
+    }] : [];
+
   const rows: GuideTableRow[] = [
+    ...rfkRows,
     ...visibleCodings.map((coding) => {
       const step = guideDifficultyStep(coding);
       const mqbPlatform = vehicle?.platform === "MQB" || vehicle?.platform === "MQB-A0";

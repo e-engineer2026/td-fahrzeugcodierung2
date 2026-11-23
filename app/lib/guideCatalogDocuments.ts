@@ -10,6 +10,7 @@ import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "./assistance
 import { displayPdfGuideCoding, isPdfGuideCoding } from "./pdfGuideCoding";
 import { MQB_FLA_MODEL_PRODUCTS } from "./mqbFlaModels";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
+import { mqbRfkGuideForVehicle } from "./mqbRfkProducts";
 import { MQB_TJA_CODING, MQB_TJA_CODING_ID, mqbTjaGuideForVehicle } from "./mqbTjaModels";
 import { MQB_TRAILER_CODING, MQB_TRAILER_CODING_ID, mqbTrailerGuideForVehicle } from "./mqbTrailerAssistModels";
 
@@ -99,6 +100,7 @@ export function catalogGuideProduct(slug: string) {
 
   const vehicle = vehicles.find(item => item.model === model);
   if (!vehicle || catalogDocumentSlug(model, rowId) !== slug) return null;
+  if (rowId === "reference-mqb-rfk") return mqbRfkGuideForVehicle(model) ?? null;
   const codings = availableModelCodings(vehicle);
   let label: string | undefined, price: number | undefined, category: GuideCategory = "Codierungen";
   if (rowId.startsWith("coding-")) {

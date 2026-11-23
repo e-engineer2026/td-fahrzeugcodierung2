@@ -1,6 +1,7 @@
 import { GOLF7_VZE_ADMIN_SLUG } from "./vzePdfVehicleLinks";
 import { catalogGuideProduct } from "./guideCatalogDocuments";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
+import { MQB_RFK_PDF_PRODUCTS } from "./mqbRfkProducts";
 import { assistanceCategoryForName } from "./assistanceCategories";
 import { GOLF7_VZE } from "./guideShopShared";
 import { VZE_VARIANT_DRAFTS, type VzeVariantDraft } from "./vzeVariantDrafts";
@@ -51,6 +52,7 @@ export const GUIDE_ADMIN_DOCUMENTS = [
     category: assistanceCategoryForName(product.name),
     code: "MQB",
   })),
+  ...MQB_RFK_PDF_PRODUCTS,
 ];
 
 export function findGuideAdminDocument(slug: string) {
