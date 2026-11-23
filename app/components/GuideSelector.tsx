@@ -45,9 +45,9 @@ function manufacturerOf(vehicle: Vehicle): Manufacturer {
 function guideCategory(coding: Coding): GuideCategory {
   const name = coding.name;
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
-  if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   // Die reine Aktivierung einer bereits verbauten RFK ist keine neue Fahrerassistenz.
   if (/(?:rückfahrkamera|rear view)/i.test(name) && /(?:aktivieren|freischalten)/i.test(name)) return "Codierungen";
+  if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   return assistanceCategoryForCoding(coding) ?? "Codierungen";
 }
 
@@ -118,6 +118,8 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
       ...researchEntries.map((entry) => pdfGuideFunctionKey({ name: entry.title })),
     ]);
     return referenceIdeasForVehicle(vehicle)
+      // The combined Low/High camera PDF replaces older partial RFK retrofit entries.
+      .filter(idea => !mqbRfkGuideForVehicle(vehicle.model) || !(/rückfahrkamera|rueckfahrkamera|rear view/i.test(idea.title) && /nachrüst|nachruest/i.test(idea.title)))
       .filter((idea) => hasDisplayPrice(referenceIdeaEstimate(idea).price))
       .filter((idea) => {
         const key = pdfGuideFunctionKey({ name: idea.title });
@@ -131,9 +133,10 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
       category,
       count: codings.filter((coding) => guideCategory(coding) === category).length
         + researchEntries.filter((entry) => entry.category === category).length
-        + sourceIdeas.filter((idea) => guideCategoryForReference(idea) === category).length,
+        + sourceIdeas.filter((idea) => guideCategoryForReference(idea) === category).length
+        + (category === "Nachrüstungen" && vehicle && mqbRfkGuideForVehicle(vehicle.model) ? 1 : 0),
     })),
-    [codings, researchEntries, sourceIdeas]
+    [codings, researchEntries, sourceIdeas, vehicle]
   );
   // Eine Suche durchsucht alle Kategorien. Ohne Suchbegriff bleibt der
   // gewählte Kategorienfilter aktiv.
