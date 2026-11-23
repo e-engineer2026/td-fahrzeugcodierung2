@@ -57,11 +57,22 @@ export async function POST(request: Request) {
     const [guestGrant] = await sql`SELECT id FROM td_guide_manual_grants
       WHERE paypal_transaction_id=${transaction} LIMIT 1`;
     if (guestGrant) return NextResponse.json({ error: "Diese Transaktion wurde bereits für einen Gastzugang verwendet." }, { status: 409, headers });
-    const [order] = await sql`UPDATE td_guide_orders SET status='paid', paid_at=now(),
-      paypal_transaction_id=${transaction}
+    // Reserve the transaction ID and release the PDF in ONE SQL statement.
+    // A second administrator or a guest-grant request cannot reuse the ID.
+    const [order] = await sql`WITH eligible AS (
+      SELECT id FROM td_guide_orders
       WHERE id=${id}::uuid AND product_id=${product.id} AND amount_cents=${product.priceCents}
         AND currency='EUR' AND status='pending' AND buyer_email IS NOT NULL
-      RETURNING buyer_email`;
+      FOR UPDATE
+    ), claimed AS (
+      INSERT INTO td_guide_payment_claims (transaction_id, claim_kind, owner_reference)
+      SELECT ${transaction}, 'account', ${id} FROM eligible
+      ON CONFLICT (transaction_id) DO NOTHING RETURNING transaction_id
+    )
+    UPDATE td_guide_orders SET status='paid', paid_at=now(), paypal_transaction_id=${transaction}
+    WHERE id=${id}::uuid AND status='pending'
+      AND EXISTS (SELECT 1 FROM claimed)
+    RETURNING buyer_email`;
     if (!order) return NextResponse.json({ error: "Offene Bestellung nicht gefunden." }, { status: 409, headers });
     return NextResponse.json({ released: true, email: order.buyer_email, model: product.model }, { headers });
   } catch (error) {
