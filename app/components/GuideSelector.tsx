@@ -5,7 +5,7 @@ import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react
 import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
-import { ASSISTANCE_CATEGORIES, assistanceCategoryForName } from "../lib/assistanceCategories";
+import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "../lib/assistanceCategories";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
@@ -17,7 +17,7 @@ import { guideInterface } from "../lib/guideInterface";
 import { guideVehicleRequirements } from "../lib/guideVehicleRequirements";
 import { researchGuideEstimate, referenceIdeaEstimate } from "../lib/researchGuidePricing";
 import { retrofitFocusFor } from "../lib/retrofitFocus";
-import { referenceIdeasForVehicle } from "../data/referenceIdeas";
+import { referenceIdeasForVehicle, type ReferenceIdea } from "../data/referenceIdeas";
 import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
 
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
@@ -41,10 +41,13 @@ function guideCategory(coding: Coding): GuideCategory {
   const name = coding.name;
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
   if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
-  if (coding.category === "Assistenzsysteme" || coding.uiGroup === "Assistenz") {
-    return assistanceCategoryForName(name);
-  }
-  return "Codierungen";
+  return assistanceCategoryForCoding(coding) ?? "Codierungen";
+}
+
+/** Auch historische Referenzideen dürfen Anpassungen nicht als neue Assistenten anzeigen. */
+function guideCategoryForReference(idea: ReferenceIdea): GuideCategory {
+  if (idea.category === "Nachrüstungen" || idea.category === "Umbauten") return idea.category;
+  return assistanceCategoryForCoding({name: idea.title, category: idea.category}) ?? "Codierungen";
 }
 
 function availableModelCodings(vehicle: Vehicle): Coding[] {
@@ -102,7 +105,7 @@ export default function GuideSelector({ renderDocumentActions }: {
     return referenceIdeasForVehicle(vehicle)
       .filter((idea) => hasDisplayPrice(referenceIdeaEstimate(idea).price))
       .filter((idea) => {
-        const key = idea.category + ":" + codingNameKey(idea.title);
+        const key = guideCategoryForReference(idea) + ":" + codingNameKey(idea.title);
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
@@ -113,7 +116,7 @@ export default function GuideSelector({ renderDocumentActions }: {
       category,
       count: codings.filter((coding) => guideCategory(coding) === category).length
         + researchEntries.filter((entry) => entry.category === category).length
-        + sourceIdeas.filter((idea) => idea.category === category).length,
+        + sourceIdeas.filter((idea) => guideCategoryForReference(idea) === category).length,
     })),
     [codings, researchEntries, sourceIdeas]
   );
@@ -124,7 +127,7 @@ export default function GuideSelector({ renderDocumentActions }: {
     matchesCodingSearch([entry.title, entry.note].join(" "), codingSearch)
   );
   const visibleSourceIdeas = sourceIdeas.filter((idea) =>
-    (searching || idea.category === activeCategory) &&
+    (searching || guideCategoryForReference(idea) === activeCategory) &&
     matchesCodingSearch([idea.title, idea.note].join(" "), codingSearch)
   );
   const visibleCodings = codings.filter((coding) =>
@@ -216,7 +219,7 @@ export default function GuideSelector({ renderDocumentActions }: {
         id: idea.id,
         title: idea.title,
         note: idea.note,
-        category: idea.category,
+        category: guideCategoryForReference(idea),
         source: "reference",
         vehicleYear: vehicle?.startYear,
         vehicleEndYear: vehicle?.endYear,
@@ -262,8 +265,8 @@ export default function GuideSelector({ renderDocumentActions }: {
       const candidates = referenceIdeasForVehicle(next);
       setActiveCategory(researchedGuidesForModel(next.model, "Nachrüstungen").some((entry) => entry.access !== "Anbieterleistung") ? "Nachrüstungen"
         : researchedGuidesForModel(next.model, "Umbauten").some((entry) => entry.access !== "Anbieterleistung") ? "Umbauten"
-        : candidates.some((idea) => idea.category === "Codierungen") ? "Codierungen"
-        : candidates.length ? candidates[0].category : "Codierungen");
+        : candidates.some((idea) => guideCategoryForReference(idea) === "Codierungen") ? "Codierungen"
+        : candidates.length ? guideCategoryForReference(candidates[0]) : "Codierungen");
     }
   }
 
