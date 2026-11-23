@@ -44,10 +44,10 @@ export const MQB_TJA_CODING: Coding = {
 export const MQB_TJA_MODEL_PRODUCTS = TJA_MODELS.map((model, index) => ({
   id: "mqb-tja-" + model.slug,
   slug: "mqb-tja-" + model.slug,
-  name: "Stauassistent (TJA) · " + model.name,
+  name: "Stauassistent (TJA) & Emergency Assist · " + model.name,
   model: model.name + " (" + model.code + ")",
   sku: "TD-MQB-TJA-" + String(index + 1).padStart(2, "0"),
-  revision: "1.1",
+  revision: "1.2",
   priceCents: 1399,
   // Kein fest eingebettetes PDF und keine öffentliche Datei:
   // Upload als Entwurf, Veröffentlichung nur über die autorisierte Admin-Oberfläche.
