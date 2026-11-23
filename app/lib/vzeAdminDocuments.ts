@@ -39,12 +39,15 @@ export const GUIDE_ADMIN_DOCUMENTS = [
   ...VZE_ADMIN_DOCUMENTS.map(document => ({
     ...document,
     title: "Verkehrszeichenerkennung (VZE) · " + document.name,
+    category: "Assistenzsysteme" as const,
     revision: vzeAdminDisplayRevision(document.productId),
   })),
   ...MQB_GUIDE_PRODUCTS.map(product => ({
     ...product,
     productId: product.id,
     title: product.name + " · MQB",
+    category: /anpass|einstell|speicher|warnverzöger|warnstärk|empfindlich|lenkeingriff|vibration|eingriffszeitpunkt|abstandseinstellung/i.test(product.name)
+      ? "Anpassungen für Assistenzsysteme" as const : "Assistenzsysteme" as const,
     code: "MQB",
   })),
 ];
