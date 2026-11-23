@@ -7,6 +7,7 @@ import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLin
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
 import { MQB_TJA_CODING, MQB_TJA_CODING_ID, mqbTjaGuideForVehicle } from "../lib/mqbTjaModels";
+import { MQB_TRAILER_CODING, MQB_TRAILER_CODING_ID, mqbTrailerGuideForVehicle } from "../lib/mqbTrailerAssistModels";
 import { ASSISTANCE_CATEGORIES, assistanceCategoryForCoding } from "../lib/assistanceCategories";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
@@ -65,6 +66,7 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
     .filter(isPdfGuideCoding)
     .map(displayPdfGuideCoding)),
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
+    ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
   ].sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
@@ -152,7 +154,9 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         : undefined;
       const modelTjaGuide = mqbPlatform && coding.id === MQB_TJA_CODING_ID && vehicle
         ? mqbTjaGuideForVehicle(vehicle.model) : undefined;
-      const mqbGuide = modelTjaGuide ?? modelFlaGuide ?? (mqbPlatform
+      const modelTrailerGuide = mqbPlatform && coding.id === MQB_TRAILER_CODING_ID && vehicle
+        ? mqbTrailerGuideForVehicle(vehicle.model) : undefined;
+      const mqbGuide = modelTrailerGuide ?? modelTjaGuide ?? modelFlaGuide ?? (mqbPlatform
         ? MQB_GUIDE_PRODUCTS.find(product => product.codingIds.some(id => id === coding.id))
         : undefined);
       const details = guideDetails({
