@@ -29,6 +29,22 @@ export default function ServiceOrdersPanel() {
     } catch (error) { setNotice(error instanceof Error ? error.message : "Laden fehlgeschlagen."); }
   }
   useEffect(() => { void refresh(); }, []);
+  // Only vehicle and coding names are transferred in the URL; the verified
+  // contact email comes from Clerk on the server after sign-in.
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("auftrag");
+    if (!raw || raw.length > 4000) return;
+    try {
+      const data = JSON.parse(raw) as Record<string, unknown>;
+      if (typeof data.brand !== "string" || !["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].includes(data.brand) ||
+          typeof data.model !== "string" || data.model.length > 120 ||
+          typeof data.services !== "string" || data.services.length > 2000 ||
+          typeof data.year !== "number" || !Number.isInteger(data.year) || data.year < 1980 || data.year > 2027 ||
+          (data.mode !== "remote" && data.mode !== "onsite")) return;
+      setForm({ brand: data.brand, model: data.model, year: String(data.year),
+        mode: data.mode, services: data.services });
+    } catch { /* Ignore malformed shared selections. */ }
+  }, []);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
