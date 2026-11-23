@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import { strict as assert } from "node:assert";
-import { assistanceCategoryForName, ASSISTANCE_CATEGORIES } from "../app/lib/assistanceCategories.ts";
+import { assistanceCategoryForName, assistanceCategoryForCoding, ASSISTANCE_CATEGORIES } from "../app/lib/assistanceCategories.ts";
 
 test("Assistenz-Aktivierungen und Anpassungen sind eigene Kategorien", () => {
   assert.deepEqual([...ASSISTANCE_CATEGORIES], ["Assistenzsysteme", "Anpassungen für Assistenzsysteme"]);
@@ -51,4 +51,30 @@ test("Einstellungen an vorhandenen Assistenten landen bei Anpassungen", () => {
   for (const name of adjustments) {
     assert.equal(assistanceCategoryForName(name), "Anpassungen für Assistenzsysteme", name);
   }
+});
+
+test("Altbestand: Anpassungen aus Komfort, Fahrdynamik und allgemeinen Codierungen verschieben", () => {
+  const examples = [
+    { name: "Einparkhilfe: Audioabsenkung während Parkmanöver ändern", uiGroup: "Komfort" },
+    { name: "Aktivierungston der Einparkhilfe anpassen", uiGroup: "Komfort" },
+    { name: "Einparkhilfe – Hilfslinien aktivieren/deaktivieren", uiGroup: "Komfort" },
+    { name: "Parkhilfe bei niedriger Vorwärtsgeschwindigkeit automatisch aktivieren", uiGroup: "Komfort" },
+    { name: "Abschaltgeschwindigkeit für PDC / Rückfahrkamera anpassen", uiGroup: "Komfort" },
+    { name: "Berganfahrassistent anpassen", uiGroup: "Fahrdynamik" },
+    { name: "ACC-Tempo in 1-km/h-Schritten einstellen", category: "Codierungen" },
+    { name: "Front Assist: gewählte Vorwarnstufe beim Start behalten", category: "Assistenzsysteme" },
+    { name: "Fernlichtassistent: Stadterkennung individuell konfigurieren", category: "Assistenzsysteme" },
+    { name: "Rückfahrkamera über Parktaste anzeigen", category: "Assistenzsysteme" },
+  ];
+  for (const entry of examples) {
+    assert.equal(assistanceCategoryForCoding(entry), "Anpassungen für Assistenzsysteme", entry.name);
+  }
+});
+
+test("Neue Assistenten bleiben in Assistenzsysteme, Standardfunktionen in der Ursprungsgruppe", () => {
+  assert.equal(assistanceCategoryForCoding({name:"Fernlichtassistent freischalten",uiGroup:"Assistenz"}),"Assistenzsysteme");
+  assert.equal(assistanceCategoryForCoding({name:"Spurhalteassistent aktivieren",uiGroup:"Assistenz"}),"Assistenzsysteme");
+  assert.equal(assistanceCategoryForCoding({name:"Verkehrszeichenerkennung aktivieren",category:"Assistenzsysteme"}),"Assistenzsysteme");
+  assert.equal(assistanceCategoryForCoding({name:"Komfortblinken anpassen",uiGroup:"Komfort"}),null);
+  assert.equal(assistanceCategoryForCoding({name:"Coming Home anpassen",uiGroup:"Licht"}),null);
 });
