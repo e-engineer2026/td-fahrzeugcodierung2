@@ -1104,18 +1104,6 @@ export const researchedGuides: readonly ResearchGuide[] = [
   },
   // Rechercheerweiterung vom 16.11.2026: nur Themen mit belegtem Anleitungsbezug.
   {
-    "id": "golf7-rfk-high-kufatec",
-    "title": "Original-Rückfahrkamera im VW-Emblem nachrüsten",
-    "category": "Nachrüstungen",
-    "models": [
-      "Golf 7 (5G)"
-    ],
-    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-rueckfahrkamera-fuer-vw-golf-7-vii/39634-4",
-    "sourceName": "KUFATEC",
-    "access": "Vorschau / Kauf",
-    "note": "Einbauanleitungs-Vorschau, Vollversion nach Kauf; kompatibles Navigations-/Radiosystem und passende Kameraausführung erforderlich"
-  },
-  {
     "id": "golf7-led-fussraum-vorn",
     "title": "Originale LED-Fußraumbeleuchtung vorne nachrüsten",
     "category": "Nachrüstungen",
@@ -1150,18 +1138,6 @@ export const researchedGuides: readonly ResearchGuide[] = [
     "sourceName": "k-electronic",
     "access": "beim Nachrüstsatz",
     "note": "Einbauanleitung im Satz; je nach Frontscheibe, Innenspiegel und Klimaanlage zusätzlicher Umbau erforderlich"
-  },
-  {
-    "id": "passat-b8-rueckfahrkamera",
-    "title": "VW-Emblem-Rückfahrkamera mit dynamischen Hilfslinien nachrüsten",
-    "category": "Nachrüstungen",
-    "models": [
-      "Passat B8 (3G)"
-    ],
-    "sourceUrl": "https://kufatec.com/de/kufatec-komplettset-rueckfahrkamera-fuer-vw-passat-b8/40775-1",
-    "sourceName": "KUFATEC",
-    "access": "Vorschau / Kauf",
-    "note": "Einbauvorschau öffentlich, vollständige Anleitung nach Kauf; Limousine/Variant und Infotainment-PR-Code beachten"
   },
   {
     "id": "a4-8w-ambient-mittelkonsole",
