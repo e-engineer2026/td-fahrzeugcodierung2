@@ -35,6 +35,7 @@ const { MQB_TJA_CODING, mqbTjaGuideForVehicle } = loadTs("app/lib/mqbTjaModels")
 const { MQB_TRAILER_CODING, mqbTrailerGuideForVehicle } = loadTs("app/lib/mqbTrailerAssistModels");
 const { guideCategory } = loadTs("app/lib/guideCatalogDocuments");
 const { MQB_RFK_PDF_PRODUCTS } = loadTs("app/lib/mqbRfkProducts");
+const { uniqueGuideAdminDocuments } = loadTs("app/lib/uniqueGuideAdminDocuments");
 
 function visibleCodings(vehicle) {
   if (vehicle.diagnosticsOnly || vehicle.startYear >= 2024) return [];
@@ -88,7 +89,7 @@ test("Low/High-Rückfahrkamera PDFs gehören ausschließlich zu ihrem Fahrzeugmo
 
 test("Aktivierung von bereits installierter Kamera, Nachrüstung und Spurhalte-Anpassung sind getrennt", () => {
   assert.equal(guideCategory({ name: "Rückfahrkamera / Rear View aktivieren" }), "Codierungen");
-  assert.equal(guideCategory({ name: "Rückfahrkamera nach Nachrüstung aktivieren" }), "Nachrüstungen");
+  assert.equal(guideCategory({ name: "Rückfahrkamera nach Nachrüstung aktivieren" }), "Codierungen");
   assert.equal(guideCategory({ name: "Lane Assist – letzte Einstellung speichern" }), "Anpassungen für Assistenzsysteme");
   assert.equal(guideCategory({ name: "Spurhalteassistent (Lane Assist) aktivieren" }), "Assistenzsysteme");
   const before = [
@@ -99,4 +100,24 @@ test("Aktivierung von bereits installierter Kamera, Nachrüstung und Spurhalte-A
   assert.deepEqual(uniquePdfGuideCodings(before).map(p => p.id), [
     "tcross-lane-activate", "tcross-lane-memory",
   ]);
+});
+
+test("Admin-Sammelupload: dieselben 38 RFK-Produkt-IDs werden nicht doppelt angezeigt/veröffentlicht", () => {
+  const fixed = MQB_RFK_PDF_PRODUCTS.map(p => ({ ...p, source: "configured" }));
+  const fromStore = fixed.map(p => ({ ...p, source: "database" }));
+  const result = uniqueGuideAdminDocuments([...fixed, ...fromStore]);
+  assert.equal(result.length, 38);
+  assert.ok(result.every(p => p.source === "configured"));
+  assert.equal(new Set(result.map(p => p.productId)).size, 38);
+  assert.equal(new Set(result.map(p => p.slug)).size, 38);
+});
+
+test("Admin-Produkte bleiben auch bei unterschiedlicher ID und gleicher Download-Zuordnung eindeutig", () => {
+  const result = uniqueGuideAdminDocuments([
+    { productId: "p1", slug: "same" },
+    { productId: "p2", slug: "same" },
+    { productId: "p1", slug: "other" },
+    { productId: "p3", slug: "different" },
+  ]);
+  assert.deepEqual(result.map(p => p.productId), ["p1", "p3"]);
 });
