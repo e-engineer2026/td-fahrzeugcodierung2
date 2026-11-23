@@ -47,10 +47,21 @@ export async function POST(request: Request) {
     const [accountOrder] = await sql`SELECT id FROM td_guide_orders
       WHERE paypal_transaction_id=${reference} LIMIT 1`;
     if (accountOrder) return NextResponse.json({ error: "Diese PayPal-Transaktion wurde bereits einem Kundenkonto zugeordnet." }, { status: 409, headers });
-    await sql`INSERT INTO td_guide_manual_grants
+    // Atomic transaction claim: a PayPal receipt cannot be used to unlock
+    // both a customer-account PDF and a guest PDF, even under concurrent clicks.
+    const [grant] = await sql`WITH claimed AS (
+      INSERT INTO td_guide_payment_claims (transaction_id, claim_kind, owner_reference)
+      VALUES (${reference}, 'manual', ${claimHash})
+      ON CONFLICT (transaction_id) DO NOTHING
+      RETURNING transaction_id
+    )
+    INSERT INTO td_guide_manual_grants
       (product_id, recipient_email, paypal_transaction_id, claim_token_hash, status, expires_at)
-      VALUES (${GOLF7_VZE.id}, ${email}, ${reference}, ${claimHash}, 'issued',
-        now() + interval '7 days')`;
+    SELECT ${GOLF7_VZE.id}, ${email}, ${reference}, ${claimHash}, 'issued',
+      now() + interval '7 days' FROM claimed
+    RETURNING id`;
+    if (!grant) return NextResponse.json(
+      { error: "Diese PayPal-Transaktion wurde bereits verwendet." }, { status: 409, headers });
     // Hash-Fragment: Das Einmal-Token wird nicht als URL-Pfad/Query zum Server uebertragen.
     return NextResponse.json({
       link: baseUrl + "#token=" + claimToken,
