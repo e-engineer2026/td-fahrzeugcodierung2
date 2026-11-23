@@ -42,6 +42,8 @@ test("Kunden sehen nur eigene Aufträge, interne Notizen bleiben adminintern", (
   assert.match(admin, /canTransitionServiceOrder/);
   assert.match(account, /ServiceOrdersPanel/);
   assert.match(account, /\/konto\/auftraege/);
+  assert.match(fs.readFileSync("app/api/account/route.ts", "utf8"), /DELETE FROM td_service_orders WHERE clerk_user_id/);
+  assert.match(fs.readFileSync("app/components/BookingConfigurator.tsx", "utf8"), /Auswahl als Anfrage im Kundenkonto speichern/);
 });
 
 test("Leistungsanfragen werden nicht automatisch als PDF-Zahlungen markiert", () => {
