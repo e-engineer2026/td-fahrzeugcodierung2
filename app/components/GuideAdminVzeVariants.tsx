@@ -277,7 +277,6 @@ export default function GuideAdminVzeVariants() {
     <div className="mx-auto mb-4 max-w-5xl">
       <details className="rounded-lg border border-slate-200 bg-white p-3 text-sm">
         <summary className="cursor-pointer font-semibold text-blue-800">PDF-Sammelupload</summary>
-        <p className="mt-2 text-xs leading-5 text-slate-600">Die 28 MQB-VZE-PDFs können gemeinsam als ZIP eingelesen werden. Sie bleiben bis zu deiner ausdrücklichen Freigabe privat als Entwürfe.</p>
         <label className="mt-3 block font-semibold">PDF-Paket (ZIP) auswählen
           <input type="file" accept=".zip,application/zip,application/x-zip-compressed" disabled={busy || !documents}
             onChange={event => { void chooseZip(event.target.files?.[0] ?? null); event.target.value = ""; }}
