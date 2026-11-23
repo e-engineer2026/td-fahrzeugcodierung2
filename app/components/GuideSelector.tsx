@@ -45,9 +45,9 @@ function manufacturerOf(vehicle: Vehicle): Manufacturer {
 function guideCategory(coding: Coding): GuideCategory {
   const name = coding.name;
   if (/umbau|umrüst|umbauen|umrüsten|steuergeräte?tausch|steuergeraetetausch|kombiinstrument.*tausch|tacho.*tausch|upgrade/i.test(name)) return "Umbauten";
-  if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   // Die reine Aktivierung einer bereits verbauten RFK ist keine neue Fahrerassistenz.
   if (/(?:rückfahrkamera|rear view)/i.test(name) && /(?:aktivieren|freischalten)/i.test(name)) return "Codierungen";
+  if (/nachrüst|nachruest|retrofit|nachrüstung|nachruestung/i.test(name)) return "Nachrüstungen";
   return assistanceCategoryForCoding(coding) ?? "Codierungen";
 }
 
