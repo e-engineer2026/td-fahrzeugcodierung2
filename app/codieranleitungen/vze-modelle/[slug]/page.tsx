@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
 import { findVzeDraft } from "../../../lib/vzeVariantDrafts";
 import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
+import { readGuidePdf } from "../../../lib/guideDocuments";
 import ModelVzeCheckout from "../../../components/ModelVzeCheckout";
 
 export const dynamic = "force-dynamic";
@@ -21,10 +22,9 @@ export default async function ModelVzePage({ params }: { params: Promise<{ slug:
   let ready = false;
   try {
     const sql = await ensureGuideShopSchema();
-    const [file] = await sql`SELECT product_id FROM td_guide_documents
-      WHERE product_id=${draft.productId} AND NOT withdrawn AND (sha256=${draft.sha256} OR assigned_filename IS NOT NULL)`;
-    ready = !!file;
+    ready = !!(await readGuidePdf(sql, draft.productId, draft.sha256, draft.filename));
   } catch { ready = false; }
+  if (!ready) notFound();
   return <main className="min-h-screen bg-slate-50 text-slate-950">
     <div className="container-x max-w-4xl py-8 sm:py-12">
       <Link href="/codieranleitungen/vze-modelle" className="text-sm font-bold text-blue-700 hover:underline">
@@ -54,13 +54,7 @@ export default async function ModelVzePage({ params }: { params: Promise<{ slug:
           Fehlende Lizenzen und Softwarevoraussetzungen lassen sich nicht durch Codierung ersetzen.
           Nur für qualifizierte Fachkräfte.
         </p>
-        {ready
-          ? <ModelVzeCheckout signedIn={!!userId} slug={draft.slug} name={draft.name}/>
-          : <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
-              Diese PDF ist derzeit noch nicht durch TD Fahrzeugcodierung veröffentlicht.
-              Diese Anleitung wird erst angeboten, wenn die freigegebene Dateiversion sicher hinterlegt ist.
-              Bitte noch keine PayPal-Zahlung ausführen.
-            </div>}
+        <ModelVzeCheckout signedIn={!!userId} slug={draft.slug} name={draft.name}/>
       </article>
     </div>
   </main>;
