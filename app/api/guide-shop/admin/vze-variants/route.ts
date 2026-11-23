@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { isGuideAdmin } from "../../../../lib/guideAdmin";
 import { ensureGuideShopSchema } from "../../../../lib/guideShopDb";
 import { GUIDE_ADMIN_DOCUMENTS, findGuideAdminDocument } from "../../../../lib/vzeAdminDocuments";
+import { uniqueGuideAdminDocuments } from "../../../../lib/uniqueGuideAdminDocuments";
 import { findMqbGuideProduct } from "../../../../lib/mqbGuideProducts";
 import { readMqbGuideDocument } from "../../../../lib/mqbGuideDocument";
 import { isAvailableGuideDocument, isGuidePdf } from "../../../../lib/guideDocuments";
@@ -23,7 +24,7 @@ export async function GET() {
     const draftsById = new Map(drafts.map(row => [row.product_id, row]));
     const catalogIds = new Set([...rows, ...drafts].map(row => String(row.product_id)).filter(id => id.startsWith("catalog:")));
     const catalogDocuments = Array.from(catalogIds, findGuideAdminDocument).filter(document => document !== null);
-    const documents = [...GUIDE_ADMIN_DOCUMENTS, ...catalogDocuments].map(document => {
+    const documents = uniqueGuideAdminDocuments([...GUIDE_ADMIN_DOCUMENTS, ...catalogDocuments]).map(document => {
       const row = byId.get(document.productId);
       const mqb = findMqbGuideProduct(document.slug);
       const stored = isAvailableGuideDocument(row, document.sha256);
