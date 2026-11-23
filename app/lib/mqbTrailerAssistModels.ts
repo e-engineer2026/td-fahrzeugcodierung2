@@ -79,7 +79,7 @@ export const MQB_TRAILER_CODING_ID = "mqb-trailer-assist-enable";
 
 export const MQB_TRAILER_CODING: Coding = {
   id: MQB_TRAILER_CODING_ID,
-  name: "Anhaengerrangierassistent (Trailer Assist) aktivieren",
+  name: "Anhängerrangierassistent (Trailer Assist) aktivieren",
   price: 59,
   category: "Assistenzsysteme",
   uiGroup: "Assistenz",
@@ -92,7 +92,7 @@ export const MQB_TRAILER_CODING: Coding = {
 export const MQB_TRAILER_MODEL_PRODUCTS = TRAILER_MODELS.map((model,index) => ({
   id: "mqb-trailer-" + model.slug,
   slug: "mqb-trailer-" + model.slug,
-  name: "Anhaengerrangierassistent (Trailer Assist) · " + model.name,
+  name: "Anhängerrangierassistent (Trailer Assist) · " + model.name,
   model: model.name + " (" + model.code + ")",
   sku: "TD-MQB-TA-" + String(index+1).padStart(2,"0"),
   revision: "1.1",
