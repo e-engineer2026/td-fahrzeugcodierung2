@@ -76,11 +76,11 @@ function availableModelCodings(vehicle: Vehicle, publishedSlugs?: readonly strin
   const hasModelGuide = (vehicle.platform === "MQB" || vehicle.platform === "MQB-A0") &&
     !!(vehicle.model === "Golf 7 (5G)" || vzePdfSlugForModel(vehicle.model));
   const modelGuideFallbacks: Coding[] = [];
-  if (hasModelGuide && !standard.some(coding => /verkehrszeichenerkennung|\\bvze\\b/i.test(coding.name))) {
+  if (hasModelGuide && !standard.some(coding => /verkehrszeichenerkennung|\bvze\b/i.test(coding.name))) {
     const vze = codingCatalog.find(coding => coding.id === "vcds-vze");
     if (vze) modelGuideFallbacks.push(displayPdfGuideCoding(vze));
   }
-  if (hasModelGuide && !standard.some(coding => /fernlichtassistent|light assist|\\bfla\\b/i.test(coding.name))) {
+  if (hasModelGuide && !standard.some(coding => /fernlichtassistent|light assist|\bfla\b/i.test(coding.name))) {
     const fla = codingCatalog.find(coding => coding.id === "vcds-fla");
     if (fla) modelGuideFallbacks.push(displayPdfGuideCoding(fla));
   }
