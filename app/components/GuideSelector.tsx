@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
 import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
+import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { guideDifficultyLevel, guideDifficultyStep, guidePrice } from "../lib/guidePricing";
 import { codingNameKey, hasDisplayPrice, uniqueByCodingName } from "../lib/codingListCleanup";
@@ -128,9 +129,17 @@ export default function GuideSelector({ renderDocumentActions }: {
   const visibleGuideRows: GuideTableRow[] = [
     ...visibleCodings.map((coding) => {
       const step = guideDifficultyStep(coding);
-      const mqbGuide = vehicle?.platform === "MQB" || vehicle?.platform === "MQB-A0"
-        ? MQB_GUIDE_PRODUCTS.find(product => product.codingIds.some(id => id === coding.id))
+      const mqbPlatform = vehicle?.platform === "MQB" || vehicle?.platform === "MQB-A0";
+      const modelPdfSlug = vehicle?.model === "Golf 7 (5G)"
+        ? "vw-golf-7-5g" : vehicle ? vzePdfSlugForModel(vehicle.model) : undefined;
+      // Prefer the matching private FLA model PDF over the historical generic proof PDF.
+      const modelFlaGuide = mqbPlatform && modelPdfSlug &&
+        (coding.id === "vcds-fla" || coding.id === "tcross-fla")
+        ? MQB_FLA_MODEL_PRODUCTS.find(product => product.slug === "mqb-fla-" + modelPdfSlug)
         : undefined;
+      const mqbGuide = modelFlaGuide ?? (mqbPlatform
+        ? MQB_GUIDE_PRODUCTS.find(product => product.codingIds.some(id => id === coding.id))
+        : undefined);
       const details = guideDetails({
         title: coding.name,
         note: coding.requirements,
