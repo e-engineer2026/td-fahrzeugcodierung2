@@ -58,7 +58,7 @@ function guideCategoryForReference(idea: ReferenceIdea): GuideCategory {
   return assistanceCategoryForCoding({name: idea.title, category: idea.category}) ?? "Codierungen";
 }
 
-function availableModelCodings(vehicle: Vehicle): Coding[] {
+function availableModelCodings(vehicle: Vehicle, publishedSlugs?: readonly string[]): Coding[] {
   if (vehicle.diagnosticsOnly || vehicle.startYear >= 2024) return [];
   const ids = new Set(codingsForVehicle(vehicle));
   // Keine 0-Euro-Codierungen in der Anleitungsliste; Duplikate nicht durch
@@ -77,7 +77,8 @@ function availableModelCodings(vehicle: Vehicle): Coding[] {
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
     ...standard,
-  ]).sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
+  ].filter(coding => !publishedSlugs ||
+    publishedSlugs.includes(codingDocumentSlugForVehicle(vehicle, coding)))).sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
 /** Liefert für jeden angezeigten Eintrag die echte Download-ID. */
@@ -126,9 +127,8 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
   );
   const vehicle = models.find((item) => item.model === model);
   const vzePdfSlug = vehicle ? vzePdfSlugForModel(vehicle.model) : undefined;
-  const codings = useMemo(() => vehicle ? availableModelCodings(vehicle)
-    .filter(coding => !publicOnly ||
-      publishedCatalogSlugs.includes(codingDocumentSlugForVehicle(vehicle, coding))) : [],
+  const codings = useMemo(() => vehicle
+    ? availableModelCodings(vehicle, publicOnly ? publishedCatalogSlugs : undefined) : [],
     [vehicle, publicOnly, publishedCatalogSlugs]);
   const researchEntries = useMemo(() => {
     if (!vehicle) return [];
@@ -344,8 +344,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
     setModel(next.model);
     setShowModels(false);
     setCodingSearch("");
-    const available = availableModelCodings(next).filter(coding => !publicOnly ||
-      publishedCatalogSlugs.includes(codingDocumentSlugForVehicle(next, coding)));
+    const available = availableModelCodings(next, publicOnly ? publishedCatalogSlugs : undefined);
     const hasOwnCodings = guideCategories.some((category) =>
       (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
       available.some((item) => guideCategory(item) === category)
