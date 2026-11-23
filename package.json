@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/check-clerk-production.cjs && node --experimental-strip-types --test scripts/guide-shop.test.mjs && next build",
+    "build": "node scripts/check-clerk-production.cjs && node --experimental-strip-types --test scripts/guide-shop.test.mjs scripts/assistance-categories.test.mjs && next build",
     "lint": "eslint .",
     "test": "node --experimental-strip-types --test scripts/*.test.mjs",
     "start": "next start"
