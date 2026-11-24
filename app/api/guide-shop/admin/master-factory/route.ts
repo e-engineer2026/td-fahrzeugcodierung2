@@ -129,6 +129,23 @@ export async function POST(request: Request) {
         if (!variant || !document || (catalog && catalog.model !== variant.model))
           return NextResponse.json({ error: "Variante nicht fachlich zugeordnet: " + slug },
             { status: 422, headers });
+        if (!variant.reviewed)
+          return NextResponse.json({
+            error: "Codierschritte der Modellvariante sind noch nicht vom Admin als fachlich geprüft markiert."
+          }, { status: 422, headers });
+        // Never mistake placeholder instructions for an actual VCDS/VCP value.
+        if (variant.steps.some(step => /\\b(?:platzhalter|testwert|pruefwert|prüfwert|tbd|todo|originalwert|zielwert)\\b/i
+          .test(step.path + " " + step.original + " " + step.target)))
+          return NextResponse.json({ error: "Codierwerte enthalten Platzhalter." },
+            { status: 422, headers });
+        if (catalog) {
+          const [sourceRow] = await sql`SELECT source_hash, reviewed_source_hash, pdf_slug
+            FROM td_coding_registry WHERE model=${variant.model} AND pdf_slug=${slug}
+              AND reviewed_source_hash=source_hash LIMIT 1`;
+          if (!sourceRow) return NextResponse.json({
+            error: "Katalogzeile muss zuerst als fachlich geprüft gespeichert werden."
+          }, { status: 422, headers });
+        }
         const pdf = createGuideDraftPdf(master, variant, document.title);
         if (pdf.byteLength < 1000 || pdf.byteLength > 3_000_000)
           return NextResponse.json({ error: "PDF-Größe nicht zulässig." }, { status: 422, headers });
