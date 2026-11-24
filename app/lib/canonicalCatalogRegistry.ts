@@ -73,7 +73,7 @@ export function registryAudit(rows: readonly CanonicalCatalogRow[]) {
     if (seen.has(key)) duplicateKeys.push(key);
     seen.add(key);
     const nameKey = row.model + ":" + row.title.toLowerCase().normalize("NFKD")
-      .replace(/\\p{M}/gu, "").replace(/[^a-z0-9]+/g, "");
+      .replace(/\p{M}/gu, "").replace(/[^a-z0-9]+/g, "");
     if (byName.has(nameKey)) duplicateLabelCandidates.push(key);
     else byName.set(nameKey, key);
     const pdfKey = row.model + ":" + row.pdfSlug;
