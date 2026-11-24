@@ -27,7 +27,7 @@ test("Master requires explicit, distinct vehicle variants and real coding step f
     variants: [{ ...master.variants[0], steps: [{ ...master.variants[0].steps[0], target: "" }] }] }), null);
 });
 
-test("PDF writer produces valid xref offsets, EOF and private draft banner", () => {
+test("PDF writer produces valid xref offsets, EOF and stable technical heading", () => {
   const checked = validateGuideMaster(master);
   assert.ok(checked);
   const pdf = createGuideDraftPdf(checked, checked.variants[0], "VW Golf 7 Verkehrszeichenerkennung");
@@ -42,7 +42,7 @@ test("PDF writer produces valid xref offsets, EOF and private draft banner", () 
   assert.match(s, /\/Type \/Pages/);
   assert.match(s, /\/WinAnsiEncoding/);
   assert.match(s, /\/Contents 6 0 R/);
-  assert.ok(s.includes(Buffer.from("PRIVATER ENTWURF", "latin1").toString("hex")), "draft banner encoded in PDF stream");
+  assert.ok(s.includes(Buffer.from("Fachinformation fuer qualifizierte Fahrzeugdiagnose", "latin1").toString("hex")), "technical heading encoded in PDF stream");
 });
 
 test("Only explicitly reviewed, non-placeholder coding variants can generate drafts", () => {
