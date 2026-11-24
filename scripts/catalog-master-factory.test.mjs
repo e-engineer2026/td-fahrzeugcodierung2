@@ -31,6 +31,7 @@ test("PDF writer produces valid xref offsets, EOF and private draft banner", () 
   const checked = validateGuideMaster(master);
   assert.ok(checked);
   const pdf = createGuideDraftPdf(checked, checked.variants[0], "VW Golf 7 Verkehrszeichenerkennung");
+  if (process.env.TD_PDF_TEST_OUTPUT) fs.writeFileSync(process.env.TD_PDF_TEST_OUTPUT, pdf);
   assert.equal(pdf.subarray(0, 8).toString("ascii"), "%PDF-1.4");
   assert.match(pdf.subarray(-60).toString("latin1"), /%%EOF\s*$/);
   assert.ok(pdf.length > 1000);
