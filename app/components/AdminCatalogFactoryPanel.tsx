@@ -105,8 +105,11 @@ export default function AdminCatalogFactoryPanel() {
           })),
         }],
       };
+      const existing = masters.some(item => item.id === masterId);
       const save = await fetch(masterApi, { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "save", master }) });
+        body: JSON.stringify(existing ? {
+          action: "append-variant", masterId, variant: master.variants[0],
+        } : { action: "save", master }) });
       const saved = await save.json() as { error?: string };
       if (!save.ok) throw new Error(saved.error ?? "Vorlage konnte nicht gespeichert werden.");
       const generate = await fetch(masterApi, { method: "POST", headers: { "Content-Type": "application/json" },
@@ -180,6 +183,17 @@ export default function AdminCatalogFactoryPanel() {
           onChange={e => setSelectedRow(e.target.value)}>
           <option value="">Codierung auswählen</option>
           {catalog.rows.map(row => <option key={row.id} value={row.id}>{row.title}</option>)}
+        </select>
+      </label>}
+      {masters.length > 0 && <label className="mt-3 block text-sm font-semibold">Bestehende Mastervorlage für weitere Modellvarianten
+        <select className="mt-1 block w-full rounded-lg border p-2" value={masters.some(m => m.id === masterId) ? masterId : ""}
+          onChange={event => { const master = masters.find(m => m.id === event.target.value);
+            if (master) { setMasterId(master.id); setRevision(master.revision); }
+          }}>
+          <option value="">Neue Vorlage verwenden</option>
+          {masters.map(master => <option key={master.id} value={master.id}>
+            {master.title} ({master.variants.length} Varianten)
+          </option>)}
         </select>
       </label>}
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
