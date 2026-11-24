@@ -172,3 +172,12 @@ export function validateGuideMaster(value: unknown): GuideMaster | null {
   }
   return m as GuideMaster;
 }
+
+/** This flag is only a manual reviewer attestation, never proof of ECU compatibility.
+ * Missing or placeholder values must not pass to a publishable draft.
+ */
+export function hasReviewableSteps(variant: GuideVariant): boolean {
+  return variant.reviewed && variant.steps.length > 0 &&
+    variant.steps.every(step => !/\b(?:platzhalter|testwert|pruefwert|prüfwert|tbd|todo|originalwert|zielwert)\b/i
+      .test(step.path + " " + step.original + " " + step.target));
+}
