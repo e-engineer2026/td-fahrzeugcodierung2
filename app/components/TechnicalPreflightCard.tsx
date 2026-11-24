@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {
-  EMPTY_TECHNICAL_EVIDENCE, EQUIPMENT_LABELS,
+  EQUIPMENT_LABELS,
   type EquipmentKey, type TechnicalEvidence, type PreflightResult,
 } from "../lib/technicalPreflight";
 
@@ -56,6 +56,5 @@ export default function TechnicalPreflightCard({ evidence, onChange, result }: P
         Auto-Scan und Fahrzeugdaten zur Vorprüfung senden
       </Link>
     </div>}
-    {Object.keys(EMPTY_TECHNICAL_EVIDENCE).length === 0 && null}
   </section>;
 }
