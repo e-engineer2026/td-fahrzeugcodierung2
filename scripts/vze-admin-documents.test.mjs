@@ -262,3 +262,61 @@ test("Fehlende Fahrzeug-PDF kann anhand der Katalogzeile zugeordnet werden", () 
   assert.equal(catalogGuideProduct(catalogDocumentSlug("Polo AW", "coding-tcross-lane-activate")), null);
   assert.equal(findGuideAdminDocument("mqb-lane-assist").productId, "mqb-lane-assist");
 });
+
+
+test("MLBevo Sammelupload: alle 36 neuen ZIP-Dateinamen sind genau einem Download zugeordnet", () => {
+  const expected = [
+    "audi-a4-b9-8w_parklenkassistent_pla.pdf",
+    "audi-a4-b9-8w_stauassistent.pdf",
+    "audi-a5-f5_parklenkassistent_pla.pdf",
+    "audi-a5-f5_stauassistent.pdf",
+    "audi-a6-c8-4a_intelligenter_park_assist_ipa.pdf",
+    "audi-a6-c8-4a_manoeverassistent.pdf",
+    "audi-a6-c8-4a_parklenkassistent_pla.pdf",
+    "audi-a6-c8-4a_stauassistent.pdf",
+    "audi-a6-c8-4a_trailer_assist.pdf",
+    "audi-a7-c8-4k_intelligenter_park_assist_ipa.pdf",
+    "audi-a7-c8-4k_manoeverassistent.pdf",
+    "audi-a7-c8-4k_parklenkassistent_pla.pdf",
+    "audi-a7-c8-4k_stauassistent.pdf",
+    "audi-a7-c8-4k_trailer_assist.pdf",
+    "audi-a8-d5-4n_intelligenter_park_assist_ipa.pdf",
+    "audi-a8-d5-4n_manoeverassistent.pdf",
+    "audi-a8-d5-4n_parklenkassistent_pla.pdf",
+    "audi-a8-d5-4n_stauassistent.pdf",
+    "audi-a8-d5-4n_trailer_assist.pdf",
+    "audi-e-tron-ge_intelligenter_park_assist_ipa.pdf",
+    "audi-e-tron-ge_manoeverassistent.pdf",
+    "audi-e-tron-ge_trailer_assist.pdf",
+    "audi-q5-fy_parklenkassistent_pla.pdf",
+    "audi-q5-fy_stauassistent.pdf",
+    "audi-q7-4m_intelligenter_park_assist_ipa.pdf",
+    "audi-q7-4m_manoeverassistent.pdf",
+    "audi-q7-4m_parklenkassistent_pla.pdf",
+    "audi-q7-4m_stauassistent.pdf",
+    "audi-q7-4m_trailer_assist.pdf",
+    "audi-q8-4m_intelligenter_park_assist_ipa.pdf",
+    "audi-q8-4m_manoeverassistent.pdf",
+    "audi-q8-4m_parklenkassistent_pla.pdf",
+    "audi-q8-4m_stauassistent.pdf",
+    "audi-q8-4m_trailer_assist.pdf",
+    "vw-touareg-iii-cr_parklenkassistent_pla.pdf",
+    "vw-touareg-iii-cr_trailer_assist.pdf"
+  ];
+  const { DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS, mlbevoAssistanceGuidesForVehicle } = loadTs("app/lib/mlbevoAssistanceGuides");
+  const { catalogGuideProduct } = loadTs("app/lib/guideCatalogDocuments");
+  const { findGuideAdminDocument } = loadTs("app/lib/vzeAdminDocuments");
+  const { guideOrderProduct } = loadTs("app/lib/vzeShopProducts");
+  const products = DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS.filter(product => !product.filename.endsWith("_anleitung.pdf"));
+  assert.deepEqual(products.map(product => product.filename).sort(), expected);
+  assert.equal(new Set(products.map(product => product.slug)).size, 36);
+  for (const product of products) {
+    assert.equal(product.category, "Assistenzsysteme");
+    assert.equal(GUIDE_ADMIN_DOCUMENTS.filter(doc => doc.filename.toLowerCase() === product.filename).length, 1);
+    assert.equal(findGuideAdminDocument(product.slug)?.productId, product.id);
+    assert.equal(catalogGuideProduct(product.slug)?.id, product.id);
+    assert.equal(guideOrderProduct(product.slug)?.id, product.id);
+    assert.ok(mlbevoAssistanceGuidesForVehicle({model: product.model, platform: "MLBevo"}).some(item => item.id === product.id));
+  }
+  assert.equal(mlbevoAssistanceGuidesForVehicle({model: "Golf 7 (5G)", platform: "MQB"}).length, 0);
+});
