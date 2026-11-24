@@ -29,6 +29,7 @@ export default function AdminCatalogFactoryPanel() {
   const [safety, setSafety] = useState("");
   const [variantNote, setVariantNote] = useState("");
   const [steps, setSteps] = useState("");
+  const [modelReviewed, setModelReviewed] = useState(false);
   const [masters, setMasters] = useState<Master[]>([]);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -100,7 +101,7 @@ export default function AdminCatalogFactoryPanel() {
         id: masterId, title: row.title, revision, overview, safety,
         variants: [{
           slug: row.pdfSlug, model: row.model, variantNote,
-          reviewed: false,
+          reviewed: modelReviewed,
           steps: parsed.map(parts => ({
             ecu: parts[0], path: parts[1], original: parts[2], target: parts[3],
             note: parts.slice(4).join(" | "),
@@ -226,7 +227,8 @@ export default function AdminCatalogFactoryPanel() {
         <textarea rows={7} className="mt-1 w-full rounded-lg border p-2 font-mono text-xs" value={steps}
           onChange={e => setSteps(e.target.value)} placeholder={"09 Bordnetz | Anpassung Leuchte... | Originalwert | Zielwert | Nur beim bestätigten Softwarestand"} />
       </label>
-      <button type="button" disabled={busy || !selectedRow} onClick={() => void createDrafts()}
+      <label className="mt-3 flex items-start gap-2 text-sm font-semibold text-slate-800"><input type="checkbox" className="mt-1" checked={modelReviewed} onChange={e => setModelReviewed(e.target.checked)} />Die genaue Modellvariante, die Steuergeräte, Softwarestände sowie sämtliche hier eingetragenen Codierschritte wurden fachlich geprüft. Eine PDF bleibt trotzdem bis zur separaten Veröffentlichung privat.</label>
+      <button type="button" disabled={busy || !selectedRow || !modelReviewed} onClick={() => void createDrafts()}
         className="mt-3 rounded-lg bg-blue-700 px-4 py-3 font-bold text-white disabled:opacity-50">
         Master speichern und privaten PDF-Entwurf erzeugen
       </button>
