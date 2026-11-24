@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   if (Number(request.headers.get("content-length") || 0) > 100_000)
     return NextResponse.json({ error: "Vorlage zu groß." }, { status: 413, headers });
 
-  let body: { action?: unknown; master?: unknown; masterId?: unknown; slugs?: unknown };
+  let body: { action?: unknown; master?: unknown; masterId?: unknown; slugs?: unknown; variant?: unknown };
   try {
     const raw = await request.text();
     if (Buffer.byteLength(raw, "utf8") > 100_000) return NextResponse.json({
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
 
   if (body?.action === "append-variant") {
     const masterId = body.masterId;
-    const variantValue = (body as { variant?: unknown }).variant;
+    const variantValue = body.variant;
     if (typeof masterId !== "string" || !/^[a-z0-9-]{5,70}$/.test(masterId))
       return NextResponse.json({ error: "Vorlagenkennung fehlt." }, { status: 400, headers });
     try {
