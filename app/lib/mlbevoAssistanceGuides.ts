@@ -8,6 +8,7 @@ const topics = [
     id: "active-lane-assist",
     name: "Active Lane Assist",
     hardware: "Kompatible Frontsensorik A5, HCA-fähige Lenkhilfe, passende Anzeige und freigegebene Bedienung erforderlich.",
+    documentedModels: ["audi-a4-b9-8w", "audi-a5-f5", "audi-q7-4m", "audi-a6-c8-4a", "audi-a7-c8-4k", "vw-touareg-iii-cr"],
     reviewModels: ["audi-a8-d5-4n", "audi-q8-4m", "audi-e-tron-ge"],
     activation: /lane assist|spurhalteassistent|spurverlassenswarnung/i,
   },
@@ -15,6 +16,7 @@ const topics = [
     id: "fla",
     name: "Fernlichtassistent (FLA)",
     hardware: "Passende Frontsensorik, Scheinwerfer, Lichtsteuerung und Zentralelektrik erforderlich.",
+    documentedModels: ["audi-a4-b9-8w", "audi-a5-f5", "audi-q7-4m", "audi-a6-c8-4a", "audi-a7-c8-4k", "audi-q8-4m"],
     reviewModels: ["audi-q5-fy", "audi-a8-d5-4n", "audi-e-tron-ge", "vw-touareg-iii-cr"],
     activation: /fernlichtassistent|\bfla\b|high beam assist/i,
   },
@@ -45,11 +47,15 @@ export const MLBEVO_ASSISTANCE_PRODUCTS = MLBEVO_VZE_PRODUCTS.flatMap(vehicle =>
     sha256: "",
     filename: vehicle.slug + "_" + topic.id + "_anleitung.pdf",
     coding,
+    documented: topic.documentedModels.includes(vehicle.slug),
     activation: topic.activation,
   };
 }));
 
+// Keep previous product IDs resolvable for uploaded PDFs and existing purchases.
+export const DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS = MLBEVO_ASSISTANCE_PRODUCTS.filter(product => product.documented);
+
 export function mlbevoAssistanceGuidesForVehicle(vehicle: Vehicle) {
   if (vehicle.platform !== "MLBevo") return [];
-  return MLBEVO_ASSISTANCE_PRODUCTS.filter(product => product.model === vehicle.model);
+  return DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS.filter(product => product.model === vehicle.model);
 }
