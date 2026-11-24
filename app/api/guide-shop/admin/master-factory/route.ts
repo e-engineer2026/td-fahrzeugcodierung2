@@ -134,7 +134,7 @@ export async function POST(request: Request) {
             error: "Codierschritte der Modellvariante sind noch nicht vom Admin als fachlich geprüft markiert."
           }, { status: 422, headers });
         // Never mistake placeholder instructions for an actual VCDS/VCP value.
-        if (variant.steps.some(step => /\\b(?:platzhalter|testwert|pruefwert|prüfwert|tbd|todo|originalwert|zielwert)\\b/i
+        if (variant.steps.some(step => /\b(?:platzhalter|testwert|pruefwert|prüfwert|tbd|todo|originalwert|zielwert)\b/i
           .test(step.path + " " + step.original + " " + step.target)))
           return NextResponse.json({ error: "Codierwerte enthalten Platzhalter." },
             { status: 422, headers });
