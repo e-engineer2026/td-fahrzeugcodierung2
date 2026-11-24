@@ -147,18 +147,49 @@ function codingDocumentSlugForVehicle(vehicle: Vehicle, coding: Coding): string 
   return catalogDocumentSlug(vehicle.model, "coding-" + coding.id);
 }
 
-export default function GuideSelector({ renderDocumentActions, publishedCatalogSlugs = [] }: {
+function initialCategoryForVehicle(next: Vehicle, publicOnly: boolean, publishedCatalogSlugs: string[]): GuideCategory {
+    const available = availableModelCodings(next, publicOnly ? publishedCatalogSlugs : undefined);
+    const hasOwnCodings = guideCategories.some((category) =>
+      (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
+      available.some((item) => guideCategory(item) === category)
+    );
+    if (hasOwnCodings) {
+      return (guideCategories.find((category) =>
+        (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
+        available.some((item) => guideCategory(item) === category)
+      ) ?? "Codierungen");
+    } else {
+      const candidates = referenceIdeasForVehicle(next).filter(idea => !publicOnly ||
+        publishedCatalogSlugs.includes(catalogDocumentSlug(next.model, "reference-" + idea.id)));
+      const hasResearch = (category: ResearchCategory) => researchedGuidesForModel(next.model, category)
+        .some(entry => entry.access !== "Anbieterleistung" &&
+          (!publicOnly || publishedCatalogSlugs.includes(catalogDocumentSlug(next.model, "research-" + entry.id))));
+      const rfk = mqbRfkGuideForVehicle(next.model);
+      return (hasResearch("Nachrüstungen") ||
+        (rfk && (!publicOnly || publishedCatalogSlugs.includes(rfk.slug))) ? "Nachrüstungen"
+        : hasResearch("Umbauten") ? "Umbauten"
+        : candidates.some((idea) => guideCategoryForReference(idea) === "Codierungen") ? "Codierungen"
+        : candidates.length ? guideCategoryForReference(candidates[0]) : "Codierungen");
+    }
+}
+
+export default function GuideSelector({ renderDocumentActions, publishedCatalogSlugs = [], initialBrand, initialModel, initialYear }: {
   renderDocumentActions?: RenderDocumentActions;
   publishedCatalogSlugs?: string[];
+  initialBrand?: string;
+  initialModel?: string;
+  initialYear?: number;
 }) {
   // Der Admin sieht auch fehlende PDFs und Entwürfe; Besucher nur freigegebene Downloads.
   const publicOnly = !renderDocumentActions;
-  const [manufacturer, setManufacturer] = useState<Manufacturer | "">("");
-  const [model, setModel] = useState("");
-  const [showModels, setShowModels] = useState(true);
+  const initialVehicle = publicOnly ? guideVehicles.find(item => item.brand === initialBrand && item.model === initialModel && manufacturers.includes(manufacturerOf(item)) && (initialYear === undefined || (initialYear >= item.startYear && initialYear <= item.endYear))) : undefined;
+  const [manufacturer, setManufacturer] = useState<Manufacturer | "">(initialVehicle ? manufacturerOf(initialVehicle) : "");
+  const [model, setModel] = useState(initialVehicle?.model ?? "");
+  const [selectedYear, setSelectedYear] = useState(initialVehicle ? initialYear : undefined);
+  const [showModels, setShowModels] = useState(!initialVehicle);
   const [codingSearch, setCodingSearch] = useState("");
   const searching = codingSearch.trim().length > 0;
-  const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
+  const [activeCategory, setActiveCategory] = useState<GuideCategory>(() => initialVehicle ? initialCategoryForVehicle(initialVehicle, publicOnly, publishedCatalogSlugs) : "Codierungen");
 
   const models = useMemo(
     () => guideVehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
@@ -377,6 +408,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
 
   function chooseManufacturer(next: Manufacturer) {
     setManufacturer(next);
+    setSelectedYear(undefined);
     setModel("");
     setShowModels(true);
     setCodingSearch("");
@@ -387,29 +419,8 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
     setModel(next.model);
     setShowModels(false);
     setCodingSearch("");
-    const available = availableModelCodings(next, publicOnly ? publishedCatalogSlugs : undefined);
-    const hasOwnCodings = guideCategories.some((category) =>
-      (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
-      available.some((item) => guideCategory(item) === category)
-    );
-    if (hasOwnCodings) {
-      setActiveCategory(guideCategories.find((category) =>
-        (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
-        available.some((item) => guideCategory(item) === category)
-      ) ?? "Codierungen");
-    } else {
-      const candidates = referenceIdeasForVehicle(next).filter(idea => !publicOnly ||
-        publishedCatalogSlugs.includes(catalogDocumentSlug(next.model, "reference-" + idea.id)));
-      const hasResearch = (category: ResearchCategory) => researchedGuidesForModel(next.model, category)
-        .some(entry => entry.access !== "Anbieterleistung" &&
-          (!publicOnly || publishedCatalogSlugs.includes(catalogDocumentSlug(next.model, "research-" + entry.id))));
-      const rfk = mqbRfkGuideForVehicle(next.model);
-      setActiveCategory(hasResearch("Nachrüstungen") ||
-        (rfk && (!publicOnly || publishedCatalogSlugs.includes(rfk.slug))) ? "Nachrüstungen"
-        : hasResearch("Umbauten") ? "Umbauten"
-        : candidates.some((idea) => guideCategoryForReference(idea) === "Codierungen") ? "Codierungen"
-        : candidates.length ? guideCategoryForReference(candidates[0]) : "Codierungen");
-    }
+    setSelectedYear(undefined);
+    setActiveCategory(initialCategoryForVehicle(next, publicOnly, publishedCatalogSlugs));
   }
 
   return (
@@ -441,7 +452,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
               </h2>
               {vehicle && (
                 <p className="text-xs text-slate-500">
-                  {String(vehicle.startYear) + "–" + String(vehicle.endYear >= 2026 ? "heute" : vehicle.endYear)}
+                  {selectedYear ? `Gewähltes Baujahr: ${selectedYear} · ` : ""}{String(vehicle.startYear) + "–" + String(vehicle.endYear >= 2026 ? "heute" : vehicle.endYear)}
                 </p>
               )}
             </div>
