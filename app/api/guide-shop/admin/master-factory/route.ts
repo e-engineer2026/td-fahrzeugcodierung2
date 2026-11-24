@@ -57,13 +57,50 @@ export async function POST(request: Request) {
     }
     try {
       const sql = await ensureGuideShopSchema();
-      await sql`INSERT INTO td_guide_master_templates (id,title,revision,procedure)
+      const [stored] = await sql`INSERT INTO td_guide_master_templates (id,title,revision,procedure)
         VALUES (${master.id},${master.title},${master.revision},${JSON.stringify(master)}::jsonb)
-        ON CONFLICT (id) DO UPDATE SET
-          title=EXCLUDED.title,revision=EXCLUDED.revision,procedure=EXCLUDED.procedure,updated_at=now()`;
+        ON CONFLICT (id) DO NOTHING RETURNING id`;
+      if (!stored) return NextResponse.json({
+        error: "Diese Mastervorlage existiert bereits. Neue Fahrzeuge über die Variantenfunktion hinzufügen."
+      }, { status: 409, headers });
       return NextResponse.json({ saved: true, masterId: master.id, publicUpdated: false }, { headers });
     } catch {
       return NextResponse.json({ error: "Vorlage konnte nicht privat gespeichert werden." },
+        { status: 500, headers });
+    }
+  }
+
+  if (body?.action === "append-variant") {
+    const masterId = body.masterId;
+    const variantValue = (body as { variant?: unknown }).variant;
+    if (typeof masterId !== "string" || !/^[a-z0-9-]{5,70}$/.test(masterId))
+      return NextResponse.json({ error: "Vorlagenkennung fehlt." }, { status: 400, headers });
+    try {
+      const sql = await ensureGuideShopSchema();
+      const [saved] = await sql`SELECT procedure FROM td_guide_master_templates WHERE id=${masterId}`;
+      const existing = validateGuideMaster(saved?.procedure);
+      if (!existing) return NextResponse.json({ error: "Mastervorlage nicht gefunden." }, { status: 404, headers });
+      const combined = validateGuideMaster({
+        ...existing, variants: [...existing.variants, variantValue],
+      });
+      if (!combined || combined.variants.some((v, i) =>
+        combined.variants.findIndex(other => other.slug === v.slug) !== i))
+        return NextResponse.json({ error: "Ungültige oder doppelte Fahrzeugvariante." },
+          { status: 422, headers });
+      const variant = combined.variants[combined.variants.length - 1];
+      const document = findGuideAdminDocument(variant.slug);
+      const catalog = catalogGuideProduct(variant.slug);
+      if (!document || (catalog && catalog.model !== variant.model))
+        return NextResponse.json({ error: "Falsche Fahrzeug-/PDF-Zuordnung." }, { status: 422, headers });
+      const before = JSON.stringify(existing);
+      const [updated] = await sql`UPDATE td_guide_master_templates
+        SET procedure=${JSON.stringify(combined)}::jsonb, updated_at=now()
+        WHERE id=${masterId} AND procedure=${before}::jsonb RETURNING id`;
+      return updated ? NextResponse.json({ saved: true, appended: variant.slug, published: false }, { headers }) :
+        NextResponse.json({ error: "Vorlage wurde gleichzeitig geändert. Bitte erneut laden." },
+          { status: 409, headers });
+    } catch {
+      return NextResponse.json({ error: "Fahrzeugvariante konnte nicht ergänzt werden." },
         { status: 500, headers });
     }
   }
