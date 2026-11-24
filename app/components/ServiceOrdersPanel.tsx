@@ -29,6 +29,17 @@ function prefillFromSelection(raw: string) {
   } catch { return initial; }
 }
 
+function calUrlForOrder(order: Order): string {
+  const base = order.mode === "remote"
+    ? "https://cal.com/timo-drechsler-lej6jm/remote-codierung"
+    : "https://cal.com/timo-drechsler-lej6jm/vag-codierung-vor-ort";
+  const url = new URL(base);
+  // In Cal.com configure an optional booking question with identifier "tdorderid".
+  // The signed webhook will only suggest, never silently approve, this reference.
+  url.searchParams.set("tdorderid", order.id);
+  return url.toString();
+}
+
 export default function ServiceOrdersPanel({ initialSelection = "" }: { initialSelection?: string }) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [form, setForm] = useState(() => prefillFromSelection(initialSelection));
@@ -83,6 +94,11 @@ export default function ServiceOrdersPanel({ initialSelection = "" }: { initialS
       <p className="mt-1 text-slate-600">{states[order.status] ?? order.status} · {order.mode === "remote" ? "Remote" : "Vor Ort"}</p>
       {order.quoteCents !== null && <p className="font-semibold">Angebot: {(Number(order.quoteCents) / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" })}</p>}
       {order.bookingReference && <p className="break-all text-slate-600">Terminreferenz: {order.bookingReference}</p>}
+      {["requested", "review", "quoted"].includes(order.status) && <a
+        href={calUrlForOrder(order)} target="_blank" rel="noopener noreferrer"
+        className="mt-3 inline-flex rounded-lg border border-blue-300 px-3 py-2 font-bold text-blue-800 hover:bg-blue-50">
+        Termin bei Cal.com auswählen
+      </a>}
     </li>)}</ul> : <p className="mt-3 text-sm text-slate-600">Noch keine Codieranfrage hinterlegt.</p>}
     <details className="mt-5 rounded-lg border border-blue-200 p-4">
       <summary className="cursor-pointer font-bold text-blue-800">Neue Codieranfrage erfassen</summary>
