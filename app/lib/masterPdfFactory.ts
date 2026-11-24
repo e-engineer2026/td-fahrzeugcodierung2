@@ -102,18 +102,30 @@ export function createGuideDraftPdf(master: GuideMaster, variant: GuideVariant, 
     const pageId = 5 + index * 2;
     const contentId = pageId + 1;
     objects[pageId - 1] = "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents " + contentId + " 0 R >>";
+    // Navy brand header, TD mark and structured sections match the website palette.
     const commands = [
-      "0.03 0.12 0.29 rg 0 826 595 16 re f",
-      "0.05 0.23 0.55 RG 42 804 m 553 804 l S",
+      "0.05 0.16 0.35 rg 0 788 595 54 re f",
+      "0.15 0.42 0.83 rg 35 800 36 30 re f",
+      "1 1 1 rg BT /F2 19 Tf 40 806 Td " + literalHex("TD") + " Tj ET",
+      "1 1 1 rg BT /F2 14 Tf 87 813 Td " + literalHex("FAHRZEUGCODIERUNG") + " Tj ET",
+      "0.73 0.85 1 rg BT /F1 9 Tf 87 799 Td " + literalHex("Codierung  |  Diagnose  |  VAG") + " Tj ET",
+      "0.15 0.42 0.83 rg 0 784 595 4 re f",
+      "0.15 0.42 0.83 RG 42 45 m 553 45 l S",
     ];
     page.forEach((item, row) => {
-      const y = 782 - row * 16;
-      commands.push("0 0 0 rg BT /" + (item.bold ? "F2" : "F1") +
-        " " + (item.bold ? 11 : 9.5) + " Tf 42 " + y +
-        " Td " + literalHex(item.text) + " Tj ET");
+      const y = 751 - row * 15.6;
+      const section = item.text === "Voraussetzungen und Funktion" ||
+        item.text.startsWith("CODIERUNG / ANPASSUNG");
+      if (section) commands.push("0.91 0.95 1 rg 34 " + (y - 7) +
+        " 527 24 re f 0.15 0.42 0.83 rg 34 " + (y - 7) + " 3 24 re f");
+      commands.push((item.bold ? "0.05 0.16 0.35 rg " : "0.12 0.19 0.25 rg ") +
+        "BT /" + (item.bold ? "F2" : "F1") + " " +
+        (section ? 10.5 : item.bold ? 10.5 : 9.5) +
+        " Tf 42 " + y.toFixed(2) + " Td " + literalHex(item.text) + " Tj ET");
     });
     const footer = "TD Fahrzeugcodierung | ENTWURF | Seite " + (index + 1) + " / " + pages.length;
-    commands.push("BT /F1 8 Tf 42 25 Td " + literalHex(footer) + " Tj ET");
+    commands.push("0.20 0.25 0.32 rg BT /F1 8 Tf 42 25 Td " +
+      literalHex(footer) + " Tj ET");
     const stream = commands.join("\n") + "\n";
     objects[contentId - 1] = "<< /Length " + Buffer.byteLength(stream, "ascii") + " >>\nstream\n" + stream + "endstream";
   });
