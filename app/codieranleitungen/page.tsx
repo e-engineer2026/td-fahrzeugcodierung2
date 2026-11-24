@@ -13,8 +13,7 @@ export const metadata: Metadata = {
   title: "Professionelle Codier-PDF-Anleitungen | TD Fahrzeugcodierung",
   description: "Professionelle VAG-Codieranleitungen mit Angaben zu geeignetem Interface und Hardwarevoraussetzungen. Für qualifizierte Fachkräfte.",
   alternates: { canonical: "/codieranleitungen" },
-  // Erst indexieren, wenn die ersten tatsächlich kaufbaren PDFs bereitstehen.
-  robots: { index: false, follow: true },
+  robots: { index: true, follow: true },
 };
 
 /** Die öffentliche Liste enthält ausschließlich tatsächlich abrufbare, freigegebene PDFs.
