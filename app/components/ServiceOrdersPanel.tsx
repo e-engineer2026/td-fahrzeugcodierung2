@@ -15,9 +15,23 @@ const states: Record<string, string> = {
 const initial = { brand: "Volkswagen", model: "", year: String(new Date().getFullYear()),
   mode: "onsite" as "onsite" | "remote", services: "" };
 
-export default function ServiceOrdersPanel() {
+function prefillFromSelection(raw: string) {
+  if (!raw || raw.length > 4000) return initial;
+  try {
+    const data = JSON.parse(raw) as Record<string, unknown>;
+    if (typeof data.brand !== "string" || !["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].includes(data.brand) ||
+        typeof data.model !== "string" || data.model.length < 2 || data.model.length > 120 ||
+        typeof data.services !== "string" || data.services.length < 5 || data.services.length > 2000 ||
+        typeof data.year !== "number" || !Number.isInteger(data.year) || data.year < 1980 || data.year > 2027 ||
+        (data.mode !== "remote" && data.mode !== "onsite")) return initial;
+    return { brand: data.brand, model: data.model, year: String(data.year),
+      mode: data.mode, services: data.services };
+  } catch { return initial; }
+}
+
+export default function ServiceOrdersPanel({ initialSelection = "" }: { initialSelection?: string }) {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [form, setForm] = useState(initial);
+  const [form, setForm] = useState(() => prefillFromSelection(initialSelection));
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   async function refresh() {
@@ -28,22 +42,18 @@ export default function ServiceOrdersPanel() {
       setOrders(data.orders ?? []);
     } catch (error) { setNotice(error instanceof Error ? error.message : "Laden fehlgeschlagen."); }
   }
-  useEffect(() => { void refresh(); }, []);
-  // Only vehicle and coding names are transferred in the URL; the verified
-  // contact email comes from Clerk on the server after sign-in.
   useEffect(() => {
-    const raw = new URLSearchParams(window.location.search).get("auftrag");
-    if (!raw || raw.length > 4000) return;
-    try {
-      const data = JSON.parse(raw) as Record<string, unknown>;
-      if (typeof data.brand !== "string" || !["Volkswagen", "Audi", "Škoda", "SEAT", "CUPRA"].includes(data.brand) ||
-          typeof data.model !== "string" || data.model.length > 120 ||
-          typeof data.services !== "string" || data.services.length > 2000 ||
-          typeof data.year !== "number" || !Number.isInteger(data.year) || data.year < 1980 || data.year > 2027 ||
-          (data.mode !== "remote" && data.mode !== "onsite")) return;
-      setForm({ brand: data.brand, model: data.model, year: String(data.year),
-        mode: data.mode, services: data.services });
-    } catch { /* Ignore malformed shared selections. */ }
+    const controller = new AbortController();
+    fetch("/api/service-orders", { cache: "no-store", credentials: "same-origin", signal: controller.signal })
+      .then(async response => {
+        const data = await response.json() as { orders?: Order[]; error?: string };
+        if (!response.ok) throw new Error(data.error ?? "Aufträge nicht verfügbar.");
+        if (!controller.signal.aborted) setOrders(data.orders ?? []);
+      })
+      .catch(error => {
+        if (!controller.signal.aborted) setNotice(error instanceof Error ? error.message : "Laden fehlgeschlagen.");
+      });
+    return () => controller.abort();
   }, []);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
