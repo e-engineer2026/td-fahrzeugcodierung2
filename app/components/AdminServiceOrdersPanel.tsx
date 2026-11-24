@@ -33,7 +33,25 @@ export default function AdminServiceOrdersPanel() {
       }])));
     } catch (error) { setNotice(error instanceof Error ? error.message : "Laden fehlgeschlagen."); }
   }
-  useEffect(() => { void refresh(); }, []);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/service-orders/admin", { cache: "no-store", credentials: "same-origin", signal: controller.signal })
+      .then(async response => {
+        const data = await response.json() as { orders?: Order[]; error?: string };
+        if (!response.ok) throw new Error(data.error ?? "Aufträge konnten nicht geladen werden.");
+        if (controller.signal.aborted) return;
+        const values = data.orders ?? [];
+        setOrders(values);
+        setEdits(Object.fromEntries(values.map(order => [order.id, {
+          status: order.status, price: order.quoteCents === null ? "" : (order.quoteCents / 100).toFixed(2),
+          bookingReference: order.bookingReference ?? "", adminNote: order.adminNote ?? "",
+        }])));
+      })
+      .catch(error => {
+        if (!controller.signal.aborted) setNotice(error instanceof Error ? error.message : "Laden fehlgeschlagen.");
+      });
+    return () => controller.abort();
+  }, []);
 
   async function save(id: string) {
     const entry = edits[id];
