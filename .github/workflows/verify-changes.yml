@@ -2,12 +2,13 @@ name: Verify website changes
 
 on:
   pull_request:
-    branches: [main, feature/central-service-orders-20261123]
+    branches: [main, feature/central-service-orders-20261123, feature/service-calcom-bridge-20261124]
   push:
     branches:
       - feature/central-service-orders-20261123
       - security/pdf-payment-claims-20261123
       - feature/service-calcom-bridge-20261124
+      - feature/admin-command-center-20261124
 
 permissions:
   contents: read
@@ -16,6 +17,18 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: tdtest
+          POSTGRES_PASSWORD: test-only-password
+          POSTGRES_DB: tdtest
+        options: >-
+          --health-cmd "pg_isready -U tdtest -d tdtest"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
         with:
@@ -47,5 +60,10 @@ jobs:
           if test -f scripts/cal-booking-webhook.test.mjs; then
             node --experimental-strip-types --test scripts/cal-booking-webhook.test.mjs
           fi
+          if test -f scripts/admin-dashboard.test.mjs; then
+            node --experimental-strip-types --test scripts/admin-dashboard.test.mjs
+          fi
+      - name: Isolated PostgreSQL admin and Cal.com KPI test
+        run: docker exec -i ${{ job.services.postgres.id }} psql -v ON_ERROR_STOP=1 -U tdtest -d tdtest < scripts/admin-dashboard-postgres-integration.sql
       - name: Next.js build and type checks (without live secrets)
         run: npm run build

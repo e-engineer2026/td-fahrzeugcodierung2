@@ -35,6 +35,11 @@ export default async function GuideAdminPage() {
     { name: "HTTPS-Preview-Rückleitung", ready: !!process.env.TD_GUIDE_SHOP_RETURN_ORIGIN },
   ];
   if (admin) return <GuideCatalogPage admin>
+    <div className="container-x pt-4">
+      <Link href="/konto/auftraege" className="inline-flex rounded-lg border border-blue-200 bg-white px-4 py-3 text-sm font-bold text-blue-800 hover:bg-blue-50">
+        Zum Admin-Dashboard mit Aufträgen, PDFs, Zahlungen und Terminen
+      </Link>
+    </div>
     <GuideAdminWorkspace production={production} preview={preview}
       liveMode={liveMode} liveChecks={liveChecks} paypalChecks={paypalChecks} />
   </GuideCatalogPage>;
