@@ -479,7 +479,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
           </div>}
 
 
-          <GuideTable rows={visibleGuideRows} renderDocumentActions={renderDocumentActions} />
+          <GuideTable rows={visibleGuideRows} renderDocumentActions={renderDocumentActions} publicCatalog={publicOnly} />
           {visibleGuideRows.length === 0 && (codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
               {codingSearch.trim()
