@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { validateGuideMaster, createGuideDraftPdf } from "../app/lib/masterPdfFactory.ts";
+import { validateGuideMaster, createGuideDraftPdf, hasReviewableSteps } from "../app/lib/masterPdfFactory.ts";
 
 const master = {
   id: "td-test-master", title: "Verkehrszeichenerkennung für geprüfte Variante",
@@ -45,6 +45,18 @@ test("PDF writer produces valid xref offsets, EOF and private draft banner", () 
   assert.ok(s.includes(Buffer.from("PRIVATER ENTWURF", "latin1").toString("hex")), "draft banner encoded in PDF stream");
 });
 
+test("Only explicitly reviewed, non-placeholder coding variants can generate drafts", () => {
+  assert.equal(hasReviewableSteps(master.variants[0]), false);
+  assert.equal(hasReviewableSteps({
+    ...master.variants[0], reviewed: true,
+  }), false, "test placeholders are not acceptable");
+  assert.equal(hasReviewableSteps({
+    ...master.variants[0], reviewed: true,
+    steps: [{ ecu: "09", path: "Anpassung Leuchte", original: "not active",
+      target: "active", note: "Test data, not a vehicle compatibility assertion" }],
+  }), true);
+});
+
 test("Master factory writes to private drafts and cannot publish by itself", () => {
   const route = fs.readFileSync("app/api/guide-shop/admin/master-factory/route.ts", "utf8");
   const registry = fs.readFileSync("app/api/guide-shop/admin/catalog-registry/route.ts", "utf8");
@@ -52,6 +64,8 @@ test("Master factory writes to private drafts and cannot publish by itself", () 
   const workspace = fs.readFileSync("app/components/GuideAdminWorkspace.tsx", "utf8");
   assert.match(route, /await isGuideAdmin\(\)/);
   assert.match(route, /td_guide_document_drafts/);
+  assert.match(route, /hasReviewableSteps\(variant\)/);
+  assert.match(route, /reviewed_source_hash=source_hash/);
   assert.match(route, /ON CONFLICT \(product_id\) DO NOTHING/);
   assert.doesNotMatch(route, /INSERT INTO td_guide_documents|SET status='paid'/);
   assert.match(route, /catalogGuideProduct\(slug\)/);
