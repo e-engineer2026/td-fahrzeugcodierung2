@@ -1,5 +1,5 @@
 import { GOLF7_VZE } from "./guideShopShared";
-import { findVzeDraft, VZE_VARIANT_DRAFTS, VZE_MODEL_PRICE_CENTS } from "./vzeVariantDrafts";
+import { findVzeDraft, VZE_MODEL_PRODUCTS, VZE_MODEL_PRICE_CENTS } from "./vzeVariantDrafts";
 import { catalogGuideProduct } from "./guideCatalogDocuments";
 import { findMqbGuideProduct } from "./mqbGuideProducts";
 
@@ -32,7 +32,7 @@ export function guideOrderProductFromId(productId: string): GuideOrderProduct | 
   if (productId.startsWith("catalog:")) return catalogGuideProduct(productId);
   const mqb = findMqbGuideProduct(productId);
   if (mqb) return mqb;
-  const draft = VZE_VARIANT_DRAFTS.find(item => item.productId === productId);
+  const draft = VZE_MODEL_PRODUCTS.find(item => item.productId === productId);
   return draft ? guideOrderProduct(draft.slug) : null;
 }
 

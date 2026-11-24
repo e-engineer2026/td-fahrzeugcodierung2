@@ -27,18 +27,18 @@ function loadTs(file, mocks = {}) {
 }
 
 const { GOLF7_VZE } = loadTs("app/lib/guideShopShared");
-const { VZE_VARIANT_DRAFTS } = loadTs("app/lib/vzeVariantDrafts");
+const { VZE_VARIANT_DRAFTS, VZE_MODEL_PRODUCTS } = loadTs("app/lib/vzeVariantDrafts");
 const {
   GUIDE_ADMIN_DOCUMENTS, VZE_ADMIN_DOCUMENTS, GOLF7_ADMIN_DOCUMENT, findVzeAdminDocument,
   vzeAdminStorageVersion, vzeAdminDisplayRevision,
 } = loadTs("app/lib/vzeAdminDocuments");
 
-test("Alle 28 VZE-Admin-PDFs sind eindeutig, ohne Änderungen an Shop-Produkt-IDs", () => {
+test("Alle VZE-Admin-PDFs sind eindeutig, ohne Änderungen an Shop-Produkt-IDs", () => {
   assert.equal(VZE_VARIANT_DRAFTS.length, 27);
-  assert.equal(VZE_ADMIN_DOCUMENTS.length, 28);
-  assert.equal(new Set(VZE_ADMIN_DOCUMENTS.map(doc => doc.slug)).size, 28);
-  assert.equal(new Set(VZE_ADMIN_DOCUMENTS.map(doc => doc.productId)).size, 28);
-  assert.deepEqual(VZE_ADMIN_DOCUMENTS.slice(1), VZE_VARIANT_DRAFTS);
+  assert.equal(VZE_ADMIN_DOCUMENTS.length, 38);
+  assert.equal(new Set(VZE_ADMIN_DOCUMENTS.map(doc => doc.slug)).size, 38);
+  assert.equal(new Set(VZE_ADMIN_DOCUMENTS.map(doc => doc.productId)).size, 38);
+  assert.deepEqual(VZE_ADMIN_DOCUMENTS.slice(1), VZE_MODEL_PRODUCTS);
   assert.equal(GOLF7_ADMIN_DOCUMENT.productId, GOLF7_VZE.id);
   assert.equal(GOLF7_ADMIN_DOCUMENT.sha256, GOLF7_VZE.expectedSha256);
   assert.equal(GOLF7_ADMIN_DOCUMENT.sku, GOLF7_VZE.sku);
@@ -109,7 +109,7 @@ test("Die Zuordnung verwendet alle Shop-Produkte und speichert eine bearbeitete 
   });
 
   const list = await (await GET()).json();
-  assert.equal(list.documents.length, 28 + MQB_GUIDE_PRODUCTS.length);
+  assert.equal(list.documents.length, VZE_ADMIN_DOCUMENTS.length + MQB_GUIDE_PRODUCTS.length);
   assert.equal(list.documents.find(doc => doc.slug === GOLF7_ADMIN_DOCUMENT.slug).available, true);
 
   const origin = "https://td.example";

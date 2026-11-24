@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react";
 import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLinks";
+import { MLBEVO_VZE_CODING_ID, mlbevoVzeGuideForVehicle, TOUAREG_CR_GUIDE_VEHICLE } from "../lib/mlbevoVzeModels";
+import { VZE_MODEL_PRICE_CENTS } from "../lib/vzeVariantDrafts";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { mqbRfkGuideForVehicle } from "../lib/mqbRfkProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
@@ -25,6 +27,7 @@ import { retrofitFocusFor } from "../lib/retrofitFocus";
 import { referenceIdeasForVehicle, type ReferenceIdea } from "../data/referenceIdeas";
 import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
 
+const guideVehicles = [...vehicles, TOUAREG_CR_GUIDE_VEHICLE];
 const manufacturers = ["Volkswagen", "Audi", "Škoda", "SEAT / CUPRA"] as const;
 type Manufacturer = (typeof manufacturers)[number];
 const guideCategories = ["Codierungen", ...ASSISTANCE_CATEGORIES, "Nachrüstungen", "Umbauten"] as const;
@@ -76,6 +79,20 @@ function availableModelCodings(vehicle: Vehicle, publishedSlugs?: readonly strin
   const hasModelGuide = (vehicle.platform === "MQB" || vehicle.platform === "MQB-A0") &&
     !!(vehicle.model === "Golf 7 (5G)" || vzePdfSlugForModel(vehicle.model));
   const modelGuideFallbacks: Coding[] = [];
+  const mlbevoGuide = mlbevoVzeGuideForVehicle(vehicle);
+  const showMlbevoGuide = mlbevoGuide && (!publishedSlugs || publishedSlugs.includes(mlbevoGuide.slug));
+  if (showMlbevoGuide) {
+    modelGuideFallbacks.push({
+      id: MLBEVO_VZE_CODING_ID,
+      name: mlbevoGuide.reviewOnly ? "Verkehrszeichenerkennung (VZE) · Prüffassung" : "Verkehrszeichenerkennung (VZE) freischalten",
+      price: VZE_MODEL_PRICE_CENTS / 100,
+      category: "Assistenzsysteme",
+      uiGroup: "Assistenz",
+      interfaceInfo: "VCDS für unterstützte Kanäle",
+      hardware: "VZE-fähige Frontkamera A5, passendes Kombiinstrument und Infotainment. Kameradatensatz, Freigaben und Softwarestand prüfen.",
+      requirements: mlbevoGuide.reviewOnly ? "Ein eindeutiger A5-Codierwert für diese Baureihe ist nicht belegt." : undefined,
+    });
+  }
   if (hasModelGuide && !standard.some(coding => /verkehrszeichenerkennung|\bvze\b/i.test(coding.name))) {
     const vze = codingCatalog.find(coding => coding.id === "vcds-vze");
     if (vze) modelGuideFallbacks.push(displayPdfGuideCoding(vze));
@@ -91,13 +108,14 @@ function availableModelCodings(vehicle: Vehicle, publishedSlugs?: readonly strin
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
     ...modelGuideFallbacks,
-    ...standard,
+    ...standard.filter(coding => !showMlbevoGuide || !vzeProductHref(coding.name, mlbevoGuide.slug)),
   ].filter(coding => !publishedSlugs ||
     publishedSlugs.includes(codingDocumentSlugForVehicle(vehicle, coding)))).sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
 
 /** Liefert für jeden angezeigten Eintrag die echte Download-ID. */
 function codingDocumentSlugForVehicle(vehicle: Vehicle, coding: Coding): string {
+  if (coding.id === MLBEVO_VZE_CODING_ID) return mlbevoVzeGuideForVehicle(vehicle)!.slug;
   const mqbPlatform = vehicle.platform === "MQB" || vehicle.platform === "MQB-A0";
   const modelPdfSlug = vehicle.model === "Golf 7 (5G)"
     ? "vw-golf-7-5g" : vzePdfSlugForModel(vehicle.model);
@@ -136,7 +154,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
   const [activeCategory, setActiveCategory] = useState<GuideCategory>("Codierungen");
 
   const models = useMemo(
-    () => vehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
+    () => guideVehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
       .sort((a, b) => a.model.localeCompare(b.model, "de", { numeric: true, sensitivity: "base" })),
     [manufacturer]
   );
@@ -270,12 +288,13 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         platform: vehicle?.platform
       });
       const golf7Vze = coding.id === "golf7-vze-pdf";
-      const vzeHref = vzeProductHref(coding.name, vzePdfSlug);
+      const mlbevoGuide = coding.id === MLBEVO_VZE_CODING_ID && vehicle ? mlbevoVzeGuideForVehicle(vehicle) : undefined;
+      const vzeHref = mlbevoGuide ? "/api/guide-shop/download/vze/" + mlbevoGuide.slug + "?liste=1" : vzeProductHref(coding.name, vzePdfSlug);
       return {
         id: "coding-" + coding.id,
         productHref: mqbGuide ? "/api/guide-shop/download/mqb/" + mqbGuide.slug + "?liste=1"
           : golf7Vze ? "/api/guide-shop/download/golf7-vze?liste=1" : vzeHref,
-        documentSlug: mqbGuide?.slug ?? (golf7Vze ? GOLF7_VZE_ADMIN_SLUG : vzeHref ? vzePdfSlug : undefined),
+        documentSlug: mqbGuide?.slug ?? (golf7Vze ? GOLF7_VZE_ADMIN_SLUG : vzeHref ? mlbevoGuide?.slug ?? vzePdfSlug : undefined),
         isProofDocument: !!mqbGuide,
         title: coding.name,
         requirements: guideVehicleRequirements({
@@ -285,7 +304,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         }),
         diagnosticInterface,
         description: details.description,
-        estimate: { step, level: guideDifficultyLevel(step), price: mqbGuide ? mqbGuide.priceCents / 100 : guidePrice(coding) }
+        estimate: { step, level: guideDifficultyLevel(step), price: mqbGuide ? mqbGuide.priceCents / 100 : mlbevoGuide ? VZE_MODEL_PRICE_CENTS / 100 : guidePrice(coding) }
       };
     }),
     ...visibleResearch.map((item) => {

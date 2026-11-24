@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { VZE_VARIANT_DRAFTS } from "../../lib/vzeVariantDrafts";
+import { VZE_MODEL_PRODUCTS } from "../../lib/vzeVariantDrafts";
 import { ensureGuideShopSchema } from "../../lib/guideShopDb";
 import { GOLF7_VZE } from "../../lib/guideShopShared";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "VZE-Modellanleitungen für MQB-Fahrzeuge | TD Fahrzeugcodierung",
+  title: "VZE-Modellanleitungen für MQB und MLBevo | TD Fahrzeugcodierung",
   description: "Modellbezogene VZE-Codieranleitungen. Kundenkauf erst nach ausdrücklicher PDF-Veröffentlichung.",
   robots: { index: false, follow: true },
 };
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 export default async function VzeModelDraftsPage() {
   // Veröffentlichungen sind nur produktbezogene, nicht zurückgezogene Dateieinträge.
   // Neue Entwürfe in td_guide_document_drafts werden niemals in dieser Liste gezeigt.
-  let published: typeof VZE_VARIANT_DRAFTS[number][] = [];
+  let published: typeof VZE_MODEL_PRODUCTS[number][] = [];
   let golf7Available = false;
   try {
     const sql = await ensureGuideShopSchema();
-    const ids = [...VZE_VARIANT_DRAFTS.map(d => d.productId), GOLF7_VZE.id];
+    const ids = [...VZE_MODEL_PRODUCTS.map(d => d.productId), GOLF7_VZE.id];
     const rows = await sql`SELECT product_id, sha256, assigned_filename,
       octet_length(file_data) AS file_size,
       encode(substring(file_data from 1 for 5), 'hex') AS pdf_header
@@ -28,7 +28,7 @@ export default async function VzeModelDraftsPage() {
       rows.some(row => row.product_id === id && Number(row.file_size) >= 16 &&
         row.pdf_header === "255044462d" &&
         (row.sha256 === expectedSha256 || typeof row.assigned_filename === "string"));
-    published = VZE_VARIANT_DRAFTS.filter(draft => publishedFile(draft.productId, draft.sha256));
+    published = VZE_MODEL_PRODUCTS.filter(draft => publishedFile(draft.productId, draft.sha256));
     golf7Available = publishedFile(GOLF7_VZE.id, GOLF7_VZE.expectedSha256);
   } catch {
     // Kein Datenbankstatus: keine potentiell unfreigegebenen Produkte zeigen.
@@ -49,7 +49,7 @@ export default async function VzeModelDraftsPage() {
           className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 px-4 py-3 last:border-b-0">
           <div>
             <p className="text-sm font-bold">{draft.name} <span className="text-slate-500">({draft.code})</span></p>
-            <p className="text-xs text-slate-500">{draft.sku} · VZE / Verkehrszeichenerkennung · VCDS / VCP, soweit kompatibel</p>
+            <p className="text-xs text-slate-500">{draft.sku} · {draft.platform ?? "MQB"} · {draft.reviewOnly ? "Prüffassung" : "Verkehrszeichenerkennung"}</p>
           </div>
           <Link href={"/codieranleitungen/vze-modelle/" + draft.slug}
             className="inline-flex rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-bold text-blue-800 hover:bg-blue-100">

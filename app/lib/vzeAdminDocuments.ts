@@ -4,7 +4,7 @@ import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
 import { MQB_RFK_PDF_PRODUCTS } from "./mqbRfkProducts";
 import { assistanceCategoryForName } from "./assistanceCategories";
 import { GOLF7_VZE } from "./guideShopShared";
-import { VZE_VARIANT_DRAFTS, type VzeVariantDraft } from "./vzeVariantDrafts";
+import { VZE_MODEL_PRODUCTS, type VzeVariantDraft } from "./vzeVariantDrafts";
 
 /** Gemeinsame Admin-Liste. Die Shop-Produkt-IDs bleiben unverändert, damit
  * bestehende PayPal-Käufe weiterhin dem richtigen privaten PDF zugeordnet sind.
@@ -22,7 +22,7 @@ export const GOLF7_ADMIN_DOCUMENT: VzeVariantDraft = {
 
 export const VZE_ADMIN_DOCUMENTS: readonly VzeVariantDraft[] = [
   GOLF7_ADMIN_DOCUMENT,
-  ...VZE_VARIANT_DRAFTS,
+  ...VZE_MODEL_PRODUCTS,
 ];
 
 export function findVzeAdminDocument(slug: string): VzeVariantDraft | undefined {
@@ -41,7 +41,7 @@ export function vzeAdminDisplayRevision(productId: string): string {
 export const GUIDE_ADMIN_DOCUMENTS = [
   ...VZE_ADMIN_DOCUMENTS.map(document => ({
     ...document,
-    title: "Verkehrszeichenerkennung (VZE) · " + document.name,
+    title: "Verkehrszeichenerkennung (VZE) · " + document.name + (document.platform ? " (" + document.code + ")" : "") + (document.reviewOnly ? " · Prüffassung" : ""),
     category: "Assistenzsysteme" as const,
     revision: vzeAdminDisplayRevision(document.productId),
   })),

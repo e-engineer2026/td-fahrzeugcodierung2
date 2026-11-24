@@ -1,3 +1,5 @@
+import { MLBEVO_VZE_PRODUCTS } from "./mlbevoVzeModels";
+
 /** Registrierte VZE-Produkte, einschliesslich der nur zur Admin-Freigabe vorgesehenen neuen MQB-Entwuerfe.
  * Ein Kauf setzt eine explizite Veröffentlichung des jeweiligen privaten PDFs UND
  * eine verifizierte Zahlung voraus. Keine pauschale Fahrzeugfreigabe. */
@@ -12,6 +14,8 @@ export type VzeVariantDraft = {
   sha256: string;
   filename: string;
   productId: string;
+  platform?: "MLBevo";
+  reviewOnly?: boolean;
 };
 export const VZE_VARIANT_DRAFTS: readonly VzeVariantDraft[] = [
   { slug: "vw-golf-sportsvan-am1", name: "VW Golf Sportsvan", code: "AM1", sku: "TD-VZE-VW-01", sha256: "05753910f355d20f0ce7d27facf5d1a84b475dad50a211093032400a49d156a7", filename: "vw-golf-sportsvan-am1_vze_fachfassung_rev10.pdf", productId: "vze-vw-golf-sportsvan-am1" },
@@ -44,6 +48,8 @@ export const VZE_VARIANT_DRAFTS: readonly VzeVariantDraft[] = [
   { slug: "cupra-ateca-kh7", name: "CUPRA Ateca", code: "KH7", sku: "TD-VZE-SE-06", sha256: "8d2329949222e761cad4a97adf6d57db642d7bf9289e8e217e900144e65452a5", filename: "cupra-ateca-kh7_vze_fachfassung_rev10.pdf", productId: "vze-cupra-ateca-kh7" },
 ] as const;
 
+export const VZE_MODEL_PRODUCTS: readonly VzeVariantDraft[] = [...VZE_VARIANT_DRAFTS, ...MLBEVO_VZE_PRODUCTS];
+
 export function findVzeDraft(slug: string): VzeVariantDraft | undefined {
-  return VZE_VARIANT_DRAFTS.find((entry) => entry.slug === slug);
+  return VZE_MODEL_PRODUCTS.find((entry) => entry.slug === slug);
 }
