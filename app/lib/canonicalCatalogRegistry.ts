@@ -61,18 +61,30 @@ export function canonicalRowsForModel(model: string): CanonicalCatalogRow[] {
 
 export function registryAudit(rows: readonly CanonicalCatalogRow[]) {
   const seen = new Set<string>();
+  const byName = new Map<string, string>();
+  const byPdf = new Map<string, string>();
   const duplicateKeys: string[] = [];
+  const duplicateLabelCandidates: string[] = [];
+  const sharedPdfCandidates: string[] = [];
   const invalidPrices: string[] = [];
   const reviewRequired: string[] = [];
   for (const row of rows) {
     const key = row.model + ":" + row.codingId;
     if (seen.has(key)) duplicateKeys.push(key);
     seen.add(key);
+    const nameKey = row.model + ":" + row.title.toLowerCase().normalize("NFKD")
+      .replace(/\\p{M}/gu, "").replace(/[^a-z0-9]+/g, "");
+    if (byName.has(nameKey)) duplicateLabelCandidates.push(key);
+    else byName.set(nameKey, key);
+    const pdfKey = row.model + ":" + row.pdfSlug;
+    if (byPdf.has(pdfKey)) sharedPdfCandidates.push(key);
+    else byPdf.set(pdfKey, key);
     if (row.servicePriceCents < 0 || row.pdfPriceCents < 0 ||
       !Number.isInteger(row.servicePriceCents) || !Number.isInteger(row.pdfPriceCents))
       invalidPrices.push(key);
     if (/assistenz|sfd2|kamera|radar|freischalt/i.test([row.category, row.hardware, row.requirements].join(" ")))
       reviewRequired.push(key);
   }
-  return { total: rows.length, duplicates: duplicateKeys, invalidPrices, reviewRequired: reviewRequired.length };
+  return { total: rows.length, duplicates: duplicateKeys, duplicateLabelCandidates,
+    sharedPdfCandidates, invalidPrices, reviewRequired: reviewRequired.length };
 }
