@@ -8,7 +8,9 @@ type RegistryRow = {
   draftStatus: "not_imported" | "draft" | "outdated" | "reviewed";
 };
 type ModelData = { rows: RegistryRow[]; sourceCount: number; storedCount: number;
-  audit: { total: number; duplicates: string[]; invalidPrices: string[]; reviewRequired: number } };
+  audit: { total: number; duplicates: string[]; duplicateLabelCandidates: string[];
+    sharedPdfCandidates: string[]; missingPdfMappingCandidates: string[];
+    invalidPrices: string[]; reviewRequired: number } };
 type Master = { id: string; title: string; revision: string;
   variants: Array<{ slug: string; model: string; reviewed: boolean }> };
 
@@ -141,7 +143,14 @@ export default function AdminCatalogFactoryPanel() {
       </label>
       {catalog && <>
         <p className="mt-3 text-sm text-slate-700">{catalog.sourceCount} bestehende Codierungen, {catalog.storedCount} bereits intern importiert.
-          {catalog.audit.duplicates.length ? " Duplikate in der Quelle gefunden." : ""}</p>
+          {catalog.audit.duplicates.length ? " Doppelte Katalog-IDs erkannt." : ""}</p>
+        <p className="mt-1 text-xs text-slate-600">
+          Mögliche doppelte Bezeichnungen: {catalog.audit.duplicateLabelCandidates.length} ·
+          Gemeinsam verwendete PDF-Ziele: {catalog.audit.sharedPdfCandidates.length} ·
+          Fehlende oder noch nicht unterstützte PDF-Zuordnungen: {catalog.audit.missingPdfMappingCandidates.length} ·
+          Technisch prüfbedürftige Einträge: {catalog.audit.reviewRequired}.
+          Alle Treffer bleiben zur manuellen Prüfung erhalten.
+        </p>
         <button type="button" disabled={busy || !model} onClick={() => void importModel()}
           className="mt-3 rounded-lg border border-blue-300 px-4 py-2 font-bold text-blue-800 disabled:opacity-50">
           Modellcodierungen in Prüfdatenbank importieren</button>
