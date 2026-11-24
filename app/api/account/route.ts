@@ -1,6 +1,7 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+import { ensureServiceOrderSchema } from "../../lib/serviceOrdersDb";
 
 export const runtime = "nodejs";
 
@@ -22,6 +23,9 @@ export async function DELETE() {
       created_at timestamptz NOT NULL DEFAULT now()
     )`;
     await sql`DELETE FROM saved_vehicles WHERE clerk_user_id = ${userId}`;
+    // Service requests contain customer contact data and must not outlive account deletion.
+    const serviceSql = await ensureServiceOrderSchema();
+    await serviceSql`DELETE FROM td_service_orders WHERE clerk_user_id = ${userId}`;
 
     const client = await clerkClient();
     await client.users.deleteUser(userId);
