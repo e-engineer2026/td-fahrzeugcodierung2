@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { GOLF7_VZE } from "../../../lib/guideShopShared";
 import { ensureGuideShopSchema } from "../../../lib/guideShopDb";
-import { VZE_VARIANT_DRAFTS } from "../../../lib/vzeVariantDrafts";
+import { VZE_MODEL_PRODUCTS } from "../../../lib/vzeVariantDrafts";
 import { MQB_GUIDE_PRODUCTS } from "../../../lib/mqbGuideProducts";
 import { isAvailableGuideDocument } from "../../../lib/guideDocuments";
 import { catalogDownloadHref } from "../../../lib/guideCatalogLinks";
@@ -21,7 +21,7 @@ export async function GET() {
       ORDER BY paid_at DESC NULLS LAST LIMIT 100`;
     const catalogIds = [...new Set(orders.map(order => String(order.product_id)).filter(id => id.startsWith("catalog:")))];
     const catalogProducts = catalogIds.map(catalogGuideProduct).filter(product => product !== null);
-    const productIds = [GOLF7_VZE.id, ...VZE_VARIANT_DRAFTS.map(draft => draft.productId),
+    const productIds = [GOLF7_VZE.id, ...VZE_MODEL_PRODUCTS.map(draft => draft.productId),
       ...MQB_GUIDE_PRODUCTS.map(product => product.id), ...catalogProducts.map(product => product.id)];
     const documents = await sql`SELECT product_id, sha256, assigned_filename, withdrawn FROM td_guide_documents
       WHERE product_id = ANY(${productIds}::text[])`;
@@ -35,7 +35,7 @@ export async function GET() {
         documentAvailable: hasDoc(GOLF7_VZE.id, GOLF7_VZE.expectedSha256),
         purchasedAt: paid?.paid_at ?? null, version: GOLF7_VZE.revision,
       },
-      vzeModels: VZE_VARIANT_DRAFTS.map(draft => {
+      vzeModels: VZE_MODEL_PRODUCTS.map(draft => {
         const purchase = orders.find(o => o.product_id === draft.productId && o.status === "paid");
         const isPending = orders.some(o => o.product_id === draft.productId && o.status === "pending");
         return {
