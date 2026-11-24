@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, LockKeyhole, MapPin, MessageCircle, Phone, Tag } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronDown, FileText, LockKeyhole, MapPin, MessageCircle, Phone, Tag } from "lucide-react";
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
@@ -47,6 +47,7 @@ export default function Home() {
         <h1 id="home-title">Dein Fahrzeug.<br />Mehr Möglichkeiten.</h1>
         <p className="td-hero-subtitle">Fahrzeugcodierung, Diagnose und Software für Volkswagen, Audi, Škoda, SEAT und CUPRA.</p>
         <div className="td-hero-actions"><a className="td-button" href="#fahrzeugauswahl">Fahrzeug auswählen<ArrowRight aria-hidden="true" /></a><Link className="td-button td-button-secondary td-vehicles-button" href="/fahrzeuge">Alle Fahrzeuge &amp; Preise</Link><a className="td-quiet-link" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />Frage per WhatsApp stellen</a></div>
+        <div className="mt-3"><Link className="td-button td-vehicles-button" href="/codieranleitungen"><FileText aria-hidden="true" />PDF-Codieranleitungen<ArrowRight aria-hidden="true" /></Link></div>
       </div></div>
     </section>
 
@@ -55,6 +56,8 @@ export default function Home() {
     <section id="buchen" className="td-container td-booking-area" aria-label="Fahrzeugcodierungen auswählen" tabIndex={-1}>
       <BookingConfigurator integrated />
     </section>
+
+    <section id="pdf-anleitungen" className="td-contact-intro" aria-labelledby="pdf-title"><div className="td-container"><div><p className="td-eyebrow">Selbst codieren</p><h2 id="pdf-title">Dein Fahrzeug. Deine Codierung.</h2><p>Fahrzeugspezifische PDF-Anleitungen mit Schritt-für-Schritt-Codierungen, Hardwarevoraussetzungen und Hinweisen zum benötigten Diagnoseinterface.</p><p>Codierungen · Assistenzsysteme · Anpassungen · Nachrüstungen · Umbauten</p></div><Link href="/codieranleitungen" className="td-button"><BookOpen aria-hidden="true" />PDF-Anleitungen entdecken<ArrowRight aria-hidden="true" /></Link></div></section>
 
     <section id="ablauf" className="td-process" aria-labelledby="process-title"><div className="td-container"><h2 id="process-title">So einfach geht’s.</h2><ol>{[
       ["Fahrzeug wählen", "Marke, Modell und Baujahr auswählen."],
