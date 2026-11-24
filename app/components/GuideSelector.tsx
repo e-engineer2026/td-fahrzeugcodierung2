@@ -5,6 +5,7 @@ import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react
 import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLinks";
 import { MLBEVO_VZE_CODING_ID, mlbevoVzeGuideForVehicle, TOUAREG_CR_GUIDE_VEHICLE } from "../lib/mlbevoVzeModels";
+import { mlbevoAssistanceGuidesForVehicle } from "../lib/mlbevoAssistanceGuides";
 import { VZE_MODEL_PRICE_CENTS } from "../lib/vzeVariantDrafts";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { mqbRfkGuideForVehicle } from "../lib/mqbRfkProducts";
@@ -101,6 +102,8 @@ function availableModelCodings(vehicle: Vehicle, publishedSlugs?: readonly strin
     const fla = codingCatalog.find(coding => coding.id === "vcds-fla");
     if (fla) modelGuideFallbacks.push(displayPdfGuideCoding(fla));
   }
+  const mlbevoAssistance = mlbevoAssistanceGuidesForVehicle(vehicle)
+    .filter(product => !publishedSlugs || publishedSlugs.includes(product.slug));
   // Modellbezogene Freischaltungs-PDFs haben Vorrang vor historischen generischen
   // Varianten wie „Lane Assist / Spurhalteassistent aktivieren“.
   return uniquePdfGuideCodings([
@@ -108,7 +111,11 @@ function availableModelCodings(vehicle: Vehicle, publishedSlugs?: readonly strin
     ...(vehicle.platform === "MQB" && mqbTjaGuideForVehicle(vehicle.model) ? [MQB_TJA_CODING] : []),
     ...(vehicle.platform === "MQB" && mqbTrailerGuideForVehicle(vehicle.model) ? [MQB_TRAILER_CODING] : []),
     ...modelGuideFallbacks,
-    ...standard.filter(coding => !showMlbevoGuide || !vzeProductHref(coding.name, mlbevoGuide.slug)),
+    ...mlbevoAssistance.map(product => product.coding),
+    ...standard.filter(coding =>
+      (!showMlbevoGuide || !vzeProductHref(coding.name, mlbevoGuide.slug)) &&
+      !(guideCategory(coding) === "Assistenzsysteme" &&
+        mlbevoAssistance.some(product => product.activation.test(coding.name)))),
   ].filter(coding => !publishedSlugs ||
     publishedSlugs.includes(codingDocumentSlugForVehicle(vehicle, coding)))).sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
 }
@@ -289,6 +296,8 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
       });
       const golf7Vze = coding.id === "golf7-vze-pdf";
       const mlbevoGuide = coding.id === MLBEVO_VZE_CODING_ID && vehicle ? mlbevoVzeGuideForVehicle(vehicle) : undefined;
+      const mlbevoAssistance = vehicle && mlbevoAssistanceGuidesForVehicle(vehicle)
+        .find(product => product.coding.id === coding.id);
       const vzeHref = mlbevoGuide ? "/api/guide-shop/download/vze/" + mlbevoGuide.slug + "?liste=1" : vzeProductHref(coding.name, vzePdfSlug);
       return {
         id: "coding-" + coding.id,
@@ -304,7 +313,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         }),
         diagnosticInterface,
         description: details.description,
-        estimate: { step, level: guideDifficultyLevel(step), price: mqbGuide ? mqbGuide.priceCents / 100 : mlbevoGuide ? VZE_MODEL_PRICE_CENTS / 100 : guidePrice(coding) }
+        estimate: { step, level: guideDifficultyLevel(step), price: mqbGuide ? mqbGuide.priceCents / 100 : mlbevoAssistance ? mlbevoAssistance.priceCents / 100 : mlbevoGuide ? VZE_MODEL_PRICE_CENTS / 100 : guidePrice(coding) }
       };
     }),
     ...visibleResearch.map((item) => {

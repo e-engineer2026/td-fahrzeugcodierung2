@@ -1,3 +1,4 @@
+import { MLBEVO_ASSISTANCE_PRODUCTS } from "./mlbevoAssistanceGuides";
 import { GOLF7_VZE_ADMIN_SLUG } from "./vzePdfVehicleLinks";
 import { catalogGuideProduct } from "./guideCatalogDocuments";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
@@ -53,6 +54,7 @@ export const GUIDE_ADMIN_DOCUMENTS = [
     code: "MQB",
   })),
   ...MQB_RFK_PDF_PRODUCTS,
+  ...MLBEVO_ASSISTANCE_PRODUCTS.map(product => ({ ...product, productId: product.id })),
 ];
 
 export function findGuideAdminDocument(slug: string) {
