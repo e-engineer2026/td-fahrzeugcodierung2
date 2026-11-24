@@ -108,5 +108,39 @@ export async function ensureGuideShopSchema() {
     assigned_filename text NOT NULL,
     uploaded_at timestamptz NOT NULL DEFAULT now()
   )`;
+
+  // New unified catalog is staged in parallel with the existing site data.
+  // Existing products, published PDFs and historical purchases remain untouched.
+  await sql`CREATE TABLE IF NOT EXISTS td_coding_registry (
+    id text PRIMARY KEY,
+    brand text NOT NULL,
+    model text NOT NULL,
+    coding_id text NOT NULL,
+    title text NOT NULL,
+    year_from smallint NOT NULL,
+    year_to smallint NOT NULL,
+    platform text NOT NULL,
+    category text NOT NULL,
+    service_price_cents integer NOT NULL CHECK (service_price_cents >= 0),
+    pdf_price_cents integer NOT NULL CHECK (pdf_price_cents >= 0),
+    pdf_slug text NOT NULL,
+    hardware text NOT NULL DEFAULT '',
+    requirements text NOT NULL DEFAULT '',
+    source_hash text NOT NULL,
+    reviewed_source_hash text,
+    updated_at timestamptz NOT NULL DEFAULT now(),
+    UNIQUE (brand, model, coding_id)
+  )`;
+  await sql`CREATE INDEX IF NOT EXISTS td_coding_registry_model_idx
+    ON td_coding_registry (model, category, title)`;
+  // Master templates require explicit per-vehicle variant steps before PDF generation.
+  // Master data never becomes a public PDF without the existing publish button.
+  await sql`CREATE TABLE IF NOT EXISTS td_guide_master_templates (
+    id text PRIMARY KEY,
+    title text NOT NULL,
+    revision text NOT NULL,
+    procedure jsonb NOT NULL,
+    updated_at timestamptz NOT NULL DEFAULT now()
+  )`;
   return sql;
 }
