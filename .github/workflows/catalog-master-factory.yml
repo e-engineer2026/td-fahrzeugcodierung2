@@ -39,5 +39,24 @@ jobs:
         run: node --experimental-strip-types --test scripts/catalog-master-factory.test.mjs
       - name: Isolated PostgreSQL integration test (no customer or Neon data)
         run: docker exec -i ${{ job.services.postgres.id }} psql -v ON_ERROR_STOP=1 -U tdtest -d tdtest < scripts/catalog-postgres-integration.sql
+      - name: Render generated PDF and validate draft visibility
+        env:
+          TD_PDF_TEST_OUTPUT: /tmp/td-guide-preview.pdf
+        run: |
+          node --experimental-strip-types --test scripts/catalog-master-factory.test.mjs
+          if ! command -v pdftotext >/dev/null || ! command -v pdftoppm >/dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+          fi
+          pdfinfo /tmp/td-guide-preview.pdf | grep -E '^Pages:'
+          pdftotext -layout /tmp/td-guide-preview.pdf /tmp/td-guide-preview.txt
+          grep -F 'PRIVATER ENTWURF' /tmp/td-guide-preview.txt
+          grep -F 'A5' /tmp/td-guide-preview.txt
+          pdftoppm -f 1 -l 1 -png -singlefile -scale-to 1200 /tmp/td-guide-preview.pdf /tmp/td-guide-preview
+      - name: Save private PDF preview for visual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: td-pdf-visual-check
+          path: /tmp/td-guide-preview.png
+          retention-days: 7
       - name: Next.js production build without live secrets
         run: npm run build
