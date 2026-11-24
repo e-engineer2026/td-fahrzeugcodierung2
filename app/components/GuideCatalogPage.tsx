@@ -5,6 +5,38 @@ import { AlertTriangle, ArrowLeft, ChevronDown, LockKeyhole, UserRound } from "l
 import { SFD1_CONTROL_UNITS, SFD1_ENGINE_EXCEPTION, SFD_VEHICLES } from "../lib/sfdProtection";
 
 export default function GuideCatalogPage({ children, admin = false }: { children: ReactNode; admin?: boolean }) {
+  const sfdOverview = (
+    <details className="group mt-3 max-w-4xl rounded-xl border border-slate-200 bg-white text-sm">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+        SFD-Fahrzeug- und Steuergeräteübersicht
+        <ChevronDown size={18} className="shrink-0 transition-transform group-open:rotate-180" aria-hidden="true" />
+      </summary>
+      <div className="border-t border-slate-200 px-4 pb-4 pt-3">
+        <h2 className="font-bold text-slate-900">Steuergeräte mit möglichem SFD (1)</h2>
+        <ul className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1 text-xs leading-5 text-slate-600 sm:grid-cols-2 lg:grid-cols-3">
+          {SFD1_CONTROL_UNITS.map((unit) => (
+            <li key={unit.address}><strong className="text-slate-900">{unit.address}</strong> – {unit.name}</li>
+          ))}
+        </ul>
+        <p className="mt-2 text-xs leading-5 text-slate-600">{SFD1_ENGINE_EXCEPTION}</p>
+        <h2 className="mt-5 font-bold text-slate-900">Fahrzeugmodelle und Beginn des SFD-Schutzes</h2>
+        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+          {SFD_VEHICLES.map((entry) => (
+            <div key={entry.catalogKey} className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs leading-5">
+              <p className="font-semibold text-slate-900">{entry.brand} {entry.name}</p>
+              <p className="text-slate-600">
+                {[
+                  entry.sfd1 ? `SFD (1) ab Bj. ${entry.sfd1}` : null,
+                  entry.sfd2 ? `SFD (2) ab Bj. ${entry.sfd2}` : null,
+                ].filter(Boolean).join(" · ")}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </details>
+  );
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <header className="border-b border-slate-200 bg-white">
@@ -40,39 +72,17 @@ export default function GuideCatalogPage({ children, admin = false }: { children
             </div>
           </details>
 
-          <details className="group mt-3 max-w-4xl rounded-xl border border-slate-200 bg-white text-sm">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 font-semibold text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
-              SFD-Fahrzeug- und Steuergeräteübersicht
-              <ChevronDown size={18} className="shrink-0 transition-transform group-open:rotate-180" aria-hidden="true" />
-            </summary>
-            <div className="border-t border-slate-200 px-4 pb-4 pt-3">
-              <h2 className="font-bold text-slate-900">Steuergeräte mit möglichem SFD (1)</h2>
-              <ul className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1 text-xs leading-5 text-slate-600 sm:grid-cols-2 lg:grid-cols-3">
-                {SFD1_CONTROL_UNITS.map((unit) => (
-                  <li key={unit.address}><strong className="text-slate-900">{unit.address}</strong> – {unit.name}</li>
-                ))}
-              </ul>
-              <p className="mt-2 text-xs leading-5 text-slate-600">{SFD1_ENGINE_EXCEPTION}</p>
-              <h2 className="mt-5 font-bold text-slate-900">Fahrzeugmodelle und Beginn des SFD-Schutzes</h2>
-              <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                {SFD_VEHICLES.map((entry) => (
-                  <div key={entry.catalogKey} className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-xs leading-5">
-                    <p className="font-semibold text-slate-900">{entry.brand} {entry.name}</p>
-                    <p className="text-slate-600">
-                      {[
-                        entry.sfd1 ? `SFD (1) ab Bj. ${entry.sfd1}` : null,
-                        entry.sfd2 ? `SFD (2) ab Bj. ${entry.sfd2}` : null,
-                      ].filter(Boolean).join(" · ")}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </details>
+          {admin && sfdOverview}
         </div>
       </section>
 
       {children}
+
+      {!admin && (
+        <div className="container-x pb-7">
+          <div className="mx-auto max-w-5xl">{sfdOverview}</div>
+        </div>
+      )}
 
       <footer className="border-t border-slate-200 bg-white">
         <div className="container-x flex flex-wrap items-center justify-between gap-4 py-7 text-sm text-slate-500">

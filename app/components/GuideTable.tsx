@@ -19,9 +19,10 @@ export type GuideTableRow = {
 export type RenderDocumentActions = (slug: string, title: string) => ReactNode;
 
 /** Einheitliche Darstellung; Werkzeuge nur mit ausgewiesener Eignung nennen. */
-export default function GuideTable({ rows, renderDocumentActions }: {
+export default function GuideTable({ rows, renderDocumentActions, publicCatalog = false }: {
   rows: GuideTableRow[];
   renderDocumentActions?: RenderDocumentActions;
+  publicCatalog?: boolean;
 }) {
   if (!rows.length) return null;
   return (
@@ -40,7 +41,7 @@ export default function GuideTable({ rows, renderDocumentActions }: {
               {(row.description || row.requirements || row.diagnosticInterface.qualification) && (
                 <details className="group mt-1.5">
                   <summary className="inline-flex cursor-pointer list-none items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600 [&::-webkit-details-marker]:hidden">
-                    Beschreibung
+                    {publicCatalog && row.description ? "Inhaltsvorschau" : "Beschreibung"}
                     <ChevronDown size={14} aria-hidden="true" className="transition-transform group-open:rotate-180" />
                   </summary>
                   <div className="mt-2 space-y-2 text-xs leading-5 text-slate-600">
