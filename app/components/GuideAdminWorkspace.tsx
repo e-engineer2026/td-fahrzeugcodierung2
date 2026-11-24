@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { CreditCard, FileText, Settings2 } from "lucide-react";
+import { CreditCard, Database, FileText, Settings2 } from "lucide-react";
 import GuideAdminManualRelease from "./GuideAdminManualRelease";
 import GuideAdminAccountOrders from "./GuideAdminAccountOrders";
 import GuideAdminVzeVariants from "./GuideAdminVzeVariants";
 import GuideSelector from "./GuideSelector";
+import AdminCatalogFactoryPanel from "./AdminCatalogFactoryPanel";
 
 type Check = { name: string; ready: boolean };
-type Tab = "payments" | "documents" | "more";
+type Tab = "payments" | "documents" | "catalog" | "more";
 type Props = {
   production: boolean;
   preview: boolean;
@@ -19,6 +20,7 @@ type Props = {
 
 const tabs: { id: Tab; label: string; Icon: typeof CreditCard }[] = [
   { id: "documents", label: "PDF-Dateien", Icon: FileText },
+  { id: "catalog", label: "Katalog & Vorlagen", Icon: Database },
   { id: "payments", label: "Zahlungen", Icon: CreditCard },
   { id: "more", label: "Weitere", Icon: Settings2 },
 ];
@@ -27,7 +29,7 @@ const tabs: { id: Tab; label: string; Icon: typeof CreditCard }[] = [
 export default function GuideAdminWorkspace({ production, preview, liveMode, liveChecks, paypalChecks }: Props) {
   const [active, setActive] = useState<Tab>("documents");
   return <div className="container-x py-5 sm:py-7">
-    <nav className="mx-auto mb-4 grid max-w-5xl grid-cols-3 gap-1.5 rounded-xl border border-slate-200 bg-slate-100 p-1.5" aria-label="PDF-Verwaltung">
+    <nav className="mx-auto mb-4 grid max-w-5xl grid-cols-4 gap-1.5 rounded-xl border border-slate-200 bg-slate-100 p-1.5" aria-label="PDF-Verwaltung">
       {tabs.map(({ id, label, Icon }) => <button key={id} type="button"
         aria-current={active === id ? "page" : undefined}
         onClick={() => setActive(id)}
@@ -47,6 +49,8 @@ export default function GuideAdminWorkspace({ production, preview, liveMode, liv
     {active === "documents" && <section aria-label="PDF-Dateien verwalten">
       {production ? <GuideAdminVzeVariants /> : <GuideSelector />}
     </section>}
+
+    {active === "catalog" && <AdminCatalogFactoryPanel />}
 
     {active === "more" && <section className="mx-auto max-w-4xl" aria-label="Weitere Funktionen">
       <p className="mt-4 text-sm text-slate-600">Sonderfälle und technische Informationen. Für normale Bestellungen nicht erforderlich.</p>
