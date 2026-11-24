@@ -60,11 +60,11 @@ function textLines(master: GuideMaster, variant: GuideVariant, title: string): A
     for (const t of wrapLine(text)) out.push({ text: t, bold });
   };
   add("TD Fahrzeugcodierung | Codieranleitung", true);
-  add("PRIVATER ENTWURF - NICHT VEROEFFENTLICHT - NICHT FREIGEGEBEN", true);
+  add("Fachinformation fuer qualifizierte Fahrzeugdiagnose", true);
   add(title, true);
   add("Baureihe: " + variant.model);
   add("Revision: " + master.revision + " | Vorlage: " + master.id);
-  add("Variante fachlich geprueft: " + (variant.reviewed ? "Vom Administrator markiert; Fahrzeug erneut prüfen" : "NEIN"));
+  add("Dokumentation der Variante: " + (variant.reviewed ? "Manuell fachlich geprüft, fahrzeugbezogene Prüfung bleibt erforderlich" : "Muster / ungeprüft"));
   add("Erstellt: " + new Date().toISOString().slice(0, 10));
   add("");
   add("Voraussetzungen und Funktion", true);
@@ -82,7 +82,7 @@ function textLines(master: GuideMaster, variant: GuideVariant, title: string): A
     add("");
   });
   add("Funktionskontrolle, Fehlerspeicher, Kalibrierung und Ruecksetzen fahrzeugspezifisch durchfuehren.");
-  add("Keine pauschale Zusicherung der Kompatibilitaet. Dieser Entwurf wird erst nach gesonderter Fachfreigabe im Adminbereich veroeffentlicht.");
+  add("Keine pauschale Zusicherung der Kompatibilitaet. Nur unter Beachtung der Fahrzeugausstattung und Herstellervorgaben anwenden.");
   return out;
 }
 
@@ -123,7 +123,7 @@ export function createGuideDraftPdf(master: GuideMaster, variant: GuideVariant, 
         (section ? 10.5 : item.bold ? 10.5 : 9.5) +
         " Tf 42 " + y.toFixed(2) + " Td " + literalHex(item.text) + " Tj ET");
     });
-    const footer = "TD Fahrzeugcodierung | ENTWURF | Seite " + (index + 1) + " / " + pages.length;
+    const footer = "TD Fahrzeugcodierung | Fachinformation | Seite " + (index + 1) + " / " + pages.length;
     commands.push("0.20 0.25 0.32 rg BT /F1 8 Tf 42 25 Td " +
       literalHex(footer) + " Tj ET");
     const stream = commands.join("\n") + "\n";
