@@ -13,6 +13,18 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: tdtest
+          POSTGRES_PASSWORD: test-only-password
+          POSTGRES_DB: tdtest
+        options: >-
+          --health-cmd "pg_isready -U tdtest -d tdtest"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,5 +37,7 @@ jobs:
         run: npx eslint app/lib/canonicalCatalogRegistry.ts app/lib/masterPdfFactory.ts app/api/guide-shop/admin/catalog-registry/route.ts app/api/guide-shop/admin/master-factory/route.ts app/components/AdminCatalogFactoryPanel.tsx
       - name: Targeted PDF factory and catalog regression tests
         run: node --experimental-strip-types --test scripts/catalog-master-factory.test.mjs
+      - name: Isolated PostgreSQL integration test (no customer or Neon data)
+        run: docker exec -i ${{ job.services.postgres.id }} psql -v ON_ERROR_STOP=1 -U tdtest -d tdtest < scripts/catalog-postgres-integration.sql
       - name: Next.js production build without live secrets
         run: npm run build
