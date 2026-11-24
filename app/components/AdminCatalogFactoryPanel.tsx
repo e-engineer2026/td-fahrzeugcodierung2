@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 type RegistryRow = {
-  id: string; model: string; title: string; pdfSlug: string;
+  id: string; model: string; title: string; pdfSlug: string; sourceHash: string;
   servicePriceCents: number; pdfPriceCents: number; requirements: string;
   draftStatus: "not_imported" | "draft" | "outdated" | "reviewed";
 };
@@ -75,7 +75,7 @@ export default function AdminCatalogFactoryPanel() {
     try {
       const response = await fetch(registryApi, { method: "PATCH",
         headers: { "Content-Type": "application/json" }, body: JSON.stringify({
-          id: draft.id, servicePriceCents: draft.servicePriceCents,
+          id: draft.id, sourceHash: draft.sourceHash, servicePriceCents: draft.servicePriceCents,
           pdfPriceCents: draft.pdfPriceCents, requirements: draft.requirements, reviewed: true,
         }) });
       const data = await response.json() as { saved?: boolean; error?: string };
