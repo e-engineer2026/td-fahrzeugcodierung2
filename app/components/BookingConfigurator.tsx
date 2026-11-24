@@ -10,6 +10,8 @@ import { sideProfiles } from "../lib/sideProfiles";
 import { vehicleHeroImage } from "../lib/vehicleHero";
 import { ChevronDown, Laptop, MapPin, FileDown, Sparkles } from "lucide-react";
 import ConfiguratorLiveActions from "./ConfiguratorLiveActions";
+import TechnicalPreflightCard from "./TechnicalPreflightCard";
+import { EMPTY_TECHNICAL_EVIDENCE, evaluateTechnicalPreflight, type TechnicalEvidence } from "../lib/technicalPreflight";
 import SaveVehicleCard from "./SaveVehicleCard";
 import FunctionExample, { hasFunctionExample } from "./FunctionExample";
 import { brands, vehicles } from "../data/catalog";
@@ -66,6 +68,9 @@ export default function BookingConfigurator({ integrated = false }: { integrated
   const [vehicleModel, setVehicleModel] = useState("");
   const [year, setYear] = useState(0);
   const [selected, setSelected] = useState<string[]>([]);
+  const [equipmentAnswers, setEquipmentAnswers] = useState<{ key: string; evidence: TechnicalEvidence }>({
+    key: "", evidence: EMPTY_TECHNICAL_EVIDENCE,
+  });
   const [quoteFile, setQuoteFile] = useState<File | null>(null);
   const [quoteShareMessage, setQuoteShareMessage] = useState("");
   useEffect(() => { setQuoteFile(null); setQuoteShareMessage(""); }, [brand, vehicleModel, year, mode, selected]);
@@ -156,6 +161,10 @@ export default function BookingConfigurator({ integrated = false }: { integrated
 
   const shown = available.filter((entry) => !showSelectedOnly || selected.includes(entry.id)).filter((entry) => activeGroup === "Alle" || displayCodingGroup(entry) === activeGroup);
   const selectedEntries = available.filter((entry) => !entry.reviewOnly && selected.includes(entry.id));
+  const equipmentKey = brand + "::" + vehicleModel + "::" + year;
+  const activeEquipment = equipmentAnswers.key === equipmentKey
+    ? equipmentAnswers.evidence : EMPTY_TECHNICAL_EVIDENCE;
+  const preflight = evaluateTechnicalPreflight(selectedEntries, year, activeEquipment);
   const codingSubtotal = selectedEntries.reduce((sum, entry) => sum + entry.price, 0);
   const sfdRequired = isSfd1 && selectedEntries.some((entry) => entry.sfd === "Ja");
   const sfdFee = sfdRequired ? 9 : 0;
@@ -168,7 +177,7 @@ export default function BookingConfigurator({ integrated = false }: { integrated
   const totalCents = Math.round(total * 100);
   const prepay = Math.round(totalCents * 0.7) / 100;
   const finalpay = (totalCents - Math.round(totalCents * 0.7)) / 100;
-  const bookingDisabled = !hasVehicle || !year || requiresProtectionReview || selectedEntries.length === 0;
+  const bookingDisabled = !hasVehicle || !year || requiresProtectionReview || selectedEntries.length === 0 || preflight.status !== "bookable";
   const paypalUrl = `https://paypal.me/TiDrechsler/${prepay.toFixed(2)}EUR`;
   const popular = useMemo(() => { const result: UnifiedCodingEntry[] = []; for (const term of popularTerms) { const hit = available.find((entry) => !entry.reviewOnly && entry.name.toLocaleLowerCase("de").includes(term) && !result.some((item) => item.id === entry.id)); if (hit) result.push(hit); if (result.length >= 4) break; } return result; }, [available]);
   const calBase = mode === "remote" ? "https://cal.com/timo-drechsler-lej6jm/remote-codierung" : "https://cal.com/timo-drechsler-lej6jm/vag-codierung-vor-ort";
@@ -214,6 +223,9 @@ export default function BookingConfigurator({ integrated = false }: { integrated
     {integrated && selectedVehicle && year > 0 && <SaveVehicleCard brand={brand} model={vehicleModel} year={year} codings={selectedEntries.map((entry) => entry.name)} />}
     {selectedEntries.length > 0 && <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4"><button type="button" onClick={shareSelection} className="rounded-lg bg-blue-700 px-4 py-2 font-bold text-white hover:bg-blue-800">Auswahl teilen</button><p role="status" className="mt-2 text-sm text-slate-700">{shareMessage}</p>{shareLink && <input aria-label="Link zur Codierungsauswahl" className="mt-2 w-full" readOnly value={shareLink} onFocus={(event) => event.currentTarget.select()} />}</div>}
     
+    {selectedEntries.length > 0 && <TechnicalPreflightCard
+      evidence={activeEquipment} result={preflight}
+      onChange={next => setEquipmentAnswers({ key: equipmentKey, evidence: next })} />}
     <ConfiguratorLiveActions snapshot={bookingDisabled ? null : { count: selectedEntries.length, subtotal: euro(subtotal), discount: euro(discount), total: euro(total), sfdFee, rate: Math.round(rate * 100), nextTier: upcomingTier ? String(upcomingTier) : "", nextDifference: upcomingTier ? euro(upcomingTier - subtotal) : "", mode, calUrl, vehicle: `${brand} ${selectedVehicle?.model} · ${year}`, codings: selectedEntries.map((entry) => entry.name), prepay, finalpay }} onBook={() => openBooking(mode === "remote")} onPayment={savePendingBooking} />
   </div>;
 }
