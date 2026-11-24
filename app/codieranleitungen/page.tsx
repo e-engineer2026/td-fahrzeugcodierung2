@@ -20,7 +20,11 @@ export const metadata: Metadata = {
  * Entwürfe, zurückgezogene Einträge und reine Produktkatalog-Datensätze bleiben intern.
  * Die Produkt-IDs in der Datenbank dürfen sich durch diese Anzeige nicht ändern.
  */
-export default async function CodieranleitungenPage() {
+export default async function CodieranleitungenPage({ searchParams }: { searchParams: Promise<{ brand?: string | string[]; model?: string | string[]; year?: string | string[] }> }) {
+  const params = await searchParams;
+  const initialBrand = typeof params.brand === "string" ? params.brand : undefined;
+  const initialModel = typeof params.model === "string" ? params.model : undefined;
+  const initialYear = typeof params.year === "string" && /^\d{4}$/.test(params.year) ? Number(params.year) : undefined;
   const publishedPdfSlugs = new Set<string>();
   try {
     const sql = await ensureGuideShopSchema();
@@ -54,7 +58,7 @@ export default async function CodieranleitungenPage() {
 
   return <GuideCatalogPage>
     <section className="container-x py-5 sm:py-7" aria-label="Anleitung und Fahrzeug auswählen">
-      <GuideSelector publishedCatalogSlugs={[...publishedPdfSlugs]} />
+      <GuideSelector key={JSON.stringify([initialBrand, initialModel, initialYear])} publishedCatalogSlugs={[...publishedPdfSlugs]} initialBrand={initialBrand} initialModel={initialModel} initialYear={initialYear} />
     </section>
   </GuideCatalogPage>;
 }
