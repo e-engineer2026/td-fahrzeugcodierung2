@@ -4,12 +4,25 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ModelVzeCheckout from "../../components/ModelVzeCheckout";
 import { catalogGuideProduct } from "../../lib/guideCatalogDocuments";
+import { catalogDocumentHref } from "../../lib/guideCatalogLinks";
 import { readGuidePdf } from "../../lib/guideDocuments";
 import { formatGuidePrice } from "../../lib/guidePricing";
 import { ensureGuideShopSchema } from "../../lib/guideShopDb";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "PDF-Codieranleitung", robots: { index: false } };
+export async function generateMetadata({ searchParams }: {
+  searchParams: Promise<{ produkt?: string | string[] }>;
+}): Promise<Metadata> {
+  const { produkt } = await searchParams;
+  const product = typeof produkt === "string" ? catalogGuideProduct(produkt) : null;
+  if (!product) return { robots: { index: false } };
+  return {
+    title: `${product.name} ${product.model} | PDF-Codieranleitung`,
+    description: `Professionelle PDF-Codieranleitung für ${product.name} am ${product.model}.`,
+    alternates: { canonical: catalogDocumentHref(product.slug) },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default async function CatalogDocumentPage({ searchParams }: {
   searchParams: Promise<{ produkt?: string | string[] }>;

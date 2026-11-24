@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "VZE-Modellanleitungen für MQB und MLBevo | TD Fahrzeugcodierung",
   description: "Modellbezogene VZE-Codieranleitungen. Kundenkauf erst nach ausdrücklicher PDF-Veröffentlichung.",
-  robots: { index: false, follow: true },
+  alternates: { canonical: "/codieranleitungen/vze-modelle" },
+  robots: { index: true, follow: true },
 };
 
 export default async function VzeModelDraftsPage() {

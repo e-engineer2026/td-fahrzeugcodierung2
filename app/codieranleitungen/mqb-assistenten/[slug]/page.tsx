@@ -10,10 +10,17 @@ import { findMqbGuideProduct } from "../../../lib/mqbGuideProducts";
 import { formatGuidePrice } from "../../../lib/guidePricing";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = {
-  title: "MQB-Prüfunterlage | TD Fahrzeugcodierung",
-  robots: { index: false, follow: true },
-};
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = findMqbGuideProduct(slug);
+  if (!product) return { robots: { index: false } };
+  return {
+    title: `${product.name} | PDF-Codieranleitung`,
+    description: product.description,
+    alternates: { canonical: `/codieranleitungen/mqb-assistenten/${encodeURIComponent(product.slug)}` },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default async function MqbGuidePage({ params }: { params: Promise<{ slug: string }> }) {
   const product = findMqbGuideProduct((await params).slug);
