@@ -4,7 +4,7 @@ import { isGuideAdmin } from "../../../../lib/guideAdmin";
 import { ensureGuideShopSchema } from "../../../../lib/guideShopDb";
 import { findGuideAdminDocument } from "../../../../lib/vzeAdminDocuments";
 import { catalogGuideProduct } from "../../../../lib/guideCatalogDocuments";
-import { createGuideDraftPdf, validateGuideMaster, type GuideMaster } from "../../../../lib/masterPdfFactory";
+import { createGuideDraftPdf, hasReviewableSteps, validateGuideMaster, type GuideMaster } from "../../../../lib/masterPdfFactory";
 
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" };
@@ -129,14 +129,8 @@ export async function POST(request: Request) {
         if (!variant || !document || (catalog && catalog.model !== variant.model))
           return NextResponse.json({ error: "Variante nicht fachlich zugeordnet: " + slug },
             { status: 422, headers });
-        if (!variant.reviewed)
-          return NextResponse.json({
-            error: "Codierschritte der Modellvariante sind noch nicht vom Admin als fachlich geprüft markiert."
-          }, { status: 422, headers });
-        // Never mistake placeholder instructions for an actual VCDS/VCP value.
-        if (variant.steps.some(step => /\b(?:platzhalter|testwert|pruefwert|prüfwert|tbd|todo|originalwert|zielwert)\b/i
-          .test(step.path + " " + step.original + " " + step.target)))
-          return NextResponse.json({ error: "Codierwerte enthalten Platzhalter." },
+        if (!hasReviewableSteps(variant))
+          return NextResponse.json({ error: "Ungeprüfte Codierschritte oder Platzhalter sind nicht zulässig." },
             { status: 422, headers });
         if (catalog) {
           const [sourceRow] = await sql`SELECT source_hash, reviewed_source_hash, pdf_slug
