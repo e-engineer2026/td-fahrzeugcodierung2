@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isGuideAdmin } from "../../../../lib/guideAdmin";
 import { ensureGuideShopSchema } from "../../../../lib/guideShopDb";
 import { catalogModels, canonicalRowsForModel, registryAudit } from "../../../../lib/canonicalCatalogRegistry";
+import { findGuideAdminDocument } from "../../../../lib/vzeAdminDocuments";
 
 export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store" };
@@ -20,8 +21,11 @@ export async function GET(request: Request) {
       pdf_slug AS "pdfSlug", hardware, requirements, source_hash AS "sourceHash",
       reviewed_source_hash AS "reviewedSourceHash"
       FROM td_coding_registry WHERE model=${model} ORDER BY title LIMIT 700`;
+    const missingPdfMappingCandidates = source
+      .filter(item => !findGuideAdminDocument(item.pdfSlug))
+      .map(item => item.codingId);
     return NextResponse.json({
-      model, audit: registryAudit(source),
+      model, audit: { ...registryAudit(source), missingPdfMappingCandidates },
       sourceCount: source.length, storedCount: rows.length,
       rows: source.map(item => {
         const stored = rows.find(row => row.id === item.id);
