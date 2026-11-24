@@ -1,0 +1,29 @@
+name: Catalog and PDF factory verification
+
+on:
+  pull_request:
+    branches: [main, feat/pdf-all-catalog-rows]
+  push:
+    branches: [feature/canonical-catalog-pdf-factory-20261124]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install exact dependencies
+        run: npm ci
+      - name: Lint new registry, PDF and admin modules
+        run: npx eslint app/lib/canonicalCatalogRegistry.ts app/lib/masterPdfFactory.ts app/api/guide-shop/admin/catalog-registry/route.ts app/api/guide-shop/admin/master-factory/route.ts app/components/AdminCatalogFactoryPanel.tsx
+      - name: Targeted PDF factory and catalog regression tests
+        run: node --experimental-strip-types --test scripts/catalog-master-factory.test.mjs
+      - name: Next.js production build without live secrets
+        run: npm run build
