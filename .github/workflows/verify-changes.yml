@@ -1,0 +1,47 @@
+name: Verify website changes
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches:
+      - feature/central-service-orders-20261123
+      - security/pdf-payment-claims-20261123
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Install exact dependencies
+        run: npm ci
+      - name: Lint newly added TypeScript files
+        shell: bash
+        run: |
+          mapfile -t files < <(git diff --name-only --diff-filter=A origin/main...HEAD | grep -E '^app/.*\.(ts|tsx)$' || true)
+          if (( ${#files[@]} > 0 )); then
+            npx eslint "${files[@]}"
+          else
+            echo "No new TypeScript files to lint"
+          fi
+      - name: Targeted regression tests (unchanged legacy suite tracked separately)
+        shell: bash
+        run: |
+          if test -f scripts/service-orders.test.mjs; then
+            node --experimental-strip-types --test scripts/service-orders.test.mjs
+          fi
+          if test -f scripts/payment-claims.test.mjs; then
+            node --experimental-strip-types --test scripts/payment-claims.test.mjs
+          fi
+      - name: Next.js build and type checks (without live secrets)
+        run: npm run build

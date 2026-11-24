@@ -45,10 +45,22 @@ export async function POST(request: Request) {
     if (!verified)
       return NextResponse.json({ error: "PayPal hat die Zahlung noch nicht vollständig bestätigt." },
         { status: 422, headers });
-    const update = await sql`UPDATE td_guide_guest_orders
-      SET status='paid', paypal_capture_id=${verified.captureId}, paid_at=now()
+    // PayPal-confirmed capture and claim are persisted atomically.
+    // A previously used capture ID cannot pay a second order.
+    const captureId = verified.captureId.toUpperCase();
+    const update = await sql`WITH eligible AS (
+      SELECT id FROM td_guide_guest_orders
       WHERE id=${localId}::uuid AND guest_token_hash=${guestHash} AND status='pending'
-      RETURNING id`;
+      FOR UPDATE
+    ), claimed AS (
+      INSERT INTO td_guide_payment_claims (transaction_id, claim_kind, owner_reference)
+      SELECT ${captureId}, 'guest', ${localId} FROM eligible
+      ON CONFLICT (transaction_id) DO NOTHING RETURNING transaction_id
+    )
+    UPDATE td_guide_guest_orders SET status='paid', paypal_capture_id=${captureId}, paid_at=now()
+    WHERE id=${localId}::uuid AND guest_token_hash=${guestHash} AND status='pending'
+      AND EXISTS (SELECT 1 FROM claimed)
+    RETURNING id`;
     if (!update.length) {
       const [paid] = await sql`SELECT id FROM td_guide_guest_orders WHERE
         id=${localId}::uuid AND guest_token_hash=${guestHash} AND status='paid'`;
