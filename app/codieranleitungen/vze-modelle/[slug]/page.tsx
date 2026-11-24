@@ -8,11 +8,17 @@ import { readGuidePdf } from "../../../lib/guideDocuments";
 import ModelVzeCheckout from "../../../components/ModelVzeCheckout";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = {
-  title: "Verkehrszeichenerkennung · VZE-Modellanleitung | TD Fahrzeugcodierung",
-  description: "Professionelle VZE-Fachanleitungen für ausgewählte MQB- und MLBevo-Fahrzeuge, mit A5-, STG17- und 5F-Variantenprüfung.",
-  robots: { index: false, follow: true },
-};
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = findVzeDraft(slug);
+  if (!product) return { robots: { index: false } };
+  return {
+    title: `Verkehrszeichenerkennung (VZE) ${product.name} | PDF-Anleitung`,
+    description: `PDF-Codieranleitung zur Verkehrszeichenerkennung für ${product.name}: Voraussetzungen, Codierung und Funktionsprüfung.`,
+    alternates: { canonical: `/codieranleitungen/vze-modelle/${encodeURIComponent(product.slug)}` },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default async function ModelVzePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

@@ -13,7 +13,8 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Golf 7 Verkehrszeichenerkennung · PDF-Dokument | TD Fahrzeugcodierung",
   description: "Technische Prüfunterlagen für Verkehrszeichenerkennung (VZE) am VW Golf 7 / 7.5.",
-  robots: { index: false, follow: true },
+  alternates: { canonical: "/codieranleitungen/golf7-vze" },
+  robots: { index: true, follow: true },
 };
 export default async function Golf7VzePage() {
   const mode = configuredShopMode();
