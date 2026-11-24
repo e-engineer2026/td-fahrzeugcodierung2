@@ -25,5 +25,19 @@ export async function ensureServiceOrderSchema() {
     ON td_service_orders (clerk_user_id, created_at DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS td_service_orders_admin_idx
     ON td_service_orders (status, created_at DESC)`;
+  // Only authenticated Cal.com webhook deliveries are stored. Never store the raw payload.
+  // Events are append-only so cancellations and reschedules remain visible to staff.
+  await sql`CREATE TABLE IF NOT EXISTS td_service_cal_events (
+    event_hash text PRIMARY KEY,
+    booking_uid text NOT NULL,
+    trigger text NOT NULL CHECK (trigger IN ('BOOKING_CREATED', 'BOOKING_RESCHEDULED', 'BOOKING_CANCELLED')),
+    attendee_email text NOT NULL,
+    proposed_order_id uuid,
+    start_time timestamptz,
+    event_time timestamptz NOT NULL,
+    received_at timestamptz NOT NULL DEFAULT now()
+  )`;
+  await sql`CREATE INDEX IF NOT EXISTS td_service_cal_events_uid_idx
+    ON td_service_cal_events (booking_uid, event_time DESC)`;
   return sql;
 }
