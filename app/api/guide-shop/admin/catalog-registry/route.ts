@@ -91,11 +91,12 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "Nicht berechtigt." }, { status: 403, headers });
   if (request.headers.get("origin") !== new URL(request.url).origin)
     return NextResponse.json({ error: "Ungültige Herkunft." }, { status: 403, headers });
-  let data: { id?: unknown; servicePriceCents?: unknown; pdfPriceCents?: unknown; requirements?: unknown; reviewed?: unknown };
+  let data: { id?: unknown; sourceHash?: unknown; servicePriceCents?: unknown; pdfPriceCents?: unknown; requirements?: unknown; reviewed?: unknown };
   try { data = await request.json(); } catch {
     return NextResponse.json({ error: "Ungültige Daten." }, { status: 400, headers });
   }
   if (typeof data?.id !== "string" || !/^[a-f0-9]{64}$/.test(data.id) ||
+      typeof data.sourceHash !== "string" || !/^[a-f0-9]{64}$/.test(data.sourceHash) ||
       !Number.isInteger(data.servicePriceCents) || typeof data.servicePriceCents !== "number" ||
       data.servicePriceCents < 0 || data.servicePriceCents > 2_000_000 ||
       !Number.isInteger(data.pdfPriceCents) || typeof data.pdfPriceCents !== "number" ||
@@ -106,12 +107,19 @@ export async function PATCH(request: Request) {
   }
   try {
     const sql = await ensureGuideShopSchema();
+    const [current] = await sql`SELECT model, source_hash FROM td_coding_registry WHERE id=${data.id}`;
+    if (!current) return NextResponse.json({ error: "Katalogzeile vorher importieren." }, { status: 404, headers });
+    const fresh = canonicalRowsForModel(String(current.model)).find(item => item.id === data.id);
+    if (!fresh || current.source_hash !== fresh.sourceHash || data.sourceHash !== fresh.sourceHash)
+      return NextResponse.json({
+        error: "Die Katalogquelle hat sich geändert. Modell erst erneut importieren und prüfen."
+      }, { status: 409, headers });
     const [row] = await sql`UPDATE td_coding_registry
       SET service_price_cents=${data.servicePriceCents},
         pdf_price_cents=${data.pdfPriceCents},
         requirements=${data.requirements},
         reviewed_source_hash=source_hash, updated_at=now()
-      WHERE id=${data.id} RETURNING id`;
+      WHERE id=${data.id} AND source_hash=${data.sourceHash} RETURNING id`;
     return row ? NextResponse.json({ saved: true, publiclyPublished: false }, { headers }) :
       NextResponse.json({ error: "Katalogzeile vorher importieren." }, { status: 404, headers });
   } catch {
