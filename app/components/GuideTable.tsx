@@ -46,16 +46,14 @@ export default function GuideTable({ rows, renderDocumentActions, publicCatalog 
                   </summary>
                   <div className="mt-2 space-y-2 text-xs leading-5 text-slate-600">
                     {row.description && <p><strong className="text-slate-800">Funktion:</strong> {row.description}</p>}
-                    {row.isProofDocument && <p><strong className="text-slate-800">PDF-Prüfunterlage:</strong> Golf 7/7.5 als Referenz. Die Eignung ist je Fahrzeug zu prüfen.</p>}
                     <p><strong className="text-slate-800">Hardware / Voraussetzungen:</strong> {row.requirements || "Fahrzeugspezifisch prüfen"}</p>
-                    <p><strong className="text-slate-800">Interface-Hinweis:</strong> {row.diagnosticInterface.qualification}</p>
                   </div>
                 </details>
               )}
             </div>
             <div role="cell" className="col-span-2 min-w-0 sm:col-span-1 sm:col-start-2 sm:row-start-1">
               <p className="text-[11px] font-semibold text-slate-600 sm:sr-only">Interface</p>
-              <p className="mt-0.5 text-xs font-semibold leading-5 text-slate-700 sm:mt-0" title={row.diagnosticInterface.qualification}>{row.diagnosticInterface.label}</p>
+              <p className="mt-0.5 text-xs font-semibold leading-5 text-slate-700 sm:mt-0">{row.diagnosticInterface.label}</p>
               {row.diagnosticInterface.sfdNotice && <p className="mt-1 text-[11px] leading-4 text-amber-800">{row.diagnosticInterface.sfdNotice}</p>}
             </div>
             <div role="cell" className="col-start-2 row-start-1 flex justify-end sm:col-start-3">

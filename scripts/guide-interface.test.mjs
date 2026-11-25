@@ -4,7 +4,7 @@ import { guideInterface } from "../app/lib/guideInterface.ts";
 import { guideVehicleRequirements } from "../app/lib/guideVehicleRequirements.ts";
 
 test("VCDS nur bei belegtem reinen Anpassungsschritt", () => {
-  assert.equal(guideInterface({ title: "Lane Assist letzte Einstellung speichern", interfaceInfo: "VCDS", vehicleYear: 2018 }).label, "VCDS / VCP");
+  assert.equal(guideInterface({ title: "Lane Assist letzte Einstellung speichern", interfaceInfo: "VCDS", vehicleYear: 2018 }).label, "VCDS / VCP (Codierung)");
   assert.equal(guideInterface({ title: "Coming Home anpassen", interfaceInfo: "VCDS; ggf. VCP oder ODIS", vehicleYear: 2016 }).label, "Interfaceprüfung erforderlich");
 });
 
@@ -57,17 +57,17 @@ test("Modellreihe mit möglichen SFD2-Baujahren erfordert zusätzliche Prüfung"
   assert.equal(guideInterface({
     title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS", platform: "MQBevo",
     vehicleYear: 2020, vehicleEndYear: 2026
-  }).label, "VCDS / VCP");
+  }).label, "VCDS / VCP (Codierung)");
 });
 
 test("SFD1-Online-Freischaltung und konkretes Baujahr anzeigen", () => {
   const golf = guideInterface({ title: "Zeigertest aktivieren", interfaceInfo: "VCDS",
     vehicleYear: 2019, vehicleEndYear: 2026, platform: "MQBevo", sfd1From: 2019 });
-  assert.equal(golf.label, "VCDS / VCP");
+  assert.equal(golf.label, "VCDS / VCP (Codierung)");
   assert.equal(golf.sfdNotice, "SFD (1) ab Bj. 2019");
   const born = guideInterface({ title: "Spiegelabsenkung anpassen", interfaceInfo: "VCDS \/ OBD11",
     vehicleYear: 2021, vehicleEndYear: 2026, platform: "MEB", sfd1From: 2021 });
-  assert.equal(born.label, "VCDS / VCP");
+  assert.equal(born.label, "VCDS / VCP (Codierung)");
   assert.equal(born.sfdNotice, "SFD (1) ab Bj. 2021");
   const oldCar = guideInterface({ title: "Komfortblinken anpassen", interfaceInfo: "VCDS", vehicleYear: 2015 });
   assert.equal(oldCar.sfdNotice, undefined);
@@ -86,15 +86,15 @@ test("Eigene Standardcodierungen erhalten eine funktionsbezogene Interfacezuordn
     title: "Komfortblinken Anzahl Blinkzyklen ändern",
     interfaceInfo: "VCDS; je nach Steuergerät ggf. VCP oder ODIS",
     category: "Codierungen", source: "catalog", vehicleYear: 2015
-  }).label, "VCDS / VCP");
+  }).label, "VCDS / VCP (Codierung)");
   assert.equal(guideInterface({
     title: "Reifendruckkontrolle über ABS aktivieren",
     category: "Codierungen", source: "catalog", vehicleYear: 2015
-  }).label, "VCDS / VCP");
+  }).label, "VCDS / VCP (Codierung)");
   assert.equal(guideInterface({
     title: "Lane Assist Warnverzögerung anpassen",
     category: "Assistenzsysteme", source: "catalog", vehicleYear: 2021, sfd1From: 2021
-  }).label, "VCDS / VCP");
+  }).label, "VCDS / VCP (Codierung)");
 });
 
 test("Komplexe Arbeiten ohne nachgewiesenes Verfahren bekommen keine pauschale VCDS-Freigabe", () => {
@@ -115,7 +115,7 @@ test("Komplexe Arbeiten ohne nachgewiesenes Verfahren bekommen keine pauschale V
 
 test("VCP für belegte VCDS-Codierungen mitnennen, nicht bei Herstellerfreigaben", () => {
   const coding = guideInterface({title:"Komfortblinken anpassen", interfaceInfo:"VCDS", source:"catalog", category:"Codierungen", vehicleYear:2017});
-  assert.equal(coding.label, "VCDS / VCP");
+  assert.equal(coding.label, "VCDS / VCP (Codierung)");
   const zdc = guideInterface({title:"QQ2 Ambientebeleuchtung", note:"VCP-Parametrierung mittels ZDC erforderlich", vehicleYear:2022});
   assert.equal(zdc.label, "VCP");
   assert.doesNotMatch(zdc.label, /VCDS/);
