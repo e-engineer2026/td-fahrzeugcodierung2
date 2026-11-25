@@ -334,7 +334,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   const vcdsDocumented = (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b/.test(hint)) ||
     (/\bvcds\b/.test(note) && !/\bvcp\b|\bodis\b/.test(note));
   if (vcdsDocumented && adjustment && !modern) {
-    return withSfd("VCDS / VCP", "Beide Werkzeuge sind für den Codier-/Anpassungsschritt grundsätzlich geeignet, sofern das jeweilige Steuergerät und der Kanal unterstützt werden. Für SFD1 ist eine passende Freischaltung erforderlich.", false);
+    return withSfd("VCDS / VCP (Codierung)", "Beide Werkzeuge sind für den Codier-/Anpassungsschritt grundsätzlich geeignet, sofern das jeweilige Steuergerät und der Kanal unterstützt werden. Für SFD1 ist eine passende Freischaltung erforderlich.", false);
   }
 
   // Eindeutig in vorhandenen Codierdaten als VCDS hinterlegte Aktivierung,
@@ -342,7 +342,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   if (/\bvcds\b/.test(hint) && !/\bvcp\b|\bodis\b/.test(hint) && !modern &&
       !/nachrüst|umbau|umrüst|aktivieren \/ anpassen|freischalt|kalibrier|grundstellung|lizenz/.test(title) &&
       !/parametrier|kalibrier|grundeinstellung|online|ge[kc]o|sfd2/.test(note)) {
-    return withSfd("VCDS / VCP", "Nur für den dokumentierten Codier-/Anpassungsschritt. Die tatsächliche VCP-Unterstützung hängt von Interface, Steuergerät und Softwarestand ab.", false);
+    return withSfd("VCDS / VCP (Codierung)", "Nur für den dokumentierten Codier-/Anpassungsschritt. Die tatsächliche VCP-Unterstützung hängt von Interface, Steuergerät und Softwarestand ab.", false);
   }
 
   if (modern) return withSfd(input.source ? "ODIS Service (Online)" : "Herstellerverfahren prüfen",
@@ -358,7 +358,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
   const complexStep =
     /nachrüst|nachruest|retrofit|umbau|umrüst|umruest|tausch|flash|update|parametrier|kalibrier|grundstellung|komponentenschutz|wegfahrsperre|schl[üu]ssel.*anlern|carplay|android.auto|mirrorlink|app.connect|mib.*upgrade|mmi.*upgrade|\bacc\b.*aktivier|pacc|travel.assist.*aktivier|360.|area.view.*aktivier|virtual.cockpit.*nachrüst/i.test(title);
   if (ordinaryCoding && typicalVcdsCoding && !complexStep) {
-    return withSfd("VCDS / VCP", "Beide für reine Codier-/Anpassungsarbeiten möglich, sofern der konkrete Kanal in VCDS und VCP unterstützt wird. Kein Nachweis für zusätzliche Parametrierung, Lizenzen oder Herstellerfreigaben.");
+    return withSfd("VCDS / VCP (Codierung)", "Beide für reine Codier-/Anpassungsarbeiten möglich, sofern der konkrete Kanal in VCDS und VCP unterstützt wird. Kein Nachweis für zusätzliche Parametrierung, Lizenzen oder Herstellerfreigaben.");
   }
 
   // Nur explizit dokumentierte, allein benötigte Werkzeuge ausweisen.
@@ -427,8 +427,7 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
       return withSfd("VCDS / VCP",
         "Für den fahrzeugseitigen Codier-/Anpassungsanteil sind VCDS beziehungsweise VCP die naheliegenden Werkzeuge. Ob darüber hinaus eine Parametrierung, Kalibrierung oder Herstellerfreigabe nötig ist, ist im konkreten Nachrüstfall offen; keine bestätigte Komplettfreigabe.");
     }
-    return withSfd("VCDS / VCP",
-      "Voraussichtliche Zuordnung für einen Codier-/Anpassungsschritt. Fahrzeug, vorhandene Hardware, Steuergeräte-Teilenummer, Softwarestand und erreichbare Kanäle müssen vor Erstellung einer professionellen PDF-Anleitung nachgewiesen werden.");
+    return withSfd("VCDS / VCP", "");
   }
 
   // Ohne Quellklassifikation keine Behauptung zur Machbarkeit.
