@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, ChevronDown, LockKeyhole, MapPin, MessageCircle, Phone, Tag } from "lucide-react";
+import { ArrowRight, ChevronDown, LockKeyhole, MapPin, MessageCircle, Phone, Tag } from "lucide-react";
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
@@ -72,8 +72,6 @@ export default function Home() {
         ))}
       </ul>
     </section>
-
-    <section id="pdf-anleitungen" className="td-contact-intro" aria-labelledby="pdf-title"><div className="td-container"><div><p className="td-eyebrow">Selbst codieren</p><h2 id="pdf-title">Dein Fahrzeug. Deine Codierung.</h2><p>Fahrzeugspezifische PDF-Anleitungen mit Schritt-für-Schritt-Codierungen, Hardwarevoraussetzungen und Hinweisen zum benötigten Diagnoseinterface.</p><p>Codierungen · Assistenzsysteme · Anpassungen · Nachrüstungen · Umbauten</p></div><Link href="/codieranleitungen" className="td-button"><BookOpen aria-hidden="true" />PDF-Anleitungen entdecken<ArrowRight aria-hidden="true" /></Link></div></section>
 
     <section id="ablauf" className="td-process" aria-labelledby="process-title"><div className="td-container"><h2 id="process-title">So einfach geht’s.</h2><ol>{[
       ["Fahrzeug wählen", "Marke, Modell und Baujahr auswählen."],
