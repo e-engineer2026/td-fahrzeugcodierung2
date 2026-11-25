@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { vehicleAdvice } from "./lib/vehicleAdvice";
 import { seoVehicles, vehiclePath } from "./lib/vehicleSeo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -31,6 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/steuergeraete-flash`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/fahrzeuge`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/codieranleitungen`, changeFrequency: "weekly", priority: 0.8 },
+    ...vehicleAdvice.map(({ slug }) => ({ url: `${base}/ratgeber/${slug}` })),
     ...vehiclePages,
     { url: `${base}/impressum`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${base}/datenschutz`, changeFrequency: "yearly", priority: 0.2 },

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { needsProtectionReview, vehicleSpecificCodings, protectionReviewMessage } from "../../../lib/vehicleCodings";
 import { codingGroups } from "../../../data/catalog";
 import { priorityVehicleSeoByPath as prioritySeoByPath } from "../../../lib/priorityVehicleSeo";
+import { vehicleAdvice } from "../../../lib/vehicleAdvice";
 import { findVehicleBySlugs, seoVehicles, vehicleBrandSlug, vehicleModelSlug } from "../../../lib/vehicleSeo";
 
 const BASE = "https://td-fahrzeugcodierung.de";
@@ -64,6 +65,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
 
   const seoKey = `${params.brand}/${params.model}`;
   const priority = prioritySeoByPath[seoKey];
+  const adviceLinks = vehicleAdvice.filter(({ vehicleKeys }) => vehicleKeys.includes(seoKey));
   const name = vehicleDisplayName(vehicle);
   const reviewFirst = !vehicle.diagnosticsOnly && needsProtectionReview(vehicle.startYear);
   const contactHref = "/#kontakt";
@@ -194,6 +196,17 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
                 );
               })}
             </div>}
+
+            {adviceLinks.length > 0 && (
+              <section className="mt-10 rounded-2xl border border-blue-100 bg-white p-5 sm:p-6">
+                <h2 className="text-2xl font-black">Ratgeber zu deinem Fahrzeug</h2>
+                <ul className="mt-3 space-y-2">
+                  {adviceLinks.map(({ slug, title }) => (
+                    <li key={slug}><Link href={`/ratgeber/${slug}`} className="font-semibold text-blue-700 hover:underline">{title}</Link></li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
               <h2 className="text-2xl font-black">Technische Voraussetzungen beim {name}</h2>

@@ -12,6 +12,7 @@ import HomeMenu from "./components/HomeMenu";
 import HomeVehicleFinder from "./components/HomeVehicleFinder";
 import HeroVehicleCarousel from "./components/HeroVehicleCarousel";
 import VehicleSelectionBridge from "./components/VehicleSelectionBridge";
+import { vehicleAdvice } from "./lib/vehicleAdvice";
 import "./redesign.css";
 
 const whatsapp = "https://wa.me/4915563047044";
@@ -59,6 +60,17 @@ export default function Home() {
 
     <section id="buchen" className="td-container td-booking-area" aria-label="Fahrzeugcodierungen auswählen" tabIndex={-1}>
       <BookingConfigurator integrated />
+    </section>
+
+    <section className="td-container py-10 sm:py-12" aria-labelledby="vehicle-advice">
+      <h2 id="vehicle-advice" className="text-2xl font-black text-slate-900 sm:text-3xl">Ratgeber für dein Fahrzeug</h2>
+      <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+        {vehicleAdvice.map(({ slug, title }) => (
+          <li key={slug}>
+            <Link href={`/ratgeber/${slug}`} className="card block h-full p-5 font-bold text-blue-700 hover:underline">{title}</Link>
+          </li>
+        ))}
+      </ul>
     </section>
 
     <section id="pdf-anleitungen" className="td-contact-intro" aria-labelledby="pdf-title"><div className="td-container"><div><p className="td-eyebrow">Selbst codieren</p><h2 id="pdf-title">Dein Fahrzeug. Deine Codierung.</h2><p>Fahrzeugspezifische PDF-Anleitungen mit Schritt-für-Schritt-Codierungen, Hardwarevoraussetzungen und Hinweisen zum benötigten Diagnoseinterface.</p><p>Codierungen · Assistenzsysteme · Anpassungen · Nachrüstungen · Umbauten</p></div><Link href="/codieranleitungen" className="td-button"><BookOpen aria-hidden="true" />PDF-Anleitungen entdecken<ArrowRight aria-hidden="true" /></Link></div></section>
