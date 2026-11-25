@@ -100,8 +100,12 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     /verkehrszeichenerkennung|verkehrszeichen.*(?:aktivier|freischalt|erkenn|anzeig)|\bvze\b|sign.assist/.test(title) &&
     !/(?:nur|lediglich).*(?:einstell|anzeig|anpass)|(?:warn|anzeige).*anpassen/.test(title);
   if (audiVzeActivation && !/\bsvm\b|herstellerseitige.online.freigabe|online.inbetriebnahme/.test(note)) {
-    return withSfd("VCP",
-      "Bei der erstmaligen Aktivierung wird die Frontkamera häufig mit VCP und einem passenden Datensatz parametriert. VCDS allein kann diesen Schritt nicht ersetzen. Bereits passend parametrierte Kameras können eine reine VCDS-/VCP-Codierung zulassen. Kamera, Navigation, Softwarestand sowie gegebenenfalls FEC-/SWaP-Freigaben prüfen.");
+    const parameterAlreadyPresent = /bereits.{0,35}parametriert|datensatz.{0,25}vorhanden|nur.{0,25}codier/.test(note);
+    const parameterRequired = !parameterAlreadyPresent &&
+      /(?:datensatz|zdc|parametrier).{0,45}(?:erforderlich|nötig|notwendig|aufspiel|einspiel)|vcp.parametrier/.test(note);
+    const qualification = "Kamera, Navigation, Softwarestand und gegebenenfalls FEC-/SWaP-Freigaben prüfen. Ein fehlender Kameradatensatz benötigt VCP; bei vorhandener Parametrierung kann die Codierung mit VCDS oder VCP erfolgen.";
+    return withSfd(parameterRequired ? "VCP" : parameterAlreadyPresent
+      ? "VCDS / VCP (Codierung)" : "VCDS / VCP (Codierung) · ggf. VCP (Datensatz)", qualification);
   }
 
   // Recherchierte, funktionsspezifische Verfahren.
@@ -132,8 +136,12 @@ export function guideInterface(input: InterfaceInput): GuideInterfaceResult {
     /ambientebeleuchtung|ambientelicht|qq2|konturbeleuchtung/.test(title);
   const expandedAmbient = /qq2|mehrfarb|rgb|kontur|ambientebeleuchtung.*(?:nachrüst|freischalt)/.test(combined);
   if (audiAmbient && expandedAmbient) {
-    return withSfd("VCP",
-      "Bei erstmaliger mehrfarbiger QQ2-Ambientebeleuchtung ist ein passender BCM-ZDC-Datensatz mit VCP erforderlich. Anschließende Codierung von BCM/5F mit VCDS oder VCP möglich. Bereits korrekt parametrierte Fahrzeuge brauchen ggf. nur die Menücodierung; Steuergerät und Softwarestand abgleichen.");
+    const parameterAlreadyPresent = /bereits.{0,35}parametriert|datensatz.{0,25}vorhanden|nur.{0,25}(?:menü|codier)/.test(note);
+    const parameterRequired = !parameterAlreadyPresent &&
+      (/nachrüst|umbau/.test(title) || /(?:zdc|datensatz|parametrier).{0,45}(?:erforderlich|nötig|notwendig|aufspiel|einspiel)|vcp.parametrier/.test(note));
+    const qualification = "Bei einer neuen mehrfarbigen QQ2-Ausstattung kann ein passender BCM-ZDC-Datensatz mit VCP nötig sein. Bei vorhandener Parametrierung ist die Menücodierung mit VCDS oder VCP möglich; Steuergerät und Softwarestand abgleichen.";
+    return withSfd(parameterRequired ? "VCP" : parameterAlreadyPresent
+      ? "VCDS / VCP (Codierung)" : "VCDS / VCP (Codierung) · ggf. VCP (Datensatz)", qualification);
   }
 
   if (!modern && /anhänger(?:kupplung|vorrichtung)|\bahk\b/.test(title) &&
