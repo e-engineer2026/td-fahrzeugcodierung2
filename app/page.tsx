@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, ChevronDown, FileText, LockKeyhole, MapPin, MessageCircle, Phone, Tag } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronDown, LockKeyhole, MapPin, MessageCircle, Phone, Tag } from "lucide-react";
 import AccountMenu from "./components/AccountMenu";
 import ArrivalGuide from "./components/ArrivalGuide";
 import BookingConfigurator from "./components/BookingConfigurator";
@@ -46,8 +46,12 @@ export default function Home() {
         <p className="td-eyebrow">Leipzig-Süd · deutschlandweit per Remote</p>
         <h1 id="home-title">Dein Fahrzeug.<br />Mehr Möglichkeiten.</h1>
         <p className="td-hero-subtitle">Fahrzeugcodierung, Diagnose und Software für Volkswagen, Audi, Škoda, SEAT und CUPRA.</p>
-        <div className="td-hero-actions"><a className="td-button" href="#fahrzeugauswahl">Fahrzeug auswählen<ArrowRight aria-hidden="true" /></a><Link className="td-button td-button-secondary td-vehicles-button" href="/fahrzeuge">Alle Fahrzeuge &amp; Preise</Link><a className="td-quiet-link" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />Frage per WhatsApp stellen</a></div>
-        <div className="mt-3"><Link className="td-button td-vehicles-button" href="/codieranleitungen"><FileText aria-hidden="true" />PDF-Codieranleitungen<ArrowRight aria-hidden="true" /></Link></div>
+        <div className="td-hero-actions">
+          <a className="td-button td-hero-primary" href="#fahrzeugauswahl">Fahrzeug auswählen<ArrowRight aria-hidden="true" /></a>
+          <Link className="td-button td-button-secondary td-vehicles-button" href="/fahrzeuge" aria-label="Alle Fahrzeuge und Preise"><span>Fahrzeuge<br className="td-hero-mobile-break" /> &amp; Preise</span></Link>
+          <Link className="td-button td-vehicles-button" href="/codieranleitungen" aria-label="PDF-Codieranleitungen"><span>PDF-<br className="td-hero-mobile-break" />Anleitungen</span></Link>
+          <a className="td-quiet-link" href={whatsapp} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" />Frage per WhatsApp stellen</a>
+        </div>
       </div></div>
     </section>
 
