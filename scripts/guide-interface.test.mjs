@@ -125,12 +125,16 @@ test("VCP für belegte VCDS-Codierungen mitnennen, nicht bei Herstellerfreigaben
   assert.equal(sfd2.label, "Herstellerfreigabe prüfen");
 });
 
-test("Audi VZE auf MLB/MLB-evo wird regelmäßig als VCP-Parametrierung dargestellt", () => {
+test("Audi VZE: VCP nur bei benötigtem Kameradatensatz", () => {
   for (const platform of ["MLB", "MLBevo"]) {
     const audi = guideInterface({ title: "Verkehrszeichenerkennung aktivieren", vehicleBrand: "Audi",
       platform, vehicleYear: 2016, interfaceInfo: "VCDS" });
-    assert.equal(audi.label, "VCP");
-    assert.match(audi.qualification, /parametriert/);
+    assert.equal(audi.label, "VCDS / VCP (Codierung) · ggf. VCP (Datensatz)");
+    assert.match(audi.qualification, /Parametrierung/);
+    assert.equal(guideInterface({title:"Verkehrszeichenerkennung aktivieren", vehicleBrand:"Audi", platform,
+      vehicleYear:2016, note:"VCP-Parametrierung erforderlich"}).label, "VCP");
+    assert.equal(guideInterface({title:"Verkehrszeichenerkennung aktivieren", vehicleBrand:"Audi", platform,
+      vehicleYear:2016, note:"Kamera bereits parametriert"}).label, "VCDS / VCP (Codierung)");
   }
   const audiA3 = guideInterface({ title: "Verkehrszeichenerkennung aktivieren", vehicleBrand: "Audi",
     platform: "MQB", vehicleYear: 2017, interfaceInfo: "VCDS" });
@@ -166,6 +170,10 @@ test("Audi QQ2 mit zusätzlichem Parameterdatensatz braucht VCP", () => {
   const r = guideInterface({ title: "Mehrfarbige Kontur-Ambientebeleuchtung (QQ2) nachrüsten",
     vehicleBrand:"Audi", platform:"MLBevo", vehicleYear:2019, source:"research" });
   assert.equal(r.label, "VCP");
+  assert.equal(guideInterface({title:"QQ2 Ambientebeleuchtung", vehicleBrand:"Audi",
+    platform:"MLBevo", vehicleYear:2019}).label, "VCDS / VCP (Codierung) · ggf. VCP (Datensatz)");
+  assert.equal(guideInterface({title:"QQ2 Ambientebeleuchtung", vehicleBrand:"Audi",
+    platform:"MLBevo", vehicleYear:2019, note:"BCM bereits parametriert"}).label, "VCDS / VCP (Codierung)");
 });
 
 test("AHK, Drive Select, Easy Entry und Ambientemenü unterstützen reine VCDS/VCP-Codierung", () => {
