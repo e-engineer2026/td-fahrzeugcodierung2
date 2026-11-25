@@ -386,3 +386,15 @@
 @media (min-width: 901px) and (max-width: 1150px) {
   .td-desktop-nav a:nth-child(n+3) { display: none; }
 }
+
+/* Three equal-height hero actions: 50 / 25 / 25 of the available width. */
+.td-home .td-hero-actions{display:grid;grid-template-columns:minmax(0,2fr) repeat(2,minmax(0,1fr));gap:8px;align-items:stretch}
+.td-home .td-hero-actions>.td-button{min-width:0;min-height:52px;justify-content:center;text-align:center;white-space:normal;line-height:1.25;padding:12px 5px;gap:7px;font-size:14px;overflow-wrap:anywhere}
+.td-home .td-hero-actions>.td-quiet-link{grid-column:1/-1;justify-self:start;margin-top:5px}
+.td-hero-mobile-break{display:none}
+@media(max-width:600px){
+  .td-home .td-hero-actions{gap:6px}
+  .td-home .td-hero-actions>.td-button{min-height:48px;font-size:clamp(10px,3.05vw,13px);padding:9px 3px;gap:4px}
+  .td-home .td-hero-actions>.td-hero-primary svg{width:14px;height:14px}
+  .td-hero-mobile-break{display:inline}
+}
