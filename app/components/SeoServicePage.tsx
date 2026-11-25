@@ -17,6 +17,7 @@ export type SeoServicePageProps = {
   faq: SeoFaq[];
   relatedLinks?: SeoRelatedLink[];
   relatedLinksTitle?: string;
+  whatsappMessage?: string;
 };
 
 const whatsapp = "https://wa.me/4915563047044";
@@ -34,7 +35,9 @@ export default function SeoServicePage({
   faq,
   relatedLinks,
   relatedLinksTitle = "Passende Leistungen und Informationen",
+  whatsappMessage,
 }: SeoServicePageProps) {
+  const whatsappHref = whatsappMessage ? `${whatsapp}?text=${encodeURIComponent(whatsappMessage)}` : whatsapp;
   const faqStructuredData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -73,7 +76,7 @@ export default function SeoServicePage({
             <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">{intro}</p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link href="/#buchen" className="btn-primary">Preis &amp; Termin konfigurieren</Link>
-              <a href={whatsapp} target="_blank" rel="noreferrer" className="btn-secondary inline-flex items-center justify-center gap-2"><MessageCircle className="h-4 w-4" /> Per WhatsApp anfragen</a>
+              <a href={whatsappHref} target="_blank" rel="noreferrer" className="btn-secondary inline-flex items-center justify-center gap-2"><MessageCircle className="h-4 w-4" /> {whatsappMessage ? "Vorprüfung per WhatsApp anfragen" : "Per WhatsApp anfragen"}</a>
             </div>
           </div>
         </div>
