@@ -38,7 +38,34 @@ export function vzeAdminDisplayRevision(productId: string): string {
   return productId === GOLF7_VZE.id ? GOLF7_VZE.revision : "1.0";
 }
 
-/** Die Verwaltung verwendet dieselben Downloads wie der Kundenbereich. */
+const mlbVehicleGuides = [
+  ["audi-a4-b8-8k", "Audi A4 B8 (8K)"],
+  ["audi-a5-8t-8f", "Audi A5 (8T / 8F)"],
+  ["audi-a6-c7-4g", "Audi A6 C7 (4G)"],
+  ["audi-a7-c7-4g", "Audi A7 C7 (4G)"],
+  ["audi-a8-d4-4h", "Audi A8 D4 (4H)"],
+  ["audi-q5-8r", "Audi Q5 (8R)"],
+  ["vw-touareg-ii-7p", "VW Touareg II (7P)"],
+  ["porsche-macan-95b", "Porsche Macan I (95B)"],
+  ["vw-phideon-3e", "VW Phideon (3E)"],
+] as const;
+
+const mlbAdminDocuments = mlbVehicleGuides.map(([vehicleId, name]) => {
+  const slug = "mlb-assistenzsysteme-" + vehicleId;
+  return {
+    slug,
+    productId: slug,
+    name,
+    title: "MLB-Assistenzsysteme · " + name,
+    category: "Assistenzsysteme" as const,
+    sku: "TD-MLB-" + vehicleId.toUpperCase(),
+    filename: vehicleId + "_mlb_assistenzsysteme.pdf",
+    sha256: "",
+    revision: "1.0",
+  };
+});
+
+/** Download-Ziele und Dateinamen für die interne PDF-Verwaltung. */
 export const GUIDE_ADMIN_DOCUMENTS = [
   ...VZE_ADMIN_DOCUMENTS.map(document => ({
     ...document,
@@ -54,6 +81,7 @@ export const GUIDE_ADMIN_DOCUMENTS = [
     code: "MQB",
   })),
   ...MQB_RFK_PDF_PRODUCTS,
+  ...mlbAdminDocuments,
   ...DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS.map(product => ({ ...product, productId: product.id })),
 ];
 
