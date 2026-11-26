@@ -470,3 +470,22 @@ test("Golf 7 Lane Assist PDF ist als modellbezogenes Dokument sichtbar und bleib
   assert.match(selector, /"\/api\/guide-shop\/download\/mqb\/" \+ mqbGuide\.slug/);
   assert.match(products, /\.\.\.MQB_LANE_ASSIST_MODEL_PRODUCTS/);
 });
+
+test("Audi C7 MLB Lane Assist PDFs haben eigene Upload-Ziele und Katalogprodukte", () => {
+  const registry = fs.readFileSync("app/lib/mlbevoAssistanceGuides.ts", "utf8");
+  const admin = fs.readFileSync("app/lib/vzeAdminDocuments.ts", "utf8");
+  const catalog = fs.readFileSync("app/lib/guideCatalogDocuments.ts", "utf8");
+  const selector = fs.readFileSync("app/components/GuideSelector.tsx", "utf8");
+  for (const [model, filename] of [["A6 / S6 C7", "audi-a6-c7-4g"], ["A7 / S7 4G", "audi-a7-c7-4g"]]) {
+    assert.ok(registry.includes('model: "' + model + '", vehicleSlug: "' + filename + '"'));
+  }
+  assert.ok(registry.includes('vehicle.vehicleSlug + "_active_lane_assist_freischaltung.pdf"'));
+  assert.ok(registry.includes('id: "mlb-active-lane-assist-pdf"'));
+  assert.ok(registry.includes('catalogDocumentSlug(vehicle.model, "coding-" + coding.id)'));
+  assert.ok(admin.includes("...mlbAdminDocuments,"));
+  assert.ok(admin.includes("...MLB_LANE_ASSIST_PRODUCTS.map(product => ({ ...product, productId: product.id }))"));
+  assert.ok(catalog.includes("MLB_LANE_ASSIST_PRODUCTS.find(product => product.slug === slug)"));
+  assert.ok(selector.includes("assistanceGuidesForVehicle(vehicle)"));
+  assert.ok(registry.includes('vehicle.platform === "MLB" && vehicle.brand === "Audi"'));
+  assert.ok(registry.includes("Lenkstockschalter"));
+});
