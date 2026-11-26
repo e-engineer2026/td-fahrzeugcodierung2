@@ -1,4 +1,7 @@
-import { timingSafeEqual } from "node:crypto";
+import { timingSafeEqual, createHash } from "node:crypto";
+import sitemap from "../../../sitemap";
+import {seoTopics,topicHref} from "../../../lib/seoTopics";
+import {seoArticles,articleHref} from "../../../lib/seoArticles";
 import { shopDatabase } from "../../../lib/guideShopDb";
 import { publishedGuideCatalog } from "../../../lib/publishedGuideCatalog";
 import { changedUrls, type UrlSnapshot } from "../../../lib/indexNowDiff";
@@ -21,8 +24,14 @@ export async function GET(request: Request) {
   try {
     // Do not turn a failed catalog lookup into a mass removal notification.
     const { links } = await publishedGuideCatalog();
-    const current: UrlSnapshot = Object.fromEntries(links.map(link =>
-      [SEO_ORIGIN + link.href, link.lastModified?.toISOString() ?? "published"]));
+    const pages = await sitemap();
+    const hash=(value:unknown)=>createHash("sha256").update(JSON.stringify(value)).digest("hex");
+    const editorial = new Map<string,string>([...seoTopics.map(topic=>[SEO_ORIGIN+topicHref(topic.slug),hash([topic.title,topic.description,topic.body])] as const),...seoArticles.map(article=>[SEO_ORIGIN+articleHref(article.slug),hash(article)] as const)]);
+    const current: UrlSnapshot = Object.fromEntries(pages.filter(page=>{
+      const path=new URL(page.url).pathname;
+      return !/^\/codieranleitungen\/(golf7-vze|vze-modelle|mqb-assistenten|dokument)(\/|$)/.test(path);
+    }).map(page=>[page.url,editorial.get(page.url)??hash([page.url,page.images??[]])]));
+    for (const link of links) current[SEO_ORIGIN+link.href] = link.lastModified?.toISOString() ?? "published";
     await sql`CREATE TABLE IF NOT EXISTS td_seo_indexnow_state (
       id text PRIMARY KEY, snapshot jsonb NOT NULL DEFAULT '{}'::jsonb,
       last_success_at timestamptz, last_count integer NOT NULL DEFAULT 0,
@@ -31,7 +40,7 @@ export async function GET(request: Request) {
     const [state] = await sql`SELECT snapshot, last_success_at FROM td_seo_indexnow_state WHERE id='primary'`;
     const previous = (state?.snapshot ?? {}) as UrlSnapshot;
     // Fail closed on an unexpected empty catalog; explicit mass withdrawals can be reviewed manually.
-    if (!links.length && Object.keys(previous).length) return Response.json({ error: "Empty catalog; no submission." }, { status: 503 });
+    if (!links.length && Object.keys(previous).some(url=>/^\/codieranleitungen\/(golf7-vze|vze-modelle|mqb-assistenten|dokument)(\/|$)/.test(new URL(url).pathname))) return Response.json({ error: "Empty catalog; no submission." }, { status: 503 });
     const urls = changedUrls(previous, current);
     if (!urls.length) return Response.json({ submitted: 0 });
     for (let i = 0; i < urls.length; i += 1000) {
