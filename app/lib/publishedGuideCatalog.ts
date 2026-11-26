@@ -8,7 +8,7 @@ import { isGuidePdf } from "./guideDocuments";
 import { catalogGuideProduct } from "./guideCatalogDocuments";
 import { catalogDocumentHref } from "./guideCatalogLinks";
 
-export type PublishedGuideLink = { href: string; title: string; lastModified?: Date };
+export type PublishedGuideLink = { href: string; title: string; searchText?: string; lastModified?: Date };
 
 /** Read-only publication discovery. Never inspect drafts or expose PDF contents. */
 export async function publishedGuideCatalog(): Promise<{ slugs: string[]; links: PublishedGuideLink[] }> {
@@ -53,7 +53,8 @@ export async function publishedGuideCatalog(): Promise<{ slugs: string[]; links:
     const title = vze ? "Verkehrszeichenerkennung (VZE) · " + vze.name
       : mqb ? mqb.name + " · " + mqb.model
       : catalog ? catalog.name + " · " + catalog.model : "";
-    links.set(href, { href, title, ...(lastModified ? { lastModified } : {}) });
+    const searchText = vze ? (vze.platform === "MLBevo" ? "VCDS" : "VCDS VCP") : mqb ? mqb.description : catalog ? catalog.title : "";
+    links.set(href, { href, title, searchText, ...(lastModified ? { lastModified } : {}) });
   }
   return { slugs: [...published.keys()], links: [...links.values()].sort((a, b) => a.title.localeCompare(b.title, "de")) };
 }
