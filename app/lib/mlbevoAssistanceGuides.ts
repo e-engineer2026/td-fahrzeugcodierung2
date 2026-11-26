@@ -112,3 +112,37 @@ export function mlbevoAssistanceGuidesForVehicle(vehicle: Vehicle) {
   if (vehicle.platform !== "MLBevo") return [];
   return DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS.filter(product => product.model === vehicle.model);
 }
+
+/** MLB (C7/4G): separate Freischaltungs-PDFs, nicht die MLB-Sammeldokumente. */
+export const MLB_LANE_ASSIST_PRODUCTS = [
+  { model: "A6 / S6 C7", vehicleSlug: "audi-a6-c7-4g", vehicleName: "Audi A6 C7 (4G)" },
+  { model: "A7 / S7 4G", vehicleSlug: "audi-a7-c7-4g", vehicleName: "Audi A7 C7 (4G)" },
+].map(vehicle => {
+  const coding: Coding = {
+    id: "mlb-active-lane-assist-pdf",
+    name: "Active Lane Assist",
+    price: VZE_MODEL_PRICE_CENTS / 100,
+    category: "Assistenzsysteme",
+    uiGroup: "Assistenz",
+    hardware: "Kompatible Frontkamera und Lenkhilfe; geeigneter Lenkstockschalter mit Assistenzsystemtaste sowie passende Lenksäulenelektronik prüfen, ggf. nachrüsten.",
+    interfaceInfo: "VCDS für unterstützte Kanäle",
+    requirements: "Hardware, Steuergeräte- und Softwarestand vor Freischaltung prüfen; erforderliche Kalibrierung und Funktionsprüfung durchführen.",
+  };
+  const slug = catalogDocumentSlug(vehicle.model, "coding-" + coding.id);
+  return {
+    id: slug, slug, name: coding.name,
+    title: coding.name + " · " + vehicle.vehicleName,
+    model: vehicle.model, category: "Assistenzsysteme" as const,
+    sku: ("TD-MLB-LANE-" + vehicle.vehicleSlug).toUpperCase(),
+    revision: "1.0", priceCents: VZE_MODEL_PRICE_CENTS, sha256: "",
+    filename: vehicle.vehicleSlug + "_active_lane_assist_freischaltung.pdf",
+    coding, documented: true,
+    activation: /lane assist|spurhalteassistent|spurverlassenswarnung/i,
+  };
+});
+
+export function assistanceGuidesForVehicle(vehicle: Vehicle) {
+  if (vehicle.platform === "MLB" && vehicle.brand === "Audi")
+    return MLB_LANE_ASSIST_PRODUCTS.filter(product => product.model === vehicle.model);
+  return mlbevoAssistanceGuidesForVehicle(vehicle);
+}

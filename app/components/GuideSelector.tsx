@@ -5,7 +5,7 @@ import { Check, ChevronDown, ChevronUp, LockKeyhole, Search } from "lucide-react
 import { GOLF7_VZE_ADMIN_SLUG, vzePdfSlugForModel } from "../lib/vzePdfVehicleLinks";
 import { catalogDocumentHref, catalogDocumentSlug } from "../lib/guideCatalogLinks";
 import { MLBEVO_VZE_CODING_ID, mlbevoVzeGuideForVehicle, TOUAREG_CR_GUIDE_VEHICLE } from "../lib/mlbevoVzeModels";
-import { mlbevoAssistanceGuidesForVehicle } from "../lib/mlbevoAssistanceGuides";
+import { assistanceGuidesForVehicle } from "../lib/mlbevoAssistanceGuides";
 import { VZE_MODEL_PRICE_CENTS } from "../lib/vzeVariantDrafts";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
 import { AHK_ADDITIONAL_GUIDE_VEHICLES, ahkGuidesForVehicle } from "../lib/ahkGuideProducts";
@@ -103,7 +103,7 @@ function availableModelCodings(vehicle: Vehicle, publishedSlugs?: readonly strin
     const fla = codingCatalog.find(coding => coding.id === "vcds-fla");
     if (fla) modelGuideFallbacks.push(displayPdfGuideCoding(fla));
   }
-  const mlbevoAssistance = mlbevoAssistanceGuidesForVehicle(vehicle)
+  const mlbevoAssistance = assistanceGuidesForVehicle(vehicle)
     .filter(product => !publishedSlugs || publishedSlugs.includes(product.slug));
   // Modellbezogene Freischaltungs-PDFs haben Vorrang vor historischen generischen
   // Varianten wie „Lane Assist / Spurhalteassistent aktivieren“.
@@ -359,7 +359,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
       });
       const golf7Vze = coding.id === "golf7-vze-pdf";
       const mlbevoGuide = coding.id === MLBEVO_VZE_CODING_ID && vehicle ? mlbevoVzeGuideForVehicle(vehicle) : undefined;
-      const mlbevoAssistance = vehicle && mlbevoAssistanceGuidesForVehicle(vehicle)
+      const mlbevoAssistance = vehicle && assistanceGuidesForVehicle(vehicle)
         .find(product => product.coding.id === coding.id);
       const vzeHref = mlbevoGuide ? "/api/guide-shop/download/vze/" + mlbevoGuide.slug + "?liste=1" : vzeProductHref(coding.name, vzePdfSlug);
       return {

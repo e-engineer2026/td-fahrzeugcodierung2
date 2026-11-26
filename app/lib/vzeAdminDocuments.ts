@@ -1,5 +1,5 @@
 import { AHK_GUIDE_PRODUCTS } from "./ahkGuideProducts";
-import { DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS } from "./mlbevoAssistanceGuides";
+import { DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS, MLB_LANE_ASSIST_PRODUCTS } from "./mlbevoAssistanceGuides";
 import { GOLF7_VZE_ADMIN_SLUG } from "./vzePdfVehicleLinks";
 import { catalogGuideProduct } from "./guideCatalogDocuments";
 import { MQB_GUIDE_PRODUCTS } from "./mqbGuideProducts";
@@ -84,6 +84,7 @@ export const GUIDE_ADMIN_DOCUMENTS = [
   ...MQB_RFK_PDF_PRODUCTS,
   ...AHK_GUIDE_PRODUCTS,
   ...mlbAdminDocuments,
+  ...MLB_LANE_ASSIST_PRODUCTS.map(product => ({ ...product, productId: product.id })),
   ...DOCUMENTED_MLBEVO_ASSISTANCE_PRODUCTS.map(product => ({ ...product, productId: product.id })),
 ];
 

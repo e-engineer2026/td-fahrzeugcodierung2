@@ -1,5 +1,5 @@
 import { AHK_GUIDE_PRODUCTS } from "./ahkGuideProducts";
-import { MLBEVO_ASSISTANCE_PRODUCTS } from "./mlbevoAssistanceGuides";
+import { MLBEVO_ASSISTANCE_PRODUCTS, MLB_LANE_ASSIST_PRODUCTS } from "./mlbevoAssistanceGuides";
 import { codingCatalog, codingsForVehicle, vehicles, type Coding, type Vehicle } from "../data/catalog";
 import { referenceIdeasForVehicle } from "../data/referenceIdeas";
 import { researchedGuidesForModel, type ResearchCategory } from "../data/guideResearch";
@@ -96,7 +96,8 @@ export function codingDocumentSlug(vehicle: Vehicle, coding: Coding): string | u
 }
 
 export function catalogGuideProduct(slug: string) {
-  const registeredProduct = MLBEVO_ASSISTANCE_PRODUCTS.find(product => product.slug === slug)
+  const registeredProduct = MLB_LANE_ASSIST_PRODUCTS.find(product => product.slug === slug)
+    ?? MLBEVO_ASSISTANCE_PRODUCTS.find(product => product.slug === slug)
     ?? AHK_GUIDE_PRODUCTS.find(product => product.slug === slug);
   if (registeredProduct) return registeredProduct;
   const [namespace, encodedModel, encodedRow, extra] = slug.split(":");
