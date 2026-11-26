@@ -8,6 +8,7 @@ import { MLBEVO_VZE_CODING_ID, mlbevoVzeGuideForVehicle, TOUAREG_CR_GUIDE_VEHICL
 import { mlbevoAssistanceGuidesForVehicle } from "../lib/mlbevoAssistanceGuides";
 import { VZE_MODEL_PRICE_CENTS } from "../lib/vzeVariantDrafts";
 import { MQB_GUIDE_PRODUCTS } from "../lib/mqbGuideProducts";
+import { AHK_ADDITIONAL_GUIDE_VEHICLES, ahkGuidesForVehicle } from "../lib/ahkGuideProducts";
 import { mqbRfkGuideForVehicle } from "../lib/mqbRfkProducts";
 import { MQB_FLA_MODEL_PRODUCTS } from "../lib/mqbFlaModels";
 import { MQB_LANE_CODING, MQB_LANE_CODING_ID, mqbLaneGuideForVehicle } from "../lib/mqbLaneAssistModels";
@@ -147,7 +148,7 @@ function codingDocumentSlugForVehicle(vehicle: Vehicle, coding: Coding): string 
   return catalogDocumentSlug(vehicle.model, "coding-" + coding.id);
 }
 
-function initialCategoryForVehicle(next: Vehicle, publicOnly: boolean, publishedCatalogSlugs: string[]): GuideCategory {
+function initialCategoryForVehicle(next: Vehicle, publicOnly: boolean, publishedCatalogSlugs: string[], year?: number): GuideCategory {
     const available = availableModelCodings(next, publicOnly ? publishedCatalogSlugs : undefined);
     const hasOwnCodings = guideCategories.some((category) =>
       (category === "Codierungen" || category === "Assistenzsysteme" || category === "Anpassungen für Assistenzsysteme") &&
@@ -165,12 +166,16 @@ function initialCategoryForVehicle(next: Vehicle, publicOnly: boolean, published
         .some(entry => entry.access !== "Anbieterleistung" &&
           (!publicOnly || publishedCatalogSlugs.includes(catalogDocumentSlug(next.model, "research-" + entry.id))));
       const rfk = mqbRfkGuideForVehicle(next.model);
-      return (hasResearch("Nachrüstungen") ||
+      return (hasResearch("Nachrüstungen") || availableAhkGuides(next.model, publicOnly, publishedCatalogSlugs, year).length > 0 ||
         (rfk && (!publicOnly || publishedCatalogSlugs.includes(rfk.slug))) ? "Nachrüstungen"
         : hasResearch("Umbauten") ? "Umbauten"
         : candidates.some((idea) => guideCategoryForReference(idea) === "Codierungen") ? "Codierungen"
         : candidates.length ? guideCategoryForReference(candidates[0]) : "Codierungen");
     }
+}
+
+function availableAhkGuides(model: string, publicOnly: boolean, publishedSlugs: string[], year?: number) {
+  return ahkGuidesForVehicle(model, year).filter(product => !publicOnly || publishedSlugs.includes(product.slug));
 }
 
 export default function GuideSelector({ renderDocumentActions, publishedCatalogSlugs = [], initialBrand, initialModel, initialYear }: {
@@ -182,19 +187,24 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
 }) {
   // Der Admin sieht auch fehlende PDFs und Entwürfe; Besucher nur freigegebene Downloads.
   const publicOnly = !renderDocumentActions;
-  const initialVehicle = publicOnly ? guideVehicles.find(item => item.brand === initialBrand && item.model === initialModel && manufacturers.includes(manufacturerOf(item)) && (initialYear === undefined || (initialYear >= item.startYear && initialYear <= item.endYear))) : undefined;
+  const selectableVehicles = useMemo(() => [
+    ...guideVehicles,
+    ...AHK_ADDITIONAL_GUIDE_VEHICLES.filter(vehicle =>
+      availableAhkGuides(vehicle.model, publicOnly, publishedCatalogSlugs).length > 0),
+  ], [publicOnly, publishedCatalogSlugs]);
+  const initialVehicle = publicOnly ? selectableVehicles.find(item => item.brand === initialBrand && item.model === initialModel && manufacturers.includes(manufacturerOf(item)) && (initialYear === undefined || (initialYear >= item.startYear && initialYear <= item.endYear))) : undefined;
   const [manufacturer, setManufacturer] = useState<Manufacturer | "">(initialVehicle ? manufacturerOf(initialVehicle) : "");
   const [model, setModel] = useState(initialVehicle?.model ?? "");
   const [selectedYear, setSelectedYear] = useState(initialVehicle ? initialYear : undefined);
   const [showModels, setShowModels] = useState(!initialVehicle);
   const [codingSearch, setCodingSearch] = useState("");
   const searching = codingSearch.trim().length > 0;
-  const [activeCategory, setActiveCategory] = useState<GuideCategory>(() => initialVehicle ? initialCategoryForVehicle(initialVehicle, publicOnly, publishedCatalogSlugs) : "Codierungen");
+  const [activeCategory, setActiveCategory] = useState<GuideCategory>(() => initialVehicle ? initialCategoryForVehicle(initialVehicle, publicOnly, publishedCatalogSlugs, initialYear) : "Codierungen");
 
   const models = useMemo(
-    () => guideVehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
+    () => selectableVehicles.filter((vehicle) => manufacturer && manufacturerOf(vehicle) === manufacturer)
       .sort((a, b) => a.model.localeCompare(b.model, "de", { numeric: true, sensitivity: "base" })),
-    [manufacturer]
+    [manufacturer, selectableVehicles]
   );
   const vehicle = models.find((item) => item.model === model);
   const vzePdfSlug = vehicle ? vzePdfSlugForModel(vehicle.model) : undefined;
@@ -235,18 +245,20 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         return true;
       });
   }, [vehicle, codings, researchEntries, publicOnly, publishedCatalogSlugs]);
+  const ahkProducts = vehicle ? availableAhkGuides(vehicle.model, publicOnly, publishedCatalogSlugs, selectedYear) : [];
+  const rfkProduct = vehicle ? mqbRfkGuideForVehicle(vehicle.model) : undefined;
+  const showRfk = !!rfkProduct && (!publicOnly || publishedCatalogSlugs.includes(rfkProduct.slug));
   const categoryCounts = useMemo(
     () => guideCategories.map((category) => ({
       category,
       count: codings.filter((coding) => guideCategory(coding) === category).length
         + researchEntries.filter((entry) => entry.category === category).length
         + sourceIdeas.filter((idea) => guideCategoryForReference(idea) === category).length
-        + (category === "Nachrüstungen" && vehicle &&
-          mqbRfkGuideForVehicle(vehicle.model) &&
-          (!publicOnly || publishedCatalogSlugs.includes(mqbRfkGuideForVehicle(vehicle.model)!.slug)) ? 1 : 0),
+        + (category === "Nachrüstungen" ? Number(showRfk) + ahkProducts.length : 0),
     })),
-    [codings, researchEntries, sourceIdeas, vehicle, publicOnly, publishedCatalogSlugs]
+    [codings, researchEntries, sourceIdeas, showRfk, ahkProducts.length]
   );
+  const hasGuides = categoryCounts.some(({ count }) => count > 0);
   // Eine Suche durchsucht alle Kategorien. Ohne Suchbegriff bleibt der
   // gewählte Kategorienfilter aktiv.
   const visibleResearch = researchEntries.filter((entry) =>
@@ -263,9 +275,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
   );
 
   // One combined RFK guide per supported MQB model; its filename is auto-matched by the admin ZIP uploader.
-  const rfkProduct = vehicle ? mqbRfkGuideForVehicle(vehicle.model) : undefined;
-  const rfkRows: GuideTableRow[] = rfkProduct &&
-    (!publicOnly || publishedCatalogSlugs.includes(rfkProduct.slug)) &&
+  const rfkRows: GuideTableRow[] = rfkProduct && showRfk &&
     (searching || activeCategory === "Nachrüstungen") &&
     matchesCodingSearch(rfkProduct.name + " Rückfahrkamera Low High MIB2 MIB3", codingSearch)
     ? [{
@@ -285,7 +295,29 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
         ? catalogDocumentHref(rfkProduct.slug) : undefined,
     }] : [];
 
+  const ahkRows: GuideTableRow[] = ahkProducts
+    .filter(product => (searching || activeCategory === product.category) &&
+      matchesCodingSearch(product.title, codingSearch))
+    .map(product => {
+      const { step } = product;
+      return {
+        id: product.slug,
+        title: product.title,
+        description: "VCDS-Codierung für eine bereits montierte Anhängerkupplung mit passendem Elektrosatz.",
+        requirements: "Baureihe und Steuergeräte abgleichen. Zugelassenen Einsatzzweck und gegebenenfalls SFD-Freigabe prüfen.",
+        diagnosticInterface: {
+          label: "VCDS",
+          qualification: "Je nach Nachrüstsatz und Software kann zusätzlich ein Datensatz oder ein autorisiertes Online-Verfahren erforderlich sein.",
+          requiresCheck: true,
+        },
+        estimate: { step, level: guideDifficultyLevel(step), price: product.priceCents / 100 },
+        documentSlug: product.slug,
+        productHref: publishedCatalogSlugs.includes(product.slug) ? catalogDocumentHref(product.slug) : undefined,
+      };
+    });
+
   const rows: GuideTableRow[] = [
+    ...ahkRows,
     ...rfkRows,
     ...visibleCodings.map((coding) => {
       const step = guideDifficultyStep(coding);
@@ -488,7 +520,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
       {vehicle && (
         <section className="mt-6" aria-label="Fahrzeuganleitungen" aria-live="polite">
           <div className="flex justify-end">
-            {(codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
+            {hasGuides && (
               <label className="relative block w-full sm:w-60">
                 <span className="sr-only">Anleitungen suchen</span>
                 <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" aria-hidden="true" />
@@ -519,14 +551,14 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
 
 
           <GuideTable rows={visibleGuideRows} renderDocumentActions={renderDocumentActions} publicCatalog={publicOnly} />
-          {visibleGuideRows.length === 0 && (codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && (
+          {visibleGuideRows.length === 0 && hasGuides && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600">
               {codingSearch.trim()
                 ? "Keine passenden Anleitungen gefunden."
                 : "Für dieses Fahrzeug sind in diesem Bereich noch keine Anleitungen zugeordnet."}
             </p>
           )}
-          {codings.length === 0 && researchEntries.length === 0 && sourceIdeas.length === 0 && (
+          {!hasGuides && (
             <p className="mt-3 rounded-lg border border-slate-200 bg-white p-4 text-sm leading-6 text-slate-600">
               {publicOnly
                 ? "Für dieses Fahrzeug sind derzeit keine PDF-Anleitungen zum Download veröffentlicht."
@@ -534,7 +566,7 @@ export default function GuideSelector({ renderDocumentActions, publishedCatalogS
               {vehicle.startYear >= 2024 ? " Für neuere Modelle ist vor einer Freigabe insbesondere der SFD-/SFD2-Schutz zu prüfen." : ""}
             </p>
           )}
-          {(codings.length > 0 || researchEntries.length > 0 || sourceIdeas.length > 0) && <p className="mt-3 text-xs leading-6 text-slate-500">
+          {hasGuides && <p className="mt-3 text-xs leading-6 text-slate-500">
             Die konkrete Codierbarkeit hängt von Baujahr, Ausstattung, Steuergerät, Softwarestand und ggf. SFD-Schutz ab.
           </p>}
           {<p className="mt-2 flex items-start gap-2 text-xs leading-6 text-slate-500">

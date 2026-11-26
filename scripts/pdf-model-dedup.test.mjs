@@ -121,3 +121,28 @@ test("Admin-Produkte bleiben auch bei unterschiedlicher ID und gleicher Download
   ]);
   assert.deepEqual(result.map(p => p.productId), ["p1", "p3"]);
 });
+
+test("AHK-Plattform-PDFs werden eindeutig erkannt und stehen den dokumentierten Fahrzeugen zur Verfügung", () => {
+  const { AHK_GUIDE_PRODUCTS, AHK_ADDITIONAL_GUIDE_VEHICLES, ahkGuidesForVehicle } = loadTs("app/lib/ahkGuideProducts");
+  const { catalogGuideProduct } = loadTs("app/lib/guideCatalogDocuments");
+  const { GUIDE_ADMIN_DOCUMENTS } = loadTs("app/lib/vzeAdminDocuments");
+  const { TOUAREG_CR_GUIDE_VEHICLE } = loadTs("app/lib/mlbevoVzeModels");
+  const models = new Set([...vehicles, ...AHK_ADDITIONAL_GUIDE_VEHICLES, TOUAREG_CR_GUIDE_VEHICLE].map(vehicle => vehicle.model));
+
+  assert.equal(AHK_GUIDE_PRODUCTS.length, 10);
+  for (const product of AHK_GUIDE_PRODUCTS) {
+    assert.equal(catalogGuideProduct(product.slug)?.id, product.id);
+    assert.equal(GUIDE_ADMIN_DOCUMENTS.filter(document => document.filename === product.filename).length, 1);
+    for (const model of product.models) assert.ok(models.has(typeof model === "string" ? model : model[0]));
+  }
+
+  const names = (model, year) => ahkGuidesForVehicle(model, year).map(product => product.model);
+  assert.deepEqual(names("Polo 6R", 2012), ["PQ25"]);
+  assert.deepEqual(names("Polo 6R", 2014), ["PQ25", "PQ26"]);
+  assert.deepEqual(names("Polo 6R", 2015), ["PQ26"]);
+  assert.deepEqual(names("Polo AW", 2018), ["MQB-A0"]);
+  assert.deepEqual(names("Touran 1T", 2008), []);
+  assert.deepEqual(names("Touran 1T", 2012), ["PQ36"]);
+  assert.deepEqual(names("CUPRA Born K11", 2021), ["MEB"]);
+  assert.deepEqual(names("up! (1S)", 2020), []);
+});
