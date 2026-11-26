@@ -6,11 +6,12 @@ import { shopDatabase } from "../../lib/guideShopDb";
 import sitemap from "../../sitemap";
 import { publishedGuideCatalog } from "../../lib/publishedGuideCatalog";
 import { searchConsoleConfigured, searchConsoleReport } from "../../lib/searchConsoleSeo";
+import {auditSeoUrls} from "../../lib/seoAudit";
 import { SEO_ORIGIN, INDEXNOW_KEY_PATH } from "../../lib/indexNowConfig";
 
 export const dynamic="force-dynamic";
 export const metadata:Metadata={title:"Interne SEO-Verwaltung",robots:{index:false,follow:false,noarchive:true}};
-export default async function SeoAdmin({searchParams}:{searchParams:Promise<{url?:string|string[]}>}){
+export default async function SeoAdmin({searchParams}:{searchParams:Promise<{url?:string|string[];audit?:string}>}){
   if(!(await isGuideAdmin())) notFound();
   const params=await searchParams;
   const urls=await sitemap();
@@ -18,6 +19,8 @@ export default async function SeoAdmin({searchParams}:{searchParams:Promise<{url
   try { published=await publishedGuideCatalog(); } catch {}
   const known=new Set(urls.map(item=>item.url));
   const selected=typeof params.url==="string"&&known.has(params.url)?params.url:undefined;
+  const sample=[SEO_ORIGIN,SEO_ORIGIN+"/codieranleitungen",SEO_ORIGIN+"/ratgeber", ...["/fahrzeuge/","/codieranleitungen/themen/","/codieranleitungen/vze-modelle/","/codieranleitungen/mqb-assistenten/","/codieranleitungen/dokument?","/ratgeber/"].flatMap(prefix=>urls.find(item=>item.url.startsWith(SEO_ORIGIN+prefix))?.url??[])].filter(url=>known.has(url));
+  const audited=params.audit==="1"?await auditSeoUrls(selected?[selected,...sample]:sample):[];
   const gscConfigured=searchConsoleConfigured();
   let report:Awaited<ReturnType<typeof searchConsoleReport>>|undefined;
   if(gscConfigured){try{report=await searchConsoleReport(selected);}catch{}}
@@ -46,5 +49,7 @@ export default async function SeoAdmin({searchParams}:{searchParams:Promise<{url
   {report.inspectionFailed&&<p className="mt-3">URL-Prüfung fehlgeschlagen.</p>}{report.inspection?.indexStatusResult&&<dl className="mt-3 text-sm"><dt>Indexstatus</dt><dd>{report.inspection.indexStatusResult.coverageState??report.inspection.indexStatusResult.verdict??"Unbekannt"}</dd><dt>Letzter Crawl</dt><dd>{report.inspection.indexStatusResult.lastCrawlTime??"Unbekannt"}</dd><dt>Google-Canonical</dt><dd className="break-all">{report.inspection.indexStatusResult.googleCanonical??"Unbekannt"}</dd></dl>}
   </>}
   <a href="https://search.google.com/search-console" className="mt-3 inline-block text-blue-700 underline">Search Console öffnen</a></section>
-  <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-slate-950"><h2 className="text-lg font-bold">URL-Verzeichnis</h2><p className="mt-2 text-sm">Eine vollständige Meta-Tag-, HTTP- und Inhaltsprüfung aller Seiten ist nicht Bestandteil dieses Live-Zählers. Diese Ergebnisse werden nicht geschätzt.</p><Link className="text-blue-700 underline" href="/sitemap.xml">Sitemap öffnen</Link><details className="mt-3"><summary className="cursor-pointer">Alle {urls.length} URLs anzeigen</summary><ul className="mt-2 space-y-1 break-all text-sm">{urls.map(item=><li key={item.url}><a href={item.url} className="text-blue-700 underline">{item.url}</a></li>)}</ul></details></section></main>;
+  <section className="mt-6 rounded-xl border border-slate-200 bg-white p-5 text-slate-950"><h2 className="text-lg font-bold">URL-Verzeichnis</h2><p className="mt-2 text-sm">HTTP- und Metadatenprüfung der öffentlichen Hauptdomain, maximal zehn Seiten pro Stichprobe. Doppelte Inhalte erfordern eine separate Prüfung.</p>
+  <form method="get" className="mt-3 flex flex-wrap gap-2"><input type="hidden" name="audit" value="1"/><select name="url" aria-label="URL zur SEO-Prüfung" className="max-w-full rounded-lg border p-2" defaultValue={selected??""}><option value="">Automatische Stichprobe</option>{urls.map(item=><option key={item.url} value={item.url}>{item.url.replace(SEO_ORIGIN,"")||"/"}</option>)}</select><button className="rounded-lg bg-blue-700 px-4 py-2 font-bold text-white">SEO-Prüfung ausführen</button></form>
+  {audited.length>0&&<div className="mt-3 overflow-x-auto"><table className="w-full text-left text-xs"><thead><tr><th>URL</th><th>HTTP</th><th>Titel</th><th>Beschreibung</th><th>Canonical</th><th>Noindex</th></tr></thead><tbody>{audited.map(row=><tr key={row.url} className="border-t"><td className="break-all py-2">{row.url.replace(SEO_ORIGIN,"")||"/"}</td><td>{row.status??row.error}</td><td>{row.title?(audited.filter(item=>item.title===row.title).length>1?"Doppelt":"OK"):"Fehlt"}</td><td>{row.description?"OK":"Fehlt"}</td><td>{row.canonical===row.url?"OK":"Abweichend"}</td><td>{row.noindex?"Ja":"Nein"}</td></tr>)}</tbody></table></div>}<Link className="text-blue-700 underline" href="/sitemap.xml">Sitemap öffnen</Link><details className="mt-3"><summary className="cursor-pointer">Alle {urls.length} URLs anzeigen</summary><ul className="mt-2 space-y-1 break-all text-sm">{urls.map(item=><li key={item.url}><a href={item.url} className="text-blue-700 underline">{item.url}</a></li>)}</ul></details></section></main>;
 }
