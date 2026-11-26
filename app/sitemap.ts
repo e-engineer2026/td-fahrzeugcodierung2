@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
 import { seoVehicles, vehiclePath } from "./lib/vehicleSeo";
+import {seoTopics,topicHref} from "./lib/seoTopics";
+import {seoArticles,articleHref} from "./lib/seoArticles";
+import {vehicleHeroImage} from "./lib/vehicleHero";
 import { publishedGuideCatalog } from "./lib/publishedGuideCatalog";
 
 // A publication or withdrawal must be reflected without a new deployment.
@@ -7,11 +10,14 @@ export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://td-fahrzeugcodierung.de";
-  const vehiclePages: MetadataRoute.Sitemap = seoVehicles.map((vehicle) => ({
+  const vehiclePages: MetadataRoute.Sitemap = seoVehicles.map((vehicle) => {
+    const photo=vehicleHeroImage({brand:vehicle.brand,model:vehicle.model,year:vehicle.startYear});
+    return {
+    ...(photo?{images:[base+photo.src]}:{}),
     url: `${base}${vehiclePath(vehicle)}`,
     changeFrequency: "weekly",
     priority: 0.7,
-  }));
+  };});
 
   let guidePages: MetadataRoute.Sitemap = [];
   try {
@@ -44,6 +50,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/steuergeraete-flash`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/fahrzeuge`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/codieranleitungen`, changeFrequency: "weekly", priority: 0.8 },
+    {url:base+"/ratgeber"},
+    ...seoTopics.map(topic=>({url:base+topicHref(topic.slug)})),
+    ...seoArticles.map(article=>({url:base+articleHref(article.slug)})),
     ...vehiclePages,
     ...guidePages,
     { url: `${base}/impressum`, changeFrequency: "yearly", priority: 0.2 },
