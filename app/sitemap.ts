@@ -1,13 +1,26 @@
 import type { MetadataRoute } from "next";
 import { seoVehicles, vehiclePath } from "./lib/vehicleSeo";
+import { publishedGuideCatalog } from "./lib/publishedGuideCatalog";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// A publication or withdrawal must be reflected without a new deployment.
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://td-fahrzeugcodierung.de";
   const vehiclePages: MetadataRoute.Sitemap = seoVehicles.map((vehicle) => ({
     url: `${base}${vehiclePath(vehicle)}`,
     changeFrequency: "weekly",
     priority: 0.7,
   }));
+
+  let guidePages: MetadataRoute.Sitemap = [];
+  try {
+    const { links } = await publishedGuideCatalog();
+    guidePages = links.map(link => ({ url: base + link.href, ...(link.lastModified ? { lastModified: link.lastModified } : {}) }));
+  } catch (error) {
+    // Keep the existing public vehicle/service sitemap available during shop outages.
+    console.error("Published PDF sitemap unavailable", error);
+  }
 
   return [
     { url: base, changeFrequency: "weekly", priority: 1 },
@@ -32,6 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/fahrzeuge`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/codieranleitungen`, changeFrequency: "weekly", priority: 0.8 },
     ...vehiclePages,
+    ...guidePages,
     { url: `${base}/impressum`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${base}/datenschutz`, changeFrequency: "yearly", priority: 0.2 },
     { url: `${base}/agb`, changeFrequency: "yearly", priority: 0.2 },
