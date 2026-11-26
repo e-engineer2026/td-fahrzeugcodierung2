@@ -1,6 +1,7 @@
 import { vehicleBookingHref } from "../../../lib/homeVehicleSelection";
 import type { Metadata } from "next";
 import Image from "next/image";
+import { vehicleHeroImage } from "../../../lib/vehicleHero";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { needsProtectionReview, vehicleSpecificCodings, protectionReviewMessage } from "../../../lib/vehicleCodings";
@@ -41,6 +42,7 @@ export async function generateMetadata(props: { params: Promise<PageParams> }): 
   if (!vehicle) return {};
 
   const name = vehicleDisplayName(vehicle);
+  const photo = vehicleHeroImage({brand:vehicle.brand,model:vehicle.model,year:vehicle.startYear});
   const url = `${BASE}/fahrzeuge/${params.brand}/${params.model}`;
   const priority = prioritySeoByPath[`${params.brand}/${params.model}`];
   const fullTitle = priority?.title ?? (vehicle.diagnosticsOnly ? `${name} Diagnose Leipzig | TD Fahrzeugcodierung` : `${name} Codierung Leipzig | TD`);
@@ -53,7 +55,8 @@ export async function generateMetadata(props: { params: Promise<PageParams> }): 
     description,
     alternates: { canonical: url },
     robots: { index: true, follow: true },
-    openGraph: { title: fullTitle, description, url, siteName: "TD Fahrzeugcodierung", locale: "de_DE", type: "website" },
+    openGraph: { title: fullTitle, description, url, siteName: "TD Fahrzeugcodierung", locale: "de_DE", type: "website", ...(photo ? {images:[{url:BASE+photo.src,alt:photo.alt}]}:{}) },
+    ...(photo ? {twitter:{card:"summary_large_image",images:[BASE+photo.src]}}:{}),
   };
 }
 
@@ -65,6 +68,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
   const seoKey = `${params.brand}/${params.model}`;
   const priority = prioritySeoByPath[seoKey];
   const name = vehicleDisplayName(vehicle);
+  const photo = vehicleHeroImage({brand:vehicle.brand,model:vehicle.model,year:vehicle.startYear});
   const reviewFirst = !vehicle.diagnosticsOnly && needsProtectionReview(vehicle.startYear);
   const contactHref = "/#kontakt";
   const mainActionHref = reviewFirst ? contactHref : vehicleBookingHref(vehicle);
@@ -145,6 +149,7 @@ export default async function VehicleSeoPage(props: { params: Promise<PageParams
               {landing ? <Link href={landing.href} className="btn-secondary w-full text-center sm:w-auto">{landing.label}</Link> : null}
             </div>
           </div>
+          {photo&&<figure className="mt-8 max-w-3xl overflow-hidden rounded-xl border border-blue-100 bg-white"><div className="relative aspect-[16/9]"><Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 768px) 100vw, 768px" className="object-contain"/></div><figcaption className="p-3 text-xs text-slate-600">{photo.label} · Beispielhafte Modellabbildung</figcaption></figure>}
         </div>
       </section>
 
