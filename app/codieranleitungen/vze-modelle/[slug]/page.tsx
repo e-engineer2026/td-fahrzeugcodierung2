@@ -1,3 +1,4 @@
+import GuideProductJsonLd from "../../../components/GuideProductJsonLd";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
@@ -33,6 +34,7 @@ export default async function ModelVzePage({ params }: { params: Promise<{ slug:
   } catch { ready = false; }
   if (!ready) notFound();
   return <main className="min-h-screen bg-slate-50 text-slate-950">
+      <GuideProductJsonLd href={"/codieranleitungen/vze-modelle/" + encodeURIComponent(draft.slug)} name={"Verkehrszeichenerkennung (VZE) · " + draft.name} description={"PDF-Codieranleitung zur Verkehrszeichenerkennung für " + draft.name + ": Voraussetzungen, Codierung und Funktionsprüfung."} priceCents={1399} sku={draft.sku} />
     <div className="container-x max-w-4xl py-8 sm:py-12">
       <Link href="/codieranleitungen/vze-modelle" className="text-sm font-bold text-blue-700 hover:underline">
         ← Zur Modellübersicht
