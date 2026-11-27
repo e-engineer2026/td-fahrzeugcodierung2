@@ -399,50 +399,33 @@
   .td-hero-mobile-break{display:inline}
 }
 
-/* The viewport tint follows the opening photo through the same light sequence. */
-.td-home .td-ignition-shade { display: none; }
+/* Two viewport layers reveal the Audi lamps before the rest of the page. */
 @media (prefers-reduced-motion: no-preference) {
   .td-home:has([data-light-start="waiting"])::after,
-  .td-home:has([data-light-start="playing"])::after {
+  .td-home:has([data-light-start="playing"])::after,
+  .td-home:has([data-light-start="playing"])::before {
     content: "";
     position: fixed;
     inset: 0;
+    background: black;
+    pointer-events: none;
     z-index: 2147483646;
-    pointer-events: none;
-    background: linear-gradient(160deg, #495578 0%, #8e8295 48%, #e7b48f 100%);
-    opacity: .34;
   }
-  .td-hero-picture:not([data-light-start="done"]) .td-ignition-shade {
-    display: block;
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    pointer-events: none;
-    z-index: 8;
-    opacity: .22;
+  .td-home:has([data-light-start="waiting"])::after {
+    animation: td-light-fallback .35s 3s forwards;
   }
-  .td-hero-picture:not([data-light-start="done"])::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 9;
-    pointer-events: none;
-    background: #596681;
-    opacity: .20;
+  .td-home:has([data-light-start="playing"])::after {
+    animation: td-lamps-on 3s ease-out both;
   }
-  .td-home:has([data-light-start="playing"])::after { animation: td-dawn-to-day 2.5s ease-in-out forwards; }
-  .td-hero-picture[data-light-start="playing"]::before { animation: td-ignition-lamps 2.5s ease-out forwards; }
-  .td-hero-picture[data-light-start="playing"] .td-ignition-shade { animation: td-ignition-daylight 2.5s ease-in-out forwards; }
-  .td-home:has([data-light-start="waiting"])::after,
-  .td-hero-picture[data-light-start="waiting"]::before,
-  .td-hero-picture[data-light-start="waiting"] .td-ignition-shade { animation: td-intro-fallback .4s 3s forwards; }
-  @media (max-width: 600px) {
-    .td-home .td-hero-picture img.td-ignition-shade { object-position: right 82%; }
+  .td-home:has([data-light-start="playing"])::before {
+    mask-image: linear-gradient(black, black), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 281' preserveAspectRatio='none'%3E%3Cpath fill='white' d='m183 161 17 5-7 7-11-3z M303 167l52-7-6 12-34 4z'/%3E%3C/svg%3E");
+    mask-size: 100% 100%, var(--lamp-size, 0px 0px);
+    mask-position: 0 0, var(--lamp-origin, 0px 0px);
+    mask-repeat: no-repeat;
+    mask-composite: subtract;
+    animation: td-page-up 3s ease-in-out both;
   }
 }
-@keyframes td-ignition-lamps { 0%, 17% { opacity: .20; } 38%, 100% { opacity: 0; } }
-@keyframes td-ignition-daylight { 0%, 47% { opacity: .22; } 100% { opacity: 0; } }
-@keyframes td-dawn-to-day { 0%, 47% { opacity: .34; } 100% { opacity: 0; } }
-@keyframes td-intro-fallback { to { opacity: 0; } }
+@keyframes td-lamps-on { 0%, 15% { opacity: 1; } 30%, 100% { opacity: 0; } }
+@keyframes td-page-up { 0%, 46% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes td-light-fallback { to { opacity: 0; } }
