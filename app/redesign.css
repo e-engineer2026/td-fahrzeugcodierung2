@@ -401,6 +401,7 @@
 
 /* Two viewport layers reveal the Audi lamps before the rest of the page. */
 @media (prefers-reduced-motion: no-preference) {
+  .td-home { --td-lamp-cutout: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 281' preserveAspectRatio='none'%3E%3Cpath fill='white' d='m183 161 17 5-7 7-11-3z M303 167l52-7-6 12-34 4z'/%3E%3C/svg%3E"); }
   .td-home:has([data-light-start="waiting"])::after,
   .td-home:has([data-light-start="playing"])::after,
   .td-home:has([data-light-start="playing"])::before {
@@ -412,13 +413,18 @@
     z-index: 2147483646;
   }
   .td-home:has([data-light-start="waiting"])::after {
+    opacity: .8;
     animation: td-light-fallback .35s 3s forwards;
   }
   .td-home:has([data-light-start="playing"])::after {
+    mask-image: var(--td-lamp-cutout);
+    mask-size: var(--lamp-size, 0px 0px);
+    mask-position: var(--lamp-origin, 0px 0px);
+    mask-repeat: no-repeat;
     animation: td-lamps-on 3s ease-out both;
   }
   .td-home:has([data-light-start="playing"])::before {
-    mask-image: linear-gradient(black, black), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 281' preserveAspectRatio='none'%3E%3Cpath fill='white' d='m183 161 17 5-7 7-11-3z M303 167l52-7-6 12-34 4z'/%3E%3C/svg%3E");
+    mask-image: linear-gradient(black, black), var(--td-lamp-cutout);
     mask-size: 100% 100%, var(--lamp-size, 0px 0px);
     mask-position: 0 0, var(--lamp-origin, 0px 0px);
     mask-repeat: no-repeat;
@@ -426,6 +432,6 @@
     animation: td-page-up 3s ease-in-out both;
   }
 }
-@keyframes td-lamps-on { 0%, 15% { opacity: 1; } 30%, 100% { opacity: 0; } }
-@keyframes td-page-up { 0%, 46% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes td-lamps-on { 0%, 15% { opacity: .8; } 30%, 100% { opacity: 0; } }
+@keyframes td-page-up { 0%, 46% { opacity: .8; } 100% { opacity: 0; } }
 @keyframes td-light-fallback { to { opacity: 0; } }
