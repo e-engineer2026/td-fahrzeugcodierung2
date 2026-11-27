@@ -108,7 +108,7 @@ export default function HeroVehicleCarousel() {
   return <div className="td-hero-picture" data-wall-scene={hasSelectedPhoto ? "selected" : String(active)} data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
     <div className="td-airplane-sky" aria-hidden="true"><div className="td-airplane-flight">
       <span className="td-airplane-banner"><Image className="td-airplane-banner-logo" src="/td-logo-status.webp" alt="" width={225} height={80} /><span className="td-airplane-banner-text"><span>Fahrzeugcodierung</span><strong>{displayLabel || "Fahrzeugcodierung"}</strong></span></span><span className="td-airplane-rope"></span>
-      <span className="td-airplane-body"><Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} /><span className="td-airplane-propeller" /></span>
+      <Image className="td-sleigh-team" src="/weihnachtsschlitten.webp" alt="" width={720} height={240} sizes="(max-width: 600px) 132px, 190px" />
     </div></div>
     <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Audi", "Volkswagen", "Škoda", "SEAT", "CUPRA"].map((brand) => { const visibleBrand = selection ? (selection.brand === "SEAT / CUPRA" ? (/cupra|formentor|born|tavascan|terramar/i.test(selection.model) ? "CUPRA" : "SEAT") : selection.brand) : vehicles[active].brand; return <span key={brand} className={brand === visibleBrand ? "is-active" : undefined}>{brand}</span>; })}</div>
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${showDefault && active === index ? " is-active" : ""}`} aria-hidden={!showDefault || active !== index}>
