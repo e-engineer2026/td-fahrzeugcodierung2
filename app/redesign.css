@@ -399,37 +399,50 @@
   .td-hero-mobile-break{display:inline}
 }
 
-/* Keep the cutouts aligned to the same object-fit crop as the opening Audi. */
+/* The viewport tint follows the opening photo through the same light sequence. */
 .td-home .td-ignition-shade { display: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .td-hero-picture:not([data-light-start="done"]) .td-ignition-shade {
-    display: block; position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; z-index: 8; pointer-events: none;
+  .td-home:has([data-light-start="waiting"])::after,
+  .td-home:has([data-light-start="playing"])::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 2147483646;
+    pointer-events: none;
+    background: linear-gradient(160deg, #495578 0%, #8e8295 48%, #e7b48f 100%);
+    opacity: .34;
   }
-  .td-hero-picture[data-light-start="playing"] .td-ignition-shade {
-    animation: td-ignition-daylight 2.5s ease-in-out forwards;
+  .td-hero-picture:not([data-light-start="done"]) .td-ignition-shade {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 8;
+    opacity: .22;
   }
   .td-hero-picture:not([data-light-start="done"])::before {
-    content: ""; position: absolute; inset: 0; z-index: 9; background: #040608; pointer-events: none;
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 9;
+    pointer-events: none;
+    background: #596681;
+    opacity: .20;
   }
-  .td-hero-picture[data-light-start="playing"]::before {
-    animation: td-ignition-lamps 2.5s ease-out forwards;
-  }
-  .td-hero:has([data-light-start="playing"]) .td-hero-inner {
-    animation: td-ignition-copy 2.5s ease-out both;
-  }
-  .td-hero:has([data-light-start="waiting"]) .td-hero-inner { opacity: .08; }
-  .td-hero:focus-within .td-hero-inner { animation: none !important; opacity: 1 !important; }
-  @media (max-width: 600px) { .td-home .td-hero-picture img.td-ignition-shade { object-position: right 82%; } }
-}
-@keyframes td-ignition-lamps { 0%, 17% { opacity: 1; } 38%, 100% { opacity: 0; } }
-@keyframes td-ignition-daylight { 0%, 47% { opacity: 1; } 100% { opacity: 0; } }
-@keyframes td-ignition-copy { 0%, 47% { opacity: .08; } 100% { opacity: 1; } }
-
-@media (prefers-reduced-motion: no-preference) {
+  .td-home:has([data-light-start="playing"])::after { animation: td-dawn-to-day 2.5s ease-in-out forwards; }
+  .td-hero-picture[data-light-start="playing"]::before { animation: td-ignition-lamps 2.5s ease-out forwards; }
+  .td-hero-picture[data-light-start="playing"] .td-ignition-shade { animation: td-ignition-daylight 2.5s ease-in-out forwards; }
+  .td-home:has([data-light-start="waiting"])::after,
   .td-hero-picture[data-light-start="waiting"]::before,
-  .td-hero-picture[data-light-start="waiting"] .td-ignition-shade { animation: td-intro-fallback .35s 3s forwards; }
-  .td-hero:has([data-light-start="waiting"]) .td-hero-inner { animation: td-copy-fallback .35s 3s forwards; }
+  .td-hero-picture[data-light-start="waiting"] .td-ignition-shade { animation: td-intro-fallback .4s 3s forwards; }
+  @media (max-width: 600px) {
+    .td-home .td-hero-picture img.td-ignition-shade { object-position: right 82%; }
+  }
 }
+@keyframes td-ignition-lamps { 0%, 17% { opacity: .20; } 38%, 100% { opacity: 0; } }
+@keyframes td-ignition-daylight { 0%, 47% { opacity: .22; } 100% { opacity: 0; } }
+@keyframes td-dawn-to-day { 0%, 47% { opacity: .34; } 100% { opacity: 0; } }
 @keyframes td-intro-fallback { to { opacity: 0; } }
-@keyframes td-copy-fallback { to { opacity: 1; } }
