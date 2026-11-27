@@ -27,8 +27,41 @@ function sportImage(choice: HomeVehicleSelection | null): VehicleHeroImage | nul
 }
 
 export default function HeroVehicleCarousel() {
-  const introFinished = useRef(false);
   const [firstImageReady, setFirstImageReady] = useState(false);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const [introFinished, setIntroFinished] = useState(false);
+  useEffect(() => {
+    if (introFinished) return;
+    const scene = sceneRef.current;
+    const home = scene?.closest<HTMLElement>(".td-home");
+    const image = scene?.querySelector<HTMLImageElement>(".td-hero-slide img");
+    if (!scene || !home || !image) return;
+    function alignLampMask() {
+      if (!scene || !home || !image) return;
+      const rect = image.getBoundingClientRect();
+      const scale = Math.max(rect.width / 1672, rect.height / 941);
+      const width = scale * 1672;
+      const height = scale * 941;
+      const offsets = getComputedStyle(image).objectPosition.split(" ").map(parseFloat);
+      home.style.setProperty("--lamp-size", `${width}px ${height}px`);
+      home.style.setProperty("--lamp-origin", `${rect.left + (rect.width - width) * offsets[0] / 100}px ${rect.top + (rect.height - height) * offsets[1] / 100}px`);
+    }
+    alignLampMask();
+    const observer = new ResizeObserver(alignLampMask);
+    observer.observe(scene);
+    window.addEventListener("scroll", alignLampMask, { passive: true });
+    window.addEventListener("resize", alignLampMask);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", alignLampMask);
+      window.removeEventListener("resize", alignLampMask);
+    };
+  }, [introFinished]);
+  useEffect(() => {
+    const fallback = window.setTimeout(() => setIntroFinished(true), firstImageReady ? 3200 : 3000);
+    return () => window.clearTimeout(fallback);
+  }, [firstImageReady]);
+
   const [active, setActive] = useState(0);
   const [selection, setSelection] = useState<HomeVehicleSelection | null>(null);
   const [photos, setPhotos] = useState<VehicleHeroImage[]>([]);
@@ -107,7 +140,7 @@ export default function HeroVehicleCarousel() {
   const displayLabel = selection
     ? (currentPhotoMatches ? photos.find((photo) => photo.src === shownSrc)?.label : requested?.label) || `${selection.brand} ${selection.model}`
     : vehicles[active].label;
-  return <div className="td-hero-picture" onAnimationEnd={(event) => { if (event.animationName === "td-ignition-daylight") introFinished.current = true; }} data-light-start={introFinished.current || selection || active !== 0 ? "done" : firstImageReady ? "playing" : "waiting"} data-wall-scene={hasSelectedPhoto ? "selected" : String(active)} data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
+  return <div className="td-hero-picture" ref={sceneRef} data-light-start={introFinished || selection || active !== 0 ? "done" : firstImageReady ? "playing" : "waiting"} data-wall-scene={hasSelectedPhoto ? "selected" : String(active)} data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
     <div className="td-airplane-sky" aria-hidden="true"><div className="td-airplane-flight">
       <span className="td-airplane-banner"><Image className="td-airplane-banner-logo" src="/td-logo-status.webp" alt="" width={225} height={80} /><span className="td-airplane-banner-text"><span>Fahrzeugcodierung</span><strong>{displayLabel || "Fahrzeugcodierung"}</strong></span></span><span className="td-airplane-rope"></span>
       <span className="td-airplane-body"><Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} /><span className="td-airplane-propeller" /></span>
@@ -116,7 +149,6 @@ export default function HeroVehicleCarousel() {
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${showDefault && active === index ? " is-active" : ""}`} aria-hidden={!showDefault || active !== index}>
       <Image src={vehicle.src} alt={vehicle.alt} fill onLoad={index === 0 ? () => setFirstImageReady(true) : undefined} onError={index === 0 ? () => setActive(1) : undefined} preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
     </div>)}
-    <img className="td-ignition-shade" src="/td-ignition-shade.svg" alt="" aria-hidden="true" />
     {photos.map((photo) => <div key={`selected-${photo.src}`} className={`td-hero-slide td-hero-model-photo${hasSelectedPhoto && shownSrc === photo.src ? " is-active" : ""}`} aria-hidden={!hasSelectedPhoto || shownSrc !== photo.src}>
       <Image src={photo.src} alt={photo.alt} fill sizes="100vw" loading="eager" onLoad={() => {
         loadedSources.current.add(photo.src);
