@@ -451,3 +451,17 @@
   .td-home .td-hero-actions{margin-top:11px}
   .td-home .td-hero-actions>.td-button{min-height:42px;padding-block:7px}
 }
+
+
+/* Vier Laufphasen und zurückhaltendere Größe des Weihnachtsgespanns. */
+.td-home .td-santa-sleigh{width:145px}
+.td-home .td-santa-frame:not(.td-santa-pose-0){opacity:0}
+@media(max-width:600px){.td-home .td-santa-sleigh{width:105px}}
+@media(prefers-reduced-motion:no-preference){
+  .td-home .td-santa-frame{animation:td-santa-step 1.2s steps(1,end) infinite}
+  .td-home .td-santa-pose-0{animation-delay:0s}
+  .td-home .td-santa-pose-1{animation-delay:-.9s}
+  .td-home .td-santa-pose-2{animation-delay:-.6s}
+  .td-home .td-santa-pose-3{animation-delay:-.3s}
+}
+@keyframes td-santa-step{0%,24.99%{opacity:1}25%,100%{opacity:0}}
