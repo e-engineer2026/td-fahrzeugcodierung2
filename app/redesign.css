@@ -398,3 +398,106 @@
   .td-home .td-hero-actions>.td-hero-primary svg{width:14px;height:14px}
   .td-hero-mobile-break{display:inline}
 }
+
+
+/* Dezenter Schneefall und Winterstimmung auf der Startseite. */
+.td-home .td-snowfall{position:fixed;inset:0;z-index:80;overflow:hidden;pointer-events:none;contain:strict}
+.td-home .td-snowfall span{position:absolute;inset:-220px 0 0;pointer-events:none;background-repeat:repeat;will-change:transform}
+.td-home .td-snowfall-far{opacity:.48;background-image:radial-gradient(circle,#fff 1.3px,transparent 1.9px),radial-gradient(circle,#d5e7f5 1px,transparent 1.7px);background-size:113px 127px,173px 193px;background-position:12px 8px,61px 87px;animation:td-snowfall 19s linear infinite}
+.td-home .td-snowfall-near{opacity:.67;background-image:radial-gradient(circle,#fff 2px,transparent 2.8px),radial-gradient(circle,#e8f3fa 1.4px,transparent 2.3px);background-size:177px 193px,227px 211px;background-position:40px 30px,12px 110px;filter:drop-shadow(0 0 1px #7d9bb4);animation:td-snowfall 13s linear infinite}
+@keyframes td-snowfall{from{transform:translate3d(0,-110px,0)}to{transform:translate3d(35px,110px,0)}}
+.td-home .td-hero{background-color:#edf5fa}
+.td-home .td-finder{box-shadow:0 -5px 0 -2px #f5fbff,0 12px 32px #5b76951c}
+.td-home .td-process{background-color:#f2f8fc}
+@media (prefers-reduced-motion:reduce){.td-home .td-snowfall{display:none}}
+
+/* Schneesäumung an der Unterkante des Titelbildes. */
+.td-home .td-hero::after{content:"";position:absolute;z-index:2;left:0;right:0;bottom:0;height:19px;pointer-events:none;background:radial-gradient(ellipse 90px 11px at 4% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 150px 13px at 21% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 120px 11px at 48% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 165px 13px at 75% 100%,#f8fcff 98%,transparent 100%),linear-gradient(to top,#f8fcff 0 5px,transparent 6px)}
+
+
+/* Weihnachtsschlitten und kompakter Einstieg. */
+.td-home .td-santa-sleigh{display:block;position:relative;flex:none;width:180px;aspect-ratio:3/1;line-height:0}
+.td-home .td-hero-picture img.td-santa-frame{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;filter:drop-shadow(0 2px 2px #20374b44)}
+.td-home .td-santa-running{animation:td-reindeer-run .8s steps(1,end) infinite}
+@keyframes td-reindeer-run{0%,49%{opacity:0}50%,100%{opacity:1}}
+.td-home .td-airplane-flight{--tow-clearance:29rem}
+@media(min-width:901px){.td-home .td-header-inner{min-height:68px}.td-home .td-hero{min-height:530px}.td-home .td-hero-inner{padding-top:58px;padding-bottom:125px}}
+@media(min-width:601px) and (max-width:900px){.td-home .td-hero{min-height:490px}.td-home .td-hero-inner{padding-top:42px;padding-bottom:115px}}
+@media(max-width:600px){.td-home .td-header-inner{min-height:56px}.td-home .td-offer summary{min-height:46px}.td-home .td-hero-inner{padding-top:22px;padding-bottom:9px}.td-home .td-hero-picture{height:225px}.td-home .td-hero-picture:has(.td-hero-vehicle-caption){height:225px}.td-home .td-santa-sleigh{width:128px}.td-home .td-airplane-flight{top:35px;--tow-clearance:22rem}}
+@media(prefers-reduced-motion:reduce){.td-home .td-santa-running{animation:none;opacity:0}}
+
+
+/* Größere Fahrzeugdarstellung und weicherer Bewegungsablauf. */
+.td-home .td-hero-slide{overflow:hidden}
+@media(min-width:601px){.td-home .td-hero-slide img{transform:scale(1.08);transform-origin:right center}}
+@media(max-width:600px){.td-home .td-hero-picture,.td-home .td-hero-picture:has(.td-hero-vehicle-caption){height:270px}}
+@media(prefers-reduced-motion:no-preference){
+  .td-home .td-santa-running{animation:td-reindeer-gallop 1.15s ease-in-out infinite}
+  .td-home .td-santa-sleigh{animation:td-sleigh-float 2.3s ease-in-out infinite}
+}
+@keyframes td-reindeer-gallop{0%,38%,100%{opacity:0}50%,88%{opacity:1}}
+@keyframes td-sleigh-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+
+
+/* Auf kleinen Displays die Fahrzeugauswahl schneller erreichbar machen. */
+@media(max-width:600px){
+  .td-home .td-offer summary{min-height:40px;padding-block:3px}
+  .td-home .td-offer-title{font-size:12px}
+  .td-home .td-offer-condition{font-size:10px;line-height:1.25}
+  .td-home .td-hero-inner{padding-top:13px;padding-bottom:6px}
+  .td-home .td-hero .td-eyebrow{font-size:10px;line-height:1.3}
+  .td-home .td-hero h1{margin-top:7px;font-size:clamp(27px,8vw,40px);line-height:1.05}
+  .td-home .td-hero-subtitle{margin-top:8px;font-size:14px;line-height:1.35}
+  .td-home .td-hero-actions{margin-top:11px}
+  .td-home .td-hero-actions>.td-button{min-height:42px;padding-block:7px}
+}
+
+
+/* Vier Laufphasen und zurückhaltendere Größe des Weihnachtsgespanns. */
+.td-home .td-santa-sleigh{width:145px}
+.td-home .td-santa-frame:not(.td-santa-pose-0){opacity:0}
+@media(max-width:600px){.td-home .td-santa-sleigh{width:105px}}
+@media(prefers-reduced-motion:no-preference){
+  .td-home .td-santa-frame{animation:td-santa-step 1.2s steps(1,end) infinite}
+  .td-home .td-santa-pose-0{animation-delay:0s}
+  .td-home .td-santa-pose-1{animation-delay:-.9s}
+  .td-home .td-santa-pose-2{animation-delay:-.6s}
+  .td-home .td-santa-pose-3{animation-delay:-.3s}
+}
+@keyframes td-santa-step{0%,24.99%{opacity:1}25%,100%{opacity:0}}
+
+
+/* Kutsche unverändert halten; nur der rechte Teil mit Rentieren wechselt. */
+.td-home .td-santa-frame.td-santa-static{clip-path:inset(0 50% 0 0);opacity:1;animation:none}
+.td-home .td-santa-frame[class*="td-santa-pose-"]{clip-path:inset(0 0 0 50%)}
+@media(prefers-reduced-motion:no-preference){
+  .td-home .td-santa-frame[class*="td-santa-pose-"]{animation:td-santa-smooth 1.6s linear infinite}
+  .td-home .td-santa-frame.td-santa-pose-0{animation-delay:0s}
+  .td-home .td-santa-frame.td-santa-pose-1{animation-delay:-1.2s}
+  .td-home .td-santa-frame.td-santa-pose-2{animation-delay:-.8s}
+  .td-home .td-santa-frame.td-santa-pose-3{animation-delay:-.4s}
+}
+@keyframes td-santa-smooth{0%,19%{opacity:1}25%,94%{opacity:0}100%{opacity:1}}
+
+
+/* Ein durchgehend sichtbares Rentierbild verhindert Flackern beim Bildwechsel. */
+.td-home .td-santa-frame[class*="td-santa-pose-"]{animation:none;opacity:0}
+.td-home .td-santa-frame.td-santa-pose-0{opacity:1;transform-origin:65% 50%}
+@media(prefers-reduced-motion:no-preference){
+  .td-home .td-santa-frame.td-santa-pose-0{animation:td-reindeer-glide 2.8s ease-in-out infinite}
+}
+@keyframes td-reindeer-glide{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-0.6px) rotate(-0.35deg)}}
+
+
+/* Körper und Kutsche bleiben fest; nur die Beine wechseln weich ihre Laufphase. */
+.td-home .td-santa-frame.td-santa-static{clip-path:polygon(0 0,100% 0,100% 60%,50% 60%,50% 100%,0 100%)}
+.td-home .td-santa-frame[class*="td-santa-pose-"]{clip-path:inset(60% 0 0 50%);animation:none;opacity:0;transform:none}
+.td-home .td-santa-frame.td-santa-pose-0{opacity:1}
+@media(prefers-reduced-motion:no-preference){
+  .td-home .td-santa-frame[class*="td-santa-pose-"]{animation:td-reindeer-legs 2.4s linear infinite}
+  .td-home .td-santa-frame.td-santa-pose-0{animation-delay:0s}
+  .td-home .td-santa-frame.td-santa-pose-1{animation-delay:-1.8s}
+  .td-home .td-santa-frame.td-santa-pose-2{animation-delay:-1.2s}
+  .td-home .td-santa-frame.td-santa-pose-3{animation-delay:-.6s}
+}
+@keyframes td-reindeer-legs{0%,15%{opacity:1}25%,90%{opacity:0}100%{opacity:1}}
