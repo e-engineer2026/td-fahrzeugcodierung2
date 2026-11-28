@@ -478,3 +478,12 @@
   .td-home .td-santa-frame.td-santa-pose-3{animation-delay:-.4s}
 }
 @keyframes td-santa-smooth{0%,19%{opacity:1}25%,94%{opacity:0}100%{opacity:1}}
+
+
+/* Ein durchgehend sichtbares Rentierbild verhindert Flackern beim Bildwechsel. */
+.td-home .td-santa-frame[class*="td-santa-pose-"]{animation:none;opacity:0}
+.td-home .td-santa-frame.td-santa-pose-0{opacity:1;transform-origin:65% 50%}
+@media(prefers-reduced-motion:no-preference){
+  .td-home .td-santa-frame.td-santa-pose-0{animation:td-reindeer-glide 2.8s ease-in-out infinite}
+}
+@keyframes td-reindeer-glide{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-0.6px) rotate(-0.35deg)}}
