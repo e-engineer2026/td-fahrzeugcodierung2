@@ -398,3 +398,18 @@
   .td-home .td-hero-actions>.td-hero-primary svg{width:14px;height:14px}
   .td-hero-mobile-break{display:inline}
 }
+
+
+/* Dezenter Schneefall und Winterstimmung auf der Startseite. */
+.td-home .td-snowfall{position:fixed;inset:0;z-index:80;overflow:hidden;pointer-events:none;contain:strict}
+.td-home .td-snowfall span{position:absolute;inset:-220px 0 0;pointer-events:none;background-repeat:repeat;will-change:transform}
+.td-home .td-snowfall-far{opacity:.48;background-image:radial-gradient(circle,#fff 1.3px,transparent 1.9px),radial-gradient(circle,#d5e7f5 1px,transparent 1.7px);background-size:113px 127px,173px 193px;background-position:12px 8px,61px 87px;animation:td-snowfall 19s linear infinite}
+.td-home .td-snowfall-near{opacity:.67;background-image:radial-gradient(circle,#fff 2px,transparent 2.8px),radial-gradient(circle,#e8f3fa 1.4px,transparent 2.3px);background-size:177px 193px,227px 211px;background-position:40px 30px,12px 110px;filter:drop-shadow(0 0 1px #7d9bb4);animation:td-snowfall 13s linear infinite}
+@keyframes td-snowfall{from{transform:translate3d(0,-110px,0)}to{transform:translate3d(35px,110px,0)}}
+.td-home .td-hero{background-color:#edf5fa}
+.td-home .td-finder{box-shadow:0 -5px 0 -2px #f5fbff,0 12px 32px #5b76951c}
+.td-home .td-process{background-color:#f2f8fc}
+@media (prefers-reduced-motion:reduce){.td-home .td-snowfall{display:none}}
+
+/* Schneesäumung an der Unterkante des Titelbildes. */
+.td-home .td-hero::after{content:"";position:absolute;z-index:2;left:0;right:0;bottom:0;height:19px;pointer-events:none;background:radial-gradient(ellipse 90px 11px at 4% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 150px 13px at 21% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 120px 11px at 48% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 165px 13px at 75% 100%,#f8fcff 98%,transparent 100%),linear-gradient(to top,#f8fcff 0 5px,transparent 6px)}
