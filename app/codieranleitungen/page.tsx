@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import GuideCatalogPage from "../components/GuideCatalogPage";
 import GuideSelector from "../components/GuideSelector";
 import Link from "next/link";
+import {seoTopics,topicHref} from "../lib/seoTopics";
 import { publishedGuideCatalog, type PublishedGuideLink } from "../lib/publishedGuideCatalog";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +37,7 @@ export default async function CodieranleitungenPage({ searchParams }: { searchPa
     <section className="container-x py-5 sm:py-7" aria-label="Anleitung und Fahrzeug auswählen">
       <GuideSelector key={JSON.stringify([initialBrand, initialModel, initialYear])} publishedCatalogSlugs={publishedPdfSlugs} initialBrand={initialBrand} initialModel={initialModel} initialYear={initialYear} />
     </section>
+    <section className="container-x pb-5"><details className="rounded-xl border border-slate-400/30 p-4"><summary className="cursor-pointer font-semibold">Codieranleitungen nach Thema</summary><ul className="mt-3 grid gap-2 text-sm sm:grid-cols-2">{seoTopics.map(topic=><li key={topic.slug}><Link className="hover:underline" href={topicHref(topic.slug)}>{topic.title}</Link></li>)}</ul><Link className="mt-3 inline-block text-blue-700" href="/ratgeber">Technischer Ratgeber</Link></details></section>
     {links.length > 0 && <section className="container-x pb-8" aria-label="Veröffentlichte PDF-Anleitungen">
       <details className="rounded-xl border border-slate-400/30 p-4">
         <summary className="cursor-pointer font-semibold">Alle verfügbaren PDF-Anleitungen ({links.length})</summary>

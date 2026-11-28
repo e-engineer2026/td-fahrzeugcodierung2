@@ -1,3 +1,4 @@
+import GuideProductJsonLd from "../../components/GuideProductJsonLd";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FileCheck2 } from "lucide-react";
@@ -28,6 +29,7 @@ export default async function Golf7VzePage() {
   if (!available) notFound();
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
+      <GuideProductJsonLd href="/codieranleitungen/golf7-vze" name={GOLF7_VZE.title + " · " + GOLF7_VZE.model} description="PDF-Dokumentation für Golf 7 / 7.5 mit Steuergeräteübersicht, Voraussetzungen, Codierwegen und Funktionsprüfung." priceCents={GOLF7_VZE.priceCents} sku={GOLF7_VZE.sku} />
       <div className="container-x max-w-4xl py-8 sm:py-12">
         <Link href="/codieranleitungen" className="text-sm font-bold text-blue-700 hover:underline">
           ← Zurück zu PDF-Anleitungen

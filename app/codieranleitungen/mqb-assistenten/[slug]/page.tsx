@@ -1,3 +1,4 @@
+import GuideProductJsonLd from "../../../components/GuideProductJsonLd";
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
@@ -34,6 +35,7 @@ export default async function MqbGuidePage({ params }: { params: Promise<{ slug:
   } catch { ready = false; }
   if (!ready) notFound();
   return <main className="min-h-screen bg-slate-50 text-slate-950">
+      <GuideProductJsonLd href={"/codieranleitungen/mqb-assistenten/" + encodeURIComponent(product.slug)} name={product.name} description={product.description} priceCents={product.priceCents} sku={product.sku} />
     <div className="container-x max-w-4xl py-8 sm:py-12">
       <Link href="/codieranleitungen" className="text-sm font-bold text-blue-700 hover:underline">← PDF-Anleitungen</Link>
       <article className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8">

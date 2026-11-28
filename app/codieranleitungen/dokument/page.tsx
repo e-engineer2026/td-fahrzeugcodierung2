@@ -1,3 +1,4 @@
+import GuideProductJsonLd from "../../components/GuideProductJsonLd";
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
@@ -40,11 +41,13 @@ export default async function CatalogDocumentPage({ searchParams }: {
   if (!ready) notFound();
 
   return <main className="min-h-screen bg-slate-50 text-slate-950">
+      <GuideProductJsonLd href={catalogDocumentHref(product.slug)} name={product.name + " · " + product.model} description={"PDF-Codieranleitung für " + product.name + " am " + product.model + "."} priceCents={product.priceCents} sku={product.id} />
     <div className="container-x max-w-4xl py-8 sm:py-12">
       <Link href="/codieranleitungen" className="text-sm font-bold text-blue-700 hover:underline">← PDF-Anleitungen</Link>
       <article className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-8">
         <p className="text-sm font-semibold text-blue-700">{product.model}</p>
         <h1 className="mt-2 text-2xl font-black sm:text-3xl">{product.name}</h1>
+        <p className="mt-3 text-sm leading-6 text-slate-700">PDF-Codieranleitung für {product.name} am {product.model}. Digitales Dokument für qualifizierte Fachkräfte. Vor der Anwendung Hardware, Steuergeräte und Softwarestand des konkreten Fahrzeugs prüfen.</p>
         <><p className="mt-4 text-xl font-black text-blue-700">{formatGuidePrice(product.priceCents / 100)}</p>
           <ModelVzeCheckout signedIn={!!userId} slug={product.slug} name={product.name} catalogPriceCents={product.priceCents} /></>
       </article>
