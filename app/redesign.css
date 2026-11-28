@@ -410,3 +410,6 @@
 .td-home .td-finder{box-shadow:0 -5px 0 -2px #f5fbff,0 12px 32px #5b76951c}
 .td-home .td-process{background-color:#f2f8fc}
 @media (prefers-reduced-motion:reduce){.td-home .td-snowfall{display:none}}
+
+/* Schneesäumung an der Unterkante des Titelbildes. */
+.td-home .td-hero::after{content:"";position:absolute;z-index:2;left:0;right:0;bottom:0;height:19px;pointer-events:none;background:radial-gradient(ellipse 90px 11px at 4% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 150px 13px at 21% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 120px 11px at 48% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 165px 13px at 75% 100%,#f8fcff 98%,transparent 100%),linear-gradient(to top,#f8fcff 0 5px,transparent 6px)}
