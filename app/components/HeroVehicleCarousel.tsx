@@ -7,9 +7,9 @@ import { homeVehiclePreviewEvent, homeVehicleUpdatedEvent, resolveHomeVehicleSel
 import { vehicleHeroImage, type VehicleHeroImage } from "../lib/vehicleHero";
 
 const vehicles = [
-  { src: "/td-hero-a6-c8-silber-td.webp", brand: "Audi", label: "Audi A6 C8", alt: "Silberner Audi A6 C8 Avant mit TD-Schriftzug und eingeschalteten Scheinwerfern" },
-  { src: "/td-hero-s6-c8-blau-td.webp", brand: "Audi", label: "Audi S6 C8", alt: "Blauer Audi S6 C8 Avant mit S6-Emblem, TD-Schriftzug und eingeschalteten Scheinwerfern" },
-  { src: "/td-hero-golf-4-r32-gta-style.webp", brand: "Volkswagen", label: "VW Golf 4 R32", alt: "Tiefblauer VW Golf 4 R32 mit TD-Schriftzug auf einem Steinplatz bei Sonnenuntergang" },
+  { src: "/hero-a6-winter.webp", brand: "Audi", label: "Audi A6 C8", alt: "Silberner Audi A6 C8 Avant mit TD-Schriftzug und eingeschalteten Scheinwerfern" },
+  { src: "/hero-s6-winter.webp", brand: "Audi", label: "Audi S6 C8", alt: "Blauer Audi S6 C8 Avant mit S6-Emblem, TD-Schriftzug und eingeschalteten Scheinwerfern" },
+  { src: "/hero-rs6-winter.webp", brand: "Audi", label: "Audi RS 6 C8", alt: "Roter Audi RS 6 Avant mit TD-Schriftzug vor winterlichen Bäumen" },
 ];
 
 const sportVariants: Array<{ model: string; from: number; until: number; src: string; label: string }> = [
@@ -108,7 +108,7 @@ export default function HeroVehicleCarousel() {
   return <div className="td-hero-picture" data-wall-scene={hasSelectedPhoto ? "selected" : String(active)} data-selected-model={selection?.model || ""} data-image-src={hasSelectedPhoto ? shownSrc : showDefault ? vehicles[active].src : ""}>
     <div className="td-airplane-sky" aria-hidden="true"><div className="td-airplane-flight">
       <span className="td-airplane-banner"><Image className="td-airplane-banner-logo" src="/td-logo-status.webp" alt="" width={225} height={80} /><span className="td-airplane-banner-text"><span>Fahrzeugcodierung</span><strong>{displayLabel || "Fahrzeugcodierung"}</strong></span></span><span className="td-airplane-rope"></span>
-      <span className="td-airplane-body"><Image className="td-airplane" src="/airplane-banner-tow.webp" alt="" width={960} height={320} /><span className="td-airplane-propeller" /></span>
+      <span className="td-santa-sleigh"><Image className="td-santa-frame" src="/santa-sleigh.webp" alt="" width={1200} height={400} /><Image className="td-santa-frame td-santa-running" src="/santa-sleigh-run.webp" alt="" width={1200} height={400} /></span>
     </div></div>
     <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Audi", "Volkswagen", "Škoda", "SEAT", "CUPRA"].map((brand) => { const visibleBrand = selection ? (selection.brand === "SEAT / CUPRA" ? (/cupra|formentor|born|tavascan|terramar/i.test(selection.model) ? "CUPRA" : "SEAT") : selection.brand) : vehicles[active].brand; return <span key={brand} className={brand === visibleBrand ? "is-active" : undefined}>{brand}</span>; })}</div>
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${showDefault && active === index ? " is-active" : ""}`} aria-hidden={!showDefault || active !== index}>

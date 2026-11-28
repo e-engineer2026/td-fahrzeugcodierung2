@@ -413,3 +413,15 @@
 
 /* Schneesäumung an der Unterkante des Titelbildes. */
 .td-home .td-hero::after{content:"";position:absolute;z-index:2;left:0;right:0;bottom:0;height:19px;pointer-events:none;background:radial-gradient(ellipse 90px 11px at 4% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 150px 13px at 21% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 120px 11px at 48% 100%,#f8fcff 98%,transparent 100%),radial-gradient(ellipse 165px 13px at 75% 100%,#f8fcff 98%,transparent 100%),linear-gradient(to top,#f8fcff 0 5px,transparent 6px)}
+
+
+/* Weihnachtsschlitten und kompakter Einstieg. */
+.td-home .td-santa-sleigh{display:block;position:relative;flex:none;width:180px;aspect-ratio:3/1;line-height:0}
+.td-home .td-hero-picture img.td-santa-frame{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;filter:drop-shadow(0 2px 2px #20374b44)}
+.td-home .td-santa-running{animation:td-reindeer-run .8s steps(1,end) infinite}
+@keyframes td-reindeer-run{0%,49%{opacity:0}50%,100%{opacity:1}}
+.td-home .td-airplane-flight{--tow-clearance:29rem}
+@media(min-width:901px){.td-home .td-header-inner{min-height:68px}.td-home .td-hero{min-height:530px}.td-home .td-hero-inner{padding-top:58px;padding-bottom:125px}}
+@media(min-width:601px) and (max-width:900px){.td-home .td-hero{min-height:490px}.td-home .td-hero-inner{padding-top:42px;padding-bottom:115px}}
+@media(max-width:600px){.td-home .td-header-inner{min-height:56px}.td-home .td-offer summary{min-height:46px}.td-home .td-hero-inner{padding-top:22px;padding-bottom:9px}.td-home .td-hero-picture{height:225px}.td-home .td-hero-picture:has(.td-hero-vehicle-caption){height:225px}.td-home .td-santa-sleigh{width:128px}.td-home .td-airplane-flight{top:35px;--tow-clearance:22rem}}
+@media(prefers-reduced-motion:reduce){.td-home .td-santa-running{animation:none;opacity:0}}
