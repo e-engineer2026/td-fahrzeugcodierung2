@@ -487,3 +487,17 @@
   .td-home .td-santa-frame.td-santa-pose-0{animation:td-reindeer-glide 2.8s ease-in-out infinite}
 }
 @keyframes td-reindeer-glide{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-0.6px) rotate(-0.35deg)}}
+
+
+/* Körper und Kutsche bleiben fest; nur die Beine wechseln weich ihre Laufphase. */
+.td-home .td-santa-frame.td-santa-static{clip-path:polygon(0 0,100% 0,100% 60%,50% 60%,50% 100%,0 100%)}
+.td-home .td-santa-frame[class*="td-santa-pose-"]{clip-path:inset(60% 0 0 50%);animation:none;opacity:0;transform:none}
+.td-home .td-santa-frame.td-santa-pose-0{opacity:1}
+@media(prefers-reduced-motion:no-preference){
+  .td-home .td-santa-frame[class*="td-santa-pose-"]{animation:td-reindeer-legs 2.4s linear infinite}
+  .td-home .td-santa-frame.td-santa-pose-0{animation-delay:0s}
+  .td-home .td-santa-frame.td-santa-pose-1{animation-delay:-1.8s}
+  .td-home .td-santa-frame.td-santa-pose-2{animation-delay:-1.2s}
+  .td-home .td-santa-frame.td-santa-pose-3{animation-delay:-.6s}
+}
+@keyframes td-reindeer-legs{0%,15%{opacity:1}25%,90%{opacity:0}100%{opacity:1}}
