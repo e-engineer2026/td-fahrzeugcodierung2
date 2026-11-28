@@ -112,10 +112,10 @@ export default function HeroVehicleCarousel() {
     </div></div>
     <div className="td-hero-brands" aria-label="Unterstützte Marken">{["Audi", "Volkswagen", "Škoda", "SEAT", "CUPRA"].map((brand) => { const visibleBrand = selection ? (selection.brand === "SEAT / CUPRA" ? (/cupra|formentor|born|tavascan|terramar/i.test(selection.model) ? "CUPRA" : "SEAT") : selection.brand) : vehicles[active].brand; return <span key={brand} className={brand === visibleBrand ? "is-active" : undefined}>{brand}</span>; })}</div>
     {vehicles.map((vehicle, index) => <div key={vehicle.src} className={`td-hero-slide${showDefault && active === index ? " is-active" : ""}`} aria-hidden={!showDefault || active !== index}>
-      <Image src={vehicle.src} alt={vehicle.alt} fill preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
+      <Image src={vehicle.src} alt={vehicle.alt} fill unoptimized preload={index === 0} loading={index === 0 ? undefined : "eager"} sizes="100vw" />
     </div>)}
     {photos.map((photo) => <div key={`selected-${photo.src}`} className={`td-hero-slide td-hero-model-photo${hasSelectedPhoto && shownSrc === photo.src ? " is-active" : ""}`} aria-hidden={!hasSelectedPhoto || shownSrc !== photo.src}>
-      <Image src={photo.src} alt={photo.alt} fill sizes="100vw" loading="eager" onLoad={() => {
+      <Image src={photo.src} alt={photo.alt} fill unoptimized sizes="100vw" loading="eager" onLoad={() => {
         loadedSources.current.add(photo.src);
         if (wantedSrc.current === photo.src) setShownSrc(photo.src);
       }} onError={() => { failedSources.current.add(photo.src); if (wantedSrc.current === photo.src) { setFailedSrc(photo.src); setShownSrc(null); } }} />
