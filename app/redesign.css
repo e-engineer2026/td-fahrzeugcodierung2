@@ -472,9 +472,9 @@
 .td-home .td-santa-frame[class*="td-santa-pose-"]{clip-path:inset(0 0 0 50%)}
 @media(prefers-reduced-motion:no-preference){
   .td-home .td-santa-frame[class*="td-santa-pose-"]{animation:td-santa-smooth 1.6s linear infinite}
-  .td-home .td-santa-pose-0{animation-delay:0s}
-  .td-home .td-santa-pose-1{animation-delay:-1.2s}
-  .td-home .td-santa-pose-2{animation-delay:-.8s}
-  .td-home .td-santa-pose-3{animation-delay:-.4s}
+  .td-home .td-santa-frame.td-santa-pose-0{animation-delay:0s}
+  .td-home .td-santa-frame.td-santa-pose-1{animation-delay:-1.2s}
+  .td-home .td-santa-frame.td-santa-pose-2{animation-delay:-.8s}
+  .td-home .td-santa-frame.td-santa-pose-3{animation-delay:-.4s}
 }
 @keyframes td-santa-smooth{0%,19%{opacity:1}25%,94%{opacity:0}100%{opacity:1}}
