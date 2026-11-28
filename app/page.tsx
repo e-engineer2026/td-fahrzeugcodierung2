@@ -20,6 +20,7 @@ const googleBusiness = "https://www.google.com/maps/search/?api=1&query=TD-Fahrz
 const googleReview = "https://search.google.com/local/writereview?placeid=ChIJbx46otT5pkcRX9IqdbeMmdU";
 export default function Home() {
   return <main className="td-home">
+    <div className="td-snowfall" aria-hidden="true"><span className="td-snowfall-near" /><span className="td-snowfall-far" /></div>
     <ProcessAnimation />
     <VehicleSelectionBridge />
     <a href="#fahrzeugauswahl" className="td-skip">Direkt zur Fahrzeugauswahl</a>
